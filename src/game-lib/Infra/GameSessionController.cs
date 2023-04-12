@@ -1,3 +1,4 @@
+using Lib.Json;
 using Lib.OS;
 using UfoGameLib.Model;
 
@@ -56,14 +57,20 @@ public class GameSessionController
     public void LaunchMission(MissionSite site, int agentCount)
         => GameSession.ApplyPlayerActions(new LaunchMissionPlayerAction(site, agentCount));
 
+    // kja introduce "SaveFile" abstraction akin to MonthlyJsonFilesStorage
     public void Save()
     {
-        GameSession.CurrentGameState.Save(Config.SaveGameDir, Config.SaveFileName);
+        Config.SaveGameDir.CreateDirIfNotExists().WriteAllTextAsync(
+            Config.SaveFileName,
+            GameSession.CurrentGameState.ToJsonIndentedUnsafe());
     }
 
-    public void Load()
+    public GameState Load()
     {
-        GameSession.GameStates[^1] =
+        var loadedGameState =
             Config.SaveGameDir.FileSystem.ReadAllJsonTo<GameState>(Config.SaveGameDir.JoinPath(Config.SaveFileName));
+        GameSession.CurrentGameState = loadedGameState;
+        return loadedGameState;
+
     }
 }

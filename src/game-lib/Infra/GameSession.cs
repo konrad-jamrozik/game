@@ -1,6 +1,3 @@
-using System.Runtime.CompilerServices;
-using UfoGameLib.Model;
-
 namespace UfoGameLib.Infra;
 
 /// <summary>
@@ -15,35 +12,21 @@ namespace UfoGameLib.Infra;
 /// </summary>
 public class GameSession
 {
-    public readonly List<GameState> GameStates = new List<GameState> { GameState.NewInitialGameState() };
-
-    public GameState CurrentGameState => GameStates.Last();
+    public GameState CurrentGameState = GameState.NewInitialGameState();
 
     public void ApplyPlayerActions(params PlayerAction[] actionsData)
     {
         PlayerActions actions = new PlayerActions(actionsData);
-        (GameState updatedState, GameStateUpdateLog log) = UpdateGameState(CurrentGameState, actions);
-
-        GameStates.Add(updatedState);
-
-        // Keep only the most recent game states to avoid eating too much memory.
-        // Consider that every GameState keeps track of all missions, so
-        // the space usage grows O(state_count * mission_count). Similar
-        // with agents.
-        if (GameStates.Count > 10)
-            GameStates.RemoveAt(0);
-        Debug.Assert(GameStates.Count <= 10);
+        GameStateUpdateLog log = UpdateGameState(CurrentGameState, actions);
     }
 
-    private static (GameState updatedState, GameStateUpdateLog log) UpdateGameState(
+    private static GameStateUpdateLog UpdateGameState(
         GameState state,
         PlayerActions actions)
     {
         Debug.Assert(!state.IsGameOver);
-        Debug.Assert(!state.IsPast);
-        GameState updatedState = state with { Id = state.Id + 1 };
-        state.IsPast = true;
-        actions.Apply(updatedState);
-        return (updatedState, new GameStateUpdateLog());
+        state.UpdateCount = state.UpdateCount++;
+        actions.Apply(state);
+        return new GameStateUpdateLog();
     }
 }

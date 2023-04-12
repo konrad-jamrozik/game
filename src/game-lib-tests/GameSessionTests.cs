@@ -49,7 +49,7 @@ public class GameSessionTests
     //   - This, coupled with the smart player simulations, ensures test failure on invariant violation.
 
     [Test]
-    public void ConductBasicHappyPathGameSession()
+    public void BasicHappyPathGameSessionWorks()
     {
         var session = new GameSession();
         var game = new GameSessionController(session);
@@ -79,27 +79,39 @@ public class GameSessionTests
             Assert.That(finalGameState.Assets.Agents, Has.Count.EqualTo(3), "agentsHiredCount");
             Assert.That(finalGameState.Missions, Has.Count.EqualTo(1), "missionsLaunchedCount");
 
-            Assert.That(startingGameState, Is.EqualTo(session.GameStates.First()), "states should be equal");
-            Assert.That(startingGameState.Assets.Agents, Is.Not.EqualTo(finalGameState.Assets.Agents));
-            Assert.That(startingGameState.Missions, Is.Not.EqualTo(finalGameState.Missions));
+            Assert.That(
+                startingGameState,
+                Is.EqualTo(finalGameState),
+                "starting state should be equal to final state");
+            Assert.That(startingGameState.Assets.Agents, Is.EqualTo(finalGameState.Assets.Agents));
+            Assert.That(startingGameState.Missions, Is.EqualTo(finalGameState.Missions));
         });
     }
 
     // kja curr TDD test
     [Test]
-    public void SaveAndLoadGameSession()
+    public void GameStateSaveAndLoadRoundTripWorks()
     {
         var session = new GameSession();
         var game = new GameSessionController(session);
 
-        var startingGameState = session.CurrentGameState;
+        int savedTurn = game.GameStatePlayerView.CurrentTurn;
+        GameState startingGameState = session.CurrentGameState;
 
-        var savedTurn = game.GameStatePlayerView.CurrentTurn;
+        // Act 1/2
         game.Save();
+
         game.AdvanceTime();
         Assert.That(game.GameStatePlayerView.CurrentTurn, Is.EqualTo(savedTurn + 1), "savedTurn+1");
-        game.Load();
+
+        // Act 2/2
+        GameState finalGameState = game.Load();
+
         Assert.That(game.GameStatePlayerView.CurrentTurn, Is.EqualTo(savedTurn), "savedTurn");
+        Assert.That(
+            startingGameState,
+            Is.Not.EqualTo(finalGameState),
+            "starting state should not be equal to final state");
     }
 
 }

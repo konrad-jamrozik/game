@@ -20,7 +20,8 @@ public static class JsonExtensions
     {
         MaxDepth = MaxDepth,
         ReadCommentHandling = JsonCommentHandling.Skip,
-        Converters = { new DateDayJsonConverter() }
+        Converters = { new DateDayJsonConverter() },
+        IncludeFields = true
     };
 
     private static readonly JsonSerializerOptions SerializerOptionsUnsafe = new(SerializerOptions)
