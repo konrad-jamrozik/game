@@ -4,9 +4,9 @@ using System.IO;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
-using Wikitools.Lib.Json;
+using Lib.Json;
 
-namespace Wikitools.Lib.OS;
+namespace Lib.OS;
 
 /// <summary>
 /// This class aims to provides partial in-memory implementation

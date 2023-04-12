@@ -3,7 +3,7 @@ using System.Globalization;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace Wikitools.Lib.Primitives;
+namespace Lib.Primitives;
 
 public class DateDayJsonConverter : JsonConverter<DateDay>
 {

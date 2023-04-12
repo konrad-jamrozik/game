@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 
-namespace Wikitools.Lib.Git;
+namespace Lib.Git;
 
 public partial record GitLogPath
 {

@@ -1,4 +1,4 @@
-namespace Wikitools.Lib.Git;
+namespace Lib.Git;
 
 public record GitFileChangeStats(
     string FilePath,

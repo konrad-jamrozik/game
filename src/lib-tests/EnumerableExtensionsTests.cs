@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Wikitools.Lib.Primitives;
+using Lib.Primitives;
 using Wikitools.Lib.Tests.Json;
 using Xunit;
 

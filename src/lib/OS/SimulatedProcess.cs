@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Wikitools.Lib.OS;
+namespace Lib.OS;
 
 public class SimulatedProcess : IProcess
 {

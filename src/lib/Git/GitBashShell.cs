@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Wikitools.Lib.OS;
-using Wikitools.Lib.Primitives;
+using Lib.OS;
+using Lib.Primitives;
 
-namespace Wikitools.Lib.Git;
+namespace Lib.Git;
 
 public record GitBashShell(IOperatingSystem OS, string GitExecutablePath) : IShell
 {

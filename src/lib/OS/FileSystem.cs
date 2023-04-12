@@ -2,10 +2,10 @@
 using System.IO;
 using System.Text.Json;
 using System.Threading.Tasks;
-using Wikitools.Lib.Contracts;
-using Wikitools.Lib.Json;
+using Lib.Contracts;
+using Lib.Json;
 
-namespace Wikitools.Lib.OS;
+namespace Lib.OS;
 
 public class FileSystem : IFileSystem
 {

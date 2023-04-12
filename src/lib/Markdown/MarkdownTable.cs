@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Wikitools.Lib.Data;
+using Lib.Data;
 
-namespace Wikitools.Lib.Markdown;
+namespace Lib.Markdown;
 
 internal record MarkdownTable(TabularData Data)
 {

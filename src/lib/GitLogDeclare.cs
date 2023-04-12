@@ -1,8 +1,8 @@
-﻿using Wikitools.Lib.Git;
-using Wikitools.Lib.OS;
-using Wikitools.Lib.Primitives;
+﻿using Lib.Git;
+using Lib.OS;
+using Lib.Primitives;
 
-namespace Wikitools.Lib;
+namespace Lib;
 
 public class GitLogDeclare
 {

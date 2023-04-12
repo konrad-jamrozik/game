@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Text.Json;
 using System.Threading.Tasks;
-using Wikitools.Lib.Json;
-using Wikitools.Lib.OS;
-using Wikitools.Lib.Primitives;
+using Lib.Json;
+using Lib.OS;
+using Lib.Primitives;
 
-namespace Wikitools.Lib.Storage;
+namespace Lib.Storage;
 
 public record MonthlyJsonFilesStorage(Dir StorageDir)
 {

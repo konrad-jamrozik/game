@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using Wikitools.Lib.Contracts;
+using Lib.Contracts;
 
-namespace Wikitools.Lib.Primitives;
+namespace Lib.Primitives;
 
 public sealed record DateMonth(int Year, int Month, DateTimeKind Kind) :
     IComparable<DateTime>, IEquatable<DateTime>,

@@ -2,9 +2,9 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using Wikitools.Lib.OS;
+using Lib.OS;
 
-namespace Wikitools.Lib.Configuration;
+namespace Lib.Configuration;
 
 public record Configuration(IFileSystem FileSystem)
 {

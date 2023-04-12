@@ -2,7 +2,7 @@
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 
-namespace Wikitools.Lib.Primitives;
+namespace Lib.Primitives;
 
 // Based on https://blogs.msdn.microsoft.com/pfxteam/2011/01/15/asynclazyt/
 // See also:

@@ -1,6 +1,6 @@
 ﻿using System.Text.RegularExpressions;
 
-namespace Wikitools.Lib.Git;
+namespace Lib.Git;
 
 public abstract partial record GitLogPath(string Path)
 {

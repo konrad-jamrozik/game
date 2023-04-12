@@ -1,4 +1,4 @@
-﻿namespace Wikitools.Lib.Data;
+﻿namespace Lib.Data;
 
 public record TabularData(object[] HeaderRow, object[][] Rows)
 {

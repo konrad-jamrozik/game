@@ -1,6 +1,6 @@
 using System.IO;
 using System.Threading.Tasks;
-using Wikitools.Lib.Markdown;
+using Lib.Markdown;
 using Wikitools.Lib.Tests.Json;
 
 namespace Wikitools.Lib.Tests.Markdown;

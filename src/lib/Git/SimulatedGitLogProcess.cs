@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Lib.OS;
+using Lib.Primitives;
 using MoreLinq;
-using Wikitools.Lib.OS;
-using Wikitools.Lib.Primitives;
 
-namespace Wikitools.Lib.Git;
+namespace Lib.Git;
 
 public record SimulatedGitLogProcess(DaySpan DaySpan, GitLogCommit[] Commits) : IProcessSimulationSpec
 {

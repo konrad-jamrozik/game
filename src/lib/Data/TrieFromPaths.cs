@@ -2,10 +2,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Lib.Primitives;
 using MoreLinq;
-using Wikitools.Lib.Primitives;
 
-namespace Wikitools.Lib.Data;
+namespace Lib.Data;
 
 public record TrieFromPaths
     (IEnumerable<string> Paths, Func<string, IEnumerable<string>> ToSegments) 

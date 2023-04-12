@@ -2,7 +2,7 @@
 using System.IO;
 using System.Linq;
 
-namespace Wikitools.Lib.OS;
+namespace Lib.OS;
 
 public record FileTree(IFileSystem FileSystem, string Path)
 {

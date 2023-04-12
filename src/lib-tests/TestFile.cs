@@ -1,7 +1,7 @@
 using System;
 using System.Runtime.CompilerServices;
-using Wikitools.Lib.OS;
-using Wikitools.Lib.Primitives;
+using Lib.OS;
+using Lib.Primitives;
 
 namespace Wikitools.Lib.Tests;
 

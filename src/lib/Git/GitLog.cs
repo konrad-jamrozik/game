@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Lib.Contracts;
+using Lib.Primitives;
 using MoreLinq;
-using Wikitools.Lib.Contracts;
-using Wikitools.Lib.Primitives;
 
-namespace Wikitools.Lib.Git;
+namespace Lib.Git;
 
 public record GitLog(ITimeline Timeline, GitRepository Repo)
 {

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Wikitools.Lib.OS;
+namespace Lib.OS;
 
 public interface IProcessSimulationSpec
 {

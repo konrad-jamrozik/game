@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
-using Wikitools.Lib.Contracts;
+using Lib.Contracts;
 
-namespace Wikitools.Lib.Primitives;
+namespace Lib.Primitives;
 
 public static class MathExtensions
 {

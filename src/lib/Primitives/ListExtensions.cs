@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Wikitools.Lib.Primitives;
+namespace Lib.Primitives;
 
 public static class ListExtensions
 {

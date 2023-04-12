@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Lib.Contracts;
 using MoreLinq;
-using Wikitools.Lib.Contracts;
 
-namespace Wikitools.Lib.Primitives;
+namespace Lib.Primitives;
 
 public record RenameMap(IEnumerable<(string from, string to)> Renames)
 {

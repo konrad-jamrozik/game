@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Wikitools.Lib.Primitives;
+using Lib.Primitives;
 
-namespace Wikitools.Lib.Data;
+namespace Lib.Data;
 
 public abstract record Trie<TValue>(PathPart<TValue> RootPathPart)
 {

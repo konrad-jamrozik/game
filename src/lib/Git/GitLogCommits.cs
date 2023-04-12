@@ -1,10 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Wikitools.Lib.Contracts;
-using Wikitools.Lib.Primitives;
+using Lib.Contracts;
+using Lib.Primitives;
 
-namespace Wikitools.Lib.Git;
+namespace Lib.Git;
 
 public record GitLogCommits : IEnumerable<GitLogCommit>
 {

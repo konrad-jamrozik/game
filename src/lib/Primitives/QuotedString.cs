@@ -1,4 +1,4 @@
-﻿namespace Wikitools.Lib.Primitives;
+﻿namespace Lib.Primitives;
 
 public class QuotedString
 {

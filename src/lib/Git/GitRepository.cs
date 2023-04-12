@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Wikitools.Lib.OS;
+using Lib.OS;
 
-namespace Wikitools.Lib.Git;
+namespace Lib.Git;
 
 public record GitRepository(GitBashShell GitBashShell, Dir WorkingDir)
 {

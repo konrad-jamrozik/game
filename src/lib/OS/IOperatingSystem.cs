@@ -1,4 +1,4 @@
-﻿namespace Wikitools.Lib.OS;
+﻿namespace Lib.OS;
 
 public interface IOperatingSystem
 {

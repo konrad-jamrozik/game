@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Wikitools.Lib.Contracts;
+namespace Lib.Contracts;
 
 public class InvariantException : Exception
 {

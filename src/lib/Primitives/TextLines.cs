@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 
-namespace Wikitools.Lib.Primitives;
+namespace Lib.Primitives;
 
 public class TextLines
 {

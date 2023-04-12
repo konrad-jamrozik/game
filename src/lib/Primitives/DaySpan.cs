@@ -1,7 +1,7 @@
 ﻿using System;
-using Wikitools.Lib.Contracts;
+using Lib.Contracts;
 
-namespace Wikitools.Lib.Primitives;
+namespace Lib.Primitives;
 
 public record DaySpan
 {

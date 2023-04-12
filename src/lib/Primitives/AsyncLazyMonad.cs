@@ -1,7 +1,7 @@
 using System;
 using System.Threading.Tasks;
 
-namespace Wikitools.Lib.Primitives;
+namespace Lib.Primitives;
 
 // ReSharper disable once UnusedType.Global
 // - reason: keeping for now.

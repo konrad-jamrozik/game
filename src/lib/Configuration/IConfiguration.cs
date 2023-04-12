@@ -1,6 +1,6 @@
-using Wikitools.Lib.OS;
+using Lib.OS;
 
-namespace Wikitools.Lib.Configuration;
+namespace Lib.Configuration;
 
 public interface IConfiguration
 {

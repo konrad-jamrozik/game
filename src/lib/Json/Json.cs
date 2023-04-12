@@ -1,4 +1,4 @@
-﻿namespace Wikitools.Lib.Json;
+﻿namespace Lib.Json;
 
 public static class Json
 {

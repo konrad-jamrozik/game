@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using Wikitools.Lib.Data;
+using Lib.Data;
 
-namespace Wikitools.Lib.OS;
+namespace Lib.OS;
 
 public record FilePathTrie(IEnumerable<string> FilePaths) : TrieFromPaths(
     FilePaths, FileSystem.SplitPath)

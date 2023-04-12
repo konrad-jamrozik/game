@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Wikitools.Lib.Primitives;
+using Lib.Primitives;
 
-namespace Wikitools.Lib.Git;
+namespace Lib.Git;
 
 public partial record GitLogCommit
 {

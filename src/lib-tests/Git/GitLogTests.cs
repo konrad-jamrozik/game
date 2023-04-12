@@ -1,7 +1,8 @@
 ﻿using System.Linq;
-using Wikitools.Lib.Git;
-using Wikitools.Lib.OS;
-using Wikitools.Lib.Primitives;
+using Lib;
+using Lib.Git;
+using Lib.OS;
+using Lib.Primitives;
 using Xunit;
 
 namespace Wikitools.Lib.Tests.Git;

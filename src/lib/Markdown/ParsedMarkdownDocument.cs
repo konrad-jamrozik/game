@@ -1,10 +1,10 @@
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Wikitools.Lib.Primitives;
+using Lib.Primitives;
 using static MoreLinq.MoreEnumerable;
 
-namespace Wikitools.Lib.Markdown;
+namespace Lib.Markdown;
 
 public record ParsedMarkdownDocument : MarkdownDocument
 {

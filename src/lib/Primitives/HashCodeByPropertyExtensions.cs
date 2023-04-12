@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Reflection;
 
-namespace Wikitools.Lib.Primitives;
+namespace Lib.Primitives;
 
 public static class HashCodeByPropertyExtensions
 {

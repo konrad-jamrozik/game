@@ -1,7 +1,7 @@
 using System;
 using System.Threading.Tasks;
 
-namespace Wikitools.Lib.Primitives;
+namespace Lib.Primitives;
 
 public static class TaskExtensions
 {

@@ -1,5 +1,5 @@
 using System;
-using Wikitools.Lib.Json;
+using Lib.Json;
 
 namespace Wikitools.Lib.Tests.Json;
 

@@ -2,7 +2,7 @@
 using System.Globalization;
 using System.Text.Json.Serialization;
 
-namespace Wikitools.Lib.Primitives;
+namespace Lib.Primitives;
 
 public sealed record DateDay(int Year, int Month, int Day, DateTimeKind Kind) : 
     IComparable<DateTime>, IEquatable<DateTime>,

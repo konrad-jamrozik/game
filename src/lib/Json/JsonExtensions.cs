@@ -2,10 +2,10 @@
 using System.Linq;
 using System.Text.Encodings.Web;
 using System.Text.Json;
+using Lib.Primitives;
 using Newtonsoft.Json.Linq;
-using Wikitools.Lib.Primitives;
 
-namespace Wikitools.Lib.Json;
+namespace Lib.Json;
 
 public static class JsonExtensions
 {

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace Wikitools.Lib.OS;
+namespace Lib.OS;
 
 public record Dir(IFileSystem FileSystem, string Path)
 {

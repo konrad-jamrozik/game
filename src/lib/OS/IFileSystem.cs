@@ -3,7 +3,7 @@ using System.IO;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-namespace Wikitools.Lib.OS;
+namespace Lib.OS;
 
 public interface IFileSystem
 {

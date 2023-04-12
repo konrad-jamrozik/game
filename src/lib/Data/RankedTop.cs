@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Wikitools.Lib.Data;
+namespace Lib.Data;
 
 public record RankedTop<T>(IEnumerable<T> Seq, int? Top) : IEnumerable<(int rank, T elem)>
 {

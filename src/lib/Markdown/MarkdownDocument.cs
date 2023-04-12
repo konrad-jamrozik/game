@@ -3,10 +3,10 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Wikitools.Lib.Data;
-using Wikitools.Lib.Primitives;
+using Lib.Data;
+using Lib.Primitives;
 
-namespace Wikitools.Lib.Markdown;
+namespace Lib.Markdown;
 
 public record MarkdownDocument(Task<object[]> Content) : IWritableToText
 {

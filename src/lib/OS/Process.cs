@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Wikitools.Lib.Primitives;
+using Lib.Primitives;
 
-namespace Wikitools.Lib.OS;
+namespace Lib.OS;
 
 public class Process : IProcess
 {

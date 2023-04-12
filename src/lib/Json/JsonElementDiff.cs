@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Text.Json;
-using Wikitools.Lib.Contracts;
+using Lib.Contracts;
 // For explanation of this alias, please see comment on Wikitools.Lib.Json.JsonElementDiff.Value.
 using DiffObject = System.Object;
 
-namespace Wikitools.Lib.Json;
+namespace Lib.Json;
 
 public class JsonElementDiff
 {

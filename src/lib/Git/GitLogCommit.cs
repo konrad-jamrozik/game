@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 
-namespace Wikitools.Lib.Git;
+namespace Lib.Git;
 
 public partial record GitLogCommit(string Author, DateTime Date, GitLogCommit.Numstat[] Stats)
 {
