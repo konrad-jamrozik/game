@@ -1,7 +1,7 @@
 using System;
 using Lib.Json;
 
-namespace Wikitools.Lib.Tests.Json;
+namespace Lib.Tests.Json;
 
 // Note this doesn't support tuples. Please see comment on Wikitools.Lib.Json.JsonDiff
 public record JsonDiffAssertion(JsonDiff Diff)

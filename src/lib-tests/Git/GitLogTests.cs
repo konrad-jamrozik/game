@@ -1,11 +1,10 @@
 ﻿using System.Linq;
-using Lib;
 using Lib.Git;
 using Lib.OS;
 using Lib.Primitives;
 using Xunit;
 
-namespace Wikitools.Lib.Tests.Git;
+namespace Lib.Tests.Git;
 
 public class GitLogTests
 {

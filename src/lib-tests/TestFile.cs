@@ -3,7 +3,7 @@ using System.Runtime.CompilerServices;
 using Lib.OS;
 using Lib.Primitives;
 
-namespace Wikitools.Lib.Tests;
+namespace Lib.Tests;
 
 public record TestFile(
     Dir Dir,

@@ -6,7 +6,7 @@ using Lib.Json;
 using Xunit;
 using Xunit.Sdk;
 
-namespace Wikitools.Lib.Tests.Json;
+namespace Lib.Tests.Json;
 
 public class JsonDiffTests
 {

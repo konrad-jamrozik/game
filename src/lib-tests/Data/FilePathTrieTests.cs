@@ -7,7 +7,7 @@ using Lib.Primitives;
 using MoreLinq;
 using Xunit;
 
-namespace Wikitools.Lib.Tests.Data;
+namespace Lib.Tests.Data;
 
 public class FilePathTrieTests
 {

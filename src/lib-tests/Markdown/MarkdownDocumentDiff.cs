@@ -1,9 +1,9 @@
 using System.IO;
 using System.Threading.Tasks;
 using Lib.Markdown;
-using Wikitools.Lib.Tests.Json;
+using Lib.Tests.Json;
 
-namespace Wikitools.Lib.Tests.Markdown;
+namespace Lib.Tests.Markdown;
 
 public record MarkdownDocumentDiff(MarkdownDocument Expected, MarkdownDocument Sut)
 {

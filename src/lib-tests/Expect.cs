@@ -2,7 +2,7 @@ using System;
 using Xunit;
 using Xunit.Sdk;
 
-namespace Wikitools.Lib.Tests;
+namespace Lib.Tests;
 
 public static class Expect
 {

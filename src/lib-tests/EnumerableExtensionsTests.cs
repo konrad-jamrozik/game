@@ -2,10 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Lib.Primitives;
-using Wikitools.Lib.Tests.Json;
+using Lib.Tests.Json;
 using Xunit;
 
-namespace Wikitools.Lib.Tests;
+namespace Lib.Tests;
 
 public class EnumerableExtensionsTests
 {
