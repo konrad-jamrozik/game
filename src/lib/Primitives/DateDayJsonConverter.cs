@@ -5,6 +5,7 @@ using System.Text.Json.Serialization;
 
 namespace Lib.Primitives;
 
+// https://learn.microsoft.com/en-us/dotnet/standard/serialization/system-text-json/converters-how-to?pivots=dotnet-7-0
 public class DateDayJsonConverter : JsonConverter<DateDay>
 {
     // Custom format string documentation:
