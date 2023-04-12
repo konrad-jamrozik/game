@@ -18,8 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ufo-game-lib\ufo-game-lib.csproj" />
-    <ProjectReference Include="..\ufo-game\ufo-game.csproj" />
+    <ProjectReference Include="..\game-lib\game-lib.csproj" />
   </ItemGroup>
 
 </Project>

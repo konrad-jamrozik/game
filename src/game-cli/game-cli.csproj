@@ -10,7 +10,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ufo-game-lib-tests\ufo-game-lib-tests.csproj" />
+    <ProjectReference Include="..\game-lib-tests\game-lib-tests.csproj" />
   </ItemGroup>
 
   <ItemGroup>
