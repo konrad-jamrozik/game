@@ -21,7 +21,10 @@ public static class JsonExtensions
         MaxDepth = MaxDepth,
         ReadCommentHandling = JsonCommentHandling.Skip,
         Converters = { new DateDayJsonConverter() },
-        IncludeFields = true
+        IncludeFields = true,
+        // https://learn.microsoft.com/en-us/dotnet/standard/serialization/system-text-json/preserve-references?pivots=dotnet-7-0
+        // kja currently failing with System.NotSupportedException : Reference metadata is not supported when deserializing constructor parameters. See type 'UfoGameLib.Infra.GameState'. The unsupported member type is located on type 'UfoGameLib.Model.Timeline'. Path: $.Timeline.$ref | LineNumber: 7 | BytePositionInLine: 14.
+        // ReferenceHandler = ReferenceHandler.Preserve
     };
 
     private static readonly JsonSerializerOptions SerializerOptionsUnsafe = new(SerializerOptions)

@@ -8,6 +8,11 @@ public class Mission
 
     public Mission(MissionSite site)
     {
+        // kja cannot use this assert here due to deserialization, but I should figure a way to use
+        // it during normal model operation.
+        // See also:
+        // https://learn.microsoft.com/en-us/dotnet/standard/serialization/system-text-json/immutability?pivots=dotnet-7-0
+        // Debug.Assert(site.IsActive);
         Site = site;
     }
 }
