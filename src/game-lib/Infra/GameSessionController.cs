@@ -58,6 +58,7 @@ public class GameSessionController
         => GameSession.ApplyPlayerActions(new LaunchMissionPlayerAction(site, agentCount));
 
     // kja introduce "SaveFile" abstraction akin to MonthlyJsonFilesStorage
+    // Also, GameSession should have reference to the "SaveFile", not the GameSessionController.
     public void Save()
     {
         string saveGamePath = Config.SaveGameDir.CreateDirIfNotExists()

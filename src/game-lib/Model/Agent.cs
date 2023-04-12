@@ -1,3 +1,11 @@
 namespace UfoGameLib.Model;
 
-public record Agent(int Id);
+public class Agent
+{
+    public readonly int Id;
+
+    public Agent(int id)
+    {
+        Id = id;
+    }
+}

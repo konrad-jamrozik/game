@@ -90,7 +90,7 @@ public class GameSessionTests
 
     // kja curr TDD test
     [Test]
-    public void GameStateSaveAndLoadRoundTripWorks()
+    public void LoadingPreviousGameStateOverridesCurrentState()
     {
         var session = new GameSession();
         var game = new GameSessionController(session);
@@ -102,16 +102,44 @@ public class GameSessionTests
         game.Save();
 
         game.AdvanceTime();
+        
         Assert.That(game.GameStatePlayerView.CurrentTurn, Is.EqualTo(savedTurn + 1), "savedTurn+1");
-
+        
         // Act 2/2
-        GameState finalGameState = game.Load();
+        GameState loadedGameState = game.Load();
 
+        Assert.That(loadedGameState, Is.EqualTo(session.CurrentGameState));
+        Assert.That(loadedGameState, Is.Not.EqualTo(startingGameState));
         Assert.That(game.GameStatePlayerView.CurrentTurn, Is.EqualTo(savedTurn), "savedTurn");
         Assert.That(
             startingGameState,
-            Is.Not.EqualTo(finalGameState),
+            Is.Not.EqualTo(loadedGameState),
             "starting state should not be equal to final state");
+    }
+
+    [Test]
+    public void RoundTrippingGameStateSaveLoadDoesntChangeIt()
+    {
+        var session = new GameSession();
+        var game = new GameSessionController(session);
+
+        game.AdvanceTime();
+        game.AdvanceTime();
+        game.AdvanceTime();
+        game.HireAgents(3);
+        game.LaunchMission(game.GameStatePlayerView.MissionSites.First(), 1);
+        game.AdvanceTime();
+        game.AdvanceTime();
+        game.AdvanceTime();
+
+        // Act 1 and 2
+        game.Save();
+        game.Load();
+
+        Assert.That(game.GameStatePlayerView.CurrentTurn, Is.EqualTo(7), "currentTurn");
+        Assert.That(game.GameStatePlayerView.Assets.Agents, Has.Count.EqualTo(3));
+        Assert.That(game.GameStatePlayerView.Missions, Has.Count.EqualTo(1));
+        Assert.That(game.GameStatePlayerView.MissionSites, Has.Count.EqualTo(2));
     }
 
 }

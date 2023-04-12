@@ -1,6 +1,13 @@
 namespace UfoGameLib.Model;
 
-public record MissionSite(int Id, bool IsActive)
+public class MissionSite
 {
-    public bool IsActive { get; set; } = true;
+    public readonly int Id;
+    public bool IsActive;
+
+    public MissionSite(int id, bool isActive = true)
+    {
+        Id = id;
+        IsActive = isActive;
+    }
 }
