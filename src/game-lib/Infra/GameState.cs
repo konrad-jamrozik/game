@@ -1,3 +1,5 @@
+using Lib.Json;
+using Lib.OS;
 using UfoGameLib.Model;
 
 namespace UfoGameLib.Infra;
@@ -36,8 +38,8 @@ public record GameState(int Id, Timeline Timeline, Assets Assets, MissionSites M
             new MissionSites(),
             new Missions());
 
-    public void Save()
+    public void Save(Dir dir, string saveFileName)
     {
-        // kja curr work
+        dir.CreateDirIfNotExists().WriteAllTextAsync(saveFileName, this.ToJsonIndentedUnsafe());
     }
 }

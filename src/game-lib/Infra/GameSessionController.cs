@@ -1,3 +1,4 @@
+using Lib.OS;
 using UfoGameLib.Model;
 
 namespace UfoGameLib.Infra;
@@ -34,6 +35,7 @@ namespace UfoGameLib.Infra;
 public class GameSessionController
 {
     protected readonly GameSession GameSession;
+    internal readonly Configuration Config = new Configuration(new FileSystem());
 
     public GameSessionController(GameSession gameSession)
     {
@@ -56,10 +58,12 @@ public class GameSessionController
 
     public void Save()
     {
-        GameSession.CurrentGameState.Save();
+        GameSession.CurrentGameState.Save(Config.SaveGameDir, Config.SaveFileName);
     }
 
     public void Load()
     {
+        GameSession.GameStates[^1] =
+            Config.SaveGameDir.FileSystem.ReadAllJsonTo<GameState>(Config.SaveGameDir.JoinPath(Config.SaveFileName));
     }
 }

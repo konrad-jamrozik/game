@@ -7,6 +7,11 @@ using Newtonsoft.Json.Linq;
 
 namespace Lib.Json;
 
+// kja need to add set of json tests showing all conversions, like:
+// type T -> json string
+// json string -> type T
+// + the choices from https://learn.microsoft.com/en-us/dotnet/standard/serialization/system-text-json/use-dom-utf8jsonreader-utf8jsonwriter?pivots=dotnet-7-0
+// + file system e.g. Lib.OS.FileSystem.ReadAllJson
 public static class JsonExtensions
 {
     private const int MaxDepth = 64;
