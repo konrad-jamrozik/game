@@ -1,8 +1,9 @@
 namespace UfoGameLib.Model;
 
-public record Mission
+public class Mission
 {
-    public MissionSite Site { get; set; }
+    // kja currently this gets duplicated upon serialization, because MissionSites get serialized directly too.
+    public MissionSite Site;
 
     public Mission(MissionSite site)
     {

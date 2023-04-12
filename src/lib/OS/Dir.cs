@@ -18,13 +18,26 @@ public record Dir(IFileSystem FileSystem, string Path)
 
     public string JoinPath(string fileName) => FileSystem.JoinPath(Path, fileName);
 
+    public string GetFullPath(string path) => FileSystem.GetFullPath(path);
+
     public string ReadAllText(string fileName) => FileSystem.ReadAllText(JoinPath(fileName));
 
     public string[] ReadAllLines(string fileName)
         => FileSystem.ReadAllLines(JoinPath(fileName));
 
-    public Task WriteAllTextAsync(string fileName, string contents) =>
-        FileSystem.WriteAllTextAsync(JoinPath(fileName), contents);
+    public async Task<string> WriteAllTextAsync(string fileName, string contents)
+    {
+        string filePath = JoinPath(fileName);
+        await FileSystem.WriteAllTextAsync(filePath, contents);
+        return filePath;
+    }
+
+    public string WriteAllText(string fileName, string contents)
+    {
+        string filePath = GetFullPath(JoinPath(fileName));
+        FileSystem.WriteAllText(filePath, contents);
+        return filePath;
+    }
 
     public StreamWriter CreateText(string fileName)
         => FileSystem.CreateText(JoinPath(fileName));

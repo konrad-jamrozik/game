@@ -35,6 +35,7 @@ public class AIPlayer
             // kja this _game.AdvanceTime(), the while !GameOver and reference to state should come from base abstract/template method.
             _game.AdvanceTime();
         }
+        _game.Save();
         // kja to implement AI Player
         // DONE First level:
         // - Advance time until mission available

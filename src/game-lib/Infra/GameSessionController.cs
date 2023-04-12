@@ -60,16 +60,20 @@ public class GameSessionController
     // kja introduce "SaveFile" abstraction akin to MonthlyJsonFilesStorage
     public void Save()
     {
-        Config.SaveGameDir.CreateDirIfNotExists().WriteAllTextAsync(
-            Config.SaveFileName,
-            GameSession.CurrentGameState.ToJsonIndentedUnsafe());
+        string saveGamePath = Config.SaveGameDir.CreateDirIfNotExists()
+            .WriteAllText(
+                Config.SaveFileName,
+                GameSession.CurrentGameState.ToJsonIndentedUnsafe());
+        Console.Out.WriteLine($"Saved game state to {Config.SaveGameDir.FileSystem.GetFullPath(saveGamePath)}");
     }
 
     public GameState Load()
     {
+        var saveGamePath = Config.SaveGameDir.JoinPath(Config.SaveFileName);
         var loadedGameState =
-            Config.SaveGameDir.FileSystem.ReadAllJsonTo<GameState>(Config.SaveGameDir.JoinPath(Config.SaveFileName));
+            Config.SaveGameDir.FileSystem.ReadAllJsonTo<GameState>(saveGamePath);
         GameSession.CurrentGameState = loadedGameState;
+        Console.Out.WriteLine($"Loaded game state from {Config.SaveGameDir.FileSystem.GetFullPath(saveGamePath)}");
         return loadedGameState;
 
     }

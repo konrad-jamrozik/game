@@ -1,6 +1,11 @@
 namespace UfoGameLib.Model;
 
-public record Timeline(int CurrentTurn)
+public class Timeline
 {
-    public int CurrentTurn { get; set; } = CurrentTurn;
+    public int CurrentTurn;
+
+    public Timeline(int currentTurn)
+    {
+        CurrentTurn = currentTurn;
+    }
 }

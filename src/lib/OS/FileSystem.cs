@@ -28,6 +28,9 @@ public class FileSystem : IFileSystem
     public Task WriteAllTextAsync(string path, string contents) 
         => System.IO.File.WriteAllTextAsync(path, contents);
 
+    public void WriteAllText(string path, string contents) 
+        => System.IO.File.WriteAllText(path, contents);
+
     public Task WriteAllLinesAsync(string path, IEnumerable<string> lines)
         => System.IO.File.WriteAllLinesAsync(path, lines);
 
@@ -44,6 +47,9 @@ public class FileSystem : IFileSystem
     }
 
     public string JoinPath(string? path1, string? path2) => System.IO.Path.Join(path1, path2);
+
+    public string GetFullPath(string path)
+        => System.IO.Path.GetFullPath(path);
 
     public bool FileExists(string path) => System.IO.File.Exists(path);
 

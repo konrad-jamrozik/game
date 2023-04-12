@@ -10,6 +10,7 @@ public interface IFileSystem
     Dir CurrentDir { get; }
     bool DirectoryExists(string path);
     public Task WriteAllTextAsync(string path, string contents);
+    public void WriteAllText(string path, string contents);
     public Task WriteAllLinesAsync(string path, IEnumerable<string> lines);
     public StreamWriter CreateText(string path);
     public string[] ReadAllLines(string path);
@@ -23,4 +24,5 @@ public interface IFileSystem
     byte[] ReadAllBytes(string path);
     FileTree FileTree(string path);
     Dir? Parent(string path);
+    string GetFullPath(string path);
 }

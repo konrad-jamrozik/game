@@ -25,7 +25,7 @@ public class GameSession
         PlayerActions actions)
     {
         Debug.Assert(!state.IsGameOver);
-        state.UpdateCount = state.UpdateCount++;
+        state.UpdateCount += 1;
         actions.Apply(state);
         return new GameStateUpdateLog();
     }

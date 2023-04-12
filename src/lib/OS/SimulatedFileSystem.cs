@@ -49,6 +49,9 @@ public class SimulatedFileSystem : IFileSystem
         return Task.CompletedTask;
     }
 
+    public void WriteAllText(string path, string contents)
+        => WriteAllTextAsync(path, contents).Wait();
+
     public Task WriteAllLinesAsync(string path, IEnumerable<string> lines)
     {
         throw new NotImplementedException();
@@ -98,4 +101,9 @@ public class SimulatedFileSystem : IFileSystem
     public Dir? Parent(string path) => FileSystem.Parent(this, path);
 
     public Dir NextSimulatedDir() => new(this, CurrentDir.JoinPath($"simulatedDir{_dirIndex++}"));
+
+    public string GetFullPath(string path)
+    {
+        throw new NotImplementedException();
+    }
 }

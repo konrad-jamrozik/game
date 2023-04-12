@@ -1,5 +1,3 @@
-using Lib.Json;
-using Lib.OS;
 using UfoGameLib.Model;
 
 namespace UfoGameLib.Infra;
@@ -23,8 +21,8 @@ public class GameState
     public static GameState NewInitialGameState()
         => new GameState(
             updateCount: 0,
-            new Timeline(CurrentTurn: 1),
-            new Assets(CurrentMoney: 100, new Agents(), MaxTransportCapacity: 4, CurrentTransportCapacity: 4),
+            new Timeline(currentTurn: 1),
+            new Assets(currentMoney: 100, new Agents(), maxTransportCapacity: 4, currentTransportCapacity: 4),
             new MissionSites(),
             new Missions());
 
@@ -34,9 +32,4 @@ public class GameState
     public bool IsGameOver => Assets.CurrentMoney < 0 || Timeline.CurrentTurn > 30;
     public int NextAgentId => Assets.Agents.Count;
     public int NextMissionSiteId => MissionSites.Count;
-
-    public void Save(Dir dir, string saveFileName)
-    {
-        dir.CreateDirIfNotExists().WriteAllTextAsync(saveFileName, this.ToJsonIndentedUnsafe());
-    }
 }

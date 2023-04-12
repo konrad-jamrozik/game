@@ -1,17 +1,17 @@
 namespace UfoGameLib.Model;
 
-public record Assets(int CurrentMoney, Agents Agents, int MaxTransportCapacity, int CurrentTransportCapacity)
+public class Assets
 {
-    public int CurrentMoney { get; set; } = CurrentMoney;
-    public Agents Agents { get; set; } = Agents;
-    public int MaxTransportCapacity { get; set; } = MaxTransportCapacity;
-    public int CurrentTransportCapacity { get; set; } = CurrentTransportCapacity;
+    public int CurrentMoney;
+    public Agents Agents;
+    public int MaxTransportCapacity;
+    public int CurrentTransportCapacity;
 
-    protected Assets(Assets original)
+    public Assets(int currentMoney, Agents agents, int maxTransportCapacity, int currentTransportCapacity)
     {
-        CurrentMoney = original.CurrentMoney;
-        Agents = (Agents)original.Agents.Clone();
-        MaxTransportCapacity = original.MaxTransportCapacity;
-        CurrentTransportCapacity = original.CurrentTransportCapacity;
+        CurrentMoney = currentMoney;
+        Agents = agents;
+        MaxTransportCapacity = maxTransportCapacity;
+        CurrentTransportCapacity = currentTransportCapacity;
     }
 }
