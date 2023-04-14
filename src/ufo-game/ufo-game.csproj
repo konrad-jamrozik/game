@@ -7,7 +7,6 @@
     <WarningsAsErrors>nullable</WarningsAsErrors>
     <WasmEnableExceptionHandling>true</WasmEnableExceptionHandling>
     <RootNamespace>UfoGame</RootNamespace>
-    <LangVersion>preview</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
