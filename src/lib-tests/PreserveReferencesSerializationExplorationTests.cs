@@ -70,7 +70,7 @@ public class PreserveReferencesSerializationExplorationTests
     {
         string json = JsonSerializer.Serialize(root, _options);
         File.WriteAllText(SerializedJsonFilePath, json);
-        Console.Out.WriteLine($"Saved to: {System.IO.Path.GetFullPath(SerializedJsonFilePath)}");
+        Console.Out.WriteLine($"Saved to: {Path.GetFullPath(SerializedJsonFilePath)}");
         var bytes = File.ReadAllBytes(SerializedJsonFilePath);
         return bytes;
     }
@@ -118,8 +118,8 @@ public class PreserveReferencesSerializationExplorationTests
 
     class Root2 : IRoot
     {
-        public List<Branch2>? Branches { get; init; }
-        public List<Leaf2>? Leaves { get; init; }
+        public required List<Branch2>? Branches { get; init; }
+        public required List<Leaf2>? Leaves { get; init; }
 
         public Root2()
         {}
@@ -133,8 +133,8 @@ public class PreserveReferencesSerializationExplorationTests
 
     class Branch2
     {
-        public int Id;
-        public Leaf2? NestedLeaf { get; init; }
+        public required int Id;
+        public required Leaf2? NestedLeaf { get; init; }
 
         public Branch2()
         {
@@ -149,8 +149,8 @@ public class PreserveReferencesSerializationExplorationTests
 
     class Leaf2
     {
-        public int Id;
-        public string? Value { get; init; }
+        public required int Id;
+        public required string? Value { get; init; }
 
         public Leaf2()
         {

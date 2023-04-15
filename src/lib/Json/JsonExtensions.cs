@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Text.Encodings.Web;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using Lib.Primitives;
 using Newtonsoft.Json.Linq;
 
@@ -40,7 +41,7 @@ public static class JsonExtensions
 
     private static readonly JsonSerializerOptions SerializerOptionsUnsafeIgnoreNulls = new(SerializerOptionsUnsafe)
     {
-        IgnoreNullValues = true
+        DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
     };
 
     public static readonly JsonSerializerOptions SerializerOptionsIndentedUnsafe =
