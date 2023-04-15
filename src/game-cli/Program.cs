@@ -6,7 +6,7 @@ namespace UfoGameCli;
 
 internal static class Program
 {
-    static void Main(string[] args)
+    private static void Main(string[] args)
     {
         var game = new GameSessionController(new GameSession());
 
@@ -18,7 +18,7 @@ internal static class Program
             .WithParsed<FireAgentsOptions>(options => InvokeFireAgents(game, options.AgentNames));
     }
 
-    static void InvokeAdvanceTime(GameSessionController game)
+    private static void InvokeAdvanceTime(GameSessionController game)
     {
         // kja what 'game' param should this be called?
         // Note there is also potential for Game and/or GameController. Like, one needs to be able to
@@ -30,20 +30,20 @@ internal static class Program
         Console.WriteLine("Time advanced.");
     }
 
-    static void InvokeHireAgents(GameSessionController game, int count)
+    private static void InvokeHireAgents(GameSessionController game, int count)
     {
         game.HireAgents(count);
         Console.WriteLine($"Hired {count} agents.");
     }
 
-    static void InvokeLaunchMission(GameSessionController game, int siteId, int count, string region)
+    private static void InvokeLaunchMission(GameSessionController game, int siteId, int count, string region)
     {
         MissionSite site = game.GameStatePlayerView.MissionSites.Single(site => site.Id == siteId);
         game.LaunchMission(site, count);
         Console.WriteLine($"Launched mission with {count} agents in region {region}.");
     }
 
-    static void InvokeFireAgents(GameSessionController game, IEnumerable<string> agentNames)
+    private static void InvokeFireAgents(GameSessionController game, IEnumerable<string> agentNames)
     {
         game.FireAgents(agentNames);
         Console.WriteLine($"Fired agents: {string.Join(", ", agentNames)}");
@@ -52,19 +52,19 @@ internal static class Program
 
 // ReSharper disable ClassNeverInstantiated.Global
 [Verb("advance-time", HelpText = "Advance the game time.")]
-class AdvanceTimeOptions
+internal class AdvanceTimeOptions
 {
 }
 
 [Verb("hire-agents", HelpText = "Hire a specific number of agents.")]
-class HireAgentsOptions
+internal class HireAgentsOptions
 {
     [Option('c', "count", Required = true, HelpText = "Number of agents to hire.")]
     public int AgentCount { get; set; }
 }
 
 [Verb("launch-mission", HelpText = "Launch a mission with a specific number of agents.")]
-class LaunchMissionOptions
+internal class LaunchMissionOptions
 {
     [Option('i', "siteId", Required = true, HelpText = "ID of the mission site.")]
     public int MissionSiteId { get; set; }
@@ -77,7 +77,7 @@ class LaunchMissionOptions
 }
 
 [Verb("fire-agents", HelpText = "Fire a list of agents by their names.")]
-class FireAgentsOptions
+internal class FireAgentsOptions
 {
     [Option('n', "names", Required = true, Separator = ',', HelpText = "Comma-separated list of agent names to fire.")]
     public IEnumerable<string> AgentNames { get; set; } = new List<string>();

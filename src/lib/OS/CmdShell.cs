@@ -4,7 +4,7 @@ using Lib.Primitives;
 
 namespace Lib.OS;
 
-class CmdShell : IShell
+internal class CmdShell : IShell
 {
     private readonly IOperatingSystem _os;
 

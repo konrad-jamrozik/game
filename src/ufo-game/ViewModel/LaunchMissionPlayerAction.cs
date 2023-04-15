@@ -4,7 +4,7 @@ using UfoGame.Model.Data;
 
 namespace UfoGame.ViewModel;
 
-class LaunchMissionPlayerAction : IPlayerActionOnRangeInput
+internal class LaunchMissionPlayerAction : IPlayerActionOnRangeInput
 {
     private readonly Agents _agents;
     private readonly MissionDeployment _missionDeployment;

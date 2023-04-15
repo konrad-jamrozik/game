@@ -2,7 +2,7 @@
 
 namespace UfoGame.ViewModel;
 
-class HireAgentsPlayerAction : IPlayerActionOnRangeInput
+internal class HireAgentsPlayerAction : IPlayerActionOnRangeInput
 {
     private readonly Procurement _procurement;
     private readonly ViewStateRefresh _viewStateRefresh;

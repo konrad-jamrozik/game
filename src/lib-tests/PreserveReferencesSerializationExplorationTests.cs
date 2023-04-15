@@ -75,12 +75,12 @@ public class PreserveReferencesSerializationExplorationTests
         return bytes;
     }
 
-    interface IRoot
+    private interface IRoot
     {
 
     }
 
-    class Root : IRoot
+    private class Root : IRoot
     {
         public List<Branch> Branches;
         public List<Leaf> Leaves;
@@ -92,7 +92,7 @@ public class PreserveReferencesSerializationExplorationTests
         }
     }
 
-    class Branch
+    private class Branch
     {
         public int Id;
         public Leaf NestedLeaf;
@@ -104,7 +104,7 @@ public class PreserveReferencesSerializationExplorationTests
         }
     }
 
-    class Leaf
+    private class Leaf
     {
         public int Id;
         public string Value;
@@ -116,7 +116,7 @@ public class PreserveReferencesSerializationExplorationTests
         }
     }
 
-    class Root2 : IRoot
+    private class Root2 : IRoot
     {
         public required List<Branch2>? Branches { get; init; }
         public required List<Leaf2>? Leaves { get; init; }
@@ -131,7 +131,7 @@ public class PreserveReferencesSerializationExplorationTests
         }
     }
 
-    class Branch2
+    private class Branch2
     {
         public required int Id;
         public required Leaf2? NestedLeaf { get; init; }
@@ -147,7 +147,7 @@ public class PreserveReferencesSerializationExplorationTests
         }
     }
 
-    class Leaf2
+    private class Leaf2
     {
         public required int Id;
         public required string? Value { get; init; }
