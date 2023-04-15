@@ -34,6 +34,9 @@ public class PreserveReferencesSerializationExplorationTests
     [Test]
     public void DeserializesPreservedReferencesUsingInitProps()
     {
+        // Note that in this test we serialize Root/Branch/Leaf
+        // and deserialize Root2/Branch2/Leaf2
+        // Serializing Root2/Branch2/Leaf2 instead of Root/Branch/Leaf also works.
         var leaves = new List<Leaf> { new Leaf(0, "abc"), new Leaf(1, "xyz") };
         var branches = new List<Branch> { new Branch(0, leaves[0]), new Branch(1, leaves[1]) };
         var root = new Root(branches, leaves);
