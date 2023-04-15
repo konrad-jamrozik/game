@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using NUnit.Framework;
@@ -15,11 +14,8 @@ public class PreserveReferencesSerializationExplorationTests
 
     private readonly JsonSerializerOptions _options = new JsonSerializerOptions
     {
-        MaxDepth = 64,
-        ReadCommentHandling = JsonCommentHandling.Skip,
         Converters = { },
         IncludeFields = true,
-        Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
         WriteIndented = true,
         ReferenceHandler = ReferenceHandler.Preserve
     };
