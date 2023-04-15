@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using NUnit.Framework;
@@ -92,20 +93,29 @@ public class PreserveReferencesSerializationExplorationTests
 
         public RootJsonConverter(JsonSerializerOptions serializationOptions)
         {
-            this._serializationOptions = serializationOptions;
+            _serializationOptions = serializationOptions;
         }
 
         // https://learn.microsoft.com/en-us/dotnet/standard/serialization/system-text-json/use-dom-utf8jsonreader-utf8jsonwriter?pivots=dotnet-7-0#use-utf8jsonreader
+        // #35019 Code snippet in 'Consume decoded JSON strings' in 'How to use a JSON document, Utf8JsonReader, and Utf8JsonWriter in System.Text.Json' does not compile 
+        // https://github.com/dotnet/docs/issues/35019
         public override Root? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
-            // Something like this, but for all token from reader, not just one
-            // var buffer = new Span<char>();
-            // reader.CopyString(buffer);
-            // return JsonSerializer.Deserialize<Root>(buffer, _serializationOptions);
+            Console.Out.WriteLine($"typeToConvert: {typeToConvert.FullName}");
+            ReadToWriteDiagToConsole(reader);
+            //   var data = ExperimentalRead(reader);
+            //   Console.Out.WriteLine("Read: " + data);
+            //   return JsonSerializer.Deserialize<Root>(data, _serializationOptions);
+            return null;
+        }
 
+        private static void ReadToWriteDiagToConsole(Utf8JsonReader reader)
+        {
             while (reader.Read())
             {
-                
+                Console.Out.WriteLine("");
+                Console.Out.WriteLine($"TokenType: {reader.TokenType}");
+
                 switch (reader.TokenType)
                 {
                     case JsonTokenType.PropertyName:
@@ -116,7 +126,7 @@ public class PreserveReferencesSerializationExplorationTests
                         Console.Write(text);
                         break;
                     }
-            
+
                     case JsonTokenType.Number:
                     {
                         int intValue = reader.GetInt32();
@@ -124,21 +134,81 @@ public class PreserveReferencesSerializationExplorationTests
                         Console.Write(intValue);
                         break;
                     }
-            
-                    default: 
-                        Console.Out.WriteLine($" TokenType: {reader.TokenType}");
-                        break;
                 }
             }
-            
-            Console.Out.WriteLine($"typeToConvert: {typeToConvert.FullName}");
-            return null;
-            //throw new NotImplementedException("DONE READING");
         }
 
         public override void Write(Utf8JsonWriter writer, Root value, JsonSerializerOptions options)
         {
             writer.WriteRawValue(JsonSerializer.Serialize(value, _serializationOptions));
+        }
+
+        // Use it like this in the caller:
+        //   var data = ExperimentalRead(reader);
+        //   Console.Out.WriteLine("Read: " + data);
+        //   return JsonSerializer.Deserialize<Root>(data, _serializationOptions);
+        private string ExperimentalRead(Utf8JsonReader reader)
+        {
+            StringBuilder sb = new StringBuilder();
+
+            JsonTokenType? prevTokenType = null;
+
+            while (reader.Read())
+            {
+                JsonTokenType tokenType = reader.TokenType;
+
+                if (prevTokenType == JsonTokenType.PropertyName)
+                    sb.Append(": ");
+
+                switch (tokenType)
+                {
+                    case JsonTokenType.StartObject:
+
+                        sb.Append('{');
+                        break;
+                    case JsonTokenType.EndObject:
+                        sb.Append('}');
+                        break;
+                    case JsonTokenType.StartArray:
+                        sb.Append('[');
+                        break;
+                    case JsonTokenType.EndArray:
+                        sb.Append(']');
+                        break;
+                    case JsonTokenType.PropertyName:
+                        sb.Append('"');
+                        sb.Append(reader.GetString());
+                        sb.Append('"');
+                        break;
+                    case JsonTokenType.String:
+                        sb.Append('"');
+                        sb.Append(reader.GetString());
+                        sb.Append('"');
+                        break;
+                    case JsonTokenType.Number:
+                        sb.Append(reader.GetInt16());
+                        break;
+                    case JsonTokenType.True:
+                        sb.Append("\"true\"");
+                        break;
+                    case JsonTokenType.False:
+                        sb.Append("\"false\"");
+                        break;
+                    case JsonTokenType.Null:
+                        sb.Append(reader.ValueSpan.ToArray());
+                        break;
+                }
+
+                if (tokenType != JsonTokenType.None)
+                {
+                    sb.Append(' ');
+                }
+
+                prevTokenType = tokenType;
+            }
+
+            string jsonString = sb.ToString();
+            return jsonString;
         }
     }
 
