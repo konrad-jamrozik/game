@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using NUnit.Framework;
@@ -29,7 +28,7 @@ public class PreserveReferencesSerializationExplorationTests
     {
         var leaves = new List<Leaf> { new Leaf(0, "abc"), new Leaf(1, "xyz") };
         var branches = new List<Branch> { new Branch(0, leaves[0]), new Branch(1, leaves[1]) };
-        var root = new Root(branches, leaves);
+        var root = new Root(7, branches, leaves);
 
         byte[] bytes = SerializeAndReadBytes(root, OptionsPreservingReferences);
 
@@ -44,7 +43,7 @@ public class PreserveReferencesSerializationExplorationTests
         // Serializing Root2/Branch2/Leaf2 instead of Root/Branch/Leaf also works.
         var leaves = new List<Leaf> { new Leaf(0, "abc"), new Leaf(1, "xyz") };
         var branches = new List<Branch> { new Branch(0, leaves[0]), new Branch(1, leaves[1]) };
-        var root = new Root(branches, leaves);
+        var root = new Root(7, branches, leaves);
 
         byte[] bytes = SerializeAndReadBytes(root, OptionsPreservingReferences);
 
@@ -52,13 +51,13 @@ public class PreserveReferencesSerializationExplorationTests
         Assert.That(deserializedRoot.Branches?[1].NestedLeaf?.Id, Is.EqualTo(1));
     }
 
-    // kja curr TDD test WorkInProgressDeserializesPreservedReferencesUsingCtorAndCustomConverter
+    // kja curr TDD test DeserializesPreservedReferencesUsingCtorAndCustomConverter
     [Test]
-    public void WorkInProgressDeserializesPreservedReferencesUsingCtorAndCustomConverter()
+    public void DeserializesPreservedReferencesUsingCtorAndCustomConverter()
     {
         var leaves = new List<Leaf> { new Leaf(0, "abc"), new Leaf(1, "xyz") };
         var branches = new List<Branch> { new Branch(0, leaves[0]), new Branch(1, leaves[1]) };
-        var root = new Root(branches, leaves);
+        var root = new Root(7, branches, leaves);
 
         var options = new JsonSerializerOptions
         {
@@ -67,15 +66,8 @@ public class PreserveReferencesSerializationExplorationTests
 
         byte[] bytes = SerializeAndReadBytes(root, options);
 
-        try
-        {
-            Root deserializedRoot = JsonSerializer.Deserialize<Root>(bytes, options)!;
-            Assert.That(deserializedRoot.Branches[1].NestedLeaf.Id, Is.EqualTo(1));
-        }
-        catch (Exception _)
-        {
-            Console.WriteLine("Currently fails for reasons explained in https://github.com/dotnet/docs/issues/35020");
-        }
+        Root deserializedRoot = JsonSerializer.Deserialize<Root>(bytes, options)!;
+        Assert.That(deserializedRoot.Branches[1].NestedLeaf.Id, Is.EqualTo(1));
     }
 
     private byte[] SerializeAndReadBytes<T>(T root, JsonSerializerOptions options) where T : IRoot
@@ -91,134 +83,21 @@ public class PreserveReferencesSerializationExplorationTests
     {
         private readonly JsonSerializerOptions _serializationOptions;
 
-        private static readonly JsonConverter<Root> RootDefaultConverter = 
-            (JsonConverter<Root>)JsonSerializerOptions.Default.GetConverter(typeof(Root));
-
-        private static readonly JsonConverter<Branch> BranchDefaultConverter = 
-            (JsonConverter<Branch>)JsonSerializerOptions.Default.GetConverter(typeof(Branch));
-
         public RootJsonConverter(JsonSerializerOptions serializationOptions)
         {
             _serializationOptions = serializationOptions;
         }
 
-        // https://learn.microsoft.com/en-us/dotnet/standard/serialization/system-text-json/use-dom-utf8jsonreader-utf8jsonwriter?pivots=dotnet-7-0#use-utf8jsonreader
-        // #35019 Code snippet in 'Consume decoded JSON strings' in 'How to use a JSON document, Utf8JsonReader, and Utf8JsonWriter in System.Text.Json' does not compile 
-        // https://github.com/dotnet/docs/issues/35019
         public override Root? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
-            // Console.Out.WriteLine($"typeToConvert: {typeToConvert.FullName}");
-            // ReadToWriteDiagToConsole(reader);
-
-            // var data = ExperimentalRead(reader);
-            // Console.Out.WriteLine("Read: " + data);
-            // return JsonSerializer.Deserialize<Root>(data, _serializationOptions);
-
-            // Currently incomplete implementation, for reasons explained in:
-            // https://github.com/dotnet/docs/issues/35020
-            return null;
+            var root = JsonSerializer.Deserialize<Root>(ref reader, _serializationOptions);
+            return root;
         }
 
         public override void Write(Utf8JsonWriter writer, Root value, JsonSerializerOptions options)
         {
+            // kja curr work: need to serialize references as appropriate to dedup
             writer.WriteRawValue(JsonSerializer.Serialize(value, _serializationOptions));
-        }
-
-        private static void ReadToWriteDiagToConsole(Utf8JsonReader reader)
-        {
-            while (reader.Read())
-            {
-                Console.Out.WriteLine("");
-                Console.Out.WriteLine($"TokenType: {reader.TokenType}");
-
-                switch (reader.TokenType)
-                {
-                    case JsonTokenType.PropertyName:
-                    case JsonTokenType.String:
-                    {
-                        string? text = reader.GetString();
-                        Console.Write(" ");
-                        Console.Write(text);
-                        break;
-                    }
-
-                    case JsonTokenType.Number:
-                    {
-                        int intValue = reader.GetInt32();
-                        Console.Write(" ");
-                        Console.Write(intValue);
-                        break;
-                    }
-                }
-            }
-        }
-
-        // Use it like this in the caller:
-        //   var data = ExperimentalRead(reader);
-        //   Console.Out.WriteLine("Read: " + data);
-        //   return JsonSerializer.Deserialize<Root>(data, _serializationOptions);
-        private string ExperimentalRead(Utf8JsonReader reader)
-        {
-            var sb = new StringBuilder();
-
-            JsonTokenType? prevTokenType = null;
-
-            while (reader.Read())
-            {
-                JsonTokenType tokenType = reader.TokenType;
-
-                if (prevTokenType == JsonTokenType.PropertyName)
-                    sb.Append(": ");
-
-                switch (tokenType)
-                {
-                    case JsonTokenType.StartObject:
-
-                        sb.Append('{');
-                        break;
-                    case JsonTokenType.EndObject:
-                        sb.Append('}');
-                        break;
-                    case JsonTokenType.StartArray:
-                        sb.Append('[');
-                        break;
-                    case JsonTokenType.EndArray:
-                        sb.Append(']');
-                        break;
-                    case JsonTokenType.PropertyName:
-                        sb.Append('"');
-                        sb.Append(reader.GetString());
-                        sb.Append('"');
-                        break;
-                    case JsonTokenType.String:
-                        sb.Append('"');
-                        sb.Append(reader.GetString());
-                        sb.Append('"');
-                        break;
-                    case JsonTokenType.Number:
-                        sb.Append(reader.GetInt16());
-                        break;
-                    case JsonTokenType.True:
-                        sb.Append("\"true\"");
-                        break;
-                    case JsonTokenType.False:
-                        sb.Append("\"false\"");
-                        break;
-                    case JsonTokenType.Null:
-                        sb.Append(reader.ValueSpan.ToArray());
-                        break;
-                }
-
-                if (tokenType != JsonTokenType.None)
-                {
-                    sb.Append(' ');
-                }
-
-                prevTokenType = tokenType;
-            }
-
-            string jsonString = sb.ToString();
-            return jsonString;
         }
     }
 
@@ -229,11 +108,13 @@ public class PreserveReferencesSerializationExplorationTests
 
     private class Root : IRoot
     {
+        public int Id;
         public List<Branch> Branches;
         public List<Leaf> Leaves;
 
-        public Root(List<Branch> branches, List<Leaf> leaves)
+        public Root(int id, List<Branch> branches, List<Leaf> leaves)
         {
+            Id = id;
             Branches = branches;
             Leaves = leaves;
         }
@@ -265,14 +146,16 @@ public class PreserveReferencesSerializationExplorationTests
 
     private class Root2 : IRoot
     {
+        public int Id;
         public required List<Branch2>? Branches { get; init; }
         public required List<Leaf2>? Leaves { get; init; }
 
         public Root2()
         {}
 
-        public Root2(List<Branch2>? branches, List<Leaf2>? leaves)
+        public Root2(int id, List<Branch2>? branches, List<Leaf2>? leaves)
         {
+            Id = id;
             Branches = branches;
             Leaves = leaves;
         }
