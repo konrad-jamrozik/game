@@ -303,9 +303,9 @@ resharper_enforce_while_statement_braces_highlighting = none
 resharper_redundant_base_qualifier_highlighting = warning
 resharper_remove_redundant_braces_highlighting = none
 resharper_simplify_linq_expression_use_all_highlighting = hint
-resharper_suggest_var_or_type_built_in_types_highlighting = hint
-resharper_suggest_var_or_type_elsewhere_highlighting = hint
-resharper_suggest_var_or_type_simple_types_highlighting = hint
+resharper_suggest_var_or_type_built_in_types_highlighting = none
+resharper_suggest_var_or_type_elsewhere_highlighting = none
+resharper_suggest_var_or_type_simple_types_highlighting = none
 
 # IDE0090: Use 'new(...)'
 dotnet_diagnostic.IDE0090.severity = silent
