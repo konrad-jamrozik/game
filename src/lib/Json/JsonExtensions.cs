@@ -13,6 +13,7 @@ namespace Lib.Json;
 // json string -> type T
 // + the choices from https://learn.microsoft.com/en-us/dotnet/standard/serialization/system-text-json/use-dom-utf8jsonreader-utf8jsonwriter?pivots=dotnet-7-0
 // + file system e.g. Lib.OS.FileSystem.ReadAllJson
+// See also: https://github.com/dotnet/docs/issues/24251#issue-892559426
 public static class JsonExtensions
 {
     private const int MaxDepth = 64;
