@@ -1,9 +1,12 @@
+using System;
+using System.Collections.Generic;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using NUnit.Framework;
 
-namespace UfoGameLib.Tests;
+namespace Lib.Tests;
 
-public class SerializationTests
+public class SerializationExplorationTests
 {
     [SetUp]
     public void Setup()

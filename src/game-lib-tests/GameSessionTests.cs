@@ -118,7 +118,7 @@ public class GameSessionTests
     }
 
     [Test]
-    public void RoundTrippingGameStateSaveLoadDoesntChangeIt()
+    public void RoundTrippingGameStateSaveLoadDoesNotChangeIt()
     {
         var session = new GameSession();
         var game = new GameSessionController(session);
