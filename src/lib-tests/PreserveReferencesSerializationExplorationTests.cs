@@ -95,7 +95,7 @@ public class PreserveReferencesSerializationExplorationTests
     private class Branch
     {
         public int Id;
-        public Leaf NestedLeaf;
+        public readonly Leaf NestedLeaf;
 
         public Branch(int id, Leaf nestedLeaf)
         {
@@ -106,7 +106,7 @@ public class PreserveReferencesSerializationExplorationTests
 
     private class Leaf
     {
-        public int Id;
+        public readonly int Id;
         public string Value;
 
         public Leaf(int id, string value)
