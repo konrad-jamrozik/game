@@ -14,7 +14,6 @@ public class PreserveReferencesSerializationExplorationTests
 
     private readonly JsonSerializerOptions _options = new JsonSerializerOptions
     {
-        Converters = { },
         IncludeFields = true,
         WriteIndented = true,
         ReferenceHandler = ReferenceHandler.Preserve
@@ -35,13 +34,32 @@ public class PreserveReferencesSerializationExplorationTests
     [Test]
     public void DeserializesPreservedReferencesUsingInitProps()
     {
-        var leaves2 = new List<Leaf2> { new Leaf2(0, "abc"), new Leaf2(1, "xyz") };
-        var branches2 = new List<Branch2> { new Branch2(0, leaves2[0]), new Branch2(1, leaves2[1]) };
-        var root2 = new Root2(branches2, leaves2);
+        var leaves = new List<Leaf> { new Leaf(0, "abc"), new Leaf(1, "xyz") };
+        var branches = new List<Branch> { new Branch(0, leaves[0]), new Branch(1, leaves[1]) };
+        var root = new Root(branches, leaves);
 
-        byte[] bytes = SerializeAndReadBytes(root2);
+        byte[] bytes = SerializeAndReadBytes(root);
 
-        var deserializedRoot = JsonSerializer.Deserialize<Root2>(bytes, _options)!;
+        Root2 deserializedRoot = JsonSerializer.Deserialize<Root2>(bytes, _options)!;
+        Assert.That(deserializedRoot.Branches?[1].NestedLeaf?.Id, Is.EqualTo(1));
+    }
+
+    // kja curr TDD test DeserializesPreservedReferencesUsingCtorAndCustomConverter
+    [Test]
+    public void DeserializesPreservedReferencesUsingCtorAndCustomConverter()
+    {
+        var leaves = new List<Leaf> { new Leaf(0, "abc"), new Leaf(1, "xyz") };
+        var branches = new List<Branch> { new Branch(0, leaves[0]), new Branch(1, leaves[1]) };
+        var root = new Root(branches, leaves);
+
+        var options = new JsonSerializerOptions(_options)
+        {
+            Converters = { }
+        };
+
+        byte[] bytes = SerializeAndReadBytes(root);
+
+        Root deserializedRoot = JsonSerializer.Deserialize<Root>(bytes, options)!;
         Assert.That(deserializedRoot.Branches?[1].NestedLeaf?.Id, Is.EqualTo(1));
     }
 
