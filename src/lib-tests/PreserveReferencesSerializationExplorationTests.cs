@@ -55,24 +55,76 @@ public class PreserveReferencesSerializationExplorationTests
         var branches = new List<Branch> { new Branch(0, leaves[0]), new Branch(1, leaves[1]) };
         var root = new Root(branches, leaves);
 
-        var options = new JsonSerializerOptions(_options)
+        // kja yet unused
+        var options = new JsonSerializerOptions
         {
-            Converters = { }
+            ReferenceHandler = ReferenceHandler.Preserve,
+            Converters = { new RootJsonConverter() }
         };
 
-        byte[] bytes = SerializeAndReadBytes(root);
+        byte[] bytes = SerializeAndReadBytes(root, _options);
 
-        Root deserializedRoot = JsonSerializer.Deserialize<Root>(bytes, options)!;
-        Assert.That(deserializedRoot.Branches?[1].NestedLeaf?.Id, Is.EqualTo(1));
+        Root deserializedRoot = JsonSerializer.Deserialize<Root>(bytes, _options)!;
+        Assert.That(deserializedRoot.Branches[1].NestedLeaf.Id, Is.EqualTo(1));
     }
 
-    private byte[] SerializeAndReadBytes<T>(T root) where T : IRoot
+    private byte[] SerializeAndReadBytes<T>(T root, JsonSerializerOptions? options = null) where T : IRoot
     {
-        string json = JsonSerializer.Serialize(root, _options);
+        string json = JsonSerializer.Serialize(root, options ?? _options);
         File.WriteAllText(SerializedJsonFilePath, json);
         Console.Out.WriteLine($"Saved to: {Path.GetFullPath(SerializedJsonFilePath)}");
         var bytes = File.ReadAllBytes(SerializedJsonFilePath);
         return bytes;
+    }
+
+    private class RootJsonConverter : JsonConverter<Root>
+    {
+        private static readonly JsonConverter<Root> RootDefaultConverter = 
+            (JsonConverter<Root>)JsonSerializerOptions.Default.GetConverter(typeof(Root));
+
+        private static readonly JsonConverter<Branch> BranchDefaultConverter = 
+            (JsonConverter<Branch>)JsonSerializerOptions.Default.GetConverter(typeof(Branch));
+
+        // https://learn.microsoft.com/en-us/dotnet/standard/serialization/system-text-json/use-dom-utf8jsonreader-utf8jsonwriter?pivots=dotnet-7-0#use-utf8jsonreader
+        public override Root? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+        {
+            //return RootDefaultConverter.Read(ref reader, typeToConvert, options);
+             while (reader.Read())
+             {
+                 
+                 switch (reader.TokenType)
+                 {
+                     case JsonTokenType.PropertyName:
+                     case JsonTokenType.String:
+                     {
+                         string? text = reader.GetString();
+                         Console.Write(" ");
+                         Console.Write(text);
+                         break;
+                     }
+            
+                     case JsonTokenType.Number:
+                     {
+                         int intValue = reader.GetInt32();
+                         Console.Write(" ");
+                         Console.Write(intValue);
+                         break;
+                     }
+            
+                     default: 
+                         Console.Out.WriteLine($" TokenType: {reader.TokenType}");
+                         break;
+                 }
+             }
+            
+             Console.Out.WriteLine($"typeToConvert: {typeToConvert.FullName}");
+            throw new NotImplementedException("DONE READING");
+        }
+
+        public override void Write(Utf8JsonWriter writer, Root value, JsonSerializerOptions options)
+        {
+            RootDefaultConverter.Write(writer, value, options);
+        }
     }
 
     private interface IRoot
