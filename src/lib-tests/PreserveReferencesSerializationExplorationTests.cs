@@ -1,0 +1,148 @@
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Text.Encodings.Web;
+using System.Text.Json;
+using System.Text.Json.Serialization;
+using NUnit.Framework;
+
+namespace Lib.Tests;
+
+// See also my personal OneNote, relevant subsection of "System.Text.Json"
+public class PreserveReferencesSerializationExplorationTests
+{
+    private const string SerializedJsonFilePath = "./temp_test_data.json";
+
+    private readonly JsonSerializerOptions _options = new JsonSerializerOptions
+    {
+        MaxDepth = 64,
+        ReadCommentHandling = JsonCommentHandling.Skip,
+        Converters = { },
+        IncludeFields = true,
+        Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
+        WriteIndented = true,
+        ReferenceHandler = ReferenceHandler.Preserve
+    };
+
+    [Test]
+    public void ThrowsExceptionOnDeserializingPreservedReferencesUsingCtor()
+    {
+        var leaves = new List<Leaf> { new Leaf(0, "abc"), new Leaf(1, "xyz") };
+        var branches = new List<Branch> { new Branch(0, leaves[0]), new Branch(1, leaves[1]) };
+        var root = new Root(branches, leaves);
+
+        byte[] bytes = SerializeAndReadBytes(root);
+
+        Assert.Throws<NotSupportedException>(() => JsonSerializer.Deserialize<Root>(bytes, _options));
+    }
+
+    [Test]
+    public void DeserializesPreservedReferencesUsingInitProps()
+    {
+        var leaves2 = new List<Leaf2> { new Leaf2(0, "abc"), new Leaf2(1, "xyz") };
+        var branches2 = new List<Branch2> { new Branch2(0, leaves2[0]), new Branch2(1, leaves2[1]) };
+        var root2 = new Root2(branches2, leaves2);
+
+        byte[] bytes = SerializeAndReadBytes(root2);
+
+        var deserializedRoot = JsonSerializer.Deserialize<Root2>(bytes, _options)!;
+        Assert.That(deserializedRoot.Branches?[1].NestedLeaf?.Id, Is.EqualTo(1));
+    }
+
+    private byte[] SerializeAndReadBytes<T>(T root) where T : IRoot
+    {
+        string json = JsonSerializer.Serialize(root, _options);
+        File.WriteAllText(SerializedJsonFilePath, json);
+        Console.Out.WriteLine($"Saved to: {System.IO.Path.GetFullPath(SerializedJsonFilePath)}");
+        var bytes = File.ReadAllBytes(SerializedJsonFilePath);
+        return bytes;
+    }
+
+    interface IRoot
+    {
+
+    }
+
+    class Root : IRoot
+    {
+        public List<Branch> Branches;
+        public List<Leaf> Leaves;
+
+        public Root(List<Branch> branches, List<Leaf> leaves)
+        {
+            Branches = branches;
+            Leaves = leaves;
+        }
+    }
+
+    class Branch
+    {
+        public int Id;
+        public Leaf NestedLeaf;
+
+        public Branch(int id, Leaf nestedLeaf)
+        {
+            Id = id;
+            NestedLeaf = nestedLeaf;
+        }
+    }
+
+    class Leaf
+    {
+        public int Id;
+        public string Value;
+
+        public Leaf(int id, string value)
+        {
+            Id = id;
+            Value = value;
+        }
+    }
+
+    class Root2 : IRoot
+    {
+        public List<Branch2>? Branches { get; init; }
+        public List<Leaf2>? Leaves { get; init; }
+
+        public Root2()
+        {}
+
+        public Root2(List<Branch2>? branches, List<Leaf2>? leaves)
+        {
+            Branches = branches;
+            Leaves = leaves;
+        }
+    }
+
+    class Branch2
+    {
+        public int Id;
+        public Leaf2? NestedLeaf { get; init; }
+
+        public Branch2()
+        {
+        }
+
+        public Branch2(int id, Leaf2? nestedLeaf)
+        {
+            Id = id;
+            NestedLeaf = nestedLeaf;
+        }
+    }
+
+    class Leaf2
+    {
+        public int Id;
+        public string? Value { get; init; }
+
+        public Leaf2()
+        {
+        }
+
+        public Leaf2(int id, string? value)
+        {
+            Id = id;
+            Value = value;
+        }
+    }
+}
