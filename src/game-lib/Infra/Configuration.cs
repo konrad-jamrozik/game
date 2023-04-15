@@ -10,10 +10,13 @@ internal class Configuration
 
     internal Configuration(IFileSystem fs)
     {
-        // /src/game-lib-tests/bin/Debug/net7.0/
+        // [repo_root]/.artifacts/bin/game-lib-tests/debug/.
         // -->
-        // /../../../../../
-        SaveGameDir = new Dir(fs, "./../../../../../saves");
+        // [repo_root]/../../../../saves
+        // -->
+        // [repo_root]/saves/
+        SaveGameDir = new Dir(fs, "./../../../../saves");
         SaveFileName = "savegame.txt";
+        // kja should have method here that returns handle to Lib.OS.File represented by SaveFileName
     }
 }
