@@ -5,8 +5,6 @@ using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
-using Lib.Primitives;
-using MoreLinq;
 using NUnit.Framework;
 
 namespace Lib.Tests;
@@ -120,7 +118,7 @@ public class PreserveReferencesSerializationExplorationTests
         {
             JsonNode node = JsonSerializer.SerializeToNode(value, _serializationOptions)!;
             ((JsonArray)node["Branches"]!).ToList().ForEach(
-                (branch, i) =>
+                branch =>
                 {
                     JsonObject branchObj = branch!.AsObject();
                     int id = branchObj["NestedLeaf"]!["Id"]!.GetValue<int>();
