@@ -26,7 +26,7 @@ public class ReferencePreservingSerializationExplorationTests
     };
 
     [Test]
-    public void ThrowsExceptionOnDeserializingPreservedReferencesUsingCtor()
+    public void ThrowsExceptionOnDeserializingPreservingReferencesUsingCtor()
     {
         var leaves = new List<Leaf> { new Leaf(0, "abc"), new Leaf(1, "xyz") };
         var branches = new List<Branch> { new Branch(0, leaves[0]), new Branch(1, leaves[1]) };
@@ -38,7 +38,7 @@ public class ReferencePreservingSerializationExplorationTests
     }
 
     [Test]
-    public void DeserializesPreservedReferencesUsingInitProps()
+    public void DeserializesPreservingReferencesUsingInitProps()
     {
         // Note that in this test we serialize Root/Branch/Leaf
         // and deserialize Root2/Branch2/Leaf2
@@ -53,9 +53,9 @@ public class ReferencePreservingSerializationExplorationTests
         Assert.That(deserializedRoot.Branches?[1].NestedLeaf?.Id, Is.EqualTo(1));
     }
 
-    // kja curr TDD test DeserializesPreservedReferencesUsingCtorAndCustomConverter
+    // kja curr TDD test DeserializesPreservingReferencesUsingCtorAndCustomConverter
     [Test]
-    public void DeserializesPreservedReferencesUsingCtorAndCustomConverter()
+    public void DeserializesPreservingReferencesUsingCtorAndCustomConverter()
     {
         var leaves = new List<Leaf> { new Leaf(10, "abc"), new Leaf(20, "xyz") };
         var branches = new List<Branch> { new Branch(100, leaves[0]), new Branch(200, leaves[1]) };
