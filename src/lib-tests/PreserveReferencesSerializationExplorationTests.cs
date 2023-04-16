@@ -1,8 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
+using Lib.Primitives;
+using MoreLinq;
 using NUnit.Framework;
 
 namespace Lib.Tests;
@@ -55,19 +59,24 @@ public class PreserveReferencesSerializationExplorationTests
     [Test]
     public void DeserializesPreservedReferencesUsingCtorAndCustomConverter()
     {
-        var leaves = new List<Leaf> { new Leaf(0, "abc"), new Leaf(1, "xyz") };
-        var branches = new List<Branch> { new Branch(0, leaves[0]), new Branch(1, leaves[1]) };
+        var leaves = new List<Leaf> { new Leaf(10, "abc"), new Leaf(20, "xyz") };
+        var branches = new List<Branch> { new Branch(100, leaves[0]), new Branch(200, leaves[1]) };
         var root = new Root(7, branches, leaves);
 
-        var options = new JsonSerializerOptions
+        var options = new JsonSerializerOptions(Options)
         {
             Converters = { new RootJsonConverter(serializationOptions: Options) }
         };
 
         byte[] bytes = SerializeAndReadBytes(root, options);
 
-        Root deserializedRoot = JsonSerializer.Deserialize<Root>(bytes, options)!;
-        Assert.That(deserializedRoot.Branches[1].NestedLeaf.Id, Is.EqualTo(1));
+        Root actual = JsonSerializer.Deserialize<Root>(bytes, options)!;
+        Assert.That(actual.Id, Is.EqualTo(7));
+        Assert.That(actual.Leaves[0].Id, Is.EqualTo(10));
+        Assert.That(actual.Branches[0].Id, Is.EqualTo(100));
+        Assert.That(actual.Leaves[1].Id, Is.EqualTo(20));
+        Assert.That(actual.Branches[1].Id, Is.EqualTo(200));
+        Assert.That(actual.Leaves[0], Is.EqualTo(actual.Branches[0].NestedLeaf));
     }
 
     private byte[] SerializeAndReadBytes<T>(T root, JsonSerializerOptions options) where T : IRoot
@@ -88,16 +97,37 @@ public class PreserveReferencesSerializationExplorationTests
             _serializationOptions = serializationOptions;
         }
 
-        public override Root? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+        public override Root Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
-            var root = JsonSerializer.Deserialize<Root>(ref reader, _serializationOptions);
+            JsonNode rootNode = JsonNode.Parse(ref reader)!;
+            List<Leaf> leaves = rootNode["Leaves"].Deserialize<List<Leaf>>(_serializationOptions)!;
+            JsonArray branchesArray = rootNode["Branches"]!.AsArray();
+            Dictionary<int, Leaf> leavesById = leaves.ToDictionary(leaf => leaf.Id);
+            List<Branch> branches = branchesArray.Select(branch =>
+            {
+                int nestedLeafId = branch!["NestedLeafId"]!.GetValue<int>();
+                Leaf leaf = leavesById[nestedLeafId];
+                int branchId = branch["Id"]!.GetValue<int>();
+                return new Branch(branchId, leaf);
+            }).ToList();
+            
+            int rootId = rootNode["Id"]!.GetValue<int>();
+            Root root = new Root(rootId, branches, leaves);
             return root;
         }
 
         public override void Write(Utf8JsonWriter writer, Root value, JsonSerializerOptions options)
         {
-            // kja curr work: need to serialize references as appropriate to dedup
-            writer.WriteRawValue(JsonSerializer.Serialize(value, _serializationOptions));
+            JsonNode node = JsonSerializer.SerializeToNode(value, _serializationOptions)!;
+            ((JsonArray)node["Branches"]!).ToList().ForEach(
+                (branch, i) =>
+                {
+                    JsonObject branchObj = branch!.AsObject();
+                    int id = branchObj["NestedLeaf"]!["Id"]!.GetValue<int>();
+                    branchObj.Add("NestedLeafId", id);
+                    branchObj.Remove("NestedLeaf");
+                });
+            node.WriteTo(writer, _serializationOptions);
         }
     }
 
