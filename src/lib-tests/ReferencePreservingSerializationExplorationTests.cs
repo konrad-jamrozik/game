@@ -103,7 +103,7 @@ public class ReferencePreservingSerializationExplorationTests
             Dictionary<int, Leaf> leavesById = leaves.ToDictionary(leaf => leaf.Id);
             List<Branch> branches = branchesArray.Select(branch =>
             {
-                int nestedLeafId = branch!["NestedLeafId"]!.GetValue<int>();
+                int nestedLeafId = branch!["$id_NestedLeaf"]!.GetValue<int>();
                 Leaf leaf = leavesById[nestedLeafId];
                 int branchId = branch["Id"]!.GetValue<int>();
                 return new Branch(branchId, leaf);
@@ -122,7 +122,7 @@ public class ReferencePreservingSerializationExplorationTests
                 {
                     JsonObject branchObj = branch!.AsObject();
                     int id = branchObj["NestedLeaf"]!["Id"]!.GetValue<int>();
-                    branchObj.Add("NestedLeafId", id);
+                    branchObj.Add("$id_NestedLeaf", id);
                     branchObj.Remove("NestedLeaf");
                 });
             node.WriteTo(writer, _serializationOptions);
