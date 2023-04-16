@@ -10,7 +10,7 @@ using NUnit.Framework;
 namespace Lib.Tests;
 
 // See also my personal OneNote, relevant subsection of "System.Text.Json"
-public class PreserveReferencesSerializationExplorationTests
+public class ReferencePreservingSerializationExplorationTests
 {
     private const string SerializedJsonFilePath = "./temp_test_data.json";
 
