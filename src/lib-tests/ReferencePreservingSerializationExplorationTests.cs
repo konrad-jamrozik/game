@@ -103,6 +103,8 @@ public class ReferencePreservingSerializationExplorationTests
             Dictionary<int, Leaf> leavesById = leaves.ToDictionary(leaf => leaf.Id);
             List<Branch> branches = branchesArray.Select(branch =>
             {
+                // kja extract this Branch construction into a nested custom converter that will take
+                // in ctor param leaf map keyed by ids (leavesById).
                 int nestedLeafId = branch!["$id_NestedLeaf"]!.GetValue<int>();
                 Leaf leaf = leavesById[nestedLeafId];
                 int branchId = branch["Id"]!.GetValue<int>();
@@ -120,6 +122,8 @@ public class ReferencePreservingSerializationExplorationTests
             ((JsonArray)node["Branches"]!).ToList().ForEach(
                 branch =>
                 {
+                    // kja extract this Branch-withLeafRef construction into a nested custom converter that will take
+                    // in ctor param leaf map keyed by ids (leavesById).
                     JsonObject branchObj = branch!.AsObject();
                     int id = branchObj["NestedLeaf"]!["Id"]!.GetValue<int>();
                     branchObj.Add("$id_NestedLeaf", id);
