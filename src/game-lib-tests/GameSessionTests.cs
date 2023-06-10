@@ -43,7 +43,7 @@ public class GameSessionTests
     // - Smart player simulators, actually playing the game, designed in a way to exercise its features.
     //   - Such simulators will exercise all of the game logic by design, and I could add assertions checking
     //     if given feature was used at least once during the simulated run.
-    //   - Game sessions executed by this players will be captured as unit tests, by fixing appropriate
+    //   - Game sessions executed by these players will be captured as unit tests, by fixing appropriate
     //     random seed and letting the simulator play.
     // - All code augmented with strong suite of invariants: preconditions, postconditions, assertions.
     //   - This, coupled with the smart player simulations, ensures test failure on invariant violation.
