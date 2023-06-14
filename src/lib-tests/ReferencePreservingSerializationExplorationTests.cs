@@ -63,6 +63,10 @@ public class ReferencePreservingSerializationExplorationTests
 
         var options = new JsonSerializerOptions(Options)
         {
+            // Commenting this out will cause the assert testing if the references have been preserved to fail.
+            // This is because without this converted, each leaf will be serialized twice to the json:
+            // - once as part of the leaves List.
+            // - once as a NestedLeaf of corresponding branch in branches List.
             Converters = { new RootJsonConverter(serializationOptions: Options) }
         };
 
@@ -74,6 +78,7 @@ public class ReferencePreservingSerializationExplorationTests
         Assert.That(actual.Branches[0].Id, Is.EqualTo(100));
         Assert.That(actual.Leaves[1].Id, Is.EqualTo(20));
         Assert.That(actual.Branches[1].Id, Is.EqualTo(200));
+        // Test the references have been preserved.
         Assert.That(actual.Leaves[0], Is.EqualTo(actual.Branches[0].NestedLeaf));
     }
 
@@ -108,6 +113,8 @@ public class ReferencePreservingSerializationExplorationTests
                 int nestedLeafId = branch!["$id_NestedLeaf"]!.GetValue<int>();
                 Leaf leaf = leavesById[nestedLeafId];
                 int branchId = branch["Id"]!.GetValue<int>();
+                // Note here is the magic sauce: instead of creating leaf duplicate here,
+                // we pass the already deserialized 'leaf' instance, thus avoiding duplication.
                 return new Branch(branchId, leaf);
             }).ToList();
             
@@ -125,6 +132,11 @@ public class ReferencePreservingSerializationExplorationTests
                     // kja extract this Branch-withLeafRef construction into a nested custom converter that will take
                     // in ctor param leaf map keyed by ids (leavesById).
                     JsonObject branchObj = branch!.AsObject();
+                    // Note here is the magic sauce: given leaf is, INCORRECTLY,
+                    // serialized twice: as member of leaves List as well as here, as NestedLeaf of given branch.
+                    // To fix this, we replace the NestedLeaf duplicate with its ID, which will be used
+                    // during deserialization to instead replace the ID with the leaf instance deserialized
+                    // from leaves List.
                     int id = branchObj["NestedLeaf"]!["Id"]!.GetValue<int>();
                     branchObj.Add("$id_NestedLeaf", id);
                     branchObj.Remove("NestedLeaf");
