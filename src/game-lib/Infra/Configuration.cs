@@ -10,7 +10,7 @@ internal class Configuration
 
     internal Configuration(IFileSystem fs)
     {
-        // [repo_root]/.artifacts/bin/game-lib-tests/debug/.
+        // [repo_root]/artifacts/bin/game-lib-tests/debug/.
         // -->
         // [repo_root]/../../../../saves
         // -->
