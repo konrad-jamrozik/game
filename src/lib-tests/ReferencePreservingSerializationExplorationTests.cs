@@ -53,7 +53,7 @@ public class ReferencePreservingSerializationExplorationTests
         Assert.That(deserializedRoot.Branches?[1].NestedLeaf?.Id, Is.EqualTo(1));
     }
 
-    // kja curr TDD test DeserializesPreservingReferencesUsingCtorAndCustomConverter
+    // kja pri:high curr TDD test DeserializesPreservingReferencesUsingCtorAndCustomConverter
     [Test]
     public void DeserializesPreservingReferencesUsingCtorAndCustomConverter()
     {
@@ -103,7 +103,7 @@ public class ReferencePreservingSerializationExplorationTests
             Dictionary<int, Leaf> leavesById = leaves.ToDictionary(leaf => leaf.Id);
             List<Branch> branches = branchesArray.Select(branch =>
             {
-                // kja extract this Branch construction into a nested custom converter that will take
+                // kja pri:high extract this Branch construction into a nested custom converter that will take
                 // in ctor param leaf map keyed by ids (leavesById).
                 int nestedLeafId = branch!["$id_NestedLeaf"]!.GetValue<int>();
                 Leaf leaf = leavesById[nestedLeafId];
@@ -122,7 +122,7 @@ public class ReferencePreservingSerializationExplorationTests
             ((JsonArray)node["Branches"]!).ToList().ForEach(
                 branch =>
                 {
-                    // kja extract this Branch-withLeafRef construction into a nested custom converter that will take
+                    // kja pri:high extract this Branch-withLeafRef construction into a nested custom converter that will take
                     // in ctor param leaf map keyed by ids (leavesById).
                     JsonObject branchObj = branch!.AsObject();
                     int id = branchObj["NestedLeaf"]!["Id"]!.GetValue<int>();

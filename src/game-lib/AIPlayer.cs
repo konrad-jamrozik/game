@@ -32,11 +32,11 @@ public class AIPlayer
             }
             Console.Out.WriteLine(
                 $"----- AIPlayer Current turn: {state.CurrentTurn} DONE");
-            // kja this _game.AdvanceTime(), the while !GameOver and reference to state should come from base abstract/template method.
+            // kja pri:low this _game.AdvanceTime(), the while !GameOver and reference to state should come from base abstract/template method.
             _game.AdvanceTime();
         }
         _game.Save();
-        // kja to implement AI Player
+        // kja pri:med to implement AI Player
         // DONE First level:
         // - Advance time until mission available
         // - Once mission available, hire agents up to transport limit and send on mission

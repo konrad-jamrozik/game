@@ -8,8 +8,9 @@ public class GameStatePlayerView
 
     public GameStatePlayerView(GameSession session)
     {
-        // kja this gameState lambda should really be unnecessary;
+        // kja pri:med this gameState lambda should really be unnecessary;
         // instead, the gameState should be mutated.
+        // I think I can just remove it now? Need to check, rerun unit tests.
         _gameState = () => session.CurrentGameState;
     }
 
