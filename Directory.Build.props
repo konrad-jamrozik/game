@@ -1,8 +1,9 @@
 <Project>
+  <!-- See https://aka.ms/dotnet/msbuild/customize for more details on customizing your build -->
   <PropertyGroup>
+    <ArtifactsPath>$(MSBuildThisFileDirectory)artifacts</ArtifactsPath>
     <TargetFramework>net8.0</TargetFramework>
     <LangVersion>preview</LangVersion>
-    <UseArtifactsOutput>true</UseArtifactsOutput>
     <Nullable>enable</Nullable>
     <WarningsAsErrors>nullable</WarningsAsErrors>
   </PropertyGroup>
