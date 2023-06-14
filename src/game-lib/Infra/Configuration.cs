@@ -17,6 +17,6 @@ internal class Configuration
         // [repo_root]/saves/
         SaveGameDir = new Dir(fs, "./../../../../saves");
         SaveFileName = "savegame.txt";
-        // kja pri:low should have method here that returns handle to Lib.OS.File represented by SaveFileName
+        // kja3 should have method here that returns handle to Lib.OS.File represented by SaveFileName
     }
 }

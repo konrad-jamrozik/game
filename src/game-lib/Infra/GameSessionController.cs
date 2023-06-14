@@ -59,7 +59,7 @@ public class GameSessionController
     public void LaunchMission(MissionSite site, int agentCount)
         => GameSession.ApplyPlayerActions(new LaunchMissionPlayerAction(site, agentCount));
 
-    // kja pri:low introduce "SaveFile" abstraction akin to MonthlyJsonFilesStorage
+    // kja3 introduce "SaveFile" abstraction akin to MonthlyJsonFilesStorage
     // Also, GameSession should have reference to the "SaveFile", not the GameSessionController.
     public void Save()
     {

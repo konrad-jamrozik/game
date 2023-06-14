@@ -8,7 +8,7 @@ using Newtonsoft.Json.Linq;
 
 namespace Lib.Json;
 
-// kja pri:med need to add set of json tests showing all conversions, like:
+// kja2 need to add set of json tests showing all conversions, like:
 // type T -> json string
 // json string -> type T
 // + the choices from https://learn.microsoft.com/en-us/dotnet/standard/serialization/system-text-json/use-dom-utf8jsonreader-utf8jsonwriter?pivots=dotnet-7-0
@@ -25,7 +25,7 @@ public static class JsonExtensions
         Converters = { new DateDayJsonConverter() },
         IncludeFields = true,
         // https://learn.microsoft.com/en-us/dotnet/standard/serialization/system-text-json/preserve-references?pivots=dotnet-7-0
-        // kja pri:high currently failing with System.NotSupportedException : Reference metadata is not supported when deserializing constructor parameters. See type 'UfoGameLib.Infra.GameState'. The unsupported member type is located on type 'UfoGameLib.Model.Timeline'. Path: $.Timeline.$ref | LineNumber: 7 | BytePositionInLine: 14.
+        // kja currently failing with System.NotSupportedException : Reference metadata is not supported when deserializing constructor parameters. See type 'UfoGameLib.Infra.GameState'. The unsupported member type is located on type 'UfoGameLib.Model.Timeline'. Path: $.Timeline.$ref | LineNumber: 7 | BytePositionInLine: 14.
         // ReferenceHandler = ReferenceHandler.Preserve
     };
 

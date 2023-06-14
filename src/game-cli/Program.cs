@@ -20,7 +20,7 @@ internal static class Program
 
     private static void InvokeAdvanceTime(GameSessionController game)
     {
-        // kja pri:low what 'game' param should this be called?
+        // kja3 what 'game' param should this be called?
         // Note there is also potential for Game and/or GameController. Like, one needs to be able to
         // invoke a CLI command that starts a new GameSession or loads and existing one. This would be done
         // via GameController. At this stage one would also determine if to enable cheating.

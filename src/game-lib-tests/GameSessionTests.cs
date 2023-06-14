@@ -10,7 +10,7 @@ public class GameSessionTests
     {
     }
 
-    // kja pri:low overall work plan:
+    // kja3 overall work plan:
     // implement first AIPlayer
     //
     // reimplement a bit more logic
@@ -88,7 +88,7 @@ public class GameSessionTests
         });
     }
 
-    // kja pri:high TDD test LoadingPreviousGameStateOverridesCurrentState
+    // kja2 TDD test LoadingPreviousGameStateOverridesCurrentState
     [Test]
     public void LoadingPreviousGameStateOverridesCurrentState()
     {
