@@ -100,6 +100,27 @@ public class ReferencePreservingSerializationExplorationTests
             _serializationOptions = serializationOptions;
         }
 
+        public override void Write(Utf8JsonWriter writer, Root value, JsonSerializerOptions options)
+        {
+            JsonNode node = JsonSerializer.SerializeToNode(value, _serializationOptions)!;
+            ((JsonArray)node["Branches"]!).ToList().ForEach(
+                branch =>
+                {
+                    // kja extract this Branch-withLeafRef construction into a nested custom converter that will take
+                    // in ctor param leaf map keyed by ids (leavesById).
+                    JsonObject branchObj = branch!.AsObject();
+                    // Note here is the magic sauce: given leaf is, INCORRECTLY,
+                    // serialized twice: as member of leaves List as well as here, as NestedLeaf of given branch.
+                    // To fix this, we replace the NestedLeaf duplicate with its ID, which will be used
+                    // during deserialization to replace the ID with the leaf instance deserialized
+                    // from leaves List.
+                    int id = branchObj["NestedLeaf"]!["Id"]!.GetValue<int>();
+                    branchObj.Add("$id_NestedLeaf", id);
+                    branchObj.Remove("NestedLeaf");
+                });
+            node.WriteTo(writer, _serializationOptions);
+        }
+
         public override Root Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
             JsonNode rootNode = JsonNode.Parse(ref reader)!;
@@ -121,27 +142,6 @@ public class ReferencePreservingSerializationExplorationTests
             int rootId = rootNode["Id"]!.GetValue<int>();
             Root root = new Root(rootId, branches, leaves);
             return root;
-        }
-
-        public override void Write(Utf8JsonWriter writer, Root value, JsonSerializerOptions options)
-        {
-            JsonNode node = JsonSerializer.SerializeToNode(value, _serializationOptions)!;
-            ((JsonArray)node["Branches"]!).ToList().ForEach(
-                branch =>
-                {
-                    // kja extract this Branch-withLeafRef construction into a nested custom converter that will take
-                    // in ctor param leaf map keyed by ids (leavesById).
-                    JsonObject branchObj = branch!.AsObject();
-                    // Note here is the magic sauce: given leaf is, INCORRECTLY,
-                    // serialized twice: as member of leaves List as well as here, as NestedLeaf of given branch.
-                    // To fix this, we replace the NestedLeaf duplicate with its ID, which will be used
-                    // during deserialization to instead replace the ID with the leaf instance deserialized
-                    // from leaves List.
-                    int id = branchObj["NestedLeaf"]!["Id"]!.GetValue<int>();
-                    branchObj.Add("$id_NestedLeaf", id);
-                    branchObj.Remove("NestedLeaf");
-                });
-            node.WriteTo(writer, _serializationOptions);
         }
     }
 
