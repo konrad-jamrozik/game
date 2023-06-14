@@ -10,7 +10,7 @@ public class GameSessionTests
     {
     }
 
-    // kja overall work plan:
+    // kja pri:low overall work plan:
     // implement first AIPlayer
     //
     // reimplement a bit more logic
@@ -52,9 +52,9 @@ public class GameSessionTests
     public void BasicHappyPathGameSessionWorks()
     {
         var session = new GameSession();
-        var game = new GameSessionController(session);
+        var controller = new GameSessionController(session);
 
-        var startingGameState = session.CurrentGameState;
+        GameState startingGameState = session.CurrentGameState;
 
         Assert.Multiple(
             () =>
@@ -65,12 +65,12 @@ public class GameSessionTests
             });
 
         // Act
-        game.HireAgents(count: 3);
-        game.AdvanceTime();
-        game.AdvanceTime();
-        MissionSite site = game.GameStatePlayerView.MissionSites.First();
-        game.LaunchMission(site, agentCount: 3);
-        game.AdvanceTime();
+        controller.HireAgents(count: 3);
+        controller.AdvanceTime();
+        controller.AdvanceTime();
+        MissionSite site = controller.GameStatePlayerView.MissionSites.First();
+        controller.LaunchMission(site, agentCount: 3);
+        controller.AdvanceTime();
 
         var finalGameState = session.CurrentGameState;
 
@@ -88,29 +88,29 @@ public class GameSessionTests
         });
     }
 
-    // kja TDD test LoadingPreviousGameStateOverridesCurrentState
+    // kja pri:high TDD test LoadingPreviousGameStateOverridesCurrentState
     [Test]
     public void LoadingPreviousGameStateOverridesCurrentState()
     {
         var session = new GameSession();
-        var game = new GameSessionController(session);
+        var controller = new GameSessionController(session);
 
-        int savedTurn = game.GameStatePlayerView.CurrentTurn;
+        int savedTurn = controller.GameStatePlayerView.CurrentTurn;
         GameState startingGameState = session.CurrentGameState;
 
         // Act 1/2
-        game.Save();
+        controller.Save();
 
-        game.AdvanceTime();
+        controller.AdvanceTime();
         
-        Assert.That(game.GameStatePlayerView.CurrentTurn, Is.EqualTo(savedTurn + 1), "savedTurn+1");
+        Assert.That(controller.GameStatePlayerView.CurrentTurn, Is.EqualTo(savedTurn + 1), "savedTurn+1");
         
         // Act 2/2
-        GameState loadedGameState = game.Load();
+        GameState loadedGameState = controller.Load();
 
         Assert.That(loadedGameState, Is.EqualTo(session.CurrentGameState));
         Assert.That(loadedGameState, Is.Not.EqualTo(startingGameState));
-        Assert.That(game.GameStatePlayerView.CurrentTurn, Is.EqualTo(savedTurn), "savedTurn");
+        Assert.That(controller.GameStatePlayerView.CurrentTurn, Is.EqualTo(savedTurn), "savedTurn");
         Assert.That(
             startingGameState,
             Is.Not.EqualTo(loadedGameState),
@@ -121,25 +121,25 @@ public class GameSessionTests
     public void RoundTrippingGameStateSaveLoadDoesNotChangeIt()
     {
         var session = new GameSession();
-        var game = new GameSessionController(session);
+        var controller = new GameSessionController(session);
 
-        game.AdvanceTime();
-        game.AdvanceTime();
-        game.AdvanceTime();
-        game.HireAgents(3);
-        game.LaunchMission(game.GameStatePlayerView.MissionSites.First(), 1);
-        game.AdvanceTime();
-        game.AdvanceTime();
-        game.AdvanceTime();
+        controller.AdvanceTime();
+        controller.AdvanceTime();
+        controller.AdvanceTime();
+        controller.HireAgents(3);
+        controller.LaunchMission(controller.GameStatePlayerView.MissionSites.First(), 1);
+        controller.AdvanceTime();
+        controller.AdvanceTime();
+        controller.AdvanceTime();
 
         // Act 1 and 2
-        game.Save();
-        game.Load();
+        controller.Save();
+        controller.Load();
 
-        Assert.That(game.GameStatePlayerView.CurrentTurn, Is.EqualTo(7), "currentTurn");
-        Assert.That(game.GameStatePlayerView.Assets.Agents, Has.Count.EqualTo(3));
-        Assert.That(game.GameStatePlayerView.Missions, Has.Count.EqualTo(1));
-        Assert.That(game.GameStatePlayerView.MissionSites, Has.Count.EqualTo(2));
+        Assert.That(controller.GameStatePlayerView.CurrentTurn, Is.EqualTo(7), "currentTurn");
+        Assert.That(controller.GameStatePlayerView.Assets.Agents, Has.Count.EqualTo(3));
+        Assert.That(controller.GameStatePlayerView.Missions, Has.Count.EqualTo(1));
+        Assert.That(controller.GameStatePlayerView.MissionSites, Has.Count.EqualTo(2));
     }
 
 }

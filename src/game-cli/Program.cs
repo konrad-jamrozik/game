@@ -8,19 +8,19 @@ internal static class Program
 {
     private static void Main(string[] args)
     {
-        var game = new GameSessionController(new GameSession());
+        var controller = new GameSessionController(new GameSession());
 
         Parser.Default.ParseArguments<AdvanceTimeOptions, HireAgentsOptions, LaunchMissionOptions>(args)
-            .WithParsed<AdvanceTimeOptions>(options => InvokeAdvanceTime(game))
-            .WithParsed<HireAgentsOptions>(options => InvokeHireAgents(game, options.AgentCount))
+            .WithParsed<AdvanceTimeOptions>(options => InvokeAdvanceTime(controller))
+            .WithParsed<HireAgentsOptions>(options => InvokeHireAgents(controller, options.AgentCount))
             .WithParsed<LaunchMissionOptions>(
-                options => InvokeLaunchMission(game, options.MissionSiteId, options.AgentCount, options.Region))
-            .WithParsed<FireAgentsOptions>(options => InvokeFireAgents(game, options.AgentNames));
+                options => InvokeLaunchMission(controller, options.MissionSiteId, options.AgentCount, options.Region))
+            .WithParsed<FireAgentsOptions>(options => InvokeFireAgents(controller, options.AgentNames));
     }
 
     private static void InvokeAdvanceTime(GameSessionController game)
     {
-        // kja what 'game' param should this be called?
+        // kja pri:low what 'game' param should this be called?
         // Note there is also potential for Game and/or GameController. Like, one needs to be able to
         // invoke a CLI command that starts a new GameSession or loads and existing one. This would be done
         // via GameController. At this stage one would also determine if to enable cheating.
