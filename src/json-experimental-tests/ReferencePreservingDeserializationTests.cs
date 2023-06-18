@@ -16,22 +16,33 @@ public class ReferencePreservingDeserializationTests
     /// When:
     ///   That serialized object graph is deserialized
     /// Then:
-    ///   The serialized object, upon deserialization will result in two distinct instances
+    ///   The serialized object, upon deserialization, will result in two distinct instances
     ///   instead of one.
     /// </summary>
     [Test]
-    public void DeserializesReferencesAsDuplicates()
-        => DeserializesUsingCustomConverters(
+    public void DeserializingResultsInDuplicateInstances()
+        => VerifyDeserialization(
             new List<JsonConverter>(),
             expectingDuplicateReferences: true);
 
-    // kja curr TDD test DeserializesPreservedReferencesWithRootJsonConverter
+    // kja curr TDD test DeserializingWithRootJsonConverterPreservesReferences
+    /// <summary>
+    /// Given:
+    ///   An object (here: new Leaf(10, "abc")) in an object graph appears twice (or more)
+    ///   AND
+    ///   That object graph is serialized using RootJsonConverter
+    /// When:
+    ///   That serialized object graph is deserialized
+    /// Then:
+    ///   The serialized object, upon deserialization, will result in one instance.
+    /// </summary>
     [Test]
-    public void DeserializesPreservedReferencesWithRootJsonConverter()
-        => DeserializesUsingCustomConverters(
-            new List<JsonConverter> { new RootJsonConverter(serializationOptions: JsonSerializationTestsLibrary.Options) });
+    public void DeserializingWithRootJsonConverterPreservesReferences()
+        => VerifyDeserialization(
+            new List<JsonConverter>
+                { new RootJsonConverter(serializationOptions: JsonSerializationTestsLibrary.Options) });
 
-    private void DeserializesUsingCustomConverters(
+    private void VerifyDeserialization(
         List<JsonConverter> converters,
         bool expectingDuplicateReferences = false)
     {
@@ -39,7 +50,6 @@ public class ReferencePreservingDeserializationTests
         var leaves = new List<Leaf> { new Leaf(10, "abc"), new Leaf(20, "xyz") };
         var branches = new List<Branch> { new Branch(100, leaves[0]), new Branch(200, leaves[1]) };
         var root = new Root(7, branches, leaves);
-        
 
         var options = new JsonSerializerOptions(JsonSerializationTestsLibrary.Options);
         // Commenting this out will cause the assert testing if the references have been preserved to fail.
@@ -56,7 +66,8 @@ public class ReferencePreservingDeserializationTests
         Assert.That(actual.Branches[0].Id, Is.EqualTo(100));
         Assert.That(actual.Leaves[1].Id, Is.EqualTo(20));
         Assert.That(actual.Branches[1].Id, Is.EqualTo(200));
-        // Test the references have been preserved.
+        // Test the references have been preserved,
+        // i.e. no duplicate object instances have been introduced.
         Assert.That(
             actual.Leaves[0],
             expectingDuplicateReferences
