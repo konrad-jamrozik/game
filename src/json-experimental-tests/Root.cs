@@ -19,6 +19,8 @@ internal class Root : IRoot
 internal class Branch
 {
     public int Id;
+
+    [JsonRef]
     public readonly Leaf NestedLeaf;
 
     public Branch(int id, Leaf nestedLeaf)

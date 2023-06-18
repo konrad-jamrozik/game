@@ -22,6 +22,7 @@ internal class Root2 : IRoot
 internal class Branch2
 {
     public required int Id;
+    
     public required Leaf2? NestedLeaf { get; init; }
 
     public Branch2()

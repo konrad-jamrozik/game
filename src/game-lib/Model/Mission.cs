@@ -33,6 +33,7 @@ public class Mission
                  https://learn.microsoft.com/en-us/dotnet/standard/serialization/system-text-json/converters-how-to?pivots=dotnet-7-0#use-default-system-converter
                  https://github.com/dotnet/docs/issues/35020
            Super-fancy: auto-generate relevant json converters based on C# attribute, and also relevant serializer options.
+             https://learn.microsoft.com/en-us/dotnet/standard/serialization/system-text-json/source-generation-modes?pivots=dotnet-8-0
 
            Note I have some proof-of-concept of the plan above in:
              Lib.Tests.ReferencePreservingSerializationExplorationTests.RootJsonConverter
