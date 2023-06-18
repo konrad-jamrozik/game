@@ -53,7 +53,7 @@ public class ReferencePreservingSerializationExplorationTests
         Assert.That(deserializedRoot.Branches?[1].NestedLeaf?.Id, Is.EqualTo(1));
     }
 
-    // kja2 curr TDD test DeserializesPreservingReferencesUsingCtorAndCustomConverter
+    // kja curr TDD test DeserializesPreservingReferencesUsingCtorAndCustomConverter
     [Test]
     public void DeserializesPreservingReferencesUsingCtorAndCustomConverter()
     {

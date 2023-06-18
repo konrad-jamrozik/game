@@ -26,6 +26,9 @@ public static class JsonExtensions
         IncludeFields = true,
         // https://learn.microsoft.com/en-us/dotnet/standard/serialization/system-text-json/preserve-references?pivots=dotnet-7-0
         // kja currently failing with System.NotSupportedException : Reference metadata is not supported when deserializing constructor parameters. See type 'UfoGameLib.Infra.GameState'. The unsupported member type is located on type 'UfoGameLib.Model.Timeline'. Path: $.Timeline.$ref | LineNumber: 7 | BytePositionInLine: 14.
+        // As a result, the test RoundTrippingGameStateSaveLoadDoesNotChangeIt duplicates MissionSite
+        // To fix this, need to use the RootJsonConverter as used in DeserializesPreservingReferencesUsingCtorAndCustomConverter
+        // But this converter cannot yet due its task properly. See comment in the Mission class for details.
         // ReferenceHandler = ReferenceHandler.Preserve
     };
 

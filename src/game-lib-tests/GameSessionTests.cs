@@ -88,7 +88,7 @@ public class GameSessionTests
         });
     }
 
-    // kja2 TDD test LoadingPreviousGameStateOverridesCurrentState
+    // kja TDD test LoadingPreviousGameStateOverridesCurrentState
     [Test]
     public void LoadingPreviousGameStateOverridesCurrentState()
     {
