@@ -42,6 +42,12 @@ public class ReferencePreservingDeserializationTests
             new List<JsonConverter>
                 { new RootJsonConverter(serializationOptions: JsonSerializationTestsLibrary.Options) });
 
+    [Test]
+    public void DeserializingWithRootJsonConverter2PreservesReferences()
+        => VerifyDeserialization(
+            new List<JsonConverter>
+                { new RootJsonConverter2(serializationOptions: JsonSerializationTestsLibrary.Options) });
+
     private void VerifyDeserialization(
         List<JsonConverter> converters,
         bool expectingDuplicateReferences = false)

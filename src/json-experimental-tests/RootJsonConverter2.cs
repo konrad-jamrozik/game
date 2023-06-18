@@ -7,11 +7,11 @@ using System.Text.Json.Serialization;
 
 namespace JsonExperimental.Tests;
 
-class RootJsonConverter : JsonConverter<Root>
+class RootJsonConverter2 : JsonConverter<Root>
 {
     private readonly JsonSerializerOptions _serializationOptions;
 
-    public RootJsonConverter(JsonSerializerOptions serializationOptions)
+    public RootJsonConverter2(JsonSerializerOptions serializationOptions)
     {
         _serializationOptions = serializationOptions;
     }
@@ -22,6 +22,8 @@ class RootJsonConverter : JsonConverter<Root>
         ((JsonArray)node["Branches"]!).ToList().ForEach(
             branch =>
             {
+                // kja extract this Branch-withLeafRef construction into a nested custom converter that will take
+                // in ctor param leaf map keyed by ids (leavesById).
                 JsonObject branchObj = branch!.AsObject();
                 // Note here is the magic sauce: given leaf is, INCORRECTLY,
                 // serialized twice: as member of leaves List as well as here, as NestedLeaf of given branch.
@@ -43,6 +45,8 @@ class RootJsonConverter : JsonConverter<Root>
         Dictionary<int, Leaf> leavesById = leaves.ToDictionary(leaf => leaf.Id);
         List<Branch> branches = branchesArray.Select(branch =>
         {
+            // kja extract this Branch construction into a nested custom converter that will take
+            // in ctor param leaf map keyed by ids (leavesById).
             int nestedLeafId = branch!["$id_NestedLeaf"]!.GetValue<int>();
             Leaf leaf = leavesById[nestedLeafId];
             int branchId = branch["Id"]!.GetValue<int>();
