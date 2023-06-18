@@ -5,9 +5,8 @@ using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
-using NUnit.Framework;
 
-namespace Lib.Tests;
+namespace JsonExperimental.Tests;
 
 // See also my personal OneNote, relevant subsection of "System.Text.Json"
 public class ReferencePreservingSerializationExplorationTests
