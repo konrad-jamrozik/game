@@ -28,18 +28,14 @@ class RootJsonConverter2 : JsonConverter<Root>
     {
         JsonNode rootNode = JsonNode.Parse(ref reader)!;
         List<Leaf> leaves = rootNode["Leaves"].Deserialize<List<Leaf>>(_serializationOptions)!;
-        JsonArray branchesArray = rootNode["Branches"]!.AsArray();
-        Dictionary<int, Leaf> leavesById = leaves.ToDictionary(leaf => leaf.Id);
-        List<Branch> branches = branchesArray.Select(branch =>
-        {
-            int nestedLeafId = branch!["$id_NestedLeaf"]!.GetValue<int>();
-            Leaf leaf = leavesById[nestedLeafId];
-            int branchId = branch["Id"]!.GetValue<int>();
-            // Note here is the magic sauce: instead of creating leaf duplicate here,
-            // we pass the already deserialized 'leaf' instance, thus avoiding duplication.
-            return new Branch(branchId, leaf);
-        }).ToList();
-            
+
+        List<Branch> branches = DeserializeObjArrayWithRefs<Branch, Leaf>(
+            parent: rootNode,
+            objArrayName: "Branches",
+            refPropName: "NestedLeaf",
+            dependencies: leaves,
+            targetCtor: (id, leaf) => new Branch(id, leaf));
+
         int rootId = rootNode["Id"]!.GetValue<int>();
         Root root = new Root(rootId, branches, leaves);
         return root;
@@ -59,5 +55,33 @@ class RootJsonConverter2 : JsonConverter<Root>
         int id = obj[propName]!["Id"]!.GetValue<int>();
         obj.Add("$id_" + propName, id);
         obj.Remove(propName);
+    }
+
+    private List<TTarget> DeserializeObjArrayWithRefs<TTarget, TDependency>(
+        JsonNode parent,
+        string objArrayName,
+        string refPropName,
+        List<TDependency> dependencies,
+        Func<int, TDependency, TTarget> targetCtor) where TDependency : IIdentifiable
+    {
+        JsonArray objArray = parent[objArrayName]!.AsArray();
+        Dictionary<int, TDependency> dependenciesById = dependencies.ToDictionary(dep => dep.Id);
+
+        List<TTarget> targets = objArray
+            .Select(obj => DeserializeObjWithRef(obj!, dependenciesById, refPropName, targetCtor))
+            .ToList();
+        return targets;
+    }
+
+    private static TTarget DeserializeObjWithRef<TTarget, TDependency>(
+        JsonNode obj,
+        Dictionary<int, TDependency> dependenciesById,
+        string refPropName,
+        Func<int, TDependency, TTarget> targetCtor) where TDependency : IIdentifiable
+    {
+        int refPropId = obj["$id_" + refPropName]!.GetValue<int>();
+        TDependency dep = dependenciesById[refPropId];
+        int objId = obj["Id"]!.GetValue<int>();
+        return targetCtor(objId, dep);
     }
 }

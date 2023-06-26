@@ -30,9 +30,9 @@ internal class Branch
     }
 }
 
-internal class Leaf
+internal class Leaf : IIdentifiable
 {
-    public readonly int Id;
+    public int Id { get; }
     public string Value;
 
     public Leaf(int id, string value)
@@ -40,4 +40,5 @@ internal class Leaf
         Id = id;
         Value = value;
     }
+
 }
