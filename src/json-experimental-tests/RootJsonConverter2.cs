@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
@@ -8,7 +7,7 @@ using System.Text.Json.Serialization;
 
 namespace JsonExperimental.Tests;
 
-class RootJsonConverter2 : JsonConverter<object>
+class RootJsonConverter2 : JsonConverter<Root>
 {
     private readonly JsonSerializerOptions _serializationOptions;
 
@@ -17,63 +16,48 @@ class RootJsonConverter2 : JsonConverter<object>
         _serializationOptions = serializationOptions;
     }
 
-    public override bool CanConvert(Type typeToConvert)
+
+    public override void Write(Utf8JsonWriter writer, Root value, JsonSerializerOptions options)
     {
-        if (typeToConvert.Name == "Leaf")
+        JsonNode node = JsonSerializer.SerializeToNode(value, _serializationOptions)!;
+        SerializeObjArrayWithRefs(node, "Branches", "NestedLeaf");
+        node.WriteTo(writer, _serializationOptions);
+    }
+
+    public override Root Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    {
+        JsonNode rootNode = JsonNode.Parse(ref reader)!;
+        List<Leaf> leaves = rootNode["Leaves"].Deserialize<List<Leaf>>(_serializationOptions)!;
+        JsonArray branchesArray = rootNode["Branches"]!.AsArray();
+        Dictionary<int, Leaf> leavesById = leaves.ToDictionary(leaf => leaf.Id);
+        List<Branch> branches = branchesArray.Select(branch =>
         {
-            // kja curr work this returns no attribute because it is not on the Leaf class directly,
-            // but on the Leaf member of Branch
-            // Probably will need to say 'yes' when any member has this attribute, and then when actually
-            // converting members without this property, do something like:
-            // https://learn.microsoft.com/en-us/dotnet/standard/serialization/system-text-json/converters-how-to?pivots=dotnet-7-0
-            // If given typeToConvert has no [JsonRef] members then this method should return false,
-            // as it will be recursively called for each member.
-            //
-            // Idea 2:
-            // Leverage serialization preserving references to serialize, then rewrite the serialized json
-            // to nicer form.
-            // Upon deserialization, have the converter read the top level root node json into
-            // JsonNode or something, and then manually crawl it building types bottom-to-top,
-            // instead of relying on recursive invocations of the custom converter.
-            // When manually crawling and deserializing, the custom converter won't pass itself to the 
-            // Deserialize call; instead, if it detects a need to deserialize a member from ID reference,
-            // it will postpone it if the member hasn't been yet deserialized, or if it was, it will 
-            // pass to ctor the already deserialized (ctored) member.
-            //
-            // Idea 3: Abandon the generic system of [JsonRef] as it would require
-            // some advanced implementation of DI container: both to delay ctoring some types
-            // when necessary, as well as for figuring out proper ctor to call
-            // (this was also explained here: https://github.com/dotnet/runtime/issues/73302#issuecomment-1204104384)
-            // Instead write a Converter that is aware of the exact domain model and knows exactly
-            // which members to serialize and deserialize by reference, which ctors to call, and by which order,
-            // as it is aware of all types.
-            // The downside of this is that such Converter will need to be adapted
-            // as the domain model changes.
-            // For example, each type that has at least one member that is serialized by ref,
-            // will need to have a custom converter that calls appropriate ctor passing as ctor argument
-            // the object that is referenced, (and that has been ctored earlier during deserialization)
-            // Plus there has to be a top-level custom converter that knows the order in which to invoke
-            // all the specific-type converters, to first obtain the objects that can be obtained
-            // and then start passing them to ctors requiring refs (via in-memory "id to object" map),
-            // and continuing the process until entire object graph is build.
-
-            var customAttribute = Attribute.GetCustomAttribute(typeToConvert, typeof(JsonRefAttribute));
-            Console.Out.WriteLine("customAttr: " + customAttribute + " " + customAttribute?.GetType());
-        }
-
-        var yes = Attribute.GetCustomAttribute(typeToConvert, typeof(JsonRefAttribute)) is JsonRefAttribute;
-        Console.Out.WriteLine($"can convert {typeToConvert.Name} ? {yes}");
-        return yes;
+            int nestedLeafId = branch!["$id_NestedLeaf"]!.GetValue<int>();
+            Leaf leaf = leavesById[nestedLeafId];
+            int branchId = branch["Id"]!.GetValue<int>();
+            // Note here is the magic sauce: instead of creating leaf duplicate here,
+            // we pass the already deserialized 'leaf' instance, thus avoiding duplication.
+            return new Branch(branchId, leaf);
+        }).ToList();
+            
+        int rootId = rootNode["Id"]!.GetValue<int>();
+        Root root = new Root(rootId, branches, leaves);
+        return root;
     }
 
-    public override void Write(Utf8JsonWriter writer, object value, JsonSerializerOptions options)
+    private void SerializeObjArrayWithRefs(JsonNode parent, string objArrayName, string propName)
     {
-        JsonSerializer.Serialize(writer, value, value.GetType(), options);
+        ((JsonArray)parent[objArrayName]!).ToList().ForEach(
+            arrayItem =>
+            {
+                SerializeObjWithRef(arrayItem!.AsObject(), propName);
+            });
     }
 
-    public override object Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    private void SerializeObjWithRef(JsonObject obj, string propName)
     {
-        Console.Out.WriteLine("Reading! " + typeToConvert.Name);
-        return new object();
+        int id = obj[propName]!["Id"]!.GetValue<int>();
+        obj.Add("$id_" + propName, id);
+        obj.Remove(propName);
     }
 }
