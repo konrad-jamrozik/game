@@ -19,9 +19,14 @@ class RootJsonConverter2 : JsonConverterSupportingReferences<Root>
     
     public override void Write(Utf8JsonWriter writer, Root value, JsonSerializerOptions options)
     {
-        JsonNode node = JsonSerializer.SerializeToNode(value, _serializationOptions)!;
-        ReplaceArrayObjectsPropertiesWithRefs(node, "Branches", "NestedLeaf");
-        node.WriteTo(writer, _serializationOptions);
+        JsonNode rootNode = JsonSerializer.SerializeToNode(value, _serializationOptions)!;
+        
+        ReplaceArrayObjectsPropertiesWithRefs(
+            parent: rootNode,
+            objArrayName: "Branches",
+            propName: "NestedLeaf");
+
+        rootNode.WriteTo(writer, _serializationOptions);
     }
 
     public override Root Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
@@ -38,6 +43,7 @@ class RootJsonConverter2 : JsonConverterSupportingReferences<Root>
             targetCtor: (id, leaf) => new Branch(id, leaf));
 
         Root root = new Root(Id(rootNode), branches, leaves);
+
         return root;
     }
 }
