@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text.Json;
 using System.Text.Json.Nodes;
+using System.Text.Json.Serialization;
 
 namespace JsonExperimental.Tests;
 
@@ -12,6 +14,7 @@ class RootJsonConverter2 : JsonConverterSupportingReferences<Root>
     public RootJsonConverter2(JsonSerializerOptions serializationOptions)
     {
         _serializationOptions = serializationOptions;
+        Debug.Assert(_serializationOptions.ReferenceHandler != ReferenceHandler.Preserve);
     }
     
     public override void Write(Utf8JsonWriter writer, Root value, JsonSerializerOptions options)

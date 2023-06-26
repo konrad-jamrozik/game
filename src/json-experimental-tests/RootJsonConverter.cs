@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
@@ -14,6 +15,7 @@ class RootJsonConverter : JsonConverter<Root>
     public RootJsonConverter(JsonSerializerOptions serializationOptions)
     {
         _serializationOptions = serializationOptions;
+        Debug.Assert(_serializationOptions.ReferenceHandler != ReferenceHandler.Preserve);
     }
 
     public override void Write(Utf8JsonWriter writer, Root value, JsonSerializerOptions options)
