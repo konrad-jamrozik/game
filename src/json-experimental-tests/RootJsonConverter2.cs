@@ -44,15 +44,15 @@ class RootJsonConverter2 : JsonConverter<object>
             // some advanced implementation of DI container: both to delay ctoring some types
             // when necessary, as well as for figuring out proper ctor to call
             // (this was also explained here: https://github.com/dotnet/runtime/issues/73302#issuecomment-1204104384)
-            // Instead write Converted that is aware of the exact domain model and knows exactly
+            // Instead write a Converter that is aware of the exact domain model and knows exactly
             // which members to serialize and deserialize by reference, which ctors to call, and by which order,
             // as it is aware of all types.
-            // The downside of this is that such Converted will need to be adapted
+            // The downside of this is that such Converter will need to be adapted
             // as the domain model changes.
             // For example, each type that has at least one member that is serialized by ref,
-            // will need to have a custom converter that call appropriate ctor passing as ctor argument
+            // will need to have a custom converter that calls appropriate ctor passing as ctor argument
             // the object that is referenced, (and that has been ctored earlier during deserialization)
-            // Plus there has to be top-level custom converter that knows the order in which to invoke
+            // Plus there has to be a top-level custom converter that knows the order in which to invoke
             // all the specific-type converters, to first obtain the objects that can be obtained
             // and then start passing them to ctors requiring refs (via in-memory "id to object" map),
             // and continuing the process until entire object graph is build.

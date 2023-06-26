@@ -25,7 +25,6 @@ public class ReferencePreservingDeserializationTests
             new List<JsonConverter>(),
             expectingDuplicateReferences: true);
 
-    // kja curr TDD test DeserializingWithRootJsonConverterPreservesReferences
     /// <summary>
     /// Given:
     ///   An object (here: new Leaf(10, "abc")) in an object graph appears twice (or more)
@@ -42,6 +41,17 @@ public class ReferencePreservingDeserializationTests
             new List<JsonConverter>
                 { new RootJsonConverter(serializationOptions: JsonSerializationTestsLibrary.Options) });
 
+    // kja curr TDD test DeserializingWithRootJsonConverter2PreservesReferences
+    /// <summary>
+    /// Given:
+    ///   An object (here: new Leaf(10, "abc")) in an object graph appears twice (or more)
+    ///   AND
+    ///   That object graph is serialized using RootJsonConverter2
+    /// When:
+    ///   That serialized object graph is deserialized
+    /// Then:
+    ///   The serialized object, upon deserialization, will result in one instance.
+    /// </summary>
     [Test]
     public void DeserializingWithRootJsonConverter2PreservesReferences()
         => VerifyDeserialization(
@@ -59,7 +69,7 @@ public class ReferencePreservingDeserializationTests
 
         var options = new JsonSerializerOptions(JsonSerializationTestsLibrary.Options);
         // Commenting this out will cause the assert testing if the references have been preserved to fail.
-        // This is because without this converted, each leaf will be serialized twice to the json:
+        // This is because without this converter, each leaf will be serialized twice to the json:
         // - once as part of the leaves List.
         // - once as a NestedLeaf of corresponding branch in branches List.
         converters.ForEach(options.Converters.Add);
