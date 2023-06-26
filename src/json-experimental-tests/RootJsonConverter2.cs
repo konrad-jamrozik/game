@@ -26,8 +26,9 @@ class RootJsonConverter2 : JsonConverterSupportingReferences<Root>
 
     public override Root Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
-        JsonNode rootNode = JsonNode.Parse(ref reader)!;
-        List<Leaf> leaves = rootNode["Leaves"].Deserialize<List<Leaf>>(_serializationOptions)!;
+        JsonNode rootNode = Node(ref reader);
+
+        List<Leaf> leaves = DeserializeList<Leaf>(rootNode, "Leaves", _serializationOptions);
 
         List<Branch> branches = DeserializeObjectArrayWithRefProps<Branch, Leaf>(
             parent: rootNode,
@@ -36,8 +37,7 @@ class RootJsonConverter2 : JsonConverterSupportingReferences<Root>
             dependencies: leaves,
             targetCtor: (id, leaf) => new Branch(id, leaf));
 
-        int rootId = rootNode["Id"]!.GetValue<int>();
-        Root root = new Root(rootId, branches, leaves);
+        Root root = new Root(Id(rootNode), branches, leaves);
         return root;
     }
 }

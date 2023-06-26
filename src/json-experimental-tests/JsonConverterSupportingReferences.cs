@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 
@@ -48,4 +49,13 @@ abstract class JsonConverterSupportingReferences<T> : JsonConverter<T>
         int objId = obj["Id"]!.GetValue<int>();
         return targetCtor(objId, dep);
     }
+
+    protected JsonNode Node(ref Utf8JsonReader reader)
+        => JsonNode.Parse(ref reader)!;
+
+    protected List<T> DeserializeList<T>(JsonNode parent, string propName, JsonSerializerOptions options)
+        => parent[propName].Deserialize<List<T>>(options)!;
+
+    protected int Id(JsonNode node) 
+        =>  node["Id"]!.GetValue<int>();
 }
