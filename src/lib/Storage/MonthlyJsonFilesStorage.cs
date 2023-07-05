@@ -26,7 +26,7 @@ public record MonthlyJsonFilesStorage(Dir StorageDir)
         await Write(mergeFunc(Read<T>(date)), date);
 
     public Task Write(object data, DateMonth date, string? fileName = default) =>
-        WriteToFile(data.ToJsonIndentedUnsafe(SerializerOptions), date, fileName);
+        WriteToFile(data.ToIndentedUnsafeJsonString(SerializerOptions), date, fileName);
 
     private async Task WriteToFile(string dataJson, DateMonth date, string? fileName) =>
         await StorageDir

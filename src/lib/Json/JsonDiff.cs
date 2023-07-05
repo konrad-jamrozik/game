@@ -35,9 +35,9 @@ public class JsonDiff
             return elementDiff ?? EmptyDiff;
         });
 
-        _string = new Lazy<string>(() => diff.Value.ToJsonIndentedUnsafe());
+        _string = new Lazy<string>(() => diff.Value.ToIndentedUnsafeJsonString());
 
-        _rawString = new Lazy<string>(() => diff.Value.ToJsonUnsafe());
+        _rawString = new Lazy<string>(() => diff.Value.ToUnsafeJsonString());
 
         _jsonElement = new Lazy<JsonElement>(() => _rawString.Value.FromJsonToUnsafe<JsonElement>());
     }

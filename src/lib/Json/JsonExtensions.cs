@@ -68,10 +68,10 @@ public static class JsonExtensions
     public static JsonElement FromObjectToJsonElement(this object obj) =>
         FromJsonTo<JsonElement>(JsonSerializer.SerializeToUtf8Bytes(obj));
 
-    public static string ToJsonUnsafe(this object data, bool ignoreNulls = false) => 
+    public static string ToUnsafeJsonString(this object data, bool ignoreNulls = false) => 
         JsonSerializer.Serialize(data, ignoreNulls ? SerializerOptionsUnsafeIgnoreNulls : SerializerOptionsUnsafe);
 
-    public static string ToJsonIndentedUnsafe(this object data, JsonSerializerOptions? options = null) =>
+    public static string ToIndentedUnsafeJsonString(this object data, JsonSerializerOptions? options = null) =>
         JsonSerializer.Serialize(data, options ?? SerializerOptionsIndentedUnsafe);
 
     /// <remarks>
@@ -114,12 +114,12 @@ public static class JsonExtensions
     /// e.g. JsonSerializer.Deserialize{JsonElement}(JsonSerializer.SerializeToUtf8Bytes(expandoObj));
     ///
     /// 5. Serialize it to string
-    /// e.g. jsonElem.ToJsonIndentedUnsafe()
+    /// e.g. jsonElem.ToIndentedUnsafeJsonString()
     /// </remarks>
     public static JsonElement Append(this JsonElement target, string propertyName, JsonElement appended)
     {
-        string targetJson = target.ToJsonUnsafe();
-        string appendedJson = appended.ToJsonUnsafe();
+        string targetJson = target.ToUnsafeJsonString();
+        string appendedJson = appended.ToUnsafeJsonString();
         var targetObject = JObject.Parse(targetJson);
         var appendedObject = JObject.Parse(appendedJson);
         appendedObject = new JObject(new JProperty(propertyName, appendedObject));
