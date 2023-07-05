@@ -1,3 +1,5 @@
+using System;
+using System.Text.Json;
 using Lib.Json;
 using Lib.OS;
 using UfoGameLib.Model;
@@ -37,6 +39,7 @@ namespace UfoGameLib.Infra;
 /// </summary>
 public class GameSessionController
 {
+    private static readonly JsonSerializerOptions SaveJsonSerializerOptions = GetSaveGameJsonSerializerOptions();
     protected readonly GameSession GameSession;
     internal readonly Configuration Config = new Configuration(new FileSystem());
 
@@ -77,9 +80,19 @@ public class GameSessionController
         GameSession.CurrentGameState = loadedGameState;
         Console.Out.WriteLine($"Loaded game state from {Config.SaveGameDir.FileSystem.GetFullPath(saveGamePath)}");
         return loadedGameState;
+    }
 
+    private static JsonSerializerOptions GetSaveGameJsonSerializerOptions()
+    {
+        var converterOptions = new JsonSerializerOptions(JsonExtensions.SerializerOptionsIndentedUnsafe)
+        {
+            IncludeFields = true,
+        };
+        var options = new JsonSerializerOptions(converterOptions);
+        options.Converters.Add(new GameStateJsonConverter(converterOptions));
+        return options;
     }
 
     private string CurrentGameStateSerializedAsJsonString()
-        => GameSession.CurrentGameState.ToIndentedUnsafeJsonString();
+        => GameSession.CurrentGameState.ToIndentedUnsafeJsonString(SaveJsonSerializerOptions);
 }

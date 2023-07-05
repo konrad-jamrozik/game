@@ -153,7 +153,7 @@ public class GameSessionTests
         Assert.That(gameState.Missions, Has.Count.EqualTo(1));
         Assert.That(gameState.MissionSites, Has.Count.EqualTo(2));
 
-        // kja TDD current failure. Need to retrofit implement the body of the stub of GameStateJsonConverter and hook it up.
+        // kja TDD current failure. Just hooked up GameStateJsonConverter, which is still just a stub.
         // Test the references have been preserved,
         // i.e. no duplicate object instances have been introduced.
         Assert.That(

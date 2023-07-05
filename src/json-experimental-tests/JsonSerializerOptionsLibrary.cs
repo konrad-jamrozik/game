@@ -8,7 +8,7 @@ internal static class JsonSerializerOptionsLibrary
     internal static readonly JsonSerializerOptions BaseOptions = new JsonSerializerOptions
     {
         IncludeFields = true,
-        WriteIndented = true,
+        WriteIndented = true
     };
 
     internal static readonly JsonSerializerOptions OptionsPreservingReferences = new JsonSerializerOptions(BaseOptions)
