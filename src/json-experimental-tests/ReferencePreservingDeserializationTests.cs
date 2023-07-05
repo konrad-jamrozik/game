@@ -39,7 +39,7 @@ public class ReferencePreservingDeserializationTests
     public void DeserializingWithRootJsonConverterPreservesReferences()
         => VerifyDeserialization(
             new List<JsonConverter>
-                { new RootJsonConverter(serializationOptions: TestsUtils.Options) });
+                { new RootJsonConverter(serializationOptions: JsonSerializerOptionsLibrary.Options) });
 
     /// <summary>
     /// Given:
@@ -55,7 +55,7 @@ public class ReferencePreservingDeserializationTests
     public void DeserializingWithRootJsonConverter2PreservesReferences()
         => VerifyDeserialization(
             new List<JsonConverter>
-                { new RootJsonConverter2(serializationOptions: TestsUtils.Options) });
+                { new RootJsonConverter2(serializationOptions: JsonSerializerOptionsLibrary.Options) });
 
     private void VerifyDeserialization(
         List<JsonConverter> converters,
@@ -66,7 +66,7 @@ public class ReferencePreservingDeserializationTests
         var branches = new List<Branch> { new Branch(100, leaves[0]), new Branch(200, leaves[1]) };
         var root = new Root(7, branches, leaves);
 
-        var options = new JsonSerializerOptions(TestsUtils.Options);
+        var options = new JsonSerializerOptions(JsonSerializerOptionsLibrary.Options);
         // Commenting this out will cause the assert testing if the references have been preserved to fail.
         // This is because without this converter, each leaf will be serialized twice to the json:
         // - once as part of the leaves List.

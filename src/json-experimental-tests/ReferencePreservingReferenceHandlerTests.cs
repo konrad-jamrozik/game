@@ -13,9 +13,9 @@ public class ReferencePreservingReferenceHandlerTests
         var branches = new List<Branch> { new Branch(0, leaves[0]), new Branch(1, leaves[1]) };
         var root = new Root(7, branches, leaves);
 
-        byte[] bytes = TestsUtils.SerializeAndReadBytes(root, TestsUtils.OptionsPreservingReferences);
+        byte[] bytes = TestsUtils.SerializeAndReadBytes(root, JsonSerializerOptionsLibrary.OptionsPreservingReferences);
 
-        Assert.Throws<NotSupportedException>(() => JsonSerializer.Deserialize<Root>(bytes, TestsUtils.OptionsPreservingReferences));
+        Assert.Throws<NotSupportedException>(() => JsonSerializer.Deserialize<Root>(bytes, JsonSerializerOptionsLibrary.OptionsPreservingReferences));
     }
 
     [Test]
@@ -34,9 +34,9 @@ public class ReferencePreservingReferenceHandlerTests
         var branches = new List<Branch> { new Branch(0, leaves[0]), new Branch(1, leaves[1]) };
         var root = new Root(7, branches, leaves);
 
-        byte[] bytes = TestsUtils.SerializeAndReadBytes(root, TestsUtils.OptionsPreservingReferences);
+        byte[] bytes = TestsUtils.SerializeAndReadBytes(root, JsonSerializerOptionsLibrary.OptionsPreservingReferences);
 
-        Root2 deserializedRoot = JsonSerializer.Deserialize<Root2>(bytes, TestsUtils.OptionsPreservingReferences)!;
+        Root2 deserializedRoot = JsonSerializer.Deserialize<Root2>(bytes, JsonSerializerOptionsLibrary.OptionsPreservingReferences)!;
         Assert.That(deserializedRoot.Branches?[1].NestedLeaf?.Id, Is.EqualTo(1));
     }
 }
