@@ -1,4 +1,4 @@
-namespace JsonExperimental.Tests;
+namespace Lib.Json;
 
 public interface IIdentifiable
 {

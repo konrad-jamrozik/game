@@ -5,9 +5,9 @@ using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 
-namespace JsonExperimental.Tests;
+namespace Lib.Json;
 
-abstract class JsonConverterSupportingReferences<T> : JsonConverter<T>
+public abstract class JsonConverterSupportingReferences<T> : JsonConverter<T>
 {
     protected void ReplaceArrayObjectsPropertiesWithRefs(JsonNode parent, string objArrayName, string propName)
     {
@@ -30,7 +30,7 @@ abstract class JsonConverterSupportingReferences<T> : JsonConverter<T>
         Func<int, TDependency, TTarget> targetCtor) where TDependency : IIdentifiable
     {
         JsonArray objArray = parent[objArrayName]!.AsArray();
-        Dictionary<int, TDependency> dependenciesById = dependencies.ToDictionary(dep => dep.Id);
+        Dictionary<int, TDependency> dependenciesById = dependencies.ToDictionary<TDependency, int>(dep => dep.Id);
 
         List<TTarget> targets = objArray
             .Select(obj => DeserializeObjWithRefProp(obj!, dependenciesById, refPropName, targetCtor))
