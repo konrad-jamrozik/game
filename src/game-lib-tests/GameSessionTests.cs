@@ -1,3 +1,4 @@
+using Lib.Json;
 using UfoGameLib.Infra;
 using UfoGameLib.Model;
 
@@ -117,8 +118,17 @@ public class GameSessionTests
             "starting state should not be equal to final state");
     }
 
+    /// <summary>
+    /// Given:
+    ///   A non-trivial game state
+    /// When:
+    ///   That game state is saved and then loaded, a.k.a. round-tripped.
+    /// Then:
+    ///   - The resulting game state is the same as before saving
+    ///   - And no duplicate instance objects have been deserialized
+    /// </summary>
     [Test]
-    public void RoundTrippingGameStateSaveLoadDoesNotChangeIt()
+    public void RoundTrippingSavingAndLoadingGameStateBehavesCorrectly()
     {
         var session = new GameSession();
         var controller = new GameSessionController(session);
@@ -127,7 +137,8 @@ public class GameSessionTests
         controller.AdvanceTime();
         controller.AdvanceTime();
         controller.HireAgents(3);
-        controller.LaunchMission(controller.GameStatePlayerView.MissionSites.First(), 1);
+        
+        controller.LaunchMission(controller.GameStatePlayerView.MissionSites.First(), agentCount: 1);
         controller.AdvanceTime();
         controller.AdvanceTime();
         controller.AdvanceTime();
@@ -136,10 +147,18 @@ public class GameSessionTests
         controller.Save();
         controller.Load();
 
-        Assert.That(controller.GameStatePlayerView.CurrentTurn, Is.EqualTo(7), "currentTurn");
-        Assert.That(controller.GameStatePlayerView.Assets.Agents, Has.Count.EqualTo(3));
-        Assert.That(controller.GameStatePlayerView.Missions, Has.Count.EqualTo(1));
-        Assert.That(controller.GameStatePlayerView.MissionSites, Has.Count.EqualTo(2));
+        var gameState = controller.GameStatePlayerView;
+        Assert.That(gameState.CurrentTurn, Is.EqualTo(7), "currentTurn");
+        Assert.That(gameState.Assets.Agents, Has.Count.EqualTo(3));
+        Assert.That(gameState.Missions, Has.Count.EqualTo(1));
+        Assert.That(gameState.MissionSites, Has.Count.EqualTo(2));
+
+        // kja TDD current failure. Need to retrofit implement the body of the stub of GameStateJsonConverter and hook it up.
+        // Test the references have been preserved,
+        // i.e. no duplicate object instances have been introduced.
+        Assert.That(
+            gameState.MissionSites[0], 
+            Is.SameAs(gameState.Missions[0].Site));
     }
 
 }
