@@ -66,18 +66,20 @@ public class GameSessionController
         string saveGamePath = Config.SaveGameDir.CreateDirIfNotExists()
             .WriteAllText(
                 Config.SaveFileName,
-                GameSession.CurrentGameState.ToJsonIndentedUnsafe());
+                CurrentGameStateSerializedAsJsonString());
         Console.Out.WriteLine($"Saved game state to {Config.SaveGameDir.FileSystem.GetFullPath(saveGamePath)}");
     }
 
     public GameState Load()
     {
         var saveGamePath = Config.SaveGameDir.JoinPath(Config.SaveFileName);
-        var loadedGameState =
-            Config.SaveGameDir.FileSystem.ReadAllJsonTo<GameState>(saveGamePath);
+        var loadedGameState = Config.SaveGameDir.FileSystem.ReadAllJsonTo<GameState>(saveGamePath);
         GameSession.CurrentGameState = loadedGameState;
         Console.Out.WriteLine($"Loaded game state from {Config.SaveGameDir.FileSystem.GetFullPath(saveGamePath)}");
         return loadedGameState;
 
     }
+
+    private string CurrentGameStateSerializedAsJsonString()
+        => GameSession.CurrentGameState.ToIndentedUnsafeJsonString();
 }
