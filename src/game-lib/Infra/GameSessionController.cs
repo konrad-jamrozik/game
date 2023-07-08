@@ -58,8 +58,24 @@ public class GameSessionController
     public void FireAgents(IEnumerable<string> agentNames)
         => throw new NotImplementedException();
 
+    /// <summary>
+    /// Convenience method. LaunchMission, but instead of choosing specific agents,
+    /// choose up to first agentCount agents that can be sent on a mission.
+    /// </summary>
     public void LaunchMission(MissionSite site, int agentCount)
-        => GameSession.ApplyPlayerActions(new LaunchMissionPlayerAction(site, agentCount));
+    {
+        List<Agent> agents = GameStatePlayerView.Assets.Agents
+            .Where(agent => agent.CanBeSentOnMission)
+            .Take(agentCount)
+            .ToList();
+
+        Debug.Assert(agents.Count == agentCount);
+
+        LaunchMission(site, agents);
+    }
+
+    public void LaunchMission(MissionSite site, List<Agent> agents)
+        => GameSession.ApplyPlayerActions(new LaunchMissionPlayerAction(site, agents));
 
     // kja3 introduce "SaveFile" abstraction akin to MonthlyJsonFilesStorage
     // Also, GameSession should have reference to the "SaveFile", not the GameSessionController.

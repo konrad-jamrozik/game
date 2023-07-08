@@ -5,24 +5,28 @@ namespace UfoGameLib.Infra;
 public class LaunchMissionPlayerAction : PlayerAction
 {
     private readonly MissionSite _site;
-    public int AgentCount { get; }
+    private readonly List<Agent> _agents;
 
-    // kja here now Agents need to be passed instead of agentCount because
-    // their state needs to be updated to OnMission
-    public LaunchMissionPlayerAction(MissionSite site, int agentCount)
+    public LaunchMissionPlayerAction(MissionSite site, List<Agent> agents)
     {
         _site = site;
-        AgentCount = agentCount;
+        _agents = agents;
     }
 
     public override void Apply(GameState state)
     {
         Debug.Assert(state.MissionSites.Contains(_site));
-        Debug.Assert(state.Assets.CurrentTransportCapacity >= AgentCount);
-        Console.Out.WriteLine($"Launch mission. SiteId: {_site.Id} AgentCount: {AgentCount}");
-        
+        Debug.Assert(_site.IsActive);
+        Debug.Assert(_agents.Any());
+        _agents.ForEach(agent => Debug.Assert(agent.CanBeSentOnMission));
+        Debug.Assert(state.Assets.CurrentTransportCapacity >= _agents.Count);
+
+        Console.Out.WriteLine($"Launch mission. SiteId: {_site.Id} AgentCount: {_agents.Count}");
+
+        _agents.ForEach(agent => agent.CurrentState = Agent.State.OnMission);
+
         state.Missions.Add(new Mission(_site));
-        state.MissionSites.Single(site => site.Id == _site.Id).IsActive = false;
-        state.Assets.CurrentTransportCapacity -= AgentCount;
+        _site.IsActive = false;
+        state.Assets.CurrentTransportCapacity -= _agents.Count;
     }
 }

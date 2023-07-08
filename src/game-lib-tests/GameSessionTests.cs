@@ -133,8 +133,10 @@ public class GameSessionTests
 
         controller.AdvanceTime();
         controller.AdvanceTime();
-        controller.AdvanceTime();
         controller.HireAgents(3);
+        // Need to advance time here so that hired agents are no longer InTransit and can be
+        // sent on a mission.
+        controller.AdvanceTime();
         
         controller.LaunchMission(controller.GameStatePlayerView.MissionSites.First(), agentCount: 1);
         controller.AdvanceTime();
@@ -145,17 +147,17 @@ public class GameSessionTests
         controller.Save();
         controller.Load();
 
-        var gameStateView = controller.GameStatePlayerView;
-        Assert.That(gameStateView.CurrentTurn, Is.EqualTo(7));
-        Assert.That(gameStateView.Assets.Agents, Has.Count.EqualTo(3));
-        Assert.That(gameStateView.Missions, Has.Count.EqualTo(1));
-        Assert.That(gameStateView.MissionSites, Has.Count.EqualTo(2));
+        var state = controller.GameStatePlayerView;
+        Assert.That(state.CurrentTurn, Is.EqualTo(7));
+        Assert.That(state.Assets.Agents, Has.Count.EqualTo(3));
+        Assert.That(state.Missions, Has.Count.EqualTo(1));
+        Assert.That(state.MissionSites, Has.Count.EqualTo(2));
 
         // Test the references have been preserved,
         // i.e. no duplicate object instances have been introduced.
         Assert.That(
-            gameStateView.Missions[0].Site, 
-            Is.SameAs(gameStateView.MissionSites[0]));
+            state.Missions[0].Site, 
+            Is.SameAs(state.MissionSites[0]));
     }
 
 }

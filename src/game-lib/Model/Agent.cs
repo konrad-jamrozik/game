@@ -26,4 +26,6 @@ public class Agent
         Id = id;
         CurrentState = State.InTransit;
     }
+
+    public bool CanBeSentOnMission => CurrentState == State.Available;
 }
