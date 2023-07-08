@@ -8,6 +8,10 @@ using System.Text.Json.Serialization;
 
 namespace Lib.Json;
 
+/// <summary>
+/// This converter extracts generic abstractions out of GameStateJsonConverter.
+/// See that converter for details.
+/// </summary>
 public abstract class JsonConverterSupportingReferences<T> : JsonConverter<T>
 {
     protected readonly JsonSerializerOptions SerializationOptions;
@@ -43,9 +47,6 @@ public abstract class JsonConverterSupportingReferences<T> : JsonConverter<T>
     protected TItem Deserialize<TItem>(JsonNode parent)
         => parent[typeof(TItem).Name].Deserialize<TItem>(SerializationOptions)!;
 
-    protected TItem Deserialize<TItem>(JsonNode parent, string propName, JsonSerializerOptions options)
-        => parent[propName].Deserialize<TItem>(options)!;
-
     protected List<TItem> DeserializeList<TItem>(JsonNode parent, string propName)
         => parent[propName].Deserialize<List<TItem>>(SerializationOptions)!;
 
@@ -58,7 +59,7 @@ public abstract class JsonConverterSupportingReferences<T> : JsonConverter<T>
     protected int Id(JsonNode node) 
         => node["Id"]!.GetValue<int>();
 
-    protected int Int(JsonNode node, string propName)
+    protected int DeserializeInt(JsonNode node, string propName)
         => node[propName]!.GetValue<int>();
 
     private void ReplaceObjectPropertyWithRef(JsonObject obj, string propName)

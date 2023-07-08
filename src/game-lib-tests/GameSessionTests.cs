@@ -89,7 +89,6 @@ public class GameSessionTests
         });
     }
 
-    // kja TDD test LoadingPreviousGameStateOverridesCurrentState
     [Test]
     public void LoadingPreviousGameStateOverridesCurrentState()
     {
@@ -125,7 +124,7 @@ public class GameSessionTests
     ///   That game state is saved and then loaded, a.k.a. round-tripped.
     /// Then:
     ///   - The resulting game state is the same as before saving
-    ///   - And no duplicate instance objects have been deserialized
+    ///   - and no duplicate instance objects have been deserialized.
     /// </summary>
     [Test]
     public void RoundTrippingSavingAndLoadingGameStateBehavesCorrectly()
@@ -148,12 +147,11 @@ public class GameSessionTests
         controller.Load();
 
         var gameStateView = controller.GameStatePlayerView;
-        Assert.That(gameStateView.CurrentTurn, Is.EqualTo(7), "currentTurn");
+        Assert.That(gameStateView.CurrentTurn, Is.EqualTo(7));
         Assert.That(gameStateView.Assets.Agents, Has.Count.EqualTo(3));
         Assert.That(gameStateView.Missions, Has.Count.EqualTo(1));
         Assert.That(gameStateView.MissionSites, Has.Count.EqualTo(2));
 
-        // kja TDD current failure. Just hooked up GameStateJsonConverter, which is still just a stub.
         // Test the references have been preserved,
         // i.e. no duplicate object instances have been introduced.
         Assert.That(

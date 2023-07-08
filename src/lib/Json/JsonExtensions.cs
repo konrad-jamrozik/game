@@ -24,12 +24,9 @@ public static class JsonExtensions
         ReadCommentHandling = JsonCommentHandling.Skip,
         Converters = { new DateDayJsonConverter() },
         IncludeFields = true,
-        // https://learn.microsoft.com/en-us/dotnet/standard/serialization/system-text-json/preserve-references?pivots=dotnet-7-0
-        // kja currently failing with System.NotSupportedException : Reference metadata is not supported when deserializing constructor parameters. See type 'UfoGameLib.Infra.GameState'. The unsupported member type is located on type 'UfoGameLib.Model.Timeline'. Path: $.Timeline.$ref | LineNumber: 7 | BytePositionInLine: 14.
-        // As a result, the test RoundTrippingGameStateSaveLoadDoesNotChangeIt duplicates MissionSite in the json serialized to HDD - 
-        // one can confirm it by inspecting the file.
-        // To fix this, need to use the RootJsonConverter as used in DeserializesPreservingReferencesUsingCtorAndCustomConverter
-        // But this converter cannot yet be used for this task properly. See comment in the Mission class for details.
+        // I am not using "ReferenceHandler.Preserve" due to reasons explained here:
+        // https://github.com/dotnet/docs/issues/35020#issue-1669574543
+        // Instead, see "JsonConverterSupportingReferences" class.
         // ReferenceHandler = ReferenceHandler.Preserve
     };
 
