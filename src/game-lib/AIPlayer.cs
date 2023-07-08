@@ -11,16 +11,9 @@ namespace UfoGameLib;
 /// - Repeat until player loses game. At this point it impossible to win. Loss will most likely happen
 /// due to running out of money.
 ///
-/// kja2 improvements to AIPlayer:
-/// - Try to always keep at least enough agents to maintain full transport capacity
-/// - Send agents on intel-gathering duty until mission is available
-/// - Send agents on available mission if not too hard
-/// - Do not hire agents if it would lead to bankruptcy
 /// </summary>
 public class AIPlayer : AbstractAIPlayer
 {
-    private readonly Intellect _intellect;
-
     public enum Intellect
     {
         DoNothing,
@@ -28,15 +21,17 @@ public class AIPlayer : AbstractAIPlayer
         Basic
     }
 
+    private const int MaxAgentsToSendOnMission = 2;
+    private readonly Intellect _intellect;
+
     private readonly IDictionary<Intellect, Action<GameStatePlayerView, GameSessionController>> _intellectMap =
         new Dictionary<Intellect, Action<GameStatePlayerView, GameSessionController>>
         {
-            [Intellect.DoNothing] = PlayGameTurnWithDoNothingIntellect,
+            [Intellect.Basic] = PlayGameTurnWithBasicIntellect,
             [Intellect.OnlySendAgentsOnMissions] = PlayGameTurnWithOnlySendAgentsOnMissionsIntellect,
-            [Intellect.Basic] = PlayGameTurnWithBasicIntellect
+            [Intellect.DoNothing] = PlayGameTurnWithDoNothingIntellect,
+            
         };
-
-    private const int MaxAgentsToSendOnMission = 2;
 
     public AIPlayer(GameSessionController controller, Intellect intellect) : base(controller)
     {
@@ -49,11 +44,11 @@ public class AIPlayer : AbstractAIPlayer
         _intellectMap[_intellect](gameStateView, controller);
     }
 
-    private static void PlayGameTurnWithDoNothingIntellect(
+    private static void PlayGameTurnWithBasicIntellect(
         GameStatePlayerView gameStateView,
         GameSessionController controller)
     {
-        // Do nothing.
+        // kja curr work PlayGameTurnWithBasicIntellect: see also note at file bottom.
     }
 
     private static void PlayGameTurnWithOnlySendAgentsOnMissionsIntellect(
@@ -66,24 +61,6 @@ public class AIPlayer : AbstractAIPlayer
             HireAgentsIfNecessary(gameStateView, controller);
             controller.LaunchMission(targetSite, gameStateView.Assets.Agents.Count);
         }
-    }
-
-    private static void PlayGameTurnWithBasicIntellect(
-        GameStatePlayerView gameStateView,
-        GameSessionController controller)
-    {
-        // kja current work
-        // Agents should be always occupied. Doing one of the following:
-        // - being sent on a mission
-        // - recovering from wounds
-        // - training to improve
-        // - gathering intelligence
-        // - generating income
-        //
-        // The AIPlayer also needs to take into account the following:
-        // - Are there any missions? Are they easy enough to send agents to?
-        // - Is there enough money in the bank? Income/Expenses are OK?
-        // - Are there enough agents available, or more need to be hired?
     }
 
     private static bool CanLaunchSomeMission(GameStatePlayerView gameStateView)
@@ -103,4 +80,40 @@ public class AIPlayer : AbstractAIPlayer
 
         controller.HireAgents(agentsToHire);
     }
+
+    private static void PlayGameTurnWithDoNothingIntellect(
+        GameStatePlayerView gameStateView,
+        GameSessionController controller)
+    {
+        // Do nothing.
+    }
 }
+
+// Need to add failure criteria that is not just a hard time limit:
+// Add "Red Dawn remnants" faction that gains power over time
+// and generates harder missions.
+// Mission failures mean support decrease.
+// Once support reaches zero, game is over.
+//
+// So first need to add the concept of mission difficulty.
+//
+// -----
+//
+// Agents should be always occupied. Doing one of the following:
+// - being sent on a mission
+// - recovering from wounds
+// - training to improve
+// - gathering intelligence
+// - generating income
+//
+// The AIPlayer also needs to take into account the following:
+// - Are there any missions? Are they easy enough to send agents to?
+// - Is there enough money in the bank? Income/Expenses are OK?
+// - Are there enough agents available, or more need to be hired?
+//
+// -----
+//
+// - Try to always keep at least enough agents to maintain full transport capacity
+// - Send agents on intel-gathering duty until mission is available
+// - Send agents on available mission if not too hard
+// - Do not hire agents if it would lead to bankruptcy
