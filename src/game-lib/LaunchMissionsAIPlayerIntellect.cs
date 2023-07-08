@@ -38,10 +38,10 @@ public class LaunchMissionsAIPlayerIntellect : IAIPlayerIntellect
     {
         // If there are less than MaxAgentsToSendOnMission then hire enough agents to reach MaxAgentsToSendOnMission,
         // however, no more than remaining transport capacity, i.e. CurrentTransportCapacity.
-        int agentsToHire = Math.Max(
-            Math.Min(state.Assets.CurrentTransportCapacity, MaxAgentsToSendOnMission) -
-            state.Assets.Agents.Count,
-            0);
+
+        int maxCountOfAgentsToSend = Math.Min(state.Assets.CurrentTransportCapacity, MaxAgentsToSendOnMission);
+        int agentsNeededToReachMaxAgentsCountToSend = maxCountOfAgentsToSend - state.Assets.Agents.Count;
+        int agentsToHire = Math.Max(agentsNeededToReachMaxAgentsCountToSend, 0);
 
         controller.HireAgents(agentsToHire);
     }

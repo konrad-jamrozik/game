@@ -7,6 +7,8 @@ public class LaunchMissionPlayerAction : PlayerAction
     private readonly MissionSite _site;
     public int AgentCount { get; }
 
+    // kja here now Agents need to be passed instead of agentCount because
+    // their state needs to be updated to OnMission
     public LaunchMissionPlayerAction(MissionSite site, int agentCount)
     {
         _site = site;

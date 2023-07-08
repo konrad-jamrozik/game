@@ -4,6 +4,11 @@ namespace UfoGameLib.Infra;
 
 public class AdvanceTimePlayerAction : PlayerAction
 {
+    private static readonly Agent.State[] TransientAgentStates = {
+        Agent.State.InTransit,
+        Agent.State.OnMission,
+    };
+
     public override void Apply(GameState state)
     {
         state.Timeline.CurrentTurn++;
@@ -15,6 +20,25 @@ public class AdvanceTimePlayerAction : PlayerAction
         // Agents cost upkeep.
         state.Assets.CurrentMoney -= state.Assets.Agents.Count * 5;
 
+        UpdateAgentStates(state);
+
+        CreateMissionSites(state);
+    }
+
+    private static void UpdateAgentStates(GameState state)
+    {
+        state.Assets.Agents.ForEach(
+            agent =>
+            {
+                if (TransientAgentStates.Contains(agent.CurrentState))
+                {
+                    agent.CurrentState = Agent.State.Available;
+                }
+            });
+    }
+
+    private static void CreateMissionSites(GameState state)
+    {
         if (state.Timeline.CurrentTurn % 3 == 0)
         {
             int siteId = state.NextMissionSiteId;
