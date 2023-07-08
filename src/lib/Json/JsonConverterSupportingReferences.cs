@@ -39,14 +39,13 @@ public abstract class JsonConverterSupportingReferences<T> : JsonConverter<T>
     }
 
     private static TTarget DeserializeObjWithRefProp<TTarget, TDependency>(
-        JsonNode obj,
+        JsonNode node,
         Dictionary<int, TDependency> dependenciesById,
         string refPropName,
         Func<int, TDependency, TTarget> targetCtor) where TDependency : IIdentifiable
     {
-        int refPropId = obj["$id_" + refPropName]!.GetValue<int>();
-        TDependency dep = dependenciesById[refPropId];
-        int objId = obj["Id"]!.GetValue<int>();
+        TDependency dep = GetByRef(node, dependenciesById, refPropName);
+        int objId = node["Id"]!.GetValue<int>();
         return targetCtor(objId, dep);
     }
 
@@ -58,4 +57,12 @@ public abstract class JsonConverterSupportingReferences<T> : JsonConverter<T>
 
     protected int Id(JsonNode node) 
         =>  node["Id"]!.GetValue<int>();
+
+
+    protected static TDependency GetByRef<TDependency>(JsonNode node, Dictionary<int, TDependency> dependenciesById, string refPropName)
+    {
+        int refPropId = node["$id_" + refPropName]!.GetValue<int>();
+        TDependency dep = dependenciesById[refPropId];
+        return dep;
+    }
 }

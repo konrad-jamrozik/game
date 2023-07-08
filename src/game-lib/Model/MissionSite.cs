@@ -1,8 +1,10 @@
+using Lib.Json;
+
 namespace UfoGameLib.Model;
 
-public class MissionSite
+public class MissionSite : IIdentifiable
 {
-    public readonly int Id;
+    public int Id { get; }
     public bool IsActive;
 
     public MissionSite(int id, bool isActive = true)

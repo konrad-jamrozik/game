@@ -38,13 +38,12 @@ class GameStateJsonConverter : JsonConverterSupportingReferences<GameState>
         Assets assets = gameStateNode[nameof(GameState.Assets)].Deserialize<Assets>(options)!;
         MissionSites missionSites = gameStateNode[nameof(GameState.MissionSites)].Deserialize<MissionSites>(options)!;
 
-        Missions missions = new Missions();
         Dictionary<int, MissionSite> missionSitesById = missionSites.ToDictionary(site => site.Id);
         JsonArray missionsArray = gameStateNode[nameof(GameState.Missions)]!.AsArray();
-        foreach (JsonNode? missionNode in missionsArray)
-        {
-            missions.Add(new Mission(site: GetByRef(missionNode!, missionSitesById, nameof(Mission.Site))));
-        }
+
+        var missions = new Missions(
+            missionsArray.Select(
+                missionNode => new Mission(site: GetByRef(missionNode!, missionSitesById, nameof(Mission.Site)))));
 
         GameState gameState = new GameState(
             updateCount,
@@ -54,12 +53,5 @@ class GameStateJsonConverter : JsonConverterSupportingReferences<GameState>
             missions);
 
         return gameState;
-    }
-
-    private TDependency GetByRef<TDependency>(JsonNode node, Dictionary<int, TDependency> dependenciesById, string refPropName)
-    {
-        int refPropId = node["$id_" + refPropName]!.GetValue<int>();
-        TDependency dep = dependenciesById[refPropId];
-        return dep;
     }
 }
