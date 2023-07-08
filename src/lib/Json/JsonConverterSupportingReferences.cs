@@ -9,6 +9,13 @@ namespace Lib.Json;
 
 public abstract class JsonConverterSupportingReferences<T> : JsonConverter<T>
 {
+    private readonly JsonSerializerOptions _serializationOptions;
+
+    protected JsonConverterSupportingReferences(JsonSerializerOptions serializationOptions)
+    {
+        _serializationOptions = serializationOptions;
+    }
+
     protected static List<TObj> DeserializeObjArrayWithDepRefProps<TObj, TDep>(
         JsonArray objJsonArray,
         string depRefPropName,
@@ -30,15 +37,27 @@ public abstract class JsonConverterSupportingReferences<T> : JsonConverter<T>
             arrayItem => { ReplaceObjectPropertyWithRef(arrayItem!.AsObject(), propName); });
     }
 
-    protected JsonNode Node(ref Utf8JsonReader reader)
-        => JsonNode.Parse(ref reader)!;
+    
+    protected TItem Deserialize<TItem>(JsonNode parent)
+        => parent[typeof(TItem).Name].Deserialize<TItem>(_serializationOptions)!;
 
-    protected List<TItem> DeserializeList<TItem>(JsonNode parent, string propName, JsonSerializerOptions options)
-        => parent[propName].Deserialize<List<TItem>>(options)!;
+    protected TItem Deserialize<TItem>(JsonNode parent, string propName, JsonSerializerOptions options)
+        => parent[propName].Deserialize<TItem>(options)!;
+
+    protected List<TItem> DeserializeList<TItem>(JsonNode parent, string propName)
+        => parent[propName].Deserialize<List<TItem>>(_serializationOptions)!;
+
+    protected JsonNode JsonNode(ref Utf8JsonReader reader)
+        => System.Text.Json.Nodes.JsonNode.Parse(ref reader)!;
+
+    protected JsonArray JsonArray(JsonNode node, string propName)
+        => node[propName]!.AsArray();
 
     protected int Id(JsonNode node) 
-        =>  node["Id"]!.GetValue<int>();
+        => node["Id"]!.GetValue<int>();
 
+    protected int Int(JsonNode node, string propName)
+        => node[propName]!.GetValue<int>();
 
     private void ReplaceObjectPropertyWithRef(JsonObject obj, string propName)
     {

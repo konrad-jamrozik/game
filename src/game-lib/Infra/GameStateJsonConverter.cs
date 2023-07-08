@@ -11,7 +11,7 @@ class GameStateJsonConverter : JsonConverterSupportingReferences<GameState>
 {
     private readonly JsonSerializerOptions _serializationOptions;
 
-    public GameStateJsonConverter(JsonSerializerOptions serializationOptions)
+    public GameStateJsonConverter(JsonSerializerOptions serializationOptions) : base(serializationOptions)
     {
         _serializationOptions = serializationOptions;
         Debug.Assert(_serializationOptions.ReferenceHandler != ReferenceHandler.Preserve);
@@ -31,18 +31,16 @@ class GameStateJsonConverter : JsonConverterSupportingReferences<GameState>
 
     public override GameState Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
-        JsonNode gameStateNode = Node(ref reader);
+        JsonNode gameStateNode = JsonNode(ref reader);
 
-        int updateCount = gameStateNode[nameof(GameState.UpdateCount)]!.GetValue<int>();
-        Timeline timeline = gameStateNode[nameof(GameState.Timeline)].Deserialize<Timeline>(options)!;
-        Assets assets = gameStateNode[nameof(GameState.Assets)].Deserialize<Assets>(options)!;
-        MissionSites missionSites = gameStateNode[nameof(GameState.MissionSites)].Deserialize<MissionSites>(options)!;
-
-        JsonArray missionsArray = gameStateNode[nameof(GameState.Missions)]!.AsArray();
+        int updateCount = Int(gameStateNode, nameof(GameState.UpdateCount));
+        Timeline timeline = Deserialize<Timeline>(gameStateNode);
+        Assets assets = Deserialize<Assets>(gameStateNode);
+        MissionSites missionSites = Deserialize<MissionSites>(gameStateNode);
 
         var missions = new Missions(
             DeserializeObjArrayWithDepRefProps(
-                missionsArray,
+                objJsonArray: JsonArray(gameStateNode, nameof(GameState.Missions)),
                 depRefPropName: nameof(Mission.Site),
                 missionSites,
                 (_, missionSite) => new Mission(missionSite)));

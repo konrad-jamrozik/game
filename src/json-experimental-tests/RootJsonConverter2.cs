@@ -12,7 +12,7 @@ class RootJsonConverter2 : JsonConverterSupportingReferences<Root>
 {
     private readonly JsonSerializerOptions _serializationOptions;
 
-    public RootJsonConverter2(JsonSerializerOptions serializationOptions)
+    public RootJsonConverter2(JsonSerializerOptions serializationOptions) : base(serializationOptions)
     {
         _serializationOptions = serializationOptions;
         Debug.Assert(_serializationOptions.ReferenceHandler != ReferenceHandler.Preserve);
@@ -32,9 +32,9 @@ class RootJsonConverter2 : JsonConverterSupportingReferences<Root>
 
     public override Root Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
-        JsonNode rootNode = Node(ref reader);
+        JsonNode rootNode = JsonNode(ref reader);
         JsonArray branchesArray = rootNode[nameof(Root.Branches)]!.AsArray();
-        List<Leaf> leaves = DeserializeList<Leaf>(rootNode, nameof(Root.Leaves), _serializationOptions);
+        List<Leaf> leaves = DeserializeList<Leaf>(rootNode, nameof(Root.Leaves));
 
         List<Branch> branches = DeserializeObjArrayWithDepRefProps(
             objJsonArray: branchesArray,
