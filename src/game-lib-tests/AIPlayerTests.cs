@@ -21,7 +21,7 @@ public class AIPlayerTests
     public void AIPlayerWithBasicIntellectPlaysGameUntilConclusion()
         => AIPlayerPlaysGameUntilConclusion(AIPlayer.Intellect.Basic);
 
-    public void AIPlayerPlaysGameUntilConclusion(AIPlayer.Intellect intellect)
+    private static void AIPlayerPlaysGameUntilConclusion(AIPlayer.Intellect intellect)
     {
         var aiPlayer = new AIPlayer(new GameSessionController(new GameSession()), intellect);
 
