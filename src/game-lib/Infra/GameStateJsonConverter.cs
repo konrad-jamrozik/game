@@ -6,6 +6,7 @@ using UfoGameLib.Model;
 
 namespace UfoGameLib.Infra;
 
+// kja REFACTOR. First experimental working implementation
 class GameStateJsonConverter : JsonConverterSupportingReferences<GameState>
 {
     private readonly JsonSerializerOptions _serializationOptions;
@@ -22,8 +23,8 @@ class GameStateJsonConverter : JsonConverterSupportingReferences<GameState>
         
         ReplaceArrayObjectsPropertiesWithRefs(
             parent: gameStateNode,
-            objArrayName: "Missions",
-            propName: "Site");
+            objArrayName: nameof(GameState.Missions),
+            propName: nameof(Mission.Site));
 
         gameStateNode.WriteTo(writer, _serializationOptions);
     }
@@ -31,27 +32,34 @@ class GameStateJsonConverter : JsonConverterSupportingReferences<GameState>
     public override GameState Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
         JsonNode gameStateNode = Node(ref reader);
-        List<MissionSite> missionSites = DeserializeList<MissionSite>(gameStateNode, "MissionSites", options);
+
+        int updateCount = gameStateNode[nameof(GameState.UpdateCount)]!.GetValue<int>();
+        Timeline timeline = gameStateNode[nameof(GameState.Timeline)].Deserialize<Timeline>(options)!;
+        Assets assets = gameStateNode[nameof(GameState.Assets)].Deserialize<Assets>(options)!;
+        MissionSites missionSites = gameStateNode[nameof(GameState.MissionSites)].Deserialize<MissionSites>(options)!;
+
+        Missions missions = new Missions();
+        Dictionary<int, MissionSite> missionSitesById = missionSites.ToDictionary(site => site.Id);
+        JsonArray missionsArray = gameStateNode[nameof(GameState.Missions)]!.AsArray();
+        foreach (JsonNode? missionNode in missionsArray)
+        {
+            missions.Add(new Mission(site: GetByRef(missionNode!, missionSitesById, nameof(Mission.Site))));
+        }
+
         GameState gameState = new GameState(
-            updateCount: 0,
-            new Timeline(currentTurn: 0),
-            new Assets(currentMoney: 0, new Agents(), maxTransportCapacity: 0, currentTransportCapacity: 0),
-            new MissionSites(),
-            new Missions());
+            updateCount,
+            timeline,
+            assets,
+            missionSites,
+            missions);
 
         return gameState;
-        //
-        // List<Leaf> leaves = DeserializeList<Leaf>(rootNode, "Leaves", _serializationOptions);
-        //
-        // List<Branch> branches = DeserializeObjectArrayWithRefProps<Branch, Leaf>(
-        //     parent: rootNode,
-        //     objArrayName: "Branches",
-        //     refPropName: "NestedLeaf",
-        //     dependencies: leaves,
-        //     targetCtor: (id, leaf) => new Branch(id, leaf));
-        //
-        // Root root = new Root(Id(rootNode), branches, leaves);
-        //
-        // return root;
+    }
+
+    private TDependency GetByRef<TDependency>(JsonNode node, Dictionary<int, TDependency> dependenciesById, string refPropName)
+    {
+        int refPropId = node["$id_" + refPropName]!.GetValue<int>();
+        TDependency dep = dependenciesById[refPropId];
+        return dep;
     }
 }

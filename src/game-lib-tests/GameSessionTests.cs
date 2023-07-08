@@ -147,18 +147,18 @@ public class GameSessionTests
         controller.Save();
         controller.Load();
 
-        var gameState = controller.GameStatePlayerView;
-        Assert.That(gameState.CurrentTurn, Is.EqualTo(7), "currentTurn");
-        Assert.That(gameState.Assets.Agents, Has.Count.EqualTo(3));
-        Assert.That(gameState.Missions, Has.Count.EqualTo(1));
-        Assert.That(gameState.MissionSites, Has.Count.EqualTo(2));
+        var gameStateView = controller.GameStatePlayerView;
+        Assert.That(gameStateView.CurrentTurn, Is.EqualTo(7), "currentTurn");
+        Assert.That(gameStateView.Assets.Agents, Has.Count.EqualTo(3));
+        Assert.That(gameStateView.Missions, Has.Count.EqualTo(1));
+        Assert.That(gameStateView.MissionSites, Has.Count.EqualTo(2));
 
         // kja TDD current failure. Just hooked up GameStateJsonConverter, which is still just a stub.
         // Test the references have been preserved,
         // i.e. no duplicate object instances have been introduced.
         Assert.That(
-            gameState.Missions[0].Site, 
-            Is.SameAs(gameState.MissionSites[0]));
+            gameStateView.Missions[0].Site, 
+            Is.SameAs(gameStateView.MissionSites[0]));
     }
 
 }
