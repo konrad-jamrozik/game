@@ -9,44 +9,25 @@ namespace Lib.Json;
 
 public abstract class JsonConverterSupportingReferences<T> : JsonConverter<T>
 {
-    protected void ReplaceArrayObjectsPropertiesWithRefs(JsonNode parent, string objArrayName, string propName)
+    protected static List<TObj> DeserializeObjArrayWithDepRefProps<TObj, TDep>(
+        JsonArray objJsonArray,
+        string depRefPropName,
+        List<TDep> deps,
+        Func<JsonNode, TDep, TObj> objCtor) where TDep : IIdentifiable
     {
-        ((JsonArray)parent[objArrayName]!).ToList().ForEach(
-            arrayItem => { ReplaceObjectPropertyWithRef(arrayItem!.AsObject(), propName); });
-    }
+        Dictionary<int, TDep> depsById = deps.ToDictionary<TDep, int>(dep => dep.Id);
 
-    private void ReplaceObjectPropertyWithRef(JsonObject obj, string propName)
-    {
-        int id = obj[propName]!["Id"]!.GetValue<int>();
-        obj.Add("$id_" + propName, id);
-        obj.Remove(propName);
-    }
-
-    protected List<TTarget> DeserializeObjectArrayWithRefProps<TTarget, TDependency>(
-        JsonNode parent,
-        string objArrayName,
-        string refPropName,
-        List<TDependency> dependencies,
-        Func<int, TDependency, TTarget> targetCtor) where TDependency : IIdentifiable
-    {
-        JsonArray objArray = parent[objArrayName]!.AsArray();
-        Dictionary<int, TDependency> dependenciesById = dependencies.ToDictionary<TDependency, int>(dep => dep.Id);
-
-        List<TTarget> targets = objArray
-            .Select(obj => DeserializeObjWithRefProp(obj!, dependenciesById, refPropName, targetCtor))
+        List<TObj> objs = objJsonArray
+            .Select<JsonNode?, TObj>(
+                objJsonNode => DeserializeObjWithDepRefProp(objJsonNode!, depsById, depRefPropName, objCtor))
             .ToList();
-        return targets;
+        return objs;
     }
 
-    private static TTarget DeserializeObjWithRefProp<TTarget, TDependency>(
-        JsonNode node,
-        Dictionary<int, TDependency> dependenciesById,
-        string refPropName,
-        Func<int, TDependency, TTarget> targetCtor) where TDependency : IIdentifiable
+    protected void ReplaceArrayObjectsPropertiesWithRefs(JsonNode parent, string objJsonArrayName, string propName)
     {
-        TDependency dep = GetByRef(node, dependenciesById, refPropName);
-        int objId = node["Id"]!.GetValue<int>();
-        return targetCtor(objId, dep);
+        ((JsonArray)parent[objJsonArrayName]!).ToList().ForEach(
+            arrayItem => { ReplaceObjectPropertyWithRef(arrayItem!.AsObject(), propName); });
     }
 
     protected JsonNode Node(ref Utf8JsonReader reader)
@@ -59,10 +40,27 @@ public abstract class JsonConverterSupportingReferences<T> : JsonConverter<T>
         =>  node["Id"]!.GetValue<int>();
 
 
-    protected static TDependency GetByRef<TDependency>(JsonNode node, Dictionary<int, TDependency> dependenciesById, string refPropName)
+    private void ReplaceObjectPropertyWithRef(JsonObject obj, string propName)
+    {
+        int id = obj[propName]!["Id"]!.GetValue<int>();
+        obj.Add("$id_" + propName, id);
+        obj.Remove(propName);
+    }
+
+    private static TObj DeserializeObjWithDepRefProp<TObj, TDep>(
+        JsonNode objJsonNode,
+        Dictionary<int, TDep> depsById,
+        string depRefPropName,
+        Func<JsonNode, TDep, TObj> objCtor) where TDep : IIdentifiable
+    {
+        TDep dep = GetByRef(objJsonNode, depsById, depRefPropName);
+        return objCtor(objJsonNode, dep);
+    }
+
+    private static TDep GetByRef<TDep>(JsonNode node, Dictionary<int, TDep> depsById, string refPropName)
     {
         int refPropId = node["$id_" + refPropName]!.GetValue<int>();
-        TDependency dep = dependenciesById[refPropId];
+        TDep dep = depsById[refPropId];
         return dep;
     }
 }

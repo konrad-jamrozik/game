@@ -23,7 +23,7 @@ class GameStateJsonConverter : JsonConverterSupportingReferences<GameState>
         
         ReplaceArrayObjectsPropertiesWithRefs(
             parent: gameStateNode,
-            objArrayName: nameof(GameState.Missions),
+            objJsonArrayName: nameof(GameState.Missions),
             propName: nameof(Mission.Site));
 
         gameStateNode.WriteTo(writer, _serializationOptions);
@@ -38,12 +38,14 @@ class GameStateJsonConverter : JsonConverterSupportingReferences<GameState>
         Assets assets = gameStateNode[nameof(GameState.Assets)].Deserialize<Assets>(options)!;
         MissionSites missionSites = gameStateNode[nameof(GameState.MissionSites)].Deserialize<MissionSites>(options)!;
 
-        Dictionary<int, MissionSite> missionSitesById = missionSites.ToDictionary(site => site.Id);
         JsonArray missionsArray = gameStateNode[nameof(GameState.Missions)]!.AsArray();
 
         var missions = new Missions(
-            missionsArray.Select(
-                missionNode => new Mission(site: GetByRef(missionNode!, missionSitesById, nameof(Mission.Site)))));
+            DeserializeObjArrayWithDepRefProps(
+                missionsArray,
+                depRefPropName: nameof(Mission.Site),
+                missionSites,
+                (_, missionSite) => new Mission(missionSite)));
 
         GameState gameState = new GameState(
             updateCount,

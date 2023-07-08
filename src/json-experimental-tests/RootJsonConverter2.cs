@@ -24,8 +24,8 @@ class RootJsonConverter2 : JsonConverterSupportingReferences<Root>
         
         ReplaceArrayObjectsPropertiesWithRefs(
             parent: rootNode,
-            objArrayName: "Branches",
-            propName: "NestedLeaf");
+            objJsonArrayName: nameof(Root.Branches),
+            propName: nameof(Branch.NestedLeaf));
 
         rootNode.WriteTo(writer, _serializationOptions);
     }
@@ -33,15 +33,15 @@ class RootJsonConverter2 : JsonConverterSupportingReferences<Root>
     public override Root Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
         JsonNode rootNode = Node(ref reader);
+        JsonArray branchesArray = rootNode[nameof(Root.Branches)]!.AsArray();
+        List<Leaf> leaves = DeserializeList<Leaf>(rootNode, nameof(Root.Leaves), _serializationOptions);
 
-        List<Leaf> leaves = DeserializeList<Leaf>(rootNode, "Leaves", _serializationOptions);
-
-        List<Branch> branches = DeserializeObjectArrayWithRefProps<Branch, Leaf>(
-            parent: rootNode,
-            objArrayName: "Branches",
-            refPropName: "NestedLeaf",
-            dependencies: leaves,
-            targetCtor: (id, leaf) => new Branch(id, leaf));
+        List<Branch> branches = DeserializeObjArrayWithDepRefProps(
+            objJsonArray: branchesArray,
+            depRefPropName: nameof(Branch.NestedLeaf),
+            deps: leaves,
+            objCtor: (objNode, leaf) => new Branch(Id(objNode), leaf)
+        );
 
         Root root = new Root(Id(rootNode), branches, leaves);
 
