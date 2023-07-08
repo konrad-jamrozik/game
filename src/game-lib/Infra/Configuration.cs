@@ -10,11 +10,15 @@ internal class Configuration
 
     internal Configuration(IFileSystem fs)
     {
-        // [repo_root]/artifacts/bin/game-lib-tests/debug/.
-        // -->
-        // [repo_root]/../../../../saves
-        // -->
-        // [repo_root]/saves/
+        // Given expected starting path:
+        //   [repo_root]/artifacts/bin/game-lib-tests/debug/.
+        //
+        // When this relative path is applied:
+        //   [repo_root]/../../../../saves
+        // 
+        // Then this is the expected resulting path:
+        //   [repo_root]/saves/
+        //
         SaveGameDir = new Dir(fs, "./../../../../saves");
         SaveFileName = "savegame.txt";
         // kja3 should have method here that returns handle to Lib.OS.File represented by SaveFileName

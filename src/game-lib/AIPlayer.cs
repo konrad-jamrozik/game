@@ -3,50 +3,38 @@ using UfoGameLib.Model;
 
 namespace UfoGameLib;
 
-public class AIPlayer
+/// <summary>
+/// Current AIPlayer capabilities:
+///
+/// - Advance time until mission is available
+/// - Once mission available, hire agents up to transport limit and send on the first available mission
+/// - Repeat until player loses game. At this point it impossible to win. Loss will most likely happend
+/// due to running out of money.
+///
+/// kja2 improvements to AIPlayer:
+/// - Try to always keep at least enough agents to maintain full transport capacity
+/// - Send agents on intel-gathering duty until mission is available
+/// - Send agents on available mission if not too hard
+/// - Do not hire agents if it would lead to bankruptcy
+/// </summary>
+public class AIPlayer : AbstractAIPlayer
 {
     private const int MaxAgentsToSendOnMission = 2;
-    private readonly GameSessionController _controller;
 
-    public AIPlayer(GameSessionController controller)
+    public AIPlayer(GameSessionController controller) : base(controller)
     {
-        _controller = controller;
     }
 
-    public void PlayGameSession()
+    protected override void PlayGameTurn(GameSessionController controller)
     {
-        GameStatePlayerView gameStateView = _controller.GameStatePlayerView;
-
-        while (!gameStateView.IsGameOver)
+        GameStatePlayerView gameStateView = controller.GameStatePlayerView;
+            
+        while (CanLaunchSomeMission(gameStateView))
         {
-            Console.Out.WriteLine(
-                $"----- AIPlayer Current turn: {gameStateView.CurrentTurn} Current money: {gameStateView.Assets.CurrentMoney}");
-            
-            while (CanLaunchSomeMission(gameStateView))
-            {
-                MissionSite targetSite = ChooseMissionSite(gameStateView);
-                HireAgentsIfNecessary(gameStateView);
-                _controller.LaunchMission(targetSite, gameStateView.Assets.Agents.Count);
-            }
-            Console.Out.WriteLine(
-                $"----- AIPlayer Current turn: {gameStateView.CurrentTurn} DONE");
-            // kja3 this _game.AdvanceTime(), the while !GameOver and reference to _controller should come from base abstract/template method.
-            
-            _controller.AdvanceTime();
+            MissionSite targetSite = ChooseMissionSite(gameStateView);
+            HireAgentsIfNecessary(gameStateView, controller);
+            controller.LaunchMission(targetSite, gameStateView.Assets.Agents.Count);
         }
-
-        _controller.Save();
-        // kja2 to implement AI Player
-        // DONE First level:
-        // - Advance time until mission available
-        // - Once mission available, hire agents up to transport limit and send on mission
-        // - Repeat until player loses game (at this point impossible to win)
-        // 
-        // Next level:
-        // - Try to always keep at least enough agents to maintain full transport capacity
-        // - Send agents on intel-gathering duty until mission is available
-        // - Send agents on available mission if not too hard
-        // - Do not hire agents if it would lead to bankruptcy
     }
 
     private static bool CanLaunchSomeMission(GameStatePlayerView gameStateView)
@@ -55,12 +43,15 @@ public class AIPlayer
     private static MissionSite ChooseMissionSite(GameStatePlayerView gameStateView)
         => gameStateView.MissionSites.First(site => site.IsActive);
 
-    private void HireAgentsIfNecessary(GameStatePlayerView gameStateView)
+    private void HireAgentsIfNecessary(GameStatePlayerView gameStateView, GameSessionController controller)
     {
+        // If there are less than MaxAgentsToSendOnMission then hire enough agents to reach MaxAgentsToSendOnMission,
+        // however, no more than remaining transport capacity, i.e. CurrentTransportCapacity.
         int agentsToHire = Math.Max(
             Math.Min(gameStateView.Assets.CurrentTransportCapacity, MaxAgentsToSendOnMission) -
             gameStateView.Assets.Agents.Count,
             0);
-        _controller.HireAgents(agentsToHire);
+
+        controller.HireAgents(agentsToHire);
     }
 }

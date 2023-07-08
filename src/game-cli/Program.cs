@@ -10,6 +10,8 @@ internal static class Program
     {
         var controller = new GameSessionController(new GameSession());
 
+        // Need to support here the various scenarios described in GameSessionController comment.
+
         Parser.Default.ParseArguments<AdvanceTimeOptions, HireAgentsOptions, LaunchMissionOptions>(args)
             .WithParsed<AdvanceTimeOptions>(options => InvokeAdvanceTime(controller))
             .WithParsed<HireAgentsOptions>(options => InvokeHireAgents(controller, options.AgentCount))
@@ -18,15 +20,10 @@ internal static class Program
             .WithParsed<FireAgentsOptions>(options => InvokeFireAgents(controller, options.AgentNames));
     }
 
-    private static void InvokeAdvanceTime(GameSessionController game)
+    private static void InvokeAdvanceTime(GameSessionController controller)
     {
-        // kja3 what 'game' param should this be called?
-        // Note there is also potential for Game and/or GameController. Like, one needs to be able to
-        // invoke a CLI command that starts a new GameSession or loads and existing one. This would be done
-        // via GameController. At this stage one would also determine if to enable cheating.
-        // Also, whether to use AIPlayer. See GameSessionController comment.
 
-        game.AdvanceTime();
+        controller.AdvanceTime();
         Console.WriteLine("Time advanced.");
     }
 
