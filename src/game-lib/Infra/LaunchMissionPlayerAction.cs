@@ -19,6 +19,7 @@ public class LaunchMissionPlayerAction : PlayerAction
         Debug.Assert(state.MissionSites.Contains(_site));
         Debug.Assert(state.Assets.CurrentTransportCapacity >= AgentCount);
         Console.Out.WriteLine($"Launch mission. SiteId: {_site.Id} AgentCount: {AgentCount}");
+        
         // kja3 need to decrease TransportCapacity by the agents sent until mission is completed (for now it just means time is advanced)
         state.Missions.Add(new Mission(_site));
         state.MissionSites.Single(site => site.Id == _site.Id).IsActive = false;

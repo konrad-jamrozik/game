@@ -6,36 +6,36 @@ namespace UfoGameLib;
 public class AIPlayer
 {
     private const int MaxAgentsToSendOnMission = 2;
-    private readonly GameSessionController _game;
+    private readonly GameSessionController _controller;
 
-    public AIPlayer(GameSessionController game)
+    public AIPlayer(GameSessionController controller)
     {
-        _game = game;
+        _controller = controller;
     }
 
     public void PlayGameSession()
     {
-        GameStatePlayerView state = _game.GameStatePlayerView;
-        while (!state.IsGameOver)
+        GameStatePlayerView gameStateView = _controller.GameStatePlayerView;
+
+        while (!gameStateView.IsGameOver)
         {
             Console.Out.WriteLine(
-                $"----- AIPlayer Current turn: {state.CurrentTurn} Current money: {state.Assets.CurrentMoney}");
-            while (state.MissionSites.Any(site => site.IsActive) && state.Assets.CurrentTransportCapacity > 0)
+                $"----- AIPlayer Current turn: {gameStateView.CurrentTurn} Current money: {gameStateView.Assets.CurrentMoney}");
+            
+            while (CanLaunchSomeMission(gameStateView))
             {
-                MissionSite targetSite = state.MissionSites.First(site => site.IsActive);
-                int agentsToHire = Math.Max(
-                    Math.Min(state.Assets.CurrentTransportCapacity, MaxAgentsToSendOnMission)
-                    - state.Assets.Agents.Count,
-                    0);
-                _game.HireAgents(agentsToHire);
-                _game.LaunchMission(targetSite, state.Assets.Agents.Count);
+                MissionSite targetSite = ChooseMissionSite(gameStateView);
+                HireAgentsIfNecessary(gameStateView);
+                _controller.LaunchMission(targetSite, gameStateView.Assets.Agents.Count);
             }
             Console.Out.WriteLine(
-                $"----- AIPlayer Current turn: {state.CurrentTurn} DONE");
-            // kja3 this _game.AdvanceTime(), the while !GameOver and reference to state should come from base abstract/template method.
-            _game.AdvanceTime();
+                $"----- AIPlayer Current turn: {gameStateView.CurrentTurn} DONE");
+            // kja3 this _game.AdvanceTime(), the while !GameOver and reference to _controller should come from base abstract/template method.
+            
+            _controller.AdvanceTime();
         }
-        _game.Save();
+
+        _controller.Save();
         // kja2 to implement AI Player
         // DONE First level:
         // - Advance time until mission available
@@ -47,5 +47,20 @@ public class AIPlayer
         // - Send agents on intel-gathering duty until mission is available
         // - Send agents on available mission if not too hard
         // - Do not hire agents if it would lead to bankruptcy
+    }
+
+    private static bool CanLaunchSomeMission(GameStatePlayerView gameStateView)
+        => gameStateView.MissionSites.Any(site => site.IsActive) && gameStateView.Assets.CurrentTransportCapacity > 0;
+
+    private static MissionSite ChooseMissionSite(GameStatePlayerView gameStateView)
+        => gameStateView.MissionSites.First(site => site.IsActive);
+
+    private void HireAgentsIfNecessary(GameStatePlayerView gameStateView)
+    {
+        int agentsToHire = Math.Max(
+            Math.Min(gameStateView.Assets.CurrentTransportCapacity, MaxAgentsToSendOnMission) -
+            gameStateView.Assets.Agents.Count,
+            0);
+        _controller.HireAgents(agentsToHire);
     }
 }

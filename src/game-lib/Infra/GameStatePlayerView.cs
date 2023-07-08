@@ -4,19 +4,16 @@ namespace UfoGameLib.Infra;
 
 public class GameStatePlayerView
 {
-    private readonly Func<GameState> _gameState;
+    private readonly GameSession _session;
 
     public GameStatePlayerView(GameSession session)
     {
-        // kja2 this gameState lambda should really be unnecessary;
-        // instead, the gameState should be mutated.
-        // I think I can just remove it now? Need to check, rerun unit tests.
-        _gameState = () => session.CurrentGameState;
+        _session = session;
     }
 
-    public int CurrentTurn => _gameState().Timeline.CurrentTurn;
-    public bool IsGameOver => _gameState().IsGameOver;
-    public Missions Missions => _gameState().Missions;
-    public MissionSites MissionSites => _gameState().MissionSites;
-    public Assets Assets => _gameState().Assets;
+    public int CurrentTurn => _session.CurrentGameState.Timeline.CurrentTurn;
+    public bool IsGameOver => _session.CurrentGameState.IsGameOver;
+    public Missions Missions => _session.CurrentGameState.Missions;
+    public MissionSites MissionSites => _session.CurrentGameState.MissionSites;
+    public Assets Assets => _session.CurrentGameState.Assets;
 }

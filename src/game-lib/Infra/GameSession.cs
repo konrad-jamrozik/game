@@ -3,8 +3,7 @@ namespace UfoGameLib.Infra;
 /// <summary>
 /// GameSession represents an instance of a game session (a playthrough).
 ///
-/// As such, it maintains a reference to current GameState as well as few most recent states for
-/// limited undo capability.
+/// As such, it maintains a reference to current GameState.
 ///
 /// In addition, it allows updating of the game state by applying PlayerActions.
 ///

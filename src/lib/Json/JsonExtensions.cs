@@ -8,11 +8,11 @@ using Newtonsoft.Json.Linq;
 
 namespace Lib.Json;
 
-// kja2 need to add set of json tests showing all conversions, like:
+// to-do: need to add set of json tests showing all conversions, like:
 // type T -> json string
 // json string -> type T
-// + the choices from https://learn.microsoft.com/en-us/dotnet/standard/serialization/system-text-json/use-dom-utf8jsonreader-utf8jsonwriter?pivots=dotnet-7-0
-// + file system e.g. Lib.OS.FileSystem.ReadAllJson
+// plus the choices from https://learn.microsoft.com/en-us/dotnet/standard/serialization/system-text-json/use-dom-utf8jsonreader-utf8jsonwriter?pivots=dotnet-7-0
+// plus file system e.g. Lib.OS.FileSystem.ReadAllJson
 // See also: https://github.com/dotnet/docs/issues/24251#issue-892559426
 public static class JsonExtensions
 {
