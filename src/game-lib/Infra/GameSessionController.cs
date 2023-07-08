@@ -39,7 +39,7 @@ namespace UfoGameLib.Infra;
 /// </summary>
 public class GameSessionController
 {
-    private static readonly JsonSerializerOptions SaveJsonSerializerOptions = GetSaveGameJsonSerializerOptions();
+    private static readonly JsonSerializerOptions SaveJsonSerializerOptions = JsonSerializerOptions();
     protected readonly GameSession GameSession;
     internal readonly Configuration Config = new Configuration(new FileSystem());
 
@@ -82,14 +82,11 @@ public class GameSessionController
         return loadedGameState;
     }
 
-    private static JsonSerializerOptions GetSaveGameJsonSerializerOptions()
+    private static JsonSerializerOptions JsonSerializerOptions()
     {
-        var converterOptions = new JsonSerializerOptions(JsonExtensions.SerializerOptionsIndentedUnsafe)
-        {
-            IncludeFields = true,
-        };
+        var converterOptions = GameStateJsonConverter.JsonSerializerOptions();
         var options = new JsonSerializerOptions(converterOptions);
-        options.Converters.Add(new GameStateJsonConverter(converterOptions));
+        options.Converters.Add(new GameStateJsonConverter());
         return options;
     }
 

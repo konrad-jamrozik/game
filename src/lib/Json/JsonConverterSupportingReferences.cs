@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
@@ -9,11 +10,12 @@ namespace Lib.Json;
 
 public abstract class JsonConverterSupportingReferences<T> : JsonConverter<T>
 {
-    private readonly JsonSerializerOptions _serializationOptions;
+    protected readonly JsonSerializerOptions SerializationOptions;
 
     protected JsonConverterSupportingReferences(JsonSerializerOptions serializationOptions)
     {
-        _serializationOptions = serializationOptions;
+        SerializationOptions = serializationOptions;
+        Debug.Assert(SerializationOptions.ReferenceHandler != ReferenceHandler.Preserve);
     }
 
     protected static List<TObj> DeserializeObjArrayWithDepRefProps<TObj, TDep>(
@@ -39,13 +41,13 @@ public abstract class JsonConverterSupportingReferences<T> : JsonConverter<T>
 
     
     protected TItem Deserialize<TItem>(JsonNode parent)
-        => parent[typeof(TItem).Name].Deserialize<TItem>(_serializationOptions)!;
+        => parent[typeof(TItem).Name].Deserialize<TItem>(SerializationOptions)!;
 
     protected TItem Deserialize<TItem>(JsonNode parent, string propName, JsonSerializerOptions options)
         => parent[propName].Deserialize<TItem>(options)!;
 
     protected List<TItem> DeserializeList<TItem>(JsonNode parent, string propName)
-        => parent[propName].Deserialize<List<TItem>>(_serializationOptions)!;
+        => parent[propName].Deserialize<List<TItem>>(SerializationOptions)!;
 
     protected JsonNode JsonNode(ref Utf8JsonReader reader)
         => System.Text.Json.Nodes.JsonNode.Parse(ref reader)!;
