@@ -76,7 +76,7 @@ public class GameSessionController
     public GameState Load()
     {
         var saveGamePath = Config.SaveGameDir.JoinPath(Config.SaveFileName);
-        var loadedGameState = Config.SaveGameDir.FileSystem.ReadAllJsonTo<GameState>(saveGamePath);
+        var loadedGameState = Config.SaveGameDir.FileSystem.ReadAllJsonTo<GameState>(saveGamePath, SaveJsonSerializerOptions);
         GameSession.CurrentGameState = loadedGameState;
         Console.Out.WriteLine($"Loaded game state from {Config.SaveGameDir.FileSystem.GetFullPath(saveGamePath)}");
         return loadedGameState;

@@ -91,6 +91,11 @@ public class SimulatedFileSystem : IFileSystem
 
     public T ReadAllJsonTo<T>(string path) => ReadAllBytes(path).FromJsonTo<T>();
 
+    public T ReadAllJsonTo<T>(string path, JsonSerializerOptions options)
+    {
+        throw new NotImplementedException();
+    }
+
     public byte[] ReadAllBytes(string path) => Encoding.UTF8.GetBytes(ReadAllText(path));
 
     public FileTree FileTree(string path)

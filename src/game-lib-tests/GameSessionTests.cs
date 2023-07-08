@@ -157,8 +157,8 @@ public class GameSessionTests
         // Test the references have been preserved,
         // i.e. no duplicate object instances have been introduced.
         Assert.That(
-            gameState.MissionSites[0], 
-            Is.SameAs(gameState.Missions[0].Site));
+            gameState.Missions[0].Site, 
+            Is.SameAs(gameState.MissionSites[0]));
     }
 
 }

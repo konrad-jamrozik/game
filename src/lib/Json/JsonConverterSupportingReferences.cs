@@ -53,8 +53,8 @@ public abstract class JsonConverterSupportingReferences<T> : JsonConverter<T>
     protected JsonNode Node(ref Utf8JsonReader reader)
         => JsonNode.Parse(ref reader)!;
 
-    protected List<T> DeserializeList<T>(JsonNode parent, string propName, JsonSerializerOptions options)
-        => parent[propName].Deserialize<List<T>>(options)!;
+    protected List<TItem> DeserializeList<TItem>(JsonNode parent, string propName, JsonSerializerOptions options)
+        => parent[propName].Deserialize<List<TItem>>(options)!;
 
     protected int Id(JsonNode node) 
         =>  node["Id"]!.GetValue<int>();

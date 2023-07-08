@@ -55,8 +55,8 @@ public static class JsonExtensions
     public static T FromJsonTo<T>(this string json) =>
         JsonSerializer.Deserialize<T>(json, SerializerOptions)!;
 
-    public static T FromJsonTo<T>(this byte[] bytes) =>
-        JsonSerializer.Deserialize<T>(bytes, SerializerOptions)!;
+    public static T FromJsonTo<T>(this byte[] bytes, JsonSerializerOptions? options = null) =>
+        JsonSerializer.Deserialize<T>(bytes, options ?? SerializerOptions)!;
 
     public static T FromJsonToUnsafe<T>(this string json) =>
         JsonSerializer.Deserialize<T>(json, SerializerOptionsUnsafe)!;

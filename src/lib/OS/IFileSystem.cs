@@ -21,6 +21,7 @@ public interface IFileSystem
     string ReadAllText(string path);
     JsonElement ReadAllJson(string path);
     T ReadAllJsonTo<T>(string path);
+    T ReadAllJsonTo<T>(string path, JsonSerializerOptions options);
     byte[] ReadAllBytes(string path);
     FileTree FileTree(string path);
     Dir? Parent(string path);

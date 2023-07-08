@@ -61,7 +61,13 @@ public class FileSystem : IFileSystem
 
     public JsonElement ReadAllJson(string path) => ReadAllBytes(path).FromJsonTo<JsonElement>();
 
-    public T ReadAllJsonTo<T>(string path) => ReadAllBytes(path).FromJsonTo<T>();
+    public T ReadAllJsonTo<T>(string path)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public T ReadAllJsonTo<T>(string path, JsonSerializerOptions options) 
+        => ReadAllBytes(path).FromJsonTo<T>(options);
 
     public FileTree FileTree(string path) => new FileTree(this, path);
 
