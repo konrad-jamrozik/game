@@ -4,7 +4,7 @@ using UfoGameLib.Model;
 namespace UfoGameLib;
 
 /// <summary>
-/// "Only send agents on missions" AI player intellect capabilities:
+/// "Launch missions" AI player intellect capabilities:
 ///
 /// - Advance time until mission is available
 /// - Once mission available, hire agents up to transport limit and send on the first available mission
@@ -14,7 +14,7 @@ namespace UfoGameLib;
 /// due to running out of money.
 ///
 /// </summary>
-public class OnlySendAgentsOnMissionsAIPlayerIntellect : IAIPlayerIntellect
+public class LaunchMissionsAIPlayerIntellect : IAIPlayerIntellect
 {
     private const int MaxAgentsToSendOnMission = 2;
 
@@ -28,19 +28,19 @@ public class OnlySendAgentsOnMissionsAIPlayerIntellect : IAIPlayerIntellect
         }
     }
 
-    private static bool CanLaunchSomeMission(GameStatePlayerView gameStateView)
-        => gameStateView.MissionSites.Any(site => site.IsActive) && gameStateView.Assets.CurrentTransportCapacity > 0;
+    private static bool CanLaunchSomeMission(GameStatePlayerView state)
+        => state.MissionSites.Any(site => site.IsActive) && state.Assets.CurrentTransportCapacity > 0;
 
-    private static MissionSite ChooseMissionSite(GameStatePlayerView gameStateView)
-        => gameStateView.MissionSites.First(site => site.IsActive);
+    private static MissionSite ChooseMissionSite(GameStatePlayerView state)
+        => state.MissionSites.First(site => site.IsActive);
 
-    private static void HireAgentsIfNecessary(GameStatePlayerView gameStateView, GameSessionController controller)
+    private static void HireAgentsIfNecessary(GameStatePlayerView state, GameSessionController controller)
     {
         // If there are less than MaxAgentsToSendOnMission then hire enough agents to reach MaxAgentsToSendOnMission,
         // however, no more than remaining transport capacity, i.e. CurrentTransportCapacity.
         int agentsToHire = Math.Max(
-            Math.Min(gameStateView.Assets.CurrentTransportCapacity, MaxAgentsToSendOnMission) -
-            gameStateView.Assets.Agents.Count,
+            Math.Min(state.Assets.CurrentTransportCapacity, MaxAgentsToSendOnMission) -
+            state.Assets.Agents.Count,
             0);
 
         controller.HireAgents(agentsToHire);

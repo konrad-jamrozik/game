@@ -6,6 +6,7 @@ public class BasicAIPlayerIntellect : IAIPlayerIntellect
 {
     public void PlayGameTurn(GameStatePlayerView state, GameSessionController controller)
     {
+        if (state.MissionSites.)
         // kja curr work PlayGameTurnWithBasicIntellect: see also note at file bottom.
     }
 }

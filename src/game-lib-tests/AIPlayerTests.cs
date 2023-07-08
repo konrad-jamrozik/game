@@ -10,15 +10,15 @@ public class AIPlayerTests
     }
 
     [Test]
-    public void AIPlayerWithDoNothingIntellectPlaysGameUntilConclusion()
+    public void DoNothingAIPlayerIntellectPlaysGameUntilConclusion()
         => AIPlayerPlaysGameUntilConclusion(AIPlayer.Intellect.DoNothing);
 
     [Test]
-    public void AIPlayerWithOnlySendAgentsOnMissionsIntellectPlaysGameUntilConclusion()
-        => AIPlayerPlaysGameUntilConclusion(AIPlayer.Intellect.OnlySendAgentsOnMissions);
+    public void LaunchMissionsAIPlayerIntellectPlaysGameUntilConclusion()
+        => AIPlayerPlaysGameUntilConclusion(AIPlayer.Intellect.LaunchMissions);
 
     [Test]
-    public void AIPlayerWithBasicIntellectPlaysGameUntilConclusion()
+    public void BasicAIPlayerIntellectPlaysGameUntilConclusion()
         => AIPlayerPlaysGameUntilConclusion(AIPlayer.Intellect.Basic);
 
     private static void AIPlayerPlaysGameUntilConclusion(AIPlayer.Intellect intellect)
