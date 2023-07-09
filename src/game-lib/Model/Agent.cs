@@ -2,12 +2,10 @@ namespace UfoGameLib.Model;
 
 public class Agent
 {
+    public static readonly int HireCost = 50;
+    public static readonly int UpkeepCost = 5;
+
     public readonly int Id;
-    // kja Agent.CurrentState: bunch of todos:
-    // - ensure save/load works with this
-    // - Ensure that nothing can be done with InTransit agents
-    // - See to-do in LaunchMissionPlayerAction for OnMission state
-    //   - Now the mission result needs to be computed at the end of turn, not immediately
     public State CurrentState;
 
     public enum State
@@ -15,10 +13,10 @@ public class Agent
         InTransit,
         Available,
         OnMission,
-        Training, // Currently unused
-        Recovering, // Currently unused
-        GatheringIntel, // Currently unused
-        GeneratingIncome // Currently unused
+        Training, // kja2 Training Currently used, but brings no effect
+        GatheringIntel, // kja2 GatheringIntel Currently used, but brings no effect
+        GeneratingIncome, // kja2 GeneratingIncome Currently used, but brings no effect
+        Recovering, // kja2 Recovering Currently unused
     }
 
     public Agent(int id)
@@ -27,5 +25,16 @@ public class Agent
         CurrentState = State.InTransit;
     }
 
-    public bool CanBeSentOnMission => CurrentState == State.Available;
+    public bool CanBeSentOnMission => CurrentState == State.Available || CurrentState == State.Training;
+
+    public bool IsAvailable => CurrentState == State.Available;
+
+    public void SendToTraining()
+        => CurrentState = State.Training;
+
+    public void GatherIntel()
+        => CurrentState = State.GatheringIntel;
+
+    public void GenerateIncome()
+        => CurrentState = State.GeneratingIncome;
 }

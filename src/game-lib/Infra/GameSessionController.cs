@@ -47,6 +47,8 @@ public class GameSessionController
         GameSession = gameSession;
     }
 
+    public Random Random => GameSession.Random;
+
     public GameStatePlayerView GameStatePlayerView => new GameStatePlayerView(GameSession);
 
     public void AdvanceTime()

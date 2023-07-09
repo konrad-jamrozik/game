@@ -12,6 +12,7 @@ namespace UfoGameLib.Infra;
 public class GameSession
 {
     public GameState CurrentGameState = GameState.NewInitialGameState();
+    public readonly Random Random = new Random();
 
     public void ApplyPlayerAction(PlayerAction action)
         => ApplyPlayerActions(action);

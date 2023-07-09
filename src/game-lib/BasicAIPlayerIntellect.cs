@@ -1,12 +1,90 @@
 using UfoGameLib.Infra;
+using UfoGameLib.Model;
 
 namespace UfoGameLib;
 
 public class BasicAIPlayerIntellect : IAIPlayerIntellect
 {
+    private static readonly Dictionary<int, Action<Agent>> AgentActionMap = new Dictionary<int, Action<Agent>>
+    {
+        [0] = agent => agent.SendToTraining(),
+        [1] = agent => agent.GatherIntel(),
+        [2] = agent => agent.GenerateIncome(),
+    };
+
+    private static void AssignAvailableAgents(GameStatePlayerView state, GameSessionController controller)
+    {
+        state.Assets.Agents.Available.ForEach(
+            agent => AgentActionMap[controller.Random.Next(3)].Invoke(agent));
+    }
+
+    private static int ComputeAgentsToHire(GameStatePlayerView state)
+    {
+        // Strive to always have twice as many agents as transport capacity,
+        // to keep adequate reserves for defense and buffer for recovery.
+        int desiredAgentCount = state.Assets.MaxTransportCapacity * 2;
+
+        int agentsMissingToDesired = desiredAgentCount - state.Assets.Agents.Count;
+        
+        int moneyAvailableFor = state.Assets.CurrentMoney / Agent.HireCost;
+
+        // The resulting total upkeep of all agents, including the agents
+        // to be hired now, cannot exceed the available funding.
+        int maxTolerableUpkeepCost = state.Assets.Funding / Agent.UpkeepCost;
+        int currentUpkeepCost = state.Assets.Agents.TotalUpkeepCost;
+        int maxUpkeepIncrease = maxTolerableUpkeepCost - currentUpkeepCost;
+        int maxAgentIncreaseByUpkeep = maxUpkeepIncrease / Agent.UpkeepCost;
+
+        int maxAgentsToHire = Math.Min(
+            Math.Min(agentsMissingToDesired, moneyAvailableFor),
+            maxAgentIncreaseByUpkeep);
+
+        return maxAgentsToHire;
+    }
+
+    private static bool CanLaunchSomeMission(GameStatePlayerView state)
+        => state.MissionSites.Any(site => site.IsActive)
+           && state.Assets.CurrentTransportCapacity > 0
+           // kja this will have only Available and Training agents, but not GatheringIntel or GeneratingIncome
+           // Need to do the following:
+           // - an agent gathering intel or generating income can be recalled, making them go into InTransit state where 
+           // they'll become available next turn
+           // - the AI player needs to decide how many agents to keep in reserve for missions and allocate/recall
+           // as appropriate.
+           && state.Assets.Agents.Any(agent => agent.CanBeSentOnMission);
+
+    private static MissionSite ChooseMissionSite(GameStatePlayerView state)
+        => state.MissionSites.First(site => site.IsActive);
+
+    private static List<Agent> ChooseAgents(GameStatePlayerView state)
+    {
+        List<Agent> agents = state.Assets.Agents.CanBeSentOnMission
+            .Take(state.Assets.CurrentTransportCapacity)
+            .ToList();
+
+        Debug.Assert(agents.Any());
+
+        return agents;
+    }
+
     public void PlayGameTurn(GameStatePlayerView state, GameSessionController controller)
     {
-        // kja curr work PlayGameTurnWithBasicIntellect: see also note at file bottom.
+        // kja2 curr work PlayGameTurnWithBasicIntellect: see also note at file bottom.
+        
+        int agentsToHire = ComputeAgentsToHire(state);
+        if (agentsToHire > 0)
+            controller.HireAgents(agentsToHire);
+
+        while (CanLaunchSomeMission(state))
+        {
+            MissionSite site = ChooseMissionSite(state);
+            List<Agent> agents = ChooseAgents(state);
+
+            controller.LaunchMission(site, agents);
+        }
+
+        AssignAvailableAgents(state, controller);
+
     }
 }
 

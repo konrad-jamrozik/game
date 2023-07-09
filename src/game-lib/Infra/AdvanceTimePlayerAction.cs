@@ -18,7 +18,7 @@ public class AdvanceTimePlayerAction : PlayerAction
         state.Assets.CurrentTransportCapacity = state.Assets.MaxTransportCapacity;
 
         // Agents cost upkeep.
-        state.Assets.CurrentMoney -= state.Assets.Agents.Count * 5;
+        state.Assets.CurrentMoney -= state.Assets.Agents.Count * Agent.UpkeepCost;
 
         UpdateAgentStates(state);
 

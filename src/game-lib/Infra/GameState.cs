@@ -22,7 +22,8 @@ public class GameState
         => new GameState(
             updateCount: 0,
             new Timeline(currentTurn: 1),
-            new Assets(currentMoney: 100, new Agents(), maxTransportCapacity: 4, currentTransportCapacity: 4),
+            // kja test funding save/load roundtrip
+            new Assets(currentMoney: 100, funding: 20, agents: new Agents(), maxTransportCapacity: 4, currentTransportCapacity: 4),
             new MissionSites(),
             new Missions());
 
