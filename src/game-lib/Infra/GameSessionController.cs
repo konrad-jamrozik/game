@@ -60,6 +60,15 @@ public class GameSessionController
     public void FireAgents(IEnumerable<string> agentNames)
         => throw new NotImplementedException();
 
+    public void SendAgentToTraining(Agent agent)
+        => GameSession.ApplyPlayerAction(new SendAgentToTrainingPlayerAction(agent));
+
+    public void SendAgentToGatherIntel(Agent agent)
+        => GameSession.ApplyPlayerAction(new SendAgentToGatherIntelPlayerAction(agent));
+
+    public void SendAgentToGenerateIncome(Agent agent)
+        => GameSession.ApplyPlayerAction(new SendAgentToGenerateIncomePlayerAction(agent));
+
     public void RecallAgent(Agent agent)
         => GameSession.ApplyPlayerAction(new RecallAgentPlayerAction(agent));
 

@@ -5,18 +5,17 @@ namespace UfoGameLib;
 
 public class BasicAIPlayerIntellect : IAIPlayerIntellect
 {
-    private static readonly Dictionary<int, Action<Agent>> AgentActionMap = new Dictionary<int, Action<Agent>>
+    private static readonly Dictionary<int, Action<GameSessionController, Agent>> AgentActionMap = new Dictionary<int, Action<GameSessionController, Agent>>
     {
-        // kja these actions cannot be called directly: they must go through Controller instead.
-        [0] = agent => agent.SendToTraining(),
-        [1] = agent => agent.GatherIntel(),
-        [2] = agent => agent.GenerateIncome(),
+        [0] = (controller, agent) => controller.SendAgentToTraining(agent),
+        [1] = (controller, agent) => controller.SendAgentToGatherIntel(agent),
+        [2] = (controller, agent) => controller.SendAgentToGenerateIncome(agent),
     };
 
     private static void AssignAvailableAgents(GameStatePlayerView state, GameSessionController controller)
     {
         state.Assets.Agents.Available.ForEach(
-            agent => AgentActionMap[controller.Random.Next(AgentActionMap.Keys.Count)].Invoke(agent));
+            agent => AgentActionMap[controller.Random.Next(AgentActionMap.Keys.Count)].Invoke(controller, agent));
     }
 
     private static int ComputeAgentsToHire(GameStatePlayerView state)

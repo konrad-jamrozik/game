@@ -52,6 +52,9 @@ public class Agent
     public void GenerateIncome()
         => CurrentState = State.GeneratingIncome;
 
+    public void SendOnMission()
+        => CurrentState = State.OnMission;
+
     public void Recall()
     {
         Debug.Assert(IsRecallable);

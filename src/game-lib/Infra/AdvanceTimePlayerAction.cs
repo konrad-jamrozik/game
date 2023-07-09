@@ -12,7 +12,7 @@ public class AdvanceTimePlayerAction : PlayerAction
     public override void Apply(GameState state)
     {
         state.Timeline.CurrentTurn++;
-        Console.Out.WriteLine($"Advance time into turn: {state.Timeline.CurrentTurn}");
+        Console.Out.WriteLine($"PlayerAction: Advance time into turn: {state.Timeline.CurrentTurn}");
 
         // Each turn all transport capacity gets freed up.
         state.Assets.CurrentTransportCapacity = state.Assets.MaxTransportCapacity;

@@ -9,5 +9,6 @@ public class Mission
         Debug.Assert(site.IsActive || (skipValidation ?? false));
 
         Site = site;
+        Site.IsActive = false;
     }
 }

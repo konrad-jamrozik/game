@@ -13,7 +13,7 @@ public class RecallAgentPlayerAction : PlayerAction
 
     public override void Apply(GameState state)
     {
-        Console.Out.WriteLine($"Recall agent. ID: {_agent.Id}");
+        Console.Out.WriteLine($"PlayerAction: Recall agent. ID: {_agent.Id}");
         _agent.Recall();
     }
 }
