@@ -60,6 +60,9 @@ public class GameSessionController
     public void FireAgents(IEnumerable<string> agentNames)
         => throw new NotImplementedException();
 
+    public void RecallAgent(Agent agent)
+        => GameSession.ApplyPlayerAction(new RecallAgentPlayerAction(agent));
+
     /// <summary>
     /// Convenience method. LaunchMission, but instead of choosing specific agents,
     /// choose up to first agentCount agents that can be sent on a mission.

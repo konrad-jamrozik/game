@@ -2,12 +2,6 @@ namespace UfoGameLib.Model;
 
 public class Agent
 {
-    public static readonly int HireCost = 50;
-    public static readonly int UpkeepCost = 5;
-
-    public readonly int Id;
-    public State CurrentState;
-
     public enum State
     {
         InTransit,
@@ -19,15 +13,35 @@ public class Agent
         Recovering, // kja2 Recovering Currently unused
     }
 
+    public static readonly int HireCost = 50;
+    public static readonly int UpkeepCost = 5;
+
+    public readonly int Id;
+    public State CurrentState;
+
     public Agent(int id)
     {
         Id = id;
         CurrentState = State.InTransit;
     }
 
-    public bool CanBeSentOnMission => CurrentState == State.Available || CurrentState == State.Training;
+    public bool CanBeSentOnMission => IsAvailable || IsTraining;
+
+    public bool CanBeSentOnMissionNextTurn => CanBeSentOnMission || IsInTransit;
+
+    public bool IsInTransit => CurrentState == State.InTransit;
 
     public bool IsAvailable => CurrentState == State.Available;
+
+    public bool IsOnMission => CurrentState == State.OnMission;
+
+    public bool IsTraining => CurrentState == State.Training;
+
+    public bool IsGatheringIntel => CurrentState == State.GatheringIntel;
+
+    public bool IsGeneratingIncome => CurrentState == State.GeneratingIncome;
+
+    public bool IsRecallable => IsGatheringIntel || IsGeneratingIncome;
 
     public void SendToTraining()
         => CurrentState = State.Training;
@@ -37,4 +51,10 @@ public class Agent
 
     public void GenerateIncome()
         => CurrentState = State.GeneratingIncome;
+
+    public void Recall()
+    {
+        Debug.Assert(IsRecallable);
+        CurrentState = State.InTransit;
+    }
 }

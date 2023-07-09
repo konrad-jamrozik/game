@@ -7,6 +7,7 @@ public class BasicAIPlayerIntellect : IAIPlayerIntellect
 {
     private static readonly Dictionary<int, Action<Agent>> AgentActionMap = new Dictionary<int, Action<Agent>>
     {
+        // kja these actions cannot be called directly: they must go through Controller instead.
         [0] = agent => agent.SendToTraining(),
         [1] = agent => agent.GatherIntel(),
         [2] = agent => agent.GenerateIncome(),
@@ -15,14 +16,15 @@ public class BasicAIPlayerIntellect : IAIPlayerIntellect
     private static void AssignAvailableAgents(GameStatePlayerView state, GameSessionController controller)
     {
         state.Assets.Agents.Available.ForEach(
-            agent => AgentActionMap[controller.Random.Next(3)].Invoke(agent));
+            agent => AgentActionMap[controller.Random.Next(AgentActionMap.Keys.Count)].Invoke(agent));
     }
 
     private static int ComputeAgentsToHire(GameStatePlayerView state)
     {
-        // Strive to always have twice as many agents as transport capacity,
-        // to keep adequate reserves for defense and buffer for recovery.
-        int desiredAgentCount = state.Assets.MaxTransportCapacity * 2;
+        // Strive to always have thrice as many agents as transport capacity,
+        // to keep adequate reserves for defense, buffer for recovery and
+        // to gather intel or generate income.
+        int desiredAgentCount = state.Assets.MaxTransportCapacity * 3;
 
         int agentsMissingToDesired = desiredAgentCount - state.Assets.Agents.Count;
         
@@ -42,15 +44,24 @@ public class BasicAIPlayerIntellect : IAIPlayerIntellect
         return maxAgentsToHire;
     }
 
+    private static void RecallAgents(GameStatePlayerView state, GameSessionController controller)
+    {
+        var agents = state.Assets.Agents;
+        // Here we assume that we determine agents to recall in given turn before 
+        // any agents have been sent on a mission.
+        Debug.Assert(agents.OnMission.Count == 0);
+
+        while (agents.CanBeSentOnMissionNextTurn.Count < state.Assets.MaxTransportCapacity * 2
+               && agents.Recallable.Count > 0)
+        {
+            Agent agentToRecall = agents.Recallable.RandomSubset(1).Single();
+            controller.RecallAgent(agentToRecall);
+        }
+    }
+
     private static bool CanLaunchSomeMission(GameStatePlayerView state)
         => state.MissionSites.Any(site => site.IsActive)
            && state.Assets.CurrentTransportCapacity > 0
-           // kja this will have only Available and Training agents, but not GatheringIntel or GeneratingIncome
-           // Need to do the following:
-           // - an agent gathering intel or generating income can be recalled, making them go into InTransit state where 
-           // they'll become available next turn
-           // - the AI player needs to decide how many agents to keep in reserve for missions and allocate/recall
-           // as appropriate.
            && state.Assets.Agents.Any(agent => agent.CanBeSentOnMission);
 
     private static MissionSite ChooseMissionSite(GameStatePlayerView state)
@@ -62,7 +73,7 @@ public class BasicAIPlayerIntellect : IAIPlayerIntellect
             .Take(state.Assets.CurrentTransportCapacity)
             .ToList();
 
-        Debug.Assert(agents.Any());
+        Debug.Assert(agents.Count > 0);
 
         return agents;
     }
@@ -75,6 +86,8 @@ public class BasicAIPlayerIntellect : IAIPlayerIntellect
         if (agentsToHire > 0)
             controller.HireAgents(agentsToHire);
 
+        RecallAgents(state, controller);
+
         while (CanLaunchSomeMission(state))
         {
             MissionSite site = ChooseMissionSite(state);
@@ -84,10 +97,8 @@ public class BasicAIPlayerIntellect : IAIPlayerIntellect
         }
 
         AssignAvailableAgents(state, controller);
-
     }
 }
-
 
 // Need to add failure criteria that is not just a hard time limit:
 // Add "Red Dawn remnants" faction that gains power over time
