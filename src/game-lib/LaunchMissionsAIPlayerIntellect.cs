@@ -16,8 +16,6 @@ namespace UfoGameLib;
 /// </summary>
 public class LaunchMissionsAIPlayerIntellect : IAIPlayerIntellect
 {
-    private const int MaxAgentsToSendOnMission = 2;
-
     public void PlayGameTurn(GameStatePlayerView state, GameSessionController controller)
     {
         int agentsToHire = ComputeAgentsToHire(state);
@@ -35,16 +33,12 @@ public class LaunchMissionsAIPlayerIntellect : IAIPlayerIntellect
 
     private static int ComputeAgentsToHire(GameStatePlayerView state)
     {
-        // kja2 the CurrentTransportCapacity should no longer be used as a limiting factor in this formulas,
-        // as newly hired agents are in transit anyway.
-        //
-        // If there are less than MaxAgentsToSendOnMission then hire enough agents to reach MaxAgentsToSendOnMission.
-        // However, hire no more than  CurrentTransportCapacity.
+        // Strive to always have twice as many agents as transport capacity,
+        // to keep adequate reserves for defense and buffer for recovery.
+        int maxAgentsToHave = state.Assets.MaxTransportCapacity * 2;
+        int agentsMissingToMax = maxAgentsToHave - state.Assets.Agents.Count;
 
-        int maxCountOfAgentsToSend = MaxCountOfAgentsToSend(state);
-        int agentsNeededToReachMaxAgentsCountToSend = maxCountOfAgentsToSend - state.Assets.Agents.Count;
-        int agentsToHire = Math.Max(agentsNeededToReachMaxAgentsCountToSend, 0);
-        return agentsToHire;
+        return agentsMissingToMax;
     }
 
     private static bool CanLaunchSomeMission(GameStatePlayerView state)
@@ -57,15 +51,13 @@ public class LaunchMissionsAIPlayerIntellect : IAIPlayerIntellect
 
     private static List<Agent> ChooseAgents(GameStatePlayerView state)
     {
-        int maxCountOfAgentsToSend = MaxCountOfAgentsToSend(state);
         List<Agent> agents = state.Assets.Agents
             .Where(agent => agent.CanBeSentOnMission)
-            .Take(maxCountOfAgentsToSend)
+            .Take(state.Assets.CurrentTransportCapacity)
             .ToList();
+
         Debug.Assert(agents.Any());
+
         return agents;
     }
-
-    private static int MaxCountOfAgentsToSend(GameStatePlayerView state)
-        => Math.Min(state.Assets.CurrentTransportCapacity, MaxAgentsToSendOnMission);
 }

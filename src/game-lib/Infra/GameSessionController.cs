@@ -40,7 +40,7 @@ public class GameSessionController
 {
     private static readonly JsonSerializerOptions SaveJsonSerializerOptions = JsonSerializerOptions();
     protected readonly GameSession GameSession;
-    internal readonly Configuration Config = new Configuration(new FileSystem());
+    private readonly Configuration _config = new Configuration(new FileSystem());
 
     public GameSessionController(GameSession gameSession)
     {
@@ -50,10 +50,10 @@ public class GameSessionController
     public GameStatePlayerView GameStatePlayerView => new GameStatePlayerView(GameSession);
 
     public void AdvanceTime()
-        => GameSession.ApplyPlayerActions(new AdvanceTimePlayerAction());
+        => GameSession.ApplyPlayerAction(new AdvanceTimePlayerAction());
 
     public void HireAgents(int count)
-        => GameSession.ApplyPlayerActions(new HireAgentsPlayerAction(count));
+        => GameSession.ApplyPlayerAction(new HireAgentsPlayerAction(count));
 
     public void FireAgents(IEnumerable<string> agentNames)
         => throw new NotImplementedException();
@@ -75,25 +75,26 @@ public class GameSessionController
     }
 
     public void LaunchMission(MissionSite site, List<Agent> agents)
-        => GameSession.ApplyPlayerActions(new LaunchMissionPlayerAction(site, agents));
+        => GameSession.ApplyPlayerAction(new LaunchMissionPlayerAction(site, agents));
 
     // kja3 introduce "SaveFile" abstraction akin to MonthlyJsonFilesStorage
     // Also, GameSession should have reference to the "SaveFile", not the GameSessionController.
     public void Save()
     {
-        string saveGamePath = Config.SaveGameDir.CreateDirIfNotExists()
+        string saveGamePath = _config.SaveGameDir.CreateDirIfNotExists()
             .WriteAllText(
-                Config.SaveFileName,
+                _config.SaveFileName,
                 CurrentGameStateSerializedAsJsonString());
-        Console.Out.WriteLine($"Saved game state to {Config.SaveGameDir.FileSystem.GetFullPath(saveGamePath)}");
+        Console.Out.WriteLine($"Saved game state to {_config.SaveGameDir.FileSystem.GetFullPath(saveGamePath)}");
     }
 
     public GameState Load()
     {
-        var saveGamePath = Config.SaveGameDir.JoinPath(Config.SaveFileName);
-        var loadedGameState = Config.SaveGameDir.FileSystem.ReadAllJsonTo<GameState>(saveGamePath, SaveJsonSerializerOptions);
+        var saveGamePath = _config.SaveGameDir.JoinPath(_config.SaveFileName);
+        var loadedGameState =
+            _config.SaveGameDir.FileSystem.ReadAllJsonTo<GameState>(saveGamePath, SaveJsonSerializerOptions);
         GameSession.CurrentGameState = loadedGameState;
-        Console.Out.WriteLine($"Loaded game state from {Config.SaveGameDir.FileSystem.GetFullPath(saveGamePath)}");
+        Console.Out.WriteLine($"Loaded game state from {_config.SaveGameDir.FileSystem.GetFullPath(saveGamePath)}");
         return loadedGameState;
     }
 

@@ -13,6 +13,10 @@ public class GameSession
 {
     public GameState CurrentGameState = GameState.NewInitialGameState();
 
+    public void ApplyPlayerAction(PlayerAction action)
+        => ApplyPlayerActions(action);
+
+
     public void ApplyPlayerActions(params PlayerAction[] actionsData)
     {
         PlayerActions actions = new PlayerActions(actionsData);
@@ -24,8 +28,9 @@ public class GameSession
         PlayerActions actions)
     {
         Debug.Assert(!state.IsGameOver);
-        state.UpdateCount += 1;
         actions.Apply(state);
+        
+        // Currently GameStateUpdateLog is just a stub.
         return new GameStateUpdateLog();
     }
 }

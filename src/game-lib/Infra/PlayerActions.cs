@@ -8,6 +8,10 @@ public class PlayerActions : List<PlayerAction>
 
     public void Apply(GameState state)
     {
-        ForEach(action => action.Apply(state));
+        ForEach(action =>
+        {
+            action.Apply(state);
+            state.UpdateCount += 1;
+        });
     }
 }
