@@ -7,7 +7,6 @@ public class AIPlayer
     public enum Intellect
     {
         DoNothing,
-        LaunchMissions,
         Basic
     }
 
@@ -15,7 +14,6 @@ public class AIPlayer
         new Dictionary<Intellect, IAIPlayerIntellect>
         {
             [Intellect.Basic] = new BasicAIPlayerIntellect(),
-            [Intellect.LaunchMissions] = new LaunchMissionsAIPlayerIntellect(),
             [Intellect.DoNothing] = new DoNothingAIPlayerIntellect(),
         };
 

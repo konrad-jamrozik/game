@@ -14,10 +14,6 @@ public class AIPlayerTests
         => AIPlayerPlaysGameUntilConclusion(AIPlayer.Intellect.DoNothing);
 
     [Test]
-    public void LaunchMissionsAIPlayerIntellectPlaysGameUntilConclusion()
-        => AIPlayerPlaysGameUntilConclusion(AIPlayer.Intellect.LaunchMissions);
-
-    [Test]
     public void BasicAIPlayerIntellectPlaysGameUntilConclusion()
         => AIPlayerPlaysGameUntilConclusion(AIPlayer.Intellect.Basic);
 
