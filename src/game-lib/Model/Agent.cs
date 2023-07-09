@@ -27,7 +27,7 @@ public class Agent
 
     public bool CanBeSentOnMission => IsAvailable || IsTraining;
 
-    public bool CanBeSentOnMissionNextTurn => CanBeSentOnMission || IsInTransit;
+    public bool CanBeSentOnMissionNextTurn => CanBeSentOnMission || IsInTransit || IsOnMission;
 
     public bool IsInTransit => CurrentState == State.InTransit;
 

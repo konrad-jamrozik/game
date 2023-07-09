@@ -5,18 +5,12 @@ namespace UfoGameLib;
 
 public class BasicAIPlayerIntellect : IAIPlayerIntellect
 {
-    private static readonly Dictionary<int, Action<GameSessionController, Agent>> AgentActionMap = new Dictionary<int, Action<GameSessionController, Agent>>
-    {
-        [0] = (controller, agent) => controller.SendAgentToTraining(agent),
-        [1] = (controller, agent) => controller.SendAgentToGatherIntel(agent),
-        [2] = (controller, agent) => controller.SendAgentToGenerateIncome(agent),
-    };
-
-    private static void AssignAvailableAgents(GameStatePlayerView state, GameSessionController controller)
-    {
-        state.Assets.Agents.Available.ForEach(
-            agent => AgentActionMap[controller.Random.Next(AgentActionMap.Keys.Count)].Invoke(controller, agent));
-    }
+    private static readonly Dictionary<int, Action<GameSessionController, Agent>> AgentActionMap =
+        new Dictionary<int, Action<GameSessionController, Agent>>
+        {
+            [1] = (controller, agent) => controller.SendAgentToGatherIntel(agent),
+            [2] = (controller, agent) => controller.SendAgentToGenerateIncome(agent),
+        };
 
     private static int ComputeAgentsToHire(GameStatePlayerView state)
     {
@@ -26,21 +20,28 @@ public class BasicAIPlayerIntellect : IAIPlayerIntellect
         int desiredAgentCount = state.Assets.MaxTransportCapacity * 3;
 
         int agentsMissingToDesired = desiredAgentCount - state.Assets.Agents.Count;
-        
+
         int moneyAvailableFor = state.Assets.CurrentMoney / Agent.HireCost;
 
         // The resulting total upkeep of all agents, including the agents
         // to be hired now, cannot exceed the available funding.
-        int maxTolerableUpkeepCost = state.Assets.Funding / Agent.UpkeepCost;
+        int maxTolerableUpkeepCost = state.Assets.Funding;
         int currentUpkeepCost = state.Assets.Agents.TotalUpkeepCost;
         int maxUpkeepIncrease = maxTolerableUpkeepCost - currentUpkeepCost;
         int maxAgentIncreaseByUpkeep = maxUpkeepIncrease / Agent.UpkeepCost;
 
-        int maxAgentsToHire = Math.Min(
+        int agentsToHire = Math.Min(
             Math.Min(agentsMissingToDesired, moneyAvailableFor),
             maxAgentIncreaseByUpkeep);
 
-        return maxAgentsToHire;
+        Console.Out.WriteLine(
+            $"AIPlayer: ComputeAgentsToHire: " +
+            $"agentsMissingToDesired: {agentsMissingToDesired}, " +
+            $"moneyAvailableFor: {moneyAvailableFor}, " +
+            $"maxAgentIncreaseByUpkeep: {maxAgentIncreaseByUpkeep}, " +
+            $"agentsToHire: {agentsToHire}");
+
+        return agentsToHire;
     }
 
     private static void RecallAgents(GameStatePlayerView state, GameSessionController controller)
@@ -50,13 +51,16 @@ public class BasicAIPlayerIntellect : IAIPlayerIntellect
         // any agents have been sent on a mission.
         Debug.Assert(agents.OnMission.Count == 0);
 
-        while (agents.CanBeSentOnMissionNextTurn.Count < state.Assets.MaxTransportCapacity * 2
+        while (agents.CanBeSentOnMissionNextTurn.Count < DesiredAgentReserve(state)
                && agents.Recallable.Count > 0)
         {
             Agent agentToRecall = agents.Recallable.RandomSubset(1).Single();
             controller.RecallAgent(agentToRecall);
         }
     }
+
+    private static int DesiredAgentReserve(GameStatePlayerView state)
+        => state.Assets.MaxTransportCapacity * 2;
 
     private static bool CanLaunchSomeMission(GameStatePlayerView state)
         => state.MissionSites.Any(site => site.IsActive)
@@ -77,10 +81,26 @@ public class BasicAIPlayerIntellect : IAIPlayerIntellect
         return agents;
     }
 
+    private static void AssignAvailableAgents(GameStatePlayerView state, GameSessionController controller)
+    {
+        Console.Out.WriteLine(
+            $"AIPlayer: AssignAvailableAgents. " +
+            $"Count: {state.Assets.Agents.CanBeSentOnMissionNextTurn.Count}, " +
+            $"Desired: {DesiredAgentReserve(state)}");
+
+        while (state.Assets.Agents.CanBeSentOnMissionNextTurn.Count > DesiredAgentReserve(state))
+        {
+            Agent agentToAssign = state.Assets.Agents.Available.RandomSubset(1).Single();
+            AgentActionMap[controller.Random.Next(AgentActionMap.Keys.Count)].Invoke(controller, agentToAssign);
+        }
+
+        state.Assets.Agents.Available.ForEach(controller.SendAgentToTraining);
+    }
+
     public void PlayGameTurn(GameStatePlayerView state, GameSessionController controller)
     {
         // kja2 curr work PlayGameTurnWithBasicIntellect: see also note at file bottom.
-        
+
         int agentsToHire = ComputeAgentsToHire(state);
         if (agentsToHire > 0)
             controller.HireAgents(agentsToHire);
