@@ -1,3 +1,4 @@
+using Lib.Tests.Json;
 using UfoGameLib.Infra;
 using UfoGameLib.Model;
 
@@ -122,8 +123,9 @@ public class GameSessionTests
     /// When:
     ///   That game state is saved and then loaded, a.k.a. round-tripped.
     /// Then:
-    ///   - The resulting game state is the same as before saving
-    ///   - and no duplicate instance objects have been deserialized.
+    ///   - The resulting loaded game state is the same as before saving
+    ///   - and no duplicate instance objects have been introduced
+    ///   - during serialization (saving) or deserialization (loading).
     /// </summary>
     [Test]
     public void RoundTrippingSavingAndLoadingGameStateBehavesCorrectly()
@@ -143,21 +145,34 @@ public class GameSessionTests
         controller.AdvanceTime();
         controller.AdvanceTime();
 
-        // Act 1 and 2
+        // Act 1/2 and 2/2
         controller.Save();
         controller.Load();
 
-        var state = controller.GameStatePlayerView;
-        Assert.That(state.CurrentTurn, Is.EqualTo(7));
-        Assert.That(state.Assets.Agents, Has.Count.EqualTo(3));
-        Assert.That(state.Missions, Has.Count.EqualTo(1));
-        Assert.That(state.MissionSites, Has.Count.EqualTo(2));
+        // Assume: session.PreviousGameState has game state as saved.
+        // Assume: session.CurrentGameState has game state as loaded.
+        // Assert that the GameState is the same after loading
+        new JsonDiffAssertion(
+                session.PreviousGameState!,
+                session.CurrentGameState,
+                GameSessionController.SaveJsonSerializerOptions)
+            .Assert();
 
-        // Test the references have been preserved,
-        // i.e. no duplicate object instances have been introduced.
-        Assert.That(
-            state.Missions[0].Site, 
-            Is.SameAs(state.MissionSites[0]));
+        GameStatePlayerView state = controller.GameStatePlayerView;
+        Assert.Multiple(
+            () =>
+            {
+                Assert.That(state.CurrentTurn, Is.EqualTo(7));
+                Assert.That(state.Assets.Agents, Has.Count.EqualTo(3));
+                Assert.That(state.Missions, Has.Count.EqualTo(1));
+                Assert.That(state.MissionSites, Has.Count.EqualTo(2));
+
+                // Test the references have been preserved,
+                // i.e. no duplicate object instances have been introduced.
+                Assert.That(
+                    state.Missions[0].Site,
+                    Is.SameAs(state.MissionSites[0]));
+            });
     }
 
 }

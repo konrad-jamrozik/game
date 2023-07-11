@@ -22,15 +22,15 @@ public class JsonDiff
     private readonly Lazy<string> _rawString;
     private readonly Lazy<JsonElement> _jsonElement;
 
-    public JsonDiff(object baseline, object target)
+    public JsonDiff(object baseline, object target, JsonSerializerOptions? options = null)
     {
         var diff = new Lazy<DiffObject>(() =>
         {
             // kj2-json JsonElement deserialization could possibly be simplified to
             // JsonElement baselineJson = JsonSerializer.Deserialize<JsonElement>(JsonSerializer.SerializeToUtf8Bytes(baseline));
             // kj2-json use instead Wikitools.Lib.Json.JsonExtensions.FromObjectToJsonElement
-            JsonDocument baselineJson = JsonDocument.Parse(JsonSerializer.SerializeToUtf8Bytes(baseline));
-            JsonDocument targetJson   = JsonDocument.Parse(JsonSerializer.SerializeToUtf8Bytes(target));
+            JsonDocument baselineJson = JsonDocument.Parse(JsonSerializer.SerializeToUtf8Bytes(baseline, options));
+            JsonDocument targetJson   = JsonDocument.Parse(JsonSerializer.SerializeToUtf8Bytes(target, options));
             DiffObject?  elementDiff  = new JsonElementDiff(baselineJson, targetJson).Value;
             return elementDiff ?? EmptyDiff;
         });

@@ -38,7 +38,7 @@ namespace UfoGameLib.Infra;
 /// </summary>
 public class GameSessionController
 {
-    private static readonly JsonSerializerOptions SaveJsonSerializerOptions = JsonSerializerOptions();
+    public static readonly JsonSerializerOptions SaveJsonSerializerOptions = JsonSerializerOptions();
     protected readonly GameSession GameSession;
     private readonly Configuration _config = new Configuration(new FileSystem());
 
@@ -107,7 +107,10 @@ public class GameSessionController
         var saveGamePath = _config.SaveGameDir.JoinPath(_config.SaveFileName);
         var loadedGameState =
             _config.SaveGameDir.FileSystem.ReadAllJsonTo<GameState>(saveGamePath, SaveJsonSerializerOptions);
+        
+        GameSession.PreviousGameState = GameSession.CurrentGameState;
         GameSession.CurrentGameState = loadedGameState;
+
         Console.Out.WriteLine($"Loaded game state from {_config.SaveGameDir.FileSystem.GetFullPath(saveGamePath)}");
         return loadedGameState;
     }
