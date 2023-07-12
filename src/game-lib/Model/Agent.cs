@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+
 namespace UfoGameLib.Model;
 
 public class Agent
@@ -25,22 +27,31 @@ public class Agent
         CurrentState = State.InTransit;
     }
 
+    [JsonIgnore]
     public bool CanBeSentOnMission => IsAvailable || IsTraining;
 
+    [JsonIgnore]
     public bool CanBeSentOnMissionNextTurn => CanBeSentOnMission || IsInTransit || IsOnMission;
 
+    [JsonIgnore]
     public bool IsInTransit => CurrentState == State.InTransit;
 
+    [JsonIgnore]
     public bool IsAvailable => CurrentState == State.Available;
 
+    [JsonIgnore]
     public bool IsOnMission => CurrentState == State.OnMission;
 
+    [JsonIgnore]
     public bool IsTraining => CurrentState == State.Training;
 
+    [JsonIgnore]
     public bool IsGatheringIntel => CurrentState == State.GatheringIntel;
 
+    [JsonIgnore]
     public bool IsGeneratingIncome => CurrentState == State.GeneratingIncome;
 
+    [JsonIgnore]
     public bool IsRecallable => IsGatheringIntel || IsGeneratingIncome;
 
     public void SendToTraining()

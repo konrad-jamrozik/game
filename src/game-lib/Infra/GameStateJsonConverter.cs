@@ -1,5 +1,6 @@
 using System.Text.Json;
 using System.Text.Json.Nodes;
+using System.Text.Json.Serialization;
 using Lib.Json;
 using UfoGameLib.Model;
 
@@ -44,7 +45,31 @@ class GameStateJsonConverter : JsonConverterSupportingReferences<GameState>
     public static JsonSerializerOptions JsonSerializerOptions()
         => new(JsonExtensions.SerializerOptionsIndentedUnsafe)
         {
-            IncludeFields = true
+            IncludeFields = true,
+            IgnoreReadOnlyFields = false,
+
+            // Not ignoring readonly properties.
+            // If they would be ignored, then there is no easy way to un-ignore
+            // a property. The [JsonInclude] attribute doesn't appear to work.
+            // This e.g. a problem for classes implementing interfaces with
+            // properties. It is not possible to request a field via interface,
+            // only property, which would get ignored, and then couldn't be brought
+            // back via the attribute.
+            // I could work around this via contract customization [1],
+            // but that's a lot of extra complex code that needs to be written for each
+            // property I want to un-ignore.
+            //
+            // Conversely, when properties aren't ignored by default, I can selectively
+            // ignore properties via [JsonIgnore].
+            //
+            // [1] https://learn.microsoft.com/en-us/dotnet/standard/serialization/system-text-json/custom-contracts
+            IgnoreReadOnlyProperties = false,
+
+            // The JsonStringEnumConverter allows serialization of enums as string instead of integers.
+            // Reference:
+            // https://learn.microsoft.com/en-us/dotnet/standard/serialization/system-text-json/customize-properties?pivots=dotnet-7-0#enums-as-strings
+            // https://stackoverflow.com/a/58234964/986533
+            Converters = { new JsonStringEnumConverter() }
         };
 
     public override void Write(Utf8JsonWriter writer, GameState value, JsonSerializerOptions options)
