@@ -3,8 +3,10 @@ using System.Linq;
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Lib.OS;
 using Lib.Primitives;
 using Newtonsoft.Json.Linq;
+using Environment = System.Environment;
 
 namespace Lib.Json;
 
@@ -49,14 +51,17 @@ public static class JsonExtensions
     public static readonly JsonSerializerOptions SerializerOptionsIndentedUnsafe =
         new(SerializerOptionsUnsafe) { WriteIndented = true };
 
-    public static T FromJsonTo<T>(this string json) =>
-        JsonSerializer.Deserialize<T>(json, SerializerOptions)!;
+    public static T FromJsonTo<T>(this string json) 
+        => JsonSerializer.Deserialize<T>(json, SerializerOptions)!;
 
-    public static T FromJsonTo<T>(this byte[] bytes, JsonSerializerOptions? options = null) =>
-        JsonSerializer.Deserialize<T>(bytes, options ?? SerializerOptions)!;
+    public static T FromJsonTo<T>(this File file, JsonSerializerOptions? options = null)
+        => file.FileSystem.FromJsonTo<T>(file, options);
 
-    public static T FromJsonToUnsafe<T>(this string json) =>
-        JsonSerializer.Deserialize<T>(json, SerializerOptionsUnsafe)!;
+    public static T FromJsonTo<T>(this byte[] bytes, JsonSerializerOptions? options = null) 
+        => JsonSerializer.Deserialize<T>(bytes, options ?? SerializerOptions)!;
+
+    public static T FromJsonToUnsafe<T>(this string json) 
+        => JsonSerializer.Deserialize<T>(json, SerializerOptionsUnsafe)!;
 
     /// <remarks>
     /// Related issue

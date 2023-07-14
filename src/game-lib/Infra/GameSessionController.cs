@@ -93,27 +93,22 @@ public class GameSessionController
     public void LaunchMission(MissionSite site, List<Agent> agents)
         => GameSession.ApplyPlayerAction(new LaunchMissionPlayerAction(_log, site, agents));
 
-    // kja3 introduce "SaveFile" abstraction akin to MonthlyJsonFilesStorage
-    // Also, GameSession should have reference to the "SaveFile", not the GameSessionController.
+    // kja3 introduce "SerializedJsonFile" abstraction that will retain the serialization options
     public void Save()
     {
-        string saveGamePath = _config.SaveGameDir.CreateDirIfNotExists()
-            .WriteAllText(
-                _config.SaveFileName,
-                CurrentGameStateSerializedAsJsonString());
-        _log.Info($"Saved game state to {_config.SaveGameDir.FileSystem.GetFullPath(saveGamePath)}");
+        _config.SaveFile.WriteAllText(CurrentGameStateSerializedAsJsonString());
+        _log.Info($"Saved game state to {_config.SaveFile.FullPath}");
     }
 
     public GameState Load()
     {
-        var saveGamePath = _config.SaveGameDir.JoinPath(_config.SaveFileName);
         var loadedGameState =
-            _config.SaveGameDir.FileSystem.ReadAllJsonTo<GameState>(saveGamePath, SaveJsonSerializerOptions);
+            _config.SaveFile.FromJsonTo<GameState>(SaveJsonSerializerOptions);
 
         GameSession.PreviousGameState = GameSession.CurrentGameState;
         GameSession.CurrentGameState = loadedGameState;
 
-        _log.Info($"Loaded game state from {_config.SaveGameDir.FileSystem.GetFullPath(saveGamePath)}");
+        _log.Info($"Loaded game state from {_config.SaveFile.FullPath}");
         return loadedGameState;
     }
 

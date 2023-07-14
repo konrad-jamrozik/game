@@ -6,5 +6,12 @@ public record File(IFileSystem FileSystem, string Path)
     {
     }
 
+    public string FullPath => FileSystem.GetFullPath(Path);
+
     public string Name => System.IO.Path.GetFileName(Path);
+
+    public void WriteAllText(string contents)
+    {
+        FileSystem.WriteAllText(Path, contents);
+    }
 }
