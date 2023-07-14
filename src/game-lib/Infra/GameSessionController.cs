@@ -42,10 +42,10 @@ public class GameSessionController
     private readonly Configuration _config;
     private readonly ILog _log;
 
-    public GameSessionController(ILog log, Configuration config, GameSession gameSession)
+    public GameSessionController(Configuration config, ILog log, GameSession gameSession)
     {
-        _log = log;
         _config = config;
+        _log = log;
         GameSession = gameSession;
     }
 

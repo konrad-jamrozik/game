@@ -12,7 +12,7 @@ internal static class Program
         var config = new Configuration(new FileSystem());
         var log = new Log(config);
 
-        var controller = new GameSessionController(log, config, new GameSession(log));
+        var controller = new GameSessionController(config, log, new GameSession(log));
 
         // Need to support here the various scenarios described in GameSessionController comment.
 

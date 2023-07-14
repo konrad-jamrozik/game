@@ -10,11 +10,9 @@ public class AIPlayer
         Basic
     }
 
-    private readonly IDictionary<Intellect, IAIPlayerIntellect> _intellectMap;
-
-    private readonly GameSessionController _controller;
     private readonly ILog _log;
-
+    private readonly GameSessionController _controller;
+    private readonly IDictionary<Intellect, IAIPlayerIntellect> _intellectMap;
     private readonly IAIPlayerIntellect _intellect;
 
     public AIPlayer(ILog log, GameSessionController controller, Intellect intellect)
@@ -38,12 +36,12 @@ public class AIPlayer
         {
             _log.Info(
                 $"----- AIPlayer Current turn: {state.CurrentTurn} Current money: {state.Assets.CurrentMoney}");
-            
+
             _intellect.PlayGameTurn(state, _controller);
 
             _log.Info(
                 $"----- AIPlayer Current turn: {state.CurrentTurn} DONE");
-            
+
             _controller.AdvanceTime();
         }
 
