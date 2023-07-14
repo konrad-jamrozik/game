@@ -1,4 +1,5 @@
 ﻿using CommandLine;
+using Lib.OS;
 using UfoGameLib.Infra;
 using UfoGameLib.Model;
 
@@ -8,7 +9,10 @@ internal static class Program
 {
     private static void Main(string[] args)
     {
-        var controller = new GameSessionController(new GameSession());
+        var config = new Configuration(new FileSystem());
+        var log = new Log(config);
+
+        var controller = new GameSessionController(new GameSession(log), config);
 
         // Need to support here the various scenarios described in GameSessionController comment.
 

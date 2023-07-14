@@ -2,19 +2,19 @@
 
 namespace UfoGameLib.Infra;
 
-internal class Configuration
+public class Configuration
 {
     internal readonly Dir SaveGameDir;
 
     internal readonly string SaveFileName;
 
-    internal Configuration(IFileSystem fs)
+    public Configuration(IFileSystem fs)
     {
         // Given expected starting path:
-        //   [repo_root]/artifacts/bin/game-lib-tests/debug/.
+        //   [repo_root]/artifacts/bin/game-lib/debug/.
         //
         // When this relative path is applied:
-        //   [repo_root]/../../../../saves
+        //   ./../../../../saves
         // 
         // Then this is the expected resulting path:
         //   [repo_root]/saves/

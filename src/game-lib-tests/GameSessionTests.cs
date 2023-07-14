@@ -1,3 +1,4 @@
+using Lib.OS;
 using Lib.Tests.Json;
 using UfoGameLib.Infra;
 using UfoGameLib.Model;
@@ -6,9 +7,14 @@ namespace UfoGameLib.Tests;
 
 public class GameSessionTests
 {
+    private Configuration _config = null!;
+    private ILog _log = null!;
+
     [SetUp]
     public void Setup()
     {
+        _config = new Configuration(new FileSystem());
+        _log = new Log(_config);
     }
 
     // kja3 overall work plan:
@@ -52,8 +58,8 @@ public class GameSessionTests
     [Test]
     public void BasicHappyPathGameSessionWorks()
     {
-        var session = new GameSession();
-        var controller = new GameSessionController(session);
+        var session = new GameSession(_log);
+        var controller = new GameSessionController(session, _config);
 
         GameState startingGameState = session.CurrentGameState;
 
@@ -92,8 +98,8 @@ public class GameSessionTests
     [Test]
     public void LoadingPreviousGameStateOverridesCurrentState()
     {
-        var session = new GameSession();
-        var controller = new GameSessionController(session);
+        var session = new GameSession(_log);
+        var controller = new GameSessionController(session, _config);
 
         int savedTurn = controller.GameStatePlayerView.CurrentTurn;
         GameState startingGameState = session.CurrentGameState;
@@ -130,8 +136,8 @@ public class GameSessionTests
     [Test]
     public void RoundTrippingSavingAndLoadingGameStateBehavesCorrectly()
     {
-        var session = new GameSession();
-        var controller = new GameSessionController(session);
+        var session = new GameSession(_log);
+        var controller = new GameSessionController(session, _config);
 
         controller.AdvanceTime();
         controller.AdvanceTime();

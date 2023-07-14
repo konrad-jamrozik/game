@@ -12,12 +12,18 @@ namespace UfoGameLib.Infra;
 public class GameSession
 {
     public GameState CurrentGameState = GameState.NewInitialGameState();
+    private ILog Log;
 
     // Populated when CurrentGameState is overridden, e.g. because it got
     // loaded from a save file.
     public GameState? PreviousGameState = null;
 
     public readonly Random Random = new Random();
+
+    public GameSession(ILog log)
+    {
+        Log = log;
+    }
 
     public void ApplyPlayerAction(PlayerAction action)
         => ApplyPlayerActions(action);

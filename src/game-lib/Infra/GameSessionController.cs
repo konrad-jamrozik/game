@@ -1,6 +1,5 @@
 using System.Text.Json;
 using Lib.Json;
-using Lib.OS;
 using UfoGameLib.Model;
 
 namespace UfoGameLib.Infra;
@@ -40,11 +39,12 @@ public class GameSessionController
 {
     public static readonly JsonSerializerOptions SaveJsonSerializerOptions = JsonSerializerOptions();
     protected readonly GameSession GameSession;
-    private readonly Configuration _config = new Configuration(new FileSystem());
+    private readonly Configuration _config;
 
-    public GameSessionController(GameSession gameSession)
+    public GameSessionController(GameSession gameSession, Configuration config)
     {
         GameSession = gameSession;
+        _config = config;
     }
 
     public Random Random => GameSession.Random;
@@ -107,7 +107,7 @@ public class GameSessionController
         var saveGamePath = _config.SaveGameDir.JoinPath(_config.SaveFileName);
         var loadedGameState =
             _config.SaveGameDir.FileSystem.ReadAllJsonTo<GameState>(saveGamePath, SaveJsonSerializerOptions);
-        
+
         GameSession.PreviousGameState = GameSession.CurrentGameState;
         GameSession.CurrentGameState = loadedGameState;
 
@@ -137,7 +137,7 @@ public class GameSessionController
 
         // Attach Converters to "options" but not "converterOptions"
         options.Converters.Add(new GameStateJsonConverter());
-        
+
 
         return options;
     }
