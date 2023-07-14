@@ -10,7 +10,7 @@ internal static class Program
     private static void Main(string[] args)
     {
         var config = new Configuration(new FileSystem());
-        var log = new Log(config);
+        using var log = new Log(config);
 
         var controller = new GameSessionController(config, log, new GameSession(log));
 

@@ -1,6 +1,6 @@
 namespace UfoGameLib.Infra;
 
-public interface ILog
+public interface ILog : IDisposable
 {
     public void Info(string message);
 }

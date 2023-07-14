@@ -42,6 +42,11 @@ public class SimulatedFileSystem : IFileSystem
 
     public bool DirectoryExists(string path) => _existingDirs.Contains(path);
 
+    public void AppendAllText(string path, string contents)
+    {
+        throw new NotImplementedException();
+    }
+
     public Task WriteAllTextAsync(string path, string contents)
     {
         _existingFiles.Add(path);

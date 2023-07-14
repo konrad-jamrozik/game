@@ -33,4 +33,10 @@ public class AIPlayerTests
 
         // Assert: no exception was thrown and the program didn't loop indefinitely.
     }
+
+    [TearDown]
+    public void TearDown()
+    {
+        _log.Dispose();
+    }
 }

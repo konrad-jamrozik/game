@@ -28,6 +28,9 @@ public class FileSystem : IFileSystem
     public Task WriteAllTextAsync(string path, string contents) 
         => System.IO.File.WriteAllTextAsync(path, contents);
 
+    public void AppendAllText(string path, string contents) 
+        => System.IO.File.AppendAllText(path, contents);
+
     public void WriteAllText(string path, string contents) 
         => System.IO.File.WriteAllText(path, contents);
 

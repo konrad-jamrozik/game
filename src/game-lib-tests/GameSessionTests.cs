@@ -181,4 +181,9 @@ public class GameSessionTests
             });
     }
 
+    [TearDown]
+    public void TearDown()
+    {
+        _log.Dispose();
+    }
 }

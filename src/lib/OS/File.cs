@@ -10,8 +10,9 @@ public record File(IFileSystem FileSystem, string Path)
 
     public string Name => System.IO.Path.GetFileName(Path);
 
+    public void AppendAllText(string contents)
+        => FileSystem.AppendAllText(Path, contents);
+
     public void WriteAllText(string contents)
-    {
-        FileSystem.WriteAllText(Path, contents);
-    }
+        => FileSystem.WriteAllText(Path, contents);
 }

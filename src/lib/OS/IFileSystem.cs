@@ -9,6 +9,7 @@ public interface IFileSystem
 {
     Dir CurrentDir { get; }
     bool DirectoryExists(string path);
+    public void AppendAllText(string path, string contents);
     public Task WriteAllTextAsync(string path, string contents);
     public void WriteAllText(string path, string contents);
     public Task WriteAllLinesAsync(string path, IEnumerable<string> lines);
