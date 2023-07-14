@@ -20,7 +20,9 @@ public class AdvanceTimePlayerAction : PlayerAction
     public override void Apply(GameState state)
     {
         state.Timeline.CurrentTurn++;
-        _log.Info($"PlayerAction: Advance time into turn: {state.Timeline.CurrentTurn}");
+        // The ,4 is alignment specifier per:
+        // https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/tokens/interpolated#structure-of-an-interpolated-string
+        _log.Info($"===== Turn {state.Timeline.CurrentTurn,4} =====");
 
         // Each turn all transport capacity gets freed up.
         state.Assets.CurrentTransportCapacity = state.Assets.MaxTransportCapacity;
