@@ -12,36 +12,11 @@ public class BasicAIPlayerIntellect : IAIPlayerIntellect
             [2] = (controller, agent) => controller.SendAgentToGenerateIncome(agent),
         };
 
-    private static int ComputeAgentsToHire(GameStatePlayerView state)
+    private readonly ILog _log;
+
+    public BasicAIPlayerIntellect(ILog log)
     {
-        // Strive to always have thrice as many agents as transport capacity,
-        // to keep adequate reserves for defense, buffer for recovery and
-        // to gather intel or generate income.
-        int desiredAgentCount = state.Assets.MaxTransportCapacity * 3;
-
-        int agentsMissingToDesired = desiredAgentCount - state.Assets.Agents.Count;
-
-        int moneyAvailableFor = state.Assets.CurrentMoney / Agent.HireCost;
-
-        // The resulting total upkeep of all agents, including the agents
-        // to be hired now, cannot exceed the available funding.
-        int maxTolerableUpkeepCost = state.Assets.Funding;
-        int currentUpkeepCost = state.Assets.Agents.TotalUpkeepCost;
-        int maxUpkeepIncrease = maxTolerableUpkeepCost - currentUpkeepCost;
-        int maxAgentIncreaseByUpkeep = maxUpkeepIncrease / Agent.UpkeepCost;
-
-        int agentsToHire = Math.Min(
-            Math.Min(agentsMissingToDesired, moneyAvailableFor),
-            maxAgentIncreaseByUpkeep);
-
-        Console.Out.WriteLine(
-            $"AIPlayer: ComputeAgentsToHire: " +
-            $"agentsMissingToDesired: {agentsMissingToDesired}, " +
-            $"moneyAvailableFor: {moneyAvailableFor}, " +
-            $"maxAgentIncreaseByUpkeep: {maxAgentIncreaseByUpkeep}, " +
-            $"agentsToHire: {agentsToHire}");
-
-        return agentsToHire;
+        _log = log;
     }
 
     private static void RecallAgents(GameStatePlayerView state, GameSessionController controller)
@@ -81,9 +56,42 @@ public class BasicAIPlayerIntellect : IAIPlayerIntellect
         return agents;
     }
 
-    private static void AssignAvailableAgents(GameStatePlayerView state, GameSessionController controller)
+
+    private int ComputeAgentsToHire(GameStatePlayerView state)
     {
-        Console.Out.WriteLine(
+        // Strive to always have thrice as many agents as transport capacity,
+        // to keep adequate reserves for defense, buffer for recovery and
+        // to gather intel or generate income.
+        int desiredAgentCount = state.Assets.MaxTransportCapacity * 3;
+
+        int agentsMissingToDesired = desiredAgentCount - state.Assets.Agents.Count;
+
+        int moneyAvailableFor = state.Assets.CurrentMoney / Agent.HireCost;
+
+        // The resulting total upkeep of all agents, including the agents
+        // to be hired now, cannot exceed the available funding.
+        int maxTolerableUpkeepCost = state.Assets.Funding;
+        int currentUpkeepCost = state.Assets.Agents.TotalUpkeepCost;
+        int maxUpkeepIncrease = maxTolerableUpkeepCost - currentUpkeepCost;
+        int maxAgentIncreaseByUpkeep = maxUpkeepIncrease / Agent.UpkeepCost;
+
+        int agentsToHire = Math.Min(
+            Math.Min(agentsMissingToDesired, moneyAvailableFor),
+            maxAgentIncreaseByUpkeep);
+
+        _log.Info(
+            $"AIPlayer: ComputeAgentsToHire: " +
+            $"agentsMissingToDesired: {agentsMissingToDesired}, " +
+            $"moneyAvailableFor: {moneyAvailableFor}, " +
+            $"maxAgentIncreaseByUpkeep: {maxAgentIncreaseByUpkeep}, " +
+            $"agentsToHire: {agentsToHire}");
+
+        return agentsToHire;
+    }
+
+    private void AssignAvailableAgents(GameStatePlayerView state, GameSessionController controller)
+    {
+        _log.Info(
             $"AIPlayer: AssignAvailableAgents. " +
             $"Count: {state.Assets.Agents.CanBeSentOnMissionNextTurn.Count}, " +
             $"Desired: {DesiredAgentReserve(state)}");

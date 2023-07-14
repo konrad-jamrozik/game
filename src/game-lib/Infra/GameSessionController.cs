@@ -40,11 +40,13 @@ public class GameSessionController
     public static readonly JsonSerializerOptions SaveJsonSerializerOptions = JsonSerializerOptions();
     protected readonly GameSession GameSession;
     private readonly Configuration _config;
+    private readonly ILog _log;
 
-    public GameSessionController(GameSession gameSession, Configuration config)
+    public GameSessionController(ILog log, Configuration config, GameSession gameSession)
     {
-        GameSession = gameSession;
+        _log = log;
         _config = config;
+        GameSession = gameSession;
     }
 
     public Random Random => GameSession.Random;
@@ -52,25 +54,25 @@ public class GameSessionController
     public GameStatePlayerView GameStatePlayerView => new GameStatePlayerView(GameSession);
 
     public void AdvanceTime()
-        => GameSession.ApplyPlayerAction(new AdvanceTimePlayerAction());
+        => GameSession.ApplyPlayerAction(new AdvanceTimePlayerAction(_log));
 
     public void HireAgents(int count)
-        => GameSession.ApplyPlayerAction(new HireAgentsPlayerAction(count));
+        => GameSession.ApplyPlayerAction(new HireAgentsPlayerAction(_log, count));
 
     public void FireAgents(IEnumerable<string> agentNames)
         => throw new NotImplementedException();
 
     public void SendAgentToTraining(Agent agent)
-        => GameSession.ApplyPlayerAction(new SendAgentToTrainingPlayerAction(agent));
+        => GameSession.ApplyPlayerAction(new SendAgentToTrainingPlayerAction(_log, agent));
 
     public void SendAgentToGatherIntel(Agent agent)
-        => GameSession.ApplyPlayerAction(new SendAgentToGatherIntelPlayerAction(agent));
+        => GameSession.ApplyPlayerAction(new SendAgentToGatherIntelPlayerAction(_log, agent));
 
     public void SendAgentToGenerateIncome(Agent agent)
-        => GameSession.ApplyPlayerAction(new SendAgentToGenerateIncomePlayerAction(agent));
+        => GameSession.ApplyPlayerAction(new SendAgentToGenerateIncomePlayerAction(_log, agent));
 
     public void RecallAgent(Agent agent)
-        => GameSession.ApplyPlayerAction(new RecallAgentPlayerAction(agent));
+        => GameSession.ApplyPlayerAction(new RecallAgentPlayerAction(_log, agent));
 
     /// <summary>
     /// Convenience method. LaunchMission, but instead of choosing specific agents,
@@ -89,7 +91,7 @@ public class GameSessionController
     }
 
     public void LaunchMission(MissionSite site, List<Agent> agents)
-        => GameSession.ApplyPlayerAction(new LaunchMissionPlayerAction(site, agents));
+        => GameSession.ApplyPlayerAction(new LaunchMissionPlayerAction(_log, site, agents));
 
     // kja3 introduce "SaveFile" abstraction akin to MonthlyJsonFilesStorage
     // Also, GameSession should have reference to the "SaveFile", not the GameSessionController.
@@ -99,7 +101,7 @@ public class GameSessionController
             .WriteAllText(
                 _config.SaveFileName,
                 CurrentGameStateSerializedAsJsonString());
-        Console.Out.WriteLine($"Saved game state to {_config.SaveGameDir.FileSystem.GetFullPath(saveGamePath)}");
+        _log.Info($"Saved game state to {_config.SaveGameDir.FileSystem.GetFullPath(saveGamePath)}");
     }
 
     public GameState Load()
@@ -111,7 +113,7 @@ public class GameSessionController
         GameSession.PreviousGameState = GameSession.CurrentGameState;
         GameSession.CurrentGameState = loadedGameState;
 
-        Console.Out.WriteLine($"Loaded game state from {_config.SaveGameDir.FileSystem.GetFullPath(saveGamePath)}");
+        _log.Info($"Loaded game state from {_config.SaveGameDir.FileSystem.GetFullPath(saveGamePath)}");
         return loadedGameState;
     }
 

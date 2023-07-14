@@ -4,16 +4,18 @@ namespace UfoGameLib.Infra;
 
 public class SendAgentToTrainingPlayerAction : PlayerAction
 {
+    private readonly ILog _log;
     private readonly Agent _agent;
 
-    public SendAgentToTrainingPlayerAction(Agent agent)
+    public SendAgentToTrainingPlayerAction(ILog log, Agent agent)
     {
+        _log = log;
         _agent = agent;
     }
 
     public override void Apply(GameState state)
     {
-        Console.Out.WriteLine($"PlayerAction: Send agent to training. ID: {_agent.Id}");
+        _log.Info($"PlayerAction: Send agent to training. ID: {_agent.Id}");
         _agent.SendToTraining();
     }
 }

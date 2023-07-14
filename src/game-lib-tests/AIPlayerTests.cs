@@ -26,7 +26,7 @@ public class AIPlayerTests
 
     private void AIPlayerPlaysGameUntilConclusion(AIPlayer.Intellect intellect)
     {
-        var aiPlayer = new AIPlayer(new GameSessionController(new GameSession(_log), _config), intellect);
+        var aiPlayer = new AIPlayer(_log, new GameSessionController(_log, _config, new GameSession(_log)), intellect);
 
         // Act
         aiPlayer.PlayGameSession();

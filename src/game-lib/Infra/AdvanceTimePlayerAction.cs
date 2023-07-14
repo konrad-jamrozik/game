@@ -4,15 +4,23 @@ namespace UfoGameLib.Infra;
 
 public class AdvanceTimePlayerAction : PlayerAction
 {
-    private static readonly Agent.State[] TransientAgentStates = {
+    private static readonly Agent.State[] TransientAgentStates =
+    {
         Agent.State.InTransit,
         Agent.State.OnMission,
     };
 
+    private readonly ILog _log;
+
+    public AdvanceTimePlayerAction(ILog log)
+    {
+        _log = log;
+    }
+
     public override void Apply(GameState state)
     {
         state.Timeline.CurrentTurn++;
-        Console.Out.WriteLine($"PlayerAction: Advance time into turn: {state.Timeline.CurrentTurn}");
+        _log.Info($"PlayerAction: Advance time into turn: {state.Timeline.CurrentTurn}");
 
         // Each turn all transport capacity gets freed up.
         state.Assets.CurrentTransportCapacity = state.Assets.MaxTransportCapacity;
@@ -37,12 +45,12 @@ public class AdvanceTimePlayerAction : PlayerAction
             });
     }
 
-    private static void CreateMissionSites(GameState state)
+    private void CreateMissionSites(GameState state)
     {
         if (state.Timeline.CurrentTurn % 3 == 0)
         {
             int siteId = state.NextMissionSiteId;
-            Console.Out.WriteLine($"Add MissionSite with Id: {siteId}");
+            _log.Info($"Add MissionSite with Id: {siteId}");
             state.MissionSites.Add(new MissionSite(siteId, isActive: true));
         }
     }

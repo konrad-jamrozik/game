@@ -10,20 +10,23 @@ public class AIPlayer
         Basic
     }
 
-    private readonly IDictionary<Intellect, IAIPlayerIntellect> _intellectMap =
-        new Dictionary<Intellect, IAIPlayerIntellect>
-        {
-            [Intellect.Basic] = new BasicAIPlayerIntellect(),
-            [Intellect.DoNothing] = new DoNothingAIPlayerIntellect(),
-        };
+    private readonly IDictionary<Intellect, IAIPlayerIntellect> _intellectMap;
 
     private readonly GameSessionController _controller;
+    private readonly ILog _log;
 
     private readonly IAIPlayerIntellect _intellect;
 
-    public AIPlayer(GameSessionController controller, Intellect intellect)
+    public AIPlayer(ILog log, GameSessionController controller, Intellect intellect)
     {
+        _log = log;
         _controller = controller;
+        _intellectMap =
+            new Dictionary<Intellect, IAIPlayerIntellect>
+            {
+                [Intellect.Basic] = new BasicAIPlayerIntellect(_log),
+                [Intellect.DoNothing] = new DoNothingAIPlayerIntellect(),
+            };
         _intellect = _intellectMap[intellect];
     }
 
@@ -33,12 +36,12 @@ public class AIPlayer
 
         while (!state.IsGameOver)
         {
-            Console.Out.WriteLine(
+            _log.Info(
                 $"----- AIPlayer Current turn: {state.CurrentTurn} Current money: {state.Assets.CurrentMoney}");
             
             _intellect.PlayGameTurn(state, _controller);
 
-            Console.Out.WriteLine(
+            _log.Info(
                 $"----- AIPlayer Current turn: {state.CurrentTurn} DONE");
             
             _controller.AdvanceTime();
