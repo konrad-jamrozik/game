@@ -30,6 +30,9 @@ public class Agent
     [JsonIgnore]
     public bool CanBeSentOnMission => IsAvailable || IsTraining;
 
+    // Here we assume that if agent:
+    // IsInTransit, they will arrive next turn.
+    // IsOnMission, they will return to base next turn, combat ready.
     [JsonIgnore]
     public bool CanBeSentOnMissionNextTurn => CanBeSentOnMission || IsInTransit || IsOnMission;
 

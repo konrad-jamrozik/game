@@ -101,28 +101,74 @@ public class BasicAIPlayerIntellect : IAIPlayerIntellect
 
         _log.Info(
             $"AIPlayer: ComputeAgentsToHire: " +
+            $"agentsToHire: {agentsToHire} | " +
             $"agentsMissingToDesired: {agentsMissingToDesired}, " +
             $"moneyAvailableFor: {moneyAvailableFor}, " +
-            $"maxAgentIncreaseByUpkeep: {maxAgentIncreaseByUpkeep}, " +
-            $"agentsToHire: {agentsToHire}");
+            $"maxAgentIncreaseByUpkeep: {maxAgentIncreaseByUpkeep}.");
 
         return agentsToHire;
     }
 
     private void AssignAvailableAgents(GameStatePlayerView state, GameSessionController controller)
     {
-        _log.Info(
-            $"AIPlayer: AssignAvailableAgents. " +
-            $"Count: {state.Assets.Agents.CanBeSentOnMissionNextTurn.Count}, " +
-            $"Desired: {DesiredAgentReserve(state)}");
+        int desiredAgentReserve = DesiredAgentReserve(state);
+        int availableAgents = state.Assets.Agents.Available.Count;
 
-        while (state.Assets.Agents.CanBeSentOnMissionNextTurn.Count > DesiredAgentReserve(state))
+        // Example cases:
+        // availableAgents: 10
+        // canBeSentOnMissionNextTurn: 17 (10 available + 3 in transit, 4 on mission)
+        //
+        // Case 1:
+        // desiredAgentReserve: 6
+        // 17 - 6 = 11
+        // Because only 10 agents are available, all will be assigned to ops.
+        //
+        // Case 2:
+        // desiredAgentReserve: 12
+        // 17 - 12 = 5
+        //
+        // Because 10 agents are available, 5 will be assigned to ops, while 5 will be assigned to training.
+        // This way, the next turn there will be 12 agents in reserve:
+        //   5 in training, 3 currently in transit and 4 currently on mission.
+        int agentsToAssignToOps = Math.Min(
+            availableAgents, 
+            Math.Max(state.Assets.Agents.CanBeSentOnMissionNextTurn.Count - desiredAgentReserve, 0));
+        
+        // Agents assigned to training, unlike agents assigned to ops, can be reassigned immediately, hence
+        // they count towards the desired agent reserve.
+        int agentsToAssignToTraining = availableAgents - agentsToAssignToOps;
+        int agentsAssignedToOps = 0;
+        int agentsAssignedToTraining = 0;
+
+        while (state.Assets.Agents.CanBeSentOnMissionNextTurn.Count > desiredAgentReserve
+               && state.Assets.Agents.Available.Count > 0)
         {
             Agent agentToAssign = state.Assets.Agents.Available.RandomSubset(1).Single();
             AgentActionMap[controller.Random.Next(AgentActionMap.Keys.Count)].Invoke(controller, agentToAssign);
+            agentsAssignedToOps++;
         }
 
-        state.Assets.Agents.Available.ForEach(controller.SendAgentToTraining);
+        state.Assets.Agents.Available.ForEach(agent =>
+        {
+            controller.SendAgentToTraining(agent);
+            agentsAssignedToTraining++;
+        });
+
+        _log.Info(
+            $"AIPlayer: AssignAvailableAgents: " +
+            $"agentsAssignedToOps: {agentsToAssignToOps}, " +
+            $"agentsAssignedToTraining: {agentsAssignedToTraining} | " +
+            $"availableAgents: {availableAgents}, " +
+            $"desiredAgentReserve: {desiredAgentReserve}.");
+
+        Debug.Assert(
+            agentsAssignedToOps == agentsToAssignToOps, 
+            $"agentsAssignedToOps: {agentsAssignedToOps} == agentsToAssignToOps: {agentsToAssignToOps}");
+
+        Debug.Assert(
+            agentsAssignedToTraining == agentsToAssignToTraining,
+            $"agentsAssignedToTraining: {agentsAssignedToTraining} == agentsToAssignToTraining: {agentsToAssignToOps}");
+
     }
 }
 
