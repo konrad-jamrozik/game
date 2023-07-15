@@ -19,6 +19,27 @@ public class BasicAIPlayerIntellect : IAIPlayerIntellect
         _log = log;
     }
 
+    public void PlayGameTurn(GameStatePlayerView state, GameSessionController controller)
+    {
+        // kja2 curr work PlayGameTurnWithBasicIntellect: see also note at file bottom.
+
+        int agentsToHire = ComputeAgentsToHire(state);
+        if (agentsToHire > 0)
+            controller.HireAgents(agentsToHire);
+
+        RecallAgents(state, controller);
+
+        while (CanLaunchSomeMission(state))
+        {
+            MissionSite site = ChooseMissionSite(state);
+            List<Agent> agents = ChooseAgents(state);
+
+            controller.LaunchMission(site, agents);
+        }
+
+        AssignAvailableAgents(state, controller);
+    }
+
     private static void RecallAgents(GameStatePlayerView state, GameSessionController controller)
     {
         var agents = state.Assets.Agents;
@@ -55,7 +76,6 @@ public class BasicAIPlayerIntellect : IAIPlayerIntellect
 
         return agents;
     }
-
 
     private int ComputeAgentsToHire(GameStatePlayerView state)
     {
@@ -103,27 +123,6 @@ public class BasicAIPlayerIntellect : IAIPlayerIntellect
         }
 
         state.Assets.Agents.Available.ForEach(controller.SendAgentToTraining);
-    }
-
-    public void PlayGameTurn(GameStatePlayerView state, GameSessionController controller)
-    {
-        // kja2 curr work PlayGameTurnWithBasicIntellect: see also note at file bottom.
-
-        int agentsToHire = ComputeAgentsToHire(state);
-        if (agentsToHire > 0)
-            controller.HireAgents(agentsToHire);
-
-        RecallAgents(state, controller);
-
-        while (CanLaunchSomeMission(state))
-        {
-            MissionSite site = ChooseMissionSite(state);
-            List<Agent> agents = ChooseAgents(state);
-
-            controller.LaunchMission(site, agents);
-        }
-
-        AssignAvailableAgents(state, controller);
     }
 }
 

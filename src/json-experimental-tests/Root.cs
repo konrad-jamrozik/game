@@ -19,10 +19,10 @@ internal class Root : IRoot
 
 internal class Branch
 {
-    public int Id;
-
     [JsonRef]
     public readonly Leaf NestedLeaf;
+
+    public int Id;
 
     public Branch(int id, Leaf nestedLeaf)
     {
@@ -33,7 +33,6 @@ internal class Branch
 
 internal class Leaf : IIdentifiable
 {
-    public int Id { get; }
     public string Value;
 
     public Leaf(int id, string value)
@@ -42,4 +41,5 @@ internal class Leaf : IIdentifiable
         Value = value;
     }
 
+    public int Id { get; }
 }

@@ -16,6 +16,25 @@ public class Log : ILog
         Console.WriteLine($"Created Log with log file path {_config.LogFile.FullPath}");
     }
 
+    public void Dispose()
+    {
+        _config.LogFile.WriteAllText(_logs.ToString());
+        Console.WriteLine($"Wrote logs to {_config.LogFile.FullPath}");
+    }
+
+    public void Info(
+        string message,
+        [CallerFilePath] string? callerFilePath = null,
+        [CallerMemberName] string? callerMemberName = null)
+
+    {
+        // Based on https://stackoverflow.com/a/45512962/986533
+
+        string log = LogPrefix(callerFilePath, callerMemberName) + message;
+        Console.WriteLine(log);
+        _logs.AppendLine(log);
+    }
+
     private string LogPrefix(string? callerFilePath, string? callerMemberName)
     {
         string logPrefix = "";
@@ -39,24 +58,5 @@ public class Log : ILog
         }
 
         return logPrefix;
-    }
-
-    public void Dispose()
-    {
-        _config.LogFile.WriteAllText(_logs.ToString());
-        Console.WriteLine($"Wrote logs to {_config.LogFile.FullPath}");
-    }
-
-    public void Info(
-        string message,
-        [CallerFilePath] string? callerFilePath = null,
-        [CallerMemberName] string? callerMemberName = null)
-
-    {
-        // Based on https://stackoverflow.com/a/45512962/986533
-
-        string log = LogPrefix(callerFilePath, callerMemberName) + message;
-        Console.WriteLine(log);
-        _logs.AppendLine(log);
     }
 }

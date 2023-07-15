@@ -48,16 +48,16 @@ public class JsonIncludeReproTests
 
     private class FooClass
     {
-        [JsonIgnore]
-        public int BarProp { get; }
-
-        [JsonInclude]
-        public int QuxProp { get; }
-
         public FooClass()
         {
             BarProp = 10;
             QuxProp = 20;
         }
+
+        [JsonIgnore]
+        public int BarProp { get; }
+
+        [JsonInclude]
+        public int QuxProp { get; }
     }
 }

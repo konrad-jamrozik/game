@@ -54,8 +54,7 @@ internal static class Program
 // ReSharper disable ClassNeverInstantiated.Global
 [Verb("advance-time", HelpText = "Advance the game time.")]
 internal class AdvanceTimeOptions
-{
-}
+{}
 
 [Verb("hire-agents", HelpText = "Hire a specific number of agents.")]
 internal class HireAgentsOptions

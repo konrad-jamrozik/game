@@ -4,8 +4,6 @@ namespace UfoGameLib.Model;
 
 public class MissionSite : IIdentifiable
 {
-    public int Id { get; }
-
     public bool IsActive;
 
     public MissionSite(int id, bool isActive = true)
@@ -13,4 +11,6 @@ public class MissionSite : IIdentifiable
         Id = id;
         IsActive = isActive;
     }
+
+    public int Id { get; }
 }

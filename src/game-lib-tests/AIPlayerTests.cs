@@ -24,6 +24,12 @@ public class AIPlayerTests
     public void BasicAIPlayerIntellectPlaysGameUntilConclusion()
         => AIPlayerPlaysGameUntilConclusion(AIPlayer.Intellect.Basic);
 
+    [TearDown]
+    public void TearDown()
+    {
+        _log.Dispose();
+    }
+
     private void AIPlayerPlaysGameUntilConclusion(AIPlayer.Intellect intellect)
     {
         var aiPlayer = new AIPlayer(_log, new GameSessionController(_config, _log, new GameSession(_log)), intellect);
@@ -32,11 +38,5 @@ public class AIPlayerTests
         aiPlayer.PlayGameSession();
 
         // Assert: no exception was thrown and the program didn't loop indefinitely.
-    }
-
-    [TearDown]
-    public void TearDown()
-    {
-        _log.Dispose();
     }
 }

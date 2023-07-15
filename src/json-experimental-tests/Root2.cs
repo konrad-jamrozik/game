@@ -5,8 +5,6 @@ namespace JsonExperimental.Tests;
 internal class Root2 : IRoot
 {
     public int Id;
-    public required List<Branch2>? Branches { get; init; }
-    public required List<Leaf2>? Leaves { get; init; }
 
     public Root2()
     {}
@@ -17,13 +15,14 @@ internal class Root2 : IRoot
         Branches = branches;
         Leaves = leaves;
     }
+
+    public required List<Branch2>? Branches { get; init; }
+    public required List<Leaf2>? Leaves { get; init; }
 }
 
 internal class Branch2
 {
     public required int Id;
-    
-    public required Leaf2? NestedLeaf { get; init; }
 
     public Branch2()
     {
@@ -34,12 +33,13 @@ internal class Branch2
         Id = id;
         NestedLeaf = nestedLeaf;
     }
+
+    public required Leaf2? NestedLeaf { get; init; }
 }
 
 internal class Leaf2
 {
     public required int Id;
-    public required string? Value { get; init; }
 
     public Leaf2()
     {
@@ -50,4 +50,6 @@ internal class Leaf2
         Id = id;
         Value = value;
     }
+
+    public required string? Value { get; init; }
 }
