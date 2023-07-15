@@ -40,7 +40,7 @@ class RootJsonConverter2 : JsonConverterSupportingReferences<Root>
             objJsonArray: branchesArray,
             depRefPropName: nameof(Branch.NestedLeaf),
             deps: leaves,
-            objCtor: (objNode, leaf) => new Branch(Id(objNode), leaf)
+            objCtor: (objNode, leaf) => new Branch(Id(objNode), leaf!)
         );
 
         Root root = new Root(Id(rootNode), branches, leaves);
