@@ -6,19 +6,19 @@ public class HireAgentsPlayerAction : PlayerAction
 {
     private readonly ILog _log;
 
+    private readonly int _count;
+
 
     public HireAgentsPlayerAction(ILog log, int count)
     {
         _log = log;
-        Count = count;
+        _count = count;
     }
-
-    public int Count { get; } // kja to private field?
 
     public override void Apply(GameState state)
     {
-        _log.Info($"PlayerAction: Hire agents. Count: {Count}");
-        for (int i = 0; i < Count; i++)
+        _log.Info($"PlayerAction: Hire agents. Count: {_count}");
+        for (int i = 0; i < _count; i++)
             state.Assets.Agents.Add(new Agent(state.NextAgentId));
     }
 }
