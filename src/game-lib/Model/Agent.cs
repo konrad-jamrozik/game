@@ -13,6 +13,7 @@ public class Agent
         GatheringIntel, // kja2 GatheringIntel Currently used, but brings no effect
         GeneratingIncome, // kja2 GeneratingIncome Currently used, but brings no effect
         Recovering, // kja2 Recovering Currently unused
+        Terminated
     }
 
     public static readonly int HireCost = 50;
@@ -28,6 +29,7 @@ public class Agent
         CurrentState = State.InTransit;
     }
 
+    // Deserialization ctor
     public Agent(int id, State currentState, Mission? currentMission)
     {
         Id = id;
@@ -35,21 +37,6 @@ public class Agent
         CurrentMission = currentMission;
         AssertMissionInvariant();
     }
-
-    [JsonIgnore]
-    public bool CanBeSentOnMission => IsAvailable || IsTraining;
-
-    [JsonIgnore] 
-    public bool CanBeSentOnMissionNextTurn => CanBeSentOnMission || IsArrivingNextTurn;
-
-    [JsonIgnore]
-    public bool IsInTransit => CurrentState == State.InTransit;
-
-    // Here we assume that if agent:
-    // IsInTransit, they will arrive next turn.
-    // IsOnMission, they will return to base next turn, combat ready.
-    [JsonIgnore] 
-    public bool IsArrivingNextTurn => IsInTransit || IsOnMission;
 
     [JsonIgnore]
     public bool IsAvailable => CurrentState == State.Available;
@@ -67,7 +54,42 @@ public class Agent
     public bool IsGeneratingIncome => CurrentState == State.GeneratingIncome;
 
     [JsonIgnore]
-    public bool IsRecallable => IsGatheringIntel || IsGeneratingIncome;
+    public bool IsRecovering => CurrentState == State.Recovering;
+    
+    [JsonIgnore]
+    public bool IsInTransit => CurrentState == State.InTransit;
+
+    [JsonIgnore]
+    public bool IsTerminated => CurrentState == State.Terminated;
+
+    [JsonIgnore]
+    public bool CanBeSentOnMission => IsAvailable || IsTraining;
+
+    [JsonIgnore]
+    public bool IsInBase => IsAvailable || IsTraining || IsRecovering;
+
+    [JsonIgnore] 
+    public bool CanBeSentOnMissionNextTurn => CanBeSentOnMission || IsArrivingNextTurn;
+
+
+    // Here we assume that if agent:
+    // IsInTransit, they will arrive next turn.
+    // IsOnMission, they will return to base next turn, combat ready.
+    // kja2 this is now no longer strictly correct, as IsOnMission may result in IsTerminated
+    [JsonIgnore] 
+    public bool IsArrivingNextTurn => IsInTransit || IsOnMission;
+
+    [JsonIgnore]
+    public bool IsDoingOps => IsGatheringIntel || IsGeneratingIncome;
+
+    [JsonIgnore]
+    public bool IsRecallable => IsDoingOps;
+
+    [JsonIgnore]
+    public bool IsAway => IsInTransit || IsDoingOps || IsOnMission;
+
+    [JsonIgnore]
+    public bool IsAlive => IsInBase || IsAway;
 
     public void SendToTraining()
     {
@@ -107,6 +129,15 @@ public class Agent
     {
         Debug.Assert(IsRecallable);
         CurrentState = State.InTransit;
+    }
+
+    public void Terminate()
+    {
+        Debug.Assert(IsAlive);
+        Debug.Assert(IsOnMission);
+        CurrentState = State.Terminated;
+        CurrentMission = null;
+        AssertMissionInvariant();
     }
 
     private void AssertMissionInvariant()

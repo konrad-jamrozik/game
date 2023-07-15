@@ -9,6 +9,7 @@ public class GameSessionTests
 {
     private Configuration _config = null!;
     private ILog _log = null!;
+    private readonly Random _random = new Random();
 
     [SetUp]
     public void Setup()
@@ -59,7 +60,7 @@ public class GameSessionTests
     public void BasicHappyPathGameSessionWorks()
     {
         var session = new GameSession(_log);
-        var controller = new GameSessionController(_config, _log, session);
+        var controller = new GameSessionController(_config, _log, _random, session);
 
         GameState startingGameState = session.CurrentGameState;
 
@@ -99,7 +100,7 @@ public class GameSessionTests
     public void LoadingPreviousGameStateOverridesCurrentState()
     {
         var session = new GameSession(_log);
-        var controller = new GameSessionController(_config, _log, session);
+        var controller = new GameSessionController(_config, _log, _random, session);
 
         int savedTurn = controller.GameStatePlayerView.CurrentTurn;
         GameState startingGameState = session.CurrentGameState;
@@ -128,16 +129,17 @@ public class GameSessionTests
     ///   A non-trivial game state
     /// When:
     ///   That game state is saved and then loaded, a.k.a. round-tripped.
+    ///   And the game state has active mission.
     /// Then:
     ///   - The resulting loaded game state is the same as before saving
     ///   - and no duplicate instance objects have been introduced
-    ///   - during serialization (saving) or deserialization (loading).
+    ///     during serialization (saving) or deserialization (loading).
     /// </summary>
     [Test]
-    public void RoundTrippingSavingAndLoadingGameStateBehavesCorrectly()
+    public void RoundTrippingSavingAndLoadingGameStateWithActiveMissionBehavesCorrectly()
     {
         var session = new GameSession(_log);
-        var controller = new GameSessionController(_config, _log, session);
+        var controller = new GameSessionController(_config, _log, _random, session);
 
         controller.AdvanceTime();
         controller.AdvanceTime();
@@ -148,8 +150,7 @@ public class GameSessionTests
         
         controller.LaunchMission(controller.GameStatePlayerView.MissionSites.First(), agentCount: 1);
 
-        // First save game round-trip test, with active mission.
-        // Act 1/4 and 2/4
+        // Act 1/2 and 2/2
         controller.Save();
         controller.Load();
 
@@ -161,13 +162,39 @@ public class GameSessionTests
                 session.CurrentGameState,
                 GameSessionController.SaveJsonSerializerOptions)
             .Assert();
+    }
+
+    /// <summary>
+    /// Given:
+    ///   A non-trivial game state
+    /// When:
+    ///   That game state is saved and then loaded, a.k.a. round-tripped.
+    /// Then:
+    ///   - The resulting loaded game state is the same as before saving
+    ///   - and no duplicate instance objects have been introduced
+    ///     during serialization (saving) or deserialization (loading)
+    ///   - and some properties have values exactly as expected.
+    /// </summary>
+    [Test]
+    public void RoundTrippingSavingAndLoadingGameStateBehavesCorrectly()
+    {
+        var session = new GameSession(_log);
+        var controller = new GameSessionController(_config, _log, _random, session);
+
+        controller.AdvanceTime();
+        controller.AdvanceTime();
+        controller.HireAgents(3);
+        // Need to advance time here so that hired agents are no longer InTransit and can be
+        // sent on a mission.
+        controller.AdvanceTime();
+        
+        controller.LaunchMission(controller.GameStatePlayerView.MissionSites.First(), agentCount: 1);
 
         controller.AdvanceTime();
         controller.AdvanceTime();
         controller.AdvanceTime();
 
-        // Second save game round-trip test, with extra assertions.
-        // Act 3/4 and 4/4
+        // Act 1/2 and 2/2
         controller.Save();
         controller.Load();
 

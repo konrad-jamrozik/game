@@ -7,7 +7,12 @@ namespace UfoGameLib.Infra;
 /// </summary>
 public class CheatingGameSessionController : GameSessionController
 {
-    public CheatingGameSessionController(Configuration config, ILog log, GameSession gameSession) : base(config, log, gameSession)
+    public CheatingGameSessionController(Configuration config, ILog log, Random random, GameSession gameSession)
+        : base(
+            config,
+            log,
+            random,
+            gameSession)
     {
     }
 

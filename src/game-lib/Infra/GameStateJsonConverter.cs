@@ -108,8 +108,8 @@ class GameStateJsonConverter : JsonConverterSupportingReferences<GameState>
                 (missionObj, missionSite)
                     => new Mission(
                         id: missionObj[nameof(Mission.Id)]!.GetValue<int>(),
-                        site: missionSite!,
-                        skipValidation: true)));
+                        isActive: missionObj[nameof(Mission.IsActive)]!.GetValue<bool>(),
+                        site: missionSite!)));
 
         var agents = new Agents(
             DeserializeObjArrayWithDepRefProps(

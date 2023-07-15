@@ -7,6 +7,7 @@ public class AIPlayerTests
 {
     private Configuration _config = null!;
     private ILog _log = null!;
+    private readonly Random _random = new Random();
 
     [SetUp]
     public void Setup()
@@ -32,7 +33,7 @@ public class AIPlayerTests
 
     private void AIPlayerPlaysGameUntilConclusion(AIPlayer.Intellect intellect)
     {
-        var aiPlayer = new AIPlayer(_log, new GameSessionController(_config, _log, new GameSession(_log)), intellect);
+        var aiPlayer = new AIPlayer(_log, new GameSessionController(_config, _log, _random, new GameSession(_log)), intellect);
 
         // Act
         aiPlayer.PlayGameSession();

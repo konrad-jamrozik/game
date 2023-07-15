@@ -13,12 +13,11 @@ public class LaunchMissionPlayerAction : PlayerAction
         _log = log;
         _site = site;
         _agents = agents;
+        // kja2 pass Agents instead of List<Agent> and assert all of them can be launched on a mission
     }
 
     public override void Apply(GameState state)
     {
-        _log.Info($"Launch mission. SiteId: {_site.Id} AgentCount: {_agents.Count}");
-
         Debug.Assert(state.MissionSites.Contains(_site));
         Debug.Assert(_site.IsActive);
         Debug.Assert(_agents.Count > 0);
@@ -31,7 +30,8 @@ public class LaunchMissionPlayerAction : PlayerAction
 
         _agents.ForEach(agent => agent.SendOnMission(mission));
 
-        
         state.Assets.CurrentTransportCapacity -= _agents.Count;
+
+        _log.Info($"Launch mission. MissionId: {mission.Id}, SiteId: {_site.Id}, AgentCount: {_agents.Count}");
     }
 }
