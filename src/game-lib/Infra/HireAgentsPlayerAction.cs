@@ -17,7 +17,7 @@ public class HireAgentsPlayerAction : PlayerAction
 
     public override void Apply(GameState state)
     {
-        _log.Info($"PlayerAction: Hire agents. Count: {_count}");
+        _log.Info($"Hire agents. Count: {_count}");
         for (int i = 0; i < _count; i++)
             state.Assets.Agents.Add(new Agent(state.NextAgentId));
     }

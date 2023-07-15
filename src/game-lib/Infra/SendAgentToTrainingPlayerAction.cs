@@ -15,7 +15,7 @@ public class SendAgentToTrainingPlayerAction : PlayerAction
 
     public override void Apply(GameState state)
     {
-        _log.Info($"PlayerAction: Send agent to training. ID: {_agent.Id}");
+        _log.Info($"Send agent to training. ID: {_agent.Id}");
         _agent.SendToTraining();
     }
 }

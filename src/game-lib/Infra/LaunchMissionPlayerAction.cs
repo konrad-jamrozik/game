@@ -17,7 +17,7 @@ public class LaunchMissionPlayerAction : PlayerAction
 
     public override void Apply(GameState state)
     {
-        _log.Info($"PlayerAction: Launch mission. SiteId: {_site.Id} AgentCount: {_agents.Count}");
+        _log.Info($"Launch mission. SiteId: {_site.Id} AgentCount: {_agents.Count}");
 
         Debug.Assert(state.MissionSites.Contains(_site));
         Debug.Assert(_site.IsActive);

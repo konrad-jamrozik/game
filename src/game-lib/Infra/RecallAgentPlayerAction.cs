@@ -15,7 +15,7 @@ public class RecallAgentPlayerAction : PlayerAction
 
     public override void Apply(GameState state)
     {
-        _log.Info($"PlayerAction: Recall agent. ID: {_agent.Id}");
+        _log.Info($"Recall agent. ID: {_agent.Id}");
         _agent.Recall();
     }
 }

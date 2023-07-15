@@ -9,6 +9,10 @@ public class Configuration
 
     public readonly File LogFile;
 
+    public readonly bool IncludeCallerTypeNameInLog = false;
+
+    public readonly bool IncludeCallerMemberNameInLog = false;
+
     public Configuration(IFileSystem fs)
     {
         // Given expected starting path:

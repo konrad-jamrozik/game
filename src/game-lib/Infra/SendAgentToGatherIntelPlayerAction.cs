@@ -15,7 +15,7 @@ public class SendAgentToGatherIntelPlayerAction : PlayerAction
 
     public override void Apply(GameState state)
     {
-        _log.Info($"PlayerAction: Send agent to gather intel. ID: {_agent.Id}");
+        _log.Info($"Send agent to gather intel. ID: {_agent.Id}");
         _agent.GatherIntel();
     }
 }

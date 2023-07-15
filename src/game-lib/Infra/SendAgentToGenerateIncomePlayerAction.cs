@@ -15,7 +15,7 @@ public class SendAgentToGenerateIncomePlayerAction : PlayerAction
 
     public override void Apply(GameState state)
     {
-        _log.Info($"PlayerAction: Send agent to generate income. ID: {_agent.Id}");
+        _log.Info($"Send agent to generate income. ID: {_agent.Id}");
         _agent.GenerateIncome();
     }
 }
