@@ -4,6 +4,8 @@ public class Agents : List<Agent>
 {
     public List<Agent> InTransit => this.Where(agent => agent.IsInTransit).ToList();
 
+    public List<Agent> ArrivingNextTurn => this.Where(agent => agent.IsArrivingNextTurn).ToList();
+
     public List<Agent> Available => this.Where(agent => agent.IsAvailable).ToList();
 
     public List<Agent> OnMission => this.Where(agent => agent.IsOnMission).ToList();

@@ -47,7 +47,7 @@ public class BasicAIPlayerIntellect : IAIPlayerIntellect
         // any agents have been sent on a mission.
         Debug.Assert(agents.OnMission.Count == 0);
 
-        while (agents.CanBeSentOnMissionNextTurn.Count < DesiredAgentReserve(state)
+        while (agents.CanBeSentOnMissionNextTurn.Count < DesiredAgentMinimalReserve(state)
                && agents.Recallable.Count > 0)
         {
             Agent agentToRecall = agents.Recallable.RandomSubset(1).Single();
@@ -55,8 +55,23 @@ public class BasicAIPlayerIntellect : IAIPlayerIntellect
         }
     }
 
-    private static int DesiredAgentReserve(GameStatePlayerView state)
+    /// <summary>
+    /// This is the desired minimum of agents that should be available for sending on missions and base defense.
+    /// </summary>
+    private static int DesiredAgentMinimalReserve(GameStatePlayerView state)
         => state.Assets.MaxTransportCapacity * 2;
+
+    /// <summary>
+    /// This is the desired amount of agents for full operational capacity, including:
+    /// - launching mission
+    /// - defending base / training
+    /// - recovery
+    /// - operations, like gathering intel or generating income.
+    /// </summary>
+    /// <param name="state"></param>
+    /// <returns></returns>
+    private static int DesiredAgentFullComplement(GameStatePlayerView state)
+        => state.Assets.MaxTransportCapacity * 4;
 
     private static bool CanLaunchSomeMission(GameStatePlayerView state)
         => state.MissionSites.Any(site => site.IsActive)
@@ -79,10 +94,7 @@ public class BasicAIPlayerIntellect : IAIPlayerIntellect
 
     private int ComputeAgentsToHire(GameStatePlayerView state)
     {
-        // Strive to always have thrice as many agents as transport capacity,
-        // to keep adequate reserves for defense, buffer for recovery and
-        // to gather intel or generate income.
-        int desiredAgentCount = state.Assets.MaxTransportCapacity * 3;
+        int desiredAgentCount = DesiredAgentFullComplement(state);
 
         int agentsMissingToDesired = desiredAgentCount - state.Assets.Agents.Count;
 
@@ -102,6 +114,7 @@ public class BasicAIPlayerIntellect : IAIPlayerIntellect
         _log.Info(
             $"AIPlayer: ComputeAgentsToHire: " +
             $"agentsToHire: {agentsToHire} | " +
+            $"desiredAgentCount: {desiredAgentCount}, " +
             $"agentsMissingToDesired: {agentsMissingToDesired}, " +
             $"moneyAvailableFor: {moneyAvailableFor}, " +
             $"maxAgentIncreaseByUpkeep: {maxAgentIncreaseByUpkeep}.");
@@ -111,8 +124,9 @@ public class BasicAIPlayerIntellect : IAIPlayerIntellect
 
     private void AssignAvailableAgents(GameStatePlayerView state, GameSessionController controller)
     {
-        int desiredAgentReserve = DesiredAgentReserve(state);
+        int desiredAgentReserve = DesiredAgentMinimalReserve(state);
         int availableAgents = state.Assets.Agents.Available.Count;
+        int agentsArrivingNextTurn = state.Assets.Agents.ArrivingNextTurn.Count;
 
         // Example cases:
         // availableAgents: 10
@@ -158,8 +172,9 @@ public class BasicAIPlayerIntellect : IAIPlayerIntellect
             $"AIPlayer: AssignAvailableAgents: " +
             $"agentsAssignedToOps: {agentsToAssignToOps}, " +
             $"agentsAssignedToTraining: {agentsAssignedToTraining} | " +
+            $"desiredAgentReserve: {desiredAgentReserve}, " +
             $"availableAgents: {availableAgents}, " +
-            $"desiredAgentReserve: {desiredAgentReserve}.");
+            $"agentsArrivingNextTurn: {agentsArrivingNextTurn}.");
 
         Debug.Assert(
             agentsAssignedToOps == agentsToAssignToOps, 
