@@ -22,7 +22,12 @@ public class GameState
         => new GameState(
             updateCount: 0,
             new Timeline(currentTurn: 1),
-            new Assets(currentMoney: 500, funding: 20, agents: new Agents(), maxTransportCapacity: 4, currentTransportCapacity: 4),
+            new Assets(
+                currentMoney: 500,
+                currentTransportCapacity: 4,
+                funding: 20,
+                maxTransportCapacity: 4,
+                agents: new Agents()),
             new MissionSites(),
             new Missions());
 
@@ -31,5 +36,6 @@ public class GameState
     // kja3 for now game ends in 30 turns, to prevent the program from hanging.
     public bool IsGameOver => Assets.CurrentMoney < 0 || Timeline.CurrentTurn > 30;
     public int NextAgentId => Assets.Agents.Count;
+    public int NextMissionId => Missions.Count;
     public int NextMissionSiteId => MissionSites.Count;
 }

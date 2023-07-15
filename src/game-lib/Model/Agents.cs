@@ -2,6 +2,11 @@ namespace UfoGameLib.Model;
 
 public class Agents : List<Agent>
 {
+    public Agents(IEnumerable<Agent>? agents = null)
+        => AddRange(agents ?? new List<Agent>());
+
+    public int TotalUpkeepCost => Count * Agent.UpkeepCost;
+
     public List<Agent> InTransit => this.Where(agent => agent.IsInTransit).ToList();
 
     public List<Agent> ArrivingNextTurn => this.Where(agent => agent.IsArrivingNextTurn).ToList();
@@ -20,6 +25,4 @@ public class Agents : List<Agent>
 
     public List<Agent> Recallable
         => this.Where(agent => agent.IsRecallable).ToList();
-
-    public int TotalUpkeepCost => Count * Agent.UpkeepCost;
 }

@@ -2,18 +2,18 @@ namespace UfoGameLib.Model;
 
 public class Assets
 {
-    public readonly Agents Agents;
-    public int MaxTransportCapacity;
     public int CurrentMoney;
-    public int Funding;
     public int CurrentTransportCapacity;
+    public int Funding;
+    public int MaxTransportCapacity;
+    public readonly Agents Agents;
 
-    public Assets(int currentMoney, int funding, Agents agents, int maxTransportCapacity, int currentTransportCapacity)
+    public Assets(int currentMoney, int currentTransportCapacity, int funding, int maxTransportCapacity, Agents agents)
     {
         CurrentMoney = currentMoney;
-        Funding = funding;
-        Agents = agents;
-        MaxTransportCapacity = maxTransportCapacity;
         CurrentTransportCapacity = currentTransportCapacity;
+        Funding = funding;
+        MaxTransportCapacity = maxTransportCapacity;
+        Agents = agents;
     }
 }

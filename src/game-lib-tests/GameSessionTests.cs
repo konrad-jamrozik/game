@@ -147,11 +147,27 @@ public class GameSessionTests
         controller.AdvanceTime();
         
         controller.LaunchMission(controller.GameStatePlayerView.MissionSites.First(), agentCount: 1);
+
+        // First save game round-trip test, with active mission.
+        // Act 1/4 and 2/4
+        controller.Save();
+        controller.Load();
+
+        // Assume: session.PreviousGameState has game state as saved.
+        // Assume: session.CurrentGameState has game state as loaded.
+        // Assert that the GameState is the same after loading
+        new JsonDiffAssertion(
+                session.PreviousGameState!,
+                session.CurrentGameState,
+                GameSessionController.SaveJsonSerializerOptions)
+            .Assert();
+
         controller.AdvanceTime();
         controller.AdvanceTime();
         controller.AdvanceTime();
 
-        // Act 1/2 and 2/2
+        // Second save game round-trip test, with extra assertions.
+        // Act 3/4 and 4/4
         controller.Save();
         controller.Load();
 

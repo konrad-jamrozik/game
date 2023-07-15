@@ -20,11 +20,20 @@ public class Agent
 
     public readonly int Id;
     public State CurrentState;
+    public Mission? CurrentMission;
 
     public Agent(int id)
     {
         Id = id;
         CurrentState = State.InTransit;
+    }
+
+    public Agent(int id, State currentState, Mission? currentMission)
+    {
+        Id = id;
+        CurrentState = currentState;
+        CurrentMission = currentMission;
+        AssertMissionInvariant();
     }
 
     [JsonIgnore]
@@ -61,20 +70,49 @@ public class Agent
     public bool IsRecallable => IsGatheringIntel || IsGeneratingIncome;
 
     public void SendToTraining()
-        => CurrentState = State.Training;
+    {
+        Debug.Assert(CanBeSentOnMission);
+        CurrentState = State.Training;
+    }
 
     public void GatherIntel()
-        => CurrentState = State.GatheringIntel;
+    {
+        Debug.Assert(CanBeSentOnMission);
+        CurrentState = State.GatheringIntel;
+    }
 
     public void GenerateIncome()
-        => CurrentState = State.GeneratingIncome;
+    {
+        Debug.Assert(CanBeSentOnMission);
+        CurrentState = State.GeneratingIncome;
+    }
 
-    public void SendOnMission()
-        => CurrentState = State.OnMission;
+    public void SendOnMission(Mission mission)
+    {
+        Debug.Assert(CanBeSentOnMission);
+        CurrentState = State.OnMission;
+        CurrentMission = mission;
+        AssertMissionInvariant();
+    }
+
+    public void MakeAvailable()
+    {
+        Debug.Assert(!IsAvailable);
+        if (IsOnMission)
+            CurrentMission = null;
+        CurrentState = State.Available;
+    }
 
     public void Recall()
     {
         Debug.Assert(IsRecallable);
         CurrentState = State.InTransit;
+    }
+
+    private void AssertMissionInvariant()
+    {
+        Debug.Assert(
+            IsOnMission == (CurrentMission != null),
+            $"IsOnMission: {IsOnMission} == (CurrentMission != null): {CurrentMission != null}");
     }
 }

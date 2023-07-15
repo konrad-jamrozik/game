@@ -42,9 +42,9 @@ public class AdvanceTimePlayerAction : PlayerAction
             {
                 if (TransientAgentStates.Contains(agent.CurrentState))
                 {
-                    // kja2 note this converts agent OnMission to Available, but rapidly this will change,
+                    // kja2 note: among others, this converts agents that are OnMission to Available, but rapidly this will change,
                     // as agents may die or need recovery
-                    agent.CurrentState = Agent.State.Available;
+                    agent.MakeAvailable();
                 }
             });
     }

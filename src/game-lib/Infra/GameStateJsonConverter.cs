@@ -50,19 +50,20 @@ class GameStateJsonConverter : JsonConverterSupportingReferences<GameState>
 
             // Not ignoring readonly properties.
             // If they would be ignored, then there is no easy way to un-ignore
-            // a property. The [JsonInclude] attribute doesn't appear to work.
+            // a property. The [JsonInclude] attribute doesn't appear to work [1].
             // This e.g. a problem for classes implementing interfaces with
             // properties. It is not possible to request a field via interface,
             // only property, which would get ignored, and then couldn't be brought
             // back via the attribute.
-            // I could work around this via contract customization [1],
+            // I could work around this via contract customization [2],
             // but that's a lot of extra complex code that needs to be written for each
             // property I want to un-ignore.
             //
             // Conversely, when properties aren't ignored by default, I can selectively
             // ignore properties via [JsonIgnore].
             //
-            // [1] https://learn.microsoft.com/en-us/dotnet/standard/serialization/system-text-json/custom-contracts
+            // [1] https://github.com/dotnet/runtime/issues/88716
+            // [2] https://learn.microsoft.com/en-us/dotnet/standard/serialization/system-text-json/custom-contracts
             IgnoreReadOnlyProperties = false,
 
             // The JsonStringEnumConverter allows serialization of enums as string instead of integers.
@@ -81,6 +82,11 @@ class GameStateJsonConverter : JsonConverterSupportingReferences<GameState>
             objJsonArrayName: nameof(GameState.Missions),
             propName: nameof(Mission.Site));
 
+        ReplaceArrayObjectsPropertiesWithRefs(
+            parent: gameStateNode[nameof(GameState.Assets)]!,
+            objJsonArrayName: nameof(Assets.Agents),
+            propName: nameof(Agent.CurrentMission));
+
         gameStateNode.WriteTo(writer, SerializationOptions);
     }
 
@@ -90,15 +96,40 @@ class GameStateJsonConverter : JsonConverterSupportingReferences<GameState>
 
         int updateCount = DeserializeInt(gameStateNode, nameof(GameState.UpdateCount));
         Timeline timeline = Deserialize<Timeline>(gameStateNode);
-        Assets assets = Deserialize<Assets>(gameStateNode);
         MissionSites missionSites = Deserialize<MissionSites>(gameStateNode);
+
+        JsonNode assetsNode = gameStateNode[nameof(GameState.Assets)]!;
 
         var missions = new Missions(
             DeserializeObjArrayWithDepRefProps(
                 objJsonArray: JsonArray(gameStateNode, nameof(GameState.Missions)),
                 depRefPropName: nameof(Mission.Site),
-                missionSites,
-                (_, missionSite) => new Mission(missionSite, skipValidation: true)));
+                deps: missionSites,
+                (missionObj, missionSite)
+                    => new Mission(
+                        id: missionObj[nameof(Mission.Id)]!.GetValue<int>(),
+                        site: missionSite!,
+                        skipValidation: true)));
+
+        var agents = new Agents(
+            DeserializeObjArrayWithDepRefProps(
+                objJsonArray: JsonArray(assetsNode, nameof(Assets.Agents)),
+                depRefPropName: nameof(Agent.CurrentMission),
+                deps: missions,
+                (agentObj, mission)
+                    => new Agent(
+                        id: agentObj[nameof(Agent.Id)]!.GetValue<int>(),
+                        currentState: Enum.Parse<Agent.State>(agentObj[nameof(Agent.CurrentState)]!.GetValue<string>()),
+                        currentMission: mission)));
+
+        var assets = new Assets(
+            currentMoney: DeserializeInt(assetsNode, nameof(Assets.CurrentMoney)),
+            currentTransportCapacity: DeserializeInt(assetsNode, nameof(Assets.CurrentTransportCapacity)),
+            funding: DeserializeInt(assetsNode, nameof(Assets.Funding)),
+            maxTransportCapacity: DeserializeInt(assetsNode, nameof(Assets.MaxTransportCapacity)),
+            agents: agents);
+
+
 
         GameState gameState = new GameState(
             updateCount,

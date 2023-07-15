@@ -26,7 +26,7 @@ public abstract class JsonConverterSupportingReferences<T> : JsonConverter<T>
         JsonArray objJsonArray,
         string depRefPropName,
         List<TDep> deps,
-        Func<JsonNode, TDep, TObj> objCtor) where TDep : IIdentifiable
+        Func<JsonNode, TDep?, TObj> objCtor) where TDep : IIdentifiable
     {
         Dictionary<int, TDep> depsById = deps.ToDictionary<TDep, int>(dep => dep.Id);
 
@@ -64,24 +64,42 @@ public abstract class JsonConverterSupportingReferences<T> : JsonConverter<T>
 
     private void ReplaceObjectPropertyWithRef(JsonObject obj, string propName)
     {
-        int id = obj[propName]!["Id"]!.GetValue<int>();
+        // This may hold:
+        //     obj[propName] == null
+        // when, for example, replacing Agent.CurrentMission with its ID reference.
+        // The Agent.CurrentMission may be null if the Agent is not on any mission.
+        int? id = obj[propName] != null ? IdFromObjPropName() : null;
         obj.Add("$id_" + propName, id);
         obj.Remove(propName);
+
+        int? IdFromObjPropName()
+        {
+            JsonNode idNode =
+                obj[propName]!["Id"]
+                ?? throw new InvalidOperationException($"obj[{propName}]![\"Id\"] is null. obj: {obj}");
+            return idNode.GetValue<int>();
+        }
     }
 
     private static TObj DeserializeObjWithDepRefProp<TObj, TDep>(
         JsonNode objJsonNode,
         Dictionary<int, TDep> depsById,
         string depRefPropName,
-        Func<JsonNode, TDep, TObj> objCtor) where TDep : IIdentifiable
+        Func<JsonNode, TDep?, TObj> objCtor) where TDep : IIdentifiable
     {
-        TDep dep = GetByRef(objJsonNode, depsById, depRefPropName);
+        TDep? dep = GetByRef(objJsonNode, depsById, depRefPropName);
         return objCtor(objJsonNode, dep);
     }
 
-    private static TDep GetByRef<TDep>(JsonNode node, Dictionary<int, TDep> depsById, string refPropName)
+    private static TDep? GetByRef<TDep>(JsonNode node, Dictionary<int, TDep> depsById, string refPropName)
     {
-        int refPropId = node["$id_" + refPropName]!.GetValue<int>();
+        JsonNode? refValNode = node["$id_" + refPropName];
+        if (refValNode == null)
+            // This is for deserializing the null ID reference as explained in
+            // ReplaceObjectPropertyWithRef
+            return default;
+
+        int refPropId = refValNode.GetValue<int>();
         TDep dep = depsById[refPropId];
         return dep;
     }

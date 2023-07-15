@@ -21,13 +21,17 @@ public class LaunchMissionPlayerAction : PlayerAction
 
         Debug.Assert(state.MissionSites.Contains(_site));
         Debug.Assert(_site.IsActive);
-        Debug.Assert(_agents.Any());
+        Debug.Assert(_agents.Count > 0);
         _agents.ForEach(agent => Debug.Assert(agent.CanBeSentOnMission));
         Debug.Assert(state.Assets.CurrentTransportCapacity >= _agents.Count);
 
-        _agents.ForEach(agent => agent.SendOnMission());
+        int missionId = state.NextMissionId;
+        var mission = new Mission(missionId, _site);
+        state.Missions.Add(mission);
 
-        state.Missions.Add(new Mission(_site));
+        _agents.ForEach(agent => agent.SendOnMission(mission));
+
+        
         state.Assets.CurrentTransportCapacity -= _agents.Count;
     }
 }
