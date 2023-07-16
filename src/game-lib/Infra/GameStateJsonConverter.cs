@@ -97,8 +97,9 @@ class GameStateJsonConverter : JsonConverterSupportingReferences<GameState>
         int updateCount = DeserializeInt(gameStateNode, nameof(GameState.UpdateCount));
         Timeline timeline = Deserialize<Timeline>(gameStateNode);
         MissionSites missionSites = Deserialize<MissionSites>(gameStateNode);
-
-        JsonNode assetsNode = gameStateNode[nameof(GameState.Assets)]!;
+        Agents terminatedAgents =
+            Deserialize<List<Agent>>(gameStateNode, nameof(GameState.TerminatedAgents)).ToAgents();
+        
 
         var missions = new Missions(
             DeserializeObjArrayWithDepRefProps(
@@ -111,6 +112,7 @@ class GameStateJsonConverter : JsonConverterSupportingReferences<GameState>
                         isActive: missionObj[nameof(Mission.IsActive)]!.GetValue<bool>(),
                         site: missionSite!)));
 
+        JsonNode assetsNode = gameStateNode[nameof(GameState.Assets)]!;
         var agents = new Agents(
             DeserializeObjArrayWithDepRefProps(
                 objJsonArray: JsonArray(assetsNode, nameof(Assets.Agents)),
@@ -129,14 +131,13 @@ class GameStateJsonConverter : JsonConverterSupportingReferences<GameState>
             maxTransportCapacity: DeserializeInt(assetsNode, nameof(Assets.MaxTransportCapacity)),
             agents: agents);
 
-
-
         GameState gameState = new GameState(
             updateCount,
             timeline,
             assets,
             missionSites,
-            missions);
+            missions,
+            terminatedAgents);
 
         return gameState;
     }

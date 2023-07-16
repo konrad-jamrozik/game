@@ -143,12 +143,16 @@ public class GameSessionTests
 
         controller.AdvanceTime();
         controller.AdvanceTime();
-        controller.HireAgents(3);
+        controller.HireAgents(5);
         // Need to advance time here so that hired agents are no longer InTransit and can be
         // sent on a mission.
         controller.AdvanceTime();
         
-        controller.LaunchMission(controller.GameStatePlayerView.MissionSites.First(), agentCount: 1);
+        // kja add here "SackAgent" to verify agent termination save/load
+
+        controller.LaunchMission(
+            controller.GameStatePlayerView.MissionSites.First(),
+            agentCount: 3);
 
         // Act 1/2 and 2/2
         controller.Save();
@@ -183,12 +187,14 @@ public class GameSessionTests
 
         controller.AdvanceTime();
         controller.AdvanceTime();
-        controller.HireAgents(3);
+        controller.HireAgents(10);
         // Need to advance time here so that hired agents are no longer InTransit and can be
         // sent on a mission.
         controller.AdvanceTime();
-        
-        controller.LaunchMission(controller.GameStatePlayerView.MissionSites.First(), agentCount: 1);
+
+        controller.LaunchMission(
+            controller.GameStatePlayerView.MissionSites.First(),
+            agentCount: controller.GameStatePlayerView.Assets.CurrentTransportCapacity);
 
         controller.AdvanceTime();
         controller.AdvanceTime();
@@ -212,7 +218,9 @@ public class GameSessionTests
             () =>
             {
                 Assert.That(state.CurrentTurn, Is.EqualTo(7));
-                Assert.That(state.Assets.Agents, Has.Count.EqualTo(3));
+                Assert.That(
+                    state.Assets.Agents.Count + state.TerminatedAgents.Count,
+                    Is.EqualTo(10));
                 Assert.That(state.Missions, Has.Count.EqualTo(1));
                 Assert.That(state.MissionSites, Has.Count.EqualTo(2));
 

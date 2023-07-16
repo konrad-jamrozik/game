@@ -8,14 +8,16 @@ public class GameState
     public readonly Assets Assets;
     public readonly MissionSites MissionSites;
     public readonly Missions Missions;
+    public readonly Agents TerminatedAgents;
 
-    public GameState(int updateCount, Timeline timeline, Assets assets, MissionSites missionSites, Missions missions)
+    public GameState(int updateCount, Timeline timeline, Assets assets, MissionSites missionSites, Missions missions, Agents terminatedAgents)
     {
         UpdateCount = updateCount;
         Timeline = timeline;
         Assets = assets;
         MissionSites = missionSites;
         Missions = missions;
+        TerminatedAgents = terminatedAgents;
     }
 
     public static GameState NewInitialGameState()
@@ -29,7 +31,8 @@ public class GameState
                 maxTransportCapacity: 4,
                 agents: new Agents()),
             new MissionSites(),
-            new Missions());
+            new Missions(),
+            terminatedAgents: new Agents());
 
     public int UpdateCount { get; set; }
 
@@ -38,4 +41,11 @@ public class GameState
     public int NextAgentId => Assets.Agents.Count;
     public int NextMissionId => Missions.Count;
     public int NextMissionSiteId => MissionSites.Count;
+
+    public void Terminate(Agent agent)
+    {
+        Assets.Agents.Remove(agent);
+        TerminatedAgents.Add(agent);
+        agent.Terminate();
+    }
 }

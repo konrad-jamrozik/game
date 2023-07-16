@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using Lib.Json;
 
 namespace UfoGameLib.Model;
@@ -20,9 +21,7 @@ public class Mission : IIdentifiable
         IsActive = true;
     }
 
-    // Deserialization ctor
-    // kja3 investigate using [JsonConstructor] for all such ctors:
-    // https://learn.microsoft.com/en-us/dotnet/api/system.text.json.serialization.jsonconstructorattribute?view=net-7.0
+    [JsonConstructor]
     public Mission(int id, bool isActive, MissionSite site)
     {
         Id = id;

@@ -60,7 +60,7 @@ public class AdvanceTimePlayerAction : PlayerAction
                 
                 if (survivalRoll <= deathChance)
                 {
-                    agent.Terminate();
+                    state.Terminate(agent);
                     _log.Info($"Agent with ID {agent.Id,4} terminated. Roll: {survivalRoll,3} <= {deathChance}");
                     agentsTerminated++;
                 }

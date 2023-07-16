@@ -29,7 +29,7 @@ public class Agent
         CurrentState = State.InTransit;
     }
 
-    // Deserialization ctor
+    [JsonConstructor]
     public Agent(int id, State currentState, Mission? currentMission)
     {
         Id = id;
