@@ -34,6 +34,7 @@ public class BasicAIPlayerIntellect : IAIPlayerIntellect
             MissionSite site = ChooseMissionSite(state);
             Agents agents = ChooseAgents(state);
 
+            // kja currently there is no incentive for launching missions. They don't give anything.
             controller.LaunchMission(site, agents);
         }
 
@@ -42,15 +43,16 @@ public class BasicAIPlayerIntellect : IAIPlayerIntellect
 
     private static void RecallAgents(GameStatePlayerView state, GameSessionController controller)
     {
+        // kja add diag logs about recalling
         var agents = state.Assets.Agents;
-        // Here we assume that we determine agents to recall in given turn before 
+
+        // Here we assume that we get determine agents to recall in given turn before 
         // any agents have been sent on a mission.
         Debug.Assert(agents.OnMission.Count == 0);
 
         while (agents.CanBeSentOnMissionNextTurn.Count < DesiredAgentMinimalReserve(state)
                && agents.Recallable.Count > 0)
         {
-
             Agent agentToRecall = controller.RandomGen.PickOneAtRandom(agents.Recallable);
             controller.RecallAgent(agentToRecall);
         }
@@ -60,7 +62,7 @@ public class BasicAIPlayerIntellect : IAIPlayerIntellect
     /// This is the desired minimum of agents that should be available for sending on missions and base defense.
     /// </summary>
     private static int DesiredAgentMinimalReserve(GameStatePlayerView state)
-        => state.Assets.MaxTransportCapacity * 2;
+        => state.Assets.MaxTransportCapacity;
 
     /// <summary>
     /// This is the desired amount of agents for full operational capacity, including:
@@ -72,7 +74,7 @@ public class BasicAIPlayerIntellect : IAIPlayerIntellect
     /// <param name="state"></param>
     /// <returns></returns>
     private static int DesiredAgentFullComplement(GameStatePlayerView state)
-        => state.Assets.MaxTransportCapacity * 4;
+        => state.Assets.MaxTransportCapacity * 2;
 
     private static bool CanLaunchSomeMission(GameStatePlayerView state)
         => state.MissionSites.Any(site => site.IsActive)
@@ -107,10 +109,13 @@ public class BasicAIPlayerIntellect : IAIPlayerIntellect
         int currentUpkeepCost = state.Assets.Agents.UpkeepCost;
         int maxUpkeepIncrease = maxTolerableUpkeepCost - currentUpkeepCost;
         int maxAgentIncreaseByUpkeep = maxUpkeepIncrease / Agent.UpkeepCost;
+        // If there is enough money in the bank to pay an agent for 10 turns, then we can hire them.
+        int maxAgentIncreaseByMoneyReserves = state.Assets.CurrentMoney / (Agent.UpkeepCost * 10);
+        int maxAgentIncrease = maxAgentIncreaseByUpkeep + maxAgentIncreaseByMoneyReserves;
 
         int agentsToHire = Math.Min(
             Math.Min(agentsMissingToDesired, moneyAvailableFor),
-            maxAgentIncreaseByUpkeep);
+            maxAgentIncrease);
 
         _log.Info(
             $"AIPlayer: ComputeAgentsToHire: " +
@@ -118,7 +123,9 @@ public class BasicAIPlayerIntellect : IAIPlayerIntellect
             $"desiredAgentCount: {desiredAgentCount}, " +
             $"agentsMissingToDesired: {agentsMissingToDesired}, " +
             $"moneyAvailableFor: {moneyAvailableFor}, " +
-            $"maxAgentIncreaseByUpkeep: {maxAgentIncreaseByUpkeep}.");
+            $"maxAgentIncrease: {maxAgentIncrease}, " +
+            $"maxAgentIncreaseByUpkeep: {maxAgentIncreaseByUpkeep}, " +
+            $"maxAgentIncreaseByMoneyReserves: {maxAgentIncreaseByMoneyReserves}.");
 
         return agentsToHire;
     }

@@ -32,6 +32,7 @@ public class GameState
             new Timeline(currentTurn: 1),
             new Assets(
                 currentMoney: 500,
+                currentIntel: 0,
                 currentTransportCapacity: 4,
                 funding: 20,
                 maxTransportCapacity: 4,

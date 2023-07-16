@@ -127,6 +127,7 @@ class GameStateJsonConverter : JsonConverterSupportingReferences<GameState>
 
         var assets = new Assets(
             currentMoney: DeserializeInt(assetsNode, nameof(Assets.CurrentMoney)),
+            currentIntel: DeserializeInt(assetsNode, nameof(Assets.CurrentIntel)),
             currentTransportCapacity: DeserializeInt(assetsNode, nameof(Assets.CurrentTransportCapacity)),
             funding: DeserializeInt(assetsNode, nameof(Assets.Funding)),
             maxTransportCapacity: DeserializeInt(assetsNode, nameof(Assets.MaxTransportCapacity)),

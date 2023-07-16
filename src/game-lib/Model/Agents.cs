@@ -24,7 +24,7 @@ public class Agents : List<Agent>
         base.AddRange(agentsList);
     }
 
-    public int UpkeepCost => this.Count * Agent.UpkeepCost;
+    public int UpkeepCost => Count * Agent.UpkeepCost;
 
     public Agents InTransit => this.Where(agent => agent.IsInTransit).ToAgents();
 
@@ -42,6 +42,7 @@ public class Agents : List<Agent>
 
     public Agents CanBeSentOnMission => this.Where(agent => agent.CanBeSentOnMission).ToAgents();
 
+    // kja this is more like "PotentialMax", because it assumes all agents returned from missin, ready to rumble.
     public Agents CanBeSentOnMissionNextTurn => this.Where(agent => agent.CanBeSentOnMissionNextTurn).ToAgents();
 
     public Agents Recallable

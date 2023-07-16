@@ -15,6 +15,7 @@ public class AdvanceTimePlayerAction : PlayerAction
 
     public override void Apply(GameState state)
     {
+        _log.Info("");
         _log.Info("----- Evaluating next turn");
         state.Timeline.CurrentTurn++;
 
@@ -27,7 +28,21 @@ public class AdvanceTimePlayerAction : PlayerAction
         state.Assets.CurrentTransportCapacity = state.Assets.MaxTransportCapacity;
 
         // Agents cost upkeep.
-        state.Assets.CurrentMoney -= state.Assets.Agents.UpkeepCost;
+        int agentUpkeep = state.Assets.Agents.UpkeepCost;
+
+        // Each agent generates income equal to their upkeep times 3.
+        int incomeGenerated = state.Assets.Agents.GeneratingIncome.Count * Agent.UpkeepCost * 3;
+
+        int moneyAdjustment = state.Assets.Funding + incomeGenerated - agentUpkeep;
+
+        state.Assets.CurrentMoney += moneyAdjustment;
+        state.Assets.CurrentMoney += incomeGenerated;
+
+        // Each agent gathers 5 intel per turn.
+        int intelGathered = state.Assets.Agents.GatheringIntel.Count * 5;
+        state.Assets.CurrentIntel += intelGathered;
+
+        
 
         UpdateAgentStates(state);
 
@@ -35,10 +50,15 @@ public class AdvanceTimePlayerAction : PlayerAction
 
         _log.Info($"===== Turn {state.Timeline.CurrentTurn,4} :");
         _log.Info($"    | Agents alive: {state.Assets.Agents.Count}, " +
-                  $"Agents terminated this turn: {agentsTerminated}, " +
-                  $"CurrentMoney: {state.Assets.CurrentMoney}, " +
+                  $"Agents terminated this turn: {agentsTerminated}.");
+        _log.Info($"    | CurrentMoney: {state.Assets.CurrentMoney}, " +
+                  $"Money adjustment: {moneyAdjustment}, " +
                   $"Funding: {state.Assets.Funding}, " +
-                  $"Agent upkeep: {state.Assets.Agents.UpkeepCost}");
+                  $"Income generated: {incomeGenerated}, " +
+                  $"Agent upkeep: {agentUpkeep}.");
+        _log.Info($"    | CurrentIntel: {state.Assets.CurrentIntel}, " +
+                  $"Intel gathered: {intelGathered}.");
+        _log.Info("");
     }
 
     private int EvaluateActiveMissions(GameState state)
