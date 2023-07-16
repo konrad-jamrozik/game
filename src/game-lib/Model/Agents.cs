@@ -16,6 +16,7 @@ public class Agents : List<Agent>
         base.Add(agent);
     }
 
+    // ReSharper disable once MemberCanBePrivate.Global
     public new void AddRange(IEnumerable<Agent> agents)
     {
         List<Agent> agentsList = agents.ToList();
@@ -23,7 +24,7 @@ public class Agents : List<Agent>
         base.AddRange(agentsList);
     }
 
-    public int UpkeepCost => Alive.Count * Agent.UpkeepCost;
+    public int UpkeepCost => this.Count * Agent.UpkeepCost;
 
     public Agents InTransit => this.Where(agent => agent.IsInTransit).ToAgents();
 
@@ -49,8 +50,6 @@ public class Agents : List<Agent>
 
     public void AssertCanBeSentOnMission()
         => Debug.Assert(this.All(agent => agent.CanBeSentOnMission));
-
-    private Agents Alive => this.Where(agent => agent.IsAlive).ToAgents();
 
     private void AssertAliveness(IEnumerable<Agent> agents)
     {
