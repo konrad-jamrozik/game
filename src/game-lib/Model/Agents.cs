@@ -30,7 +30,9 @@ public class Agents : List<Agent>
 
     public Agents Training => this.Where(agent => agent.IsTraining).ToAgents();
 
-    public Agents ArrivingNextTurn => this.Where(agent => agent.IsArrivingNextTurn).ToAgents();
+    public Agents ArrivingNextTurnForSure => this.Where(agent => agent.IsArrivingNextTurnForSure).ToAgents();
+
+    public Agents ArrivingNextTurnMaybe => this.Where(agent => agent.IsArrivingNextTurnMaybe).ToAgents();
 
     public Agents Available => this.Where(agent => agent.IsAvailable).ToAgents();
 
@@ -42,8 +44,9 @@ public class Agents : List<Agent>
 
     public Agents CanBeSentOnMission => this.Where(agent => agent.CanBeSentOnMission).ToAgents();
 
-    // kja this is more like "PotentialMax", because it assumes all agents returned from missin, ready to rumble.
-    public Agents CanBeSentOnMissionNextTurn => this.Where(agent => agent.CanBeSentOnMissionNextTurn).ToAgents();
+    public Agents CanBeSentOnMissionNextTurnForSure => this.Where(agent => agent.CanBeSentOnMissionNextTurnForSure).ToAgents();
+
+    public Agents CanBeSentOnMissionNextTurnMaybe => this.Where(agent => agent.CanBeSentOnMissionNextTurnMaybe).ToAgents();
 
     public Agents Recallable
         => this.Where(agent => agent.IsRecallable).ToAgents();

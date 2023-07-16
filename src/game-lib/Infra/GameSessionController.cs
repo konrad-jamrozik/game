@@ -74,8 +74,8 @@ public class GameSessionController
     public void SendAgentToGenerateIncome(Agent agent)
         => GameSession.ApplyPlayerAction(new SendAgentToGenerateIncomePlayerAction(_log, agent));
 
-    public void RecallAgent(Agent agent)
-        => GameSession.ApplyPlayerAction(new RecallAgentPlayerAction(_log, agent));
+    public void RecallAgents(Agents agents)
+        => GameSession.ApplyPlayerAction(new RecallAgentsPlayerAction(_log, agents));
 
     /// <summary>
     /// Convenience method. LaunchMission, but instead of choosing specific agents,

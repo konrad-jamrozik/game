@@ -41,21 +41,36 @@ public class BasicAIPlayerIntellect : IAIPlayerIntellect
         AssignAvailableAgents(state, controller);
     }
 
-    private static void RecallAgents(GameStatePlayerView state, GameSessionController controller)
+    private void RecallAgents(GameStatePlayerView state, GameSessionController controller)
     {
-        // kja add diag logs about recalling
-        var agents = state.Assets.Agents;
+        Agents agents = state.Assets.Agents;
 
         // Here we assume that we get determine agents to recall in given turn before 
         // any agents have been sent on a mission.
         Debug.Assert(agents.OnMission.Count == 0);
 
-        while (agents.CanBeSentOnMissionNextTurn.Count < DesiredAgentMinimalReserve(state)
-               && agents.Recallable.Count > 0)
-        {
-            Agent agentToRecall = controller.RandomGen.PickOneAtRandom(agents.Recallable);
-            controller.RecallAgent(agentToRecall);
-        }
+        int predictedAgents = agents.CanBeSentOnMissionNextTurnMaybe.Count;
+        int desiredReserve = DesiredAgentMinimalReserve(state);
+        int desiredAgentsToRecallCount = Math.Max(desiredReserve - predictedAgents, 0);
+
+        int recallableAgentsCount = agents.Recallable.Count;
+
+        int agentsToRecallCount = Math.Min(desiredAgentsToRecallCount, recallableAgentsCount);
+
+        Agents agentsToRecall = controller.RandomGen.Pick(agents.Recallable, agentsToRecallCount).ToAgents();
+        int recalledGeneratingIncome = agentsToRecall.GeneratingIncome.Count;
+        int recalledGatheringIntel = agentsToRecall.GatheringIntel.Count;
+        controller.RecallAgents(agentsToRecall);
+
+        _log.Info(
+            $"AIPlayer: RecallAgents: " +
+            $"agentsRecalled: {agentsToRecall.Count}, " +
+            $"generatingIncome: {recalledGeneratingIncome}, " +
+            $"gatheringIntel: {recalledGatheringIntel} | " +
+            $"desiredAgentsToRecall: {desiredAgentsToRecallCount}, " +
+            $"desiredReserve: {desiredReserve}, " +
+            $"predictedAgents: {predictedAgents}, " +
+            $"recallableAgents: {recallableAgentsCount}.");
     }
 
     /// <summary>
@@ -134,7 +149,7 @@ public class BasicAIPlayerIntellect : IAIPlayerIntellect
     {
         int desiredAgentReserve = DesiredAgentMinimalReserve(state);
         int availableAgents = state.Assets.Agents.Available.Count;
-        int agentsArrivingNextTurn = state.Assets.Agents.ArrivingNextTurn.Count;
+        int agentsArrivingNextTurn = state.Assets.Agents.ArrivingNextTurnForSure.Count; // kja check if I should use "Maybe" instead of "ForSure" here
 
         // Example cases:
         // availableAgents: 10
@@ -154,7 +169,7 @@ public class BasicAIPlayerIntellect : IAIPlayerIntellect
         //   5 in training, 3 currently in transit and 4 currently on mission.
         int agentsToAssignToOps = Math.Min(
             availableAgents, 
-            Math.Max(state.Assets.Agents.CanBeSentOnMissionNextTurn.Count - desiredAgentReserve, 0));
+            Math.Max(state.Assets.Agents.CanBeSentOnMissionNextTurnForSure.Count - desiredAgentReserve, 0)); // kja check if I should use "Maybe" instead of "ForSure" here
         
         // Agents assigned to training, unlike agents assigned to ops, can be reassigned immediately, hence
         // they count towards the desired agent reserve.
@@ -162,11 +177,11 @@ public class BasicAIPlayerIntellect : IAIPlayerIntellect
         int agentsAssignedToOps = 0;
         int agentsAssignedToTraining = 0;
 
-        while (state.Assets.Agents.CanBeSentOnMissionNextTurn.Count > desiredAgentReserve
+        while (state.Assets.Agents.CanBeSentOnMissionNextTurnForSure.Count > desiredAgentReserve // kja check if I should use "Maybe" instead of "ForSure" here
                && state.Assets.Agents.Available.Count > 0)
         {
             Agent agentToAssign = state.Assets.Agents.Available.RandomSubset(1).Single();
-            controller.RandomGen.PickOneAtRandom(AgentActionMap).Invoke(controller, agentToAssign);
+            controller.RandomGen.Pick(AgentActionMap).Invoke(controller, agentToAssign);
             agentsAssignedToOps++;
         }
 

@@ -75,15 +75,17 @@ public class Agent
     public bool IsInBase => IsAvailable || IsTraining || IsRecovering;
 
     [JsonIgnore] 
-    public bool CanBeSentOnMissionNextTurn => CanBeSentOnMission || IsArrivingNextTurn;
+    public bool CanBeSentOnMissionNextTurnForSure => CanBeSentOnMission || IsArrivingNextTurnForSure;
 
-
-    // Here we assume that if agent:
-    // IsInTransit, they will arrive next turn.
-    // IsOnMission, they will return to base next turn, combat ready.
-    // kja2 this is now no longer strictly correct, as IsOnMission may result in IsTerminated
     [JsonIgnore] 
-    public bool IsArrivingNextTurn => IsInTransit || IsOnMission;
+    public bool CanBeSentOnMissionNextTurnMaybe => CanBeSentOnMission || IsArrivingNextTurnMaybe;
+
+    [JsonIgnore]
+    public bool IsArrivingNextTurnForSure => IsInTransit;
+
+    [JsonIgnore]
+    public bool IsArrivingNextTurnMaybe => IsArrivingNextTurnForSure || IsOnMission;
+
 
     [JsonIgnore]
     public bool IsDoingOps => IsGatheringIntel || IsGeneratingIncome;
