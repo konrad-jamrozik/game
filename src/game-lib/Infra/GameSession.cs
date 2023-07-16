@@ -11,7 +11,7 @@ namespace UfoGameLib.Infra;
 /// </summary>
 public class GameSession
 {
-    public readonly Random Random = new Random();
+    public readonly RandomGen RandomGen;
     public GameState CurrentGameState = GameState.NewInitialGameState();
 
     // Populated when CurrentGameState is overridden, e.g. because it got
@@ -19,9 +19,10 @@ public class GameSession
     public GameState? PreviousGameState = null;
     private ILog Log;
 
-    public GameSession(ILog log)
+    public GameSession(ILog log, RandomGen randomGen)
     {
         Log = log;
+        RandomGen = randomGen;
     }
 
     public void ApplyPlayerAction(PlayerAction action)

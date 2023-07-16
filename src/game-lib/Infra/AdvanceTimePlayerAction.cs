@@ -10,12 +10,12 @@ public class AdvanceTimePlayerAction : PlayerAction
     };
 
     private readonly ILog _log;
-    private readonly Random _random;
+    private readonly RandomGen _randomGen;
 
-    public AdvanceTimePlayerAction(ILog log, Random random)
+    public AdvanceTimePlayerAction(ILog log, RandomGen randomGen)
     {
         _log = log;
-        _random = random;
+        _randomGen = randomGen;
     }
 
     public override void Apply(GameState state)
@@ -56,7 +56,7 @@ public class AdvanceTimePlayerAction : PlayerAction
             Agents agentsOnMission = state.Assets.Agents.OnSpecificMission(mission);
             foreach (Agent agent in agentsOnMission)
             {
-                int survivalRoll = _random.Next(100) + 1;
+                int survivalRoll = _randomGen.Roll100();
                 
                 if (survivalRoll <= deathChance)
                 {

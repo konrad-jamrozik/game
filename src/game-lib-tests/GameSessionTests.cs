@@ -9,7 +9,7 @@ public class GameSessionTests
 {
     private Configuration _config = null!;
     private ILog _log = null!;
-    private readonly Random _random = new Random();
+    private readonly RandomGen _randomGen = new RandomGen(new Random());
 
     [SetUp]
     public void Setup()
@@ -59,8 +59,8 @@ public class GameSessionTests
     [Test]
     public void BasicHappyPathGameSessionWorks()
     {
-        var session = new GameSession(_log);
-        var controller = new GameSessionController(_config, _log, _random, session);
+        var session = new GameSession(_log, _randomGen);
+        var controller = new GameSessionController(_config, _log, session);
 
         GameState startingState = session.CurrentGameState;
 
@@ -102,8 +102,8 @@ public class GameSessionTests
     [Test]
     public void LoadingPreviousGameStateOverridesCurrentState()
     {
-        var session = new GameSession(_log);
-        var controller = new GameSessionController(_config, _log, _random, session);
+        var session = new GameSession(_log, _randomGen);
+        var controller = new GameSessionController(_config, _log, session);
 
         int savedTurn = controller.GameStatePlayerView.CurrentTurn;
         GameState startingGameState = session.CurrentGameState;
@@ -141,8 +141,8 @@ public class GameSessionTests
     [Test]
     public void RoundTrippingSavingAndLoadingGameStateWithActiveMissionBehavesCorrectly()
     {
-        var session = new GameSession(_log);
-        var controller = new GameSessionController(_config, _log, _random, session);
+        var session = new GameSession(_log, _randomGen);
+        var controller = new GameSessionController(_config, _log, session);
 
         controller.AdvanceTime();
         controller.AdvanceTime();
@@ -185,8 +185,8 @@ public class GameSessionTests
     [Test]
     public void RoundTrippingSavingAndLoadingGameStateBehavesCorrectly()
     {
-        var session = new GameSession(_log);
-        var controller = new GameSessionController(_config, _log, _random, session);
+        var session = new GameSession(_log, _randomGen);
+        var controller = new GameSessionController(_config, _log, session);
 
         controller.AdvanceTime();
         controller.AdvanceTime();

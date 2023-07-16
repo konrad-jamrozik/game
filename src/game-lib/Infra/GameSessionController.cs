@@ -41,22 +41,20 @@ public class GameSessionController
     protected readonly GameSession GameSession;
     private readonly Configuration _config;
     private readonly ILog _log;
-    private readonly Random _random;
 
-    public GameSessionController(Configuration config, ILog log, Random random, GameSession gameSession)
+    public GameSessionController(Configuration config, ILog log, GameSession gameSession)
     {
         _config = config;
         _log = log;
         GameSession = gameSession;
-        _random = random;
     }
 
-    public Random Random => GameSession.Random;
+    public RandomGen RandomGen => GameSession.RandomGen;
 
     public GameStatePlayerView GameStatePlayerView => new GameStatePlayerView(GameSession);
 
     public void AdvanceTime()
-        => GameSession.ApplyPlayerAction(new AdvanceTimePlayerAction(_log, _random));
+        => GameSession.ApplyPlayerAction(new AdvanceTimePlayerAction(_log, RandomGen));
 
     public void HireAgents(int count)
         => GameSession.ApplyPlayerAction(new HireAgentsPlayerAction(_log, count));

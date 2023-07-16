@@ -50,9 +50,8 @@ public class BasicAIPlayerIntellect : IAIPlayerIntellect
         while (agents.CanBeSentOnMissionNextTurn.Count < DesiredAgentMinimalReserve(state)
                && agents.Recallable.Count > 0)
         {
-            // kja2 refactor
-            int agentIndex = controller.Random.Next(agents.Recallable.Count);
-            Agent agentToRecall = agents.Recallable[agentIndex];
+
+            Agent agentToRecall = controller.RandomGen.PickOneAtRandom(agents.Recallable);
             controller.RecallAgent(agentToRecall);
         }
     }
@@ -160,7 +159,7 @@ public class BasicAIPlayerIntellect : IAIPlayerIntellect
                && state.Assets.Agents.Available.Count > 0)
         {
             Agent agentToAssign = state.Assets.Agents.Available.RandomSubset(1).Single();
-            AgentActionMap[controller.Random.Next(AgentActionMap.Keys.Count)].Invoke(controller, agentToAssign);
+            controller.RandomGen.PickOneAtRandom(AgentActionMap).Invoke(controller, agentToAssign);
             agentsAssignedToOps++;
         }
 
