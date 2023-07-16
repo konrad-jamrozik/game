@@ -94,7 +94,7 @@ public class AdvanceTimePlayerAction : PlayerAction
         {
             int siteId = state.NextMissionSiteId;
             _log.Info($"Add MissionSite with Id: {siteId}");
-            state.MissionSites.Add(new MissionSite(siteId, isActive: true));
+            state.MissionSites.Add(new MissionSite(siteId));
         }
     }
 }

@@ -7,12 +7,11 @@ public class MissionSite : IIdentifiable
 {
     public bool IsActive;
 
-    // kja2 if I remove isActive, will it get deserialized properly?
     [JsonConstructor]
-    public MissionSite(int id, bool isActive = true)
+    public MissionSite(int id)
     {
         Id = id;
-        IsActive = isActive;
+        IsActive = true;
     }
 
     public int Id { get; }
