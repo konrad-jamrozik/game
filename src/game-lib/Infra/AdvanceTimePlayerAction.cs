@@ -42,8 +42,6 @@ public class AdvanceTimePlayerAction : PlayerAction
         int intelGathered = state.Assets.Agents.GatheringIntel.Count * 5;
         state.Assets.CurrentIntel += intelGathered;
 
-        
-
         UpdateAgentStates(state);
 
         CreateMissionSites(state);

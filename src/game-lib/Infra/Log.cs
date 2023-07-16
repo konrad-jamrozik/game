@@ -53,3 +53,22 @@ public class Log : ILog
             => Path.GetFileNameWithoutExtension(callerFilePath);
     }
 }
+
+// kja3 Logged info could be significantly improved, like this:
+// A game state is snapshotted at following points:
+// A) Player is just starting their turn; basically _intellect.PlayGameTurn
+// B) Turn is about to be processed; basically _controller.AdvanceTime();
+// Note that A) for turn N is the same as "Turn finished processing" but for turn N-1.
+//
+// The log/report would be displaying Diff between A) and B),
+// aka "player decisions diff" and then B) and A) aka "turn eval. diff"
+// Both diffs could have tables, e.g. agent table, where each row corresponds to an agent,
+// and says things like:
+// - for player decisions diff:
+//   - how the agent state state changed, e.g. from InTraining to OnMission
+// - for turn eval. diff:
+//   - how the agent fared on mission: wounds sustained, enemies killed, experience gained
+//   - how the agent improved in training, recovered, or how much intel gathered
+//
+// The benefit of such snapshot diff is that data can be easily derived, and post-processed
+// instead of having to log just-in-time, like e.g. player decision to send an agent to mission.
