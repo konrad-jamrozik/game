@@ -10,7 +10,13 @@ public class GameState
     public readonly Missions Missions;
     public readonly Agents TerminatedAgents;
 
-    public GameState(int updateCount, Timeline timeline, Assets assets, MissionSites missionSites, Missions missions, Agents terminatedAgents)
+    public GameState(
+        int updateCount,
+        Timeline timeline,
+        Assets assets,
+        MissionSites missionSites,
+        Missions missions,
+        Agents terminatedAgents)
     {
         UpdateCount = updateCount;
         Timeline = timeline;

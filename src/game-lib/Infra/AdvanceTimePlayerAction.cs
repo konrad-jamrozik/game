@@ -39,7 +39,7 @@ public class AdvanceTimePlayerAction : PlayerAction
         CreateMissionSites(state);
 
         _log.Info($"===== Turn {state.Timeline.CurrentTurn,4} :");
-        _log.Info($"    | Agents alive: {state.Assets.Agents.Alive.Count}, " +
+        _log.Info($"    | Agents alive: {state.Assets.Agents.Count}, " +
                   $"Agents terminated this turn: {agentsTerminated}, " +
                   $"CurrentMoney: {state.Assets.CurrentMoney}, " +
                   $"Funding: {state.Assets.Funding}, " +
@@ -78,7 +78,7 @@ public class AdvanceTimePlayerAction : PlayerAction
 
     private static void UpdateAgentStates(GameState state)
     {
-        state.Assets.Agents.Alive.ForEach(
+        state.Assets.Agents.ForEach(
             agent =>
             {
                 if (TransientAgentStates.Contains(agent.CurrentState))

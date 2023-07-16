@@ -2,8 +2,26 @@ namespace UfoGameLib.Model;
 
 public class Agents : List<Agent>
 {
-    public Agents(IEnumerable<Agent>? agents = null)
-        => AddRange(agents ?? new List<Agent>());
+    private readonly bool _terminated;
+
+    public Agents(IEnumerable<Agent>? agents = null, bool terminated = false)
+    {
+        _terminated = terminated;
+        AddRange(agents ?? new List<Agent>());
+    }
+
+    public new void Add(Agent agent)
+    {
+        AssertAliveness(new List<Agent> { agent });
+        base.Add(agent);
+    }
+
+    public new void AddRange(IEnumerable<Agent> agents)
+    {
+        List<Agent> agentsList = agents.ToList();
+        AssertAliveness(agentsList);
+        base.AddRange(agentsList);
+    }
 
     public int UpkeepCost => Alive.Count * Agent.UpkeepCost;
 
@@ -23,9 +41,6 @@ public class Agents : List<Agent>
 
     public Agents CanBeSentOnMissionNextTurn => this.Where(agent => agent.CanBeSentOnMissionNextTurn).ToAgents();
 
-    // kj2 maybe it would be better to move non-Alive (terminated) agent to a separate collection.
-    public Agents Alive => this.Where(agent => agent.IsAlive).ToAgents();
-
     public Agents Recallable
         => this.Where(agent => agent.IsRecallable).ToAgents();
 
@@ -34,4 +49,20 @@ public class Agents : List<Agent>
 
     public void AssertCanBeSentOnMission()
         => Debug.Assert(this.All(agent => agent.CanBeSentOnMission));
+
+    private Agents Alive => this.Where(agent => agent.IsAlive).ToAgents();
+
+    private void AssertAliveness(IEnumerable<Agent> agents)
+    {
+        if (_terminated)
+            AssertTerminated(agents);
+        else
+            AssertAlive(agents);
+    }
+
+    private void AssertTerminated(IEnumerable<Agent> agents)
+        => Debug.Assert(agents.All(agent => agent.IsTerminated));
+
+    private void AssertAlive(IEnumerable<Agent> agents)
+        => Debug.Assert(agents.All(agent => agent.IsAlive));
 }

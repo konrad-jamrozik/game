@@ -42,7 +42,7 @@ public class BasicAIPlayerIntellect : IAIPlayerIntellect
 
     private static void RecallAgents(GameStatePlayerView state, GameSessionController controller)
     {
-        var agents = state.Assets.Agents.Alive;
+        var agents = state.Assets.Agents;
         // Here we assume that we determine agents to recall in given turn before 
         // any agents have been sent on a mission.
         Debug.Assert(agents.OnMission.Count == 0);
@@ -78,7 +78,7 @@ public class BasicAIPlayerIntellect : IAIPlayerIntellect
     private static bool CanLaunchSomeMission(GameStatePlayerView state)
         => state.MissionSites.Any(site => site.IsActive)
            && state.Assets.CurrentTransportCapacity > 0
-           && state.Assets.Agents.Alive.Any(agent => agent.CanBeSentOnMission);
+           && state.Assets.Agents.Any(agent => agent.CanBeSentOnMission);
 
     private static MissionSite ChooseMissionSite(GameStatePlayerView state)
         => state.MissionSites.First(site => site.IsActive);
@@ -98,7 +98,7 @@ public class BasicAIPlayerIntellect : IAIPlayerIntellect
     {
         int desiredAgentCount = DesiredAgentFullComplement(state);
 
-        int agentsMissingToDesired = desiredAgentCount - state.Assets.Agents.Alive.Count;
+        int agentsMissingToDesired = desiredAgentCount - state.Assets.Agents.Count;
 
         int moneyAvailableFor = state.Assets.CurrentMoney / Agent.HireCost;
 

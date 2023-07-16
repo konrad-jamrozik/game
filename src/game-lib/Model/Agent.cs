@@ -89,7 +89,7 @@ public class Agent
     public bool IsAway => IsInTransit || IsDoingOps || IsOnMission;
 
     [JsonIgnore]
-    public bool IsAlive => IsInBase || IsAway;
+    public bool IsAlive => (IsInBase || IsAway) && !IsTerminated;
 
     public void SendToTraining()
     {

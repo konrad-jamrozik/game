@@ -62,14 +62,14 @@ public class GameSessionTests
         var session = new GameSession(_log);
         var controller = new GameSessionController(_config, _log, _random, session);
 
-        GameState startingGameState = session.CurrentGameState;
+        GameState startingState = session.CurrentGameState;
 
         Assert.Multiple(
             () =>
             {
-                Assert.That(startingGameState.Timeline.CurrentTurn, Is.EqualTo(1));
-                Assert.That(startingGameState.Assets.Agents, Has.Count.EqualTo(0));
-                Assert.That(startingGameState.Missions, Has.Count.EqualTo(0));
+                Assert.That(startingState.Timeline.CurrentTurn, Is.EqualTo(1));
+                Assert.That(startingState.Assets.Agents, Has.Count.EqualTo(0));
+                Assert.That(startingState.Missions, Has.Count.EqualTo(0));
             });
 
         // Act
@@ -80,19 +80,22 @@ public class GameSessionTests
         controller.LaunchMission(site, agentCount: 3);
         controller.AdvanceTime();
 
-        var finalGameState = session.CurrentGameState;
+        var finalState = session.CurrentGameState;
 
         Assert.Multiple(() => {
-            Assert.That(finalGameState.Timeline.CurrentTurn, Is.EqualTo(4), "currentTurn");
-            Assert.That(finalGameState.Assets.Agents, Has.Count.EqualTo(3), "agentsHiredCount");
-            Assert.That(finalGameState.Missions, Has.Count.EqualTo(1), "missionsLaunchedCount");
+            Assert.That(finalState.Timeline.CurrentTurn, Is.EqualTo(4), "currentTurn");
+            Assert.That(
+                finalState.Assets.Agents.Count + finalState.TerminatedAgents.Count,
+                Is.EqualTo(3),
+                "agentsHiredCount");
+            Assert.That(finalState.Missions, Has.Count.EqualTo(1), "missionsLaunchedCount");
 
             Assert.That(
-                startingGameState,
-                Is.EqualTo(finalGameState),
+                startingState,
+                Is.EqualTo(finalState),
                 "starting state should be equal to final state");
-            Assert.That(startingGameState.Assets.Agents, Is.EqualTo(finalGameState.Assets.Agents));
-            Assert.That(startingGameState.Missions, Is.EqualTo(finalGameState.Missions));
+            Assert.That(startingState.Assets.Agents, Is.EqualTo(finalState.Assets.Agents));
+            Assert.That(startingState.Missions, Is.EqualTo(finalState.Missions));
         });
     }
 

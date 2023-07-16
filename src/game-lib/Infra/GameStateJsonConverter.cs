@@ -98,7 +98,7 @@ class GameStateJsonConverter : JsonConverterSupportingReferences<GameState>
         Timeline timeline = Deserialize<Timeline>(gameStateNode);
         MissionSites missionSites = Deserialize<MissionSites>(gameStateNode);
         Agents terminatedAgents =
-            Deserialize<List<Agent>>(gameStateNode, nameof(GameState.TerminatedAgents)).ToAgents();
+            Deserialize<List<Agent>>(gameStateNode, nameof(GameState.TerminatedAgents)).ToAgents(terminated: true);
         
 
         var missions = new Missions(
