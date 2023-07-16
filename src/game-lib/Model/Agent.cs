@@ -10,8 +10,8 @@ public class Agent
         Available,
         OnMission,
         Training,
-        GatheringIntel, // kja2 GatheringIntel Currently used, but brings no effect
-        GeneratingIncome, // kja2 GeneratingIncome Currently used, but brings no effect
+        GatheringIntel,
+        GeneratingIncome,
         Recovering, // kja2 Recovering Currently unused
         Terminated
     }
