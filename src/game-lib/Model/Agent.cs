@@ -9,7 +9,7 @@ public class Agent
         InTransit,
         Available,
         OnMission,
-        Training, // kja2 Training Currently used, but brings no effect
+        Training,
         GatheringIntel, // kja2 GatheringIntel Currently used, but brings no effect
         GeneratingIncome, // kja2 GeneratingIncome Currently used, but brings no effect
         Recovering, // kja2 Recovering Currently unused
@@ -22,19 +22,22 @@ public class Agent
     public readonly int Id;
     public State CurrentState;
     public Mission? CurrentMission;
+    public int TurnsTrained;
 
     public Agent(int id)
     {
         Id = id;
         CurrentState = State.InTransit;
+        TurnsTrained = 0;
     }
 
     [JsonConstructor]
-    public Agent(int id, State currentState, Mission? currentMission)
+    public Agent(int id, State currentState, Mission? currentMission, int turnsTrained)
     {
         Id = id;
         CurrentState = currentState;
         CurrentMission = currentMission;
+        TurnsTrained = turnsTrained;
         AssertMissionInvariant();
     }
 
@@ -126,6 +129,7 @@ public class Agent
         if (IsOnMission)
             CurrentMission = null;
         CurrentState = State.Available;
+        AssertMissionInvariant();
     }
 
     public void Recall()

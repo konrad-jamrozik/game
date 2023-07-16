@@ -65,6 +65,12 @@ public abstract class JsonConverterSupportingReferences<T> : JsonConverter<T>
     protected int DeserializeInt(JsonNode node, string propName)
         => node[propName]!.GetValue<int>();
 
+    protected bool DeserializeBool(JsonNode node, string propName)
+        => node[propName]!.GetValue<bool>();
+
+    protected TEnum DeserializeEnum<TEnum>(JsonNode node, string propName) where TEnum : struct, Enum
+        => Enum.Parse<TEnum>(node[propName]!.GetValue<string>());
+
     private void ReplaceObjectPropertyWithRef(JsonObject obj, string propName)
     {
         // This may hold:

@@ -28,6 +28,8 @@ public class Agents : List<Agent>
 
     public Agents InTransit => this.Where(agent => agent.IsInTransit).ToAgents();
 
+    public Agents Training => this.Where(agent => agent.IsTraining).ToAgents();
+
     public Agents ArrivingNextTurn => this.Where(agent => agent.IsArrivingNextTurn).ToAgents();
 
     public Agents Available => this.Where(agent => agent.IsAvailable).ToAgents();

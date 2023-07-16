@@ -4,11 +4,6 @@ namespace UfoGameLib.Infra;
 
 public class AdvanceTimePlayerAction : PlayerAction
 {
-    private static readonly Agent.State[] TransientAgentStates =
-    {
-        Agent.State.InTransit,
-    };
-
     private readonly ILog _log;
     private readonly RandomGen _randomGen;
 
@@ -48,7 +43,7 @@ public class AdvanceTimePlayerAction : PlayerAction
 
     private int EvaluateActiveMissions(GameState state)
     {
-        int deathChance = 30; // 30% chance for each agent to die
+        int baseDeathChance = 30; // 30% chance for each agent to die
         int agentsTerminated = 0;
         foreach (Mission mission in state.Missions.Active)
         {
@@ -57,17 +52,18 @@ public class AdvanceTimePlayerAction : PlayerAction
             foreach (Agent agent in agentsOnMission)
             {
                 int survivalRoll = _randomGen.Roll100();
+                int agentDeathChance = Math.Max(baseDeathChance - agent.TurnsTrained, 0);
                 
-                if (survivalRoll <= deathChance)
+                if (survivalRoll <= agentDeathChance)
                 {
                     state.Terminate(agent);
-                    _log.Info($"Agent with ID {agent.Id,4} terminated. Roll: {survivalRoll,3} <= {deathChance}");
+                    _log.Info($"Agent with ID {agent.Id,4} terminated. Roll: {survivalRoll,3} <= {agentDeathChance}");
                     agentsTerminated++;
                 }
                 else
                 {
                     agent.MakeAvailable();
-                    _log.Info($"Agent with ID {agent.Id,4} survived.   Roll: {survivalRoll,3} >  {deathChance}");
+                    _log.Info($"Agent with ID {agent.Id,4} survived.   Roll: {survivalRoll,3} >  {agentDeathChance}");
                 }
             }
             mission.IsActive = false;
@@ -78,14 +74,8 @@ public class AdvanceTimePlayerAction : PlayerAction
 
     private static void UpdateAgentStates(GameState state)
     {
-        state.Assets.Agents.ForEach(
-            agent =>
-            {
-                if (TransientAgentStates.Contains(agent.CurrentState))
-                {
-                    agent.MakeAvailable();
-                }
-            });
+        state.Assets.Agents.InTransit.ForEach(agent => agent.MakeAvailable());
+        state.Assets.Agents.Training.ForEach(agent => agent.TurnsTrained++);
     }
 
     private void CreateMissionSites(GameState state)

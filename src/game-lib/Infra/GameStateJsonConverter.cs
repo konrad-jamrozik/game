@@ -108,8 +108,8 @@ class GameStateJsonConverter : JsonConverterSupportingReferences<GameState>
                 deps: missionSites,
                 (missionObj, missionSite)
                     => new Mission(
-                        id: missionObj[nameof(Mission.Id)]!.GetValue<int>(),
-                        isActive: missionObj[nameof(Mission.IsActive)]!.GetValue<bool>(),
+                        id: DeserializeInt(missionObj,nameof(Mission.Id)),
+                        isActive: DeserializeBool(missionObj, nameof(Mission.IsActive)),
                         site: missionSite!)));
 
         JsonNode assetsNode = gameStateNode[nameof(GameState.Assets)]!;
@@ -120,9 +120,10 @@ class GameStateJsonConverter : JsonConverterSupportingReferences<GameState>
                 deps: missions,
                 (agentObj, mission)
                     => new Agent(
-                        id: agentObj[nameof(Agent.Id)]!.GetValue<int>(),
-                        currentState: Enum.Parse<Agent.State>(agentObj[nameof(Agent.CurrentState)]!.GetValue<string>()),
-                        currentMission: mission)));
+                        id: DeserializeInt(agentObj,nameof(Agent.Id)),
+                        currentState: DeserializeEnum<Agent.State>(agentObj, nameof(Agent.CurrentState)),
+                        currentMission: mission,
+                        turnsTrained: DeserializeInt(agentObj, nameof(Agent.TurnsTrained)))));
 
         var assets = new Assets(
             currentMoney: DeserializeInt(assetsNode, nameof(Assets.CurrentMoney)),
