@@ -44,7 +44,7 @@ public class GameState
 
     // kja3 for now game ends in 30 turns, to prevent the program from hanging.
     public bool IsGameOver => Assets.CurrentMoney < 0 || Timeline.CurrentTurn > 30;
-    public int NextAgentId => Assets.Agents.Count;
+    public int NextAgentId => Assets.Agents.Count + TerminatedAgents.Count;
     public int NextMissionId => Missions.Count;
     public int NextMissionSiteId => MissionSites.Count;
 
