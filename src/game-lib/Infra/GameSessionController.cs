@@ -82,17 +82,17 @@ public class GameSessionController
     /// </summary>
     public void LaunchMission(MissionSite site, int agentCount)
     {
-        List<Agent> agents = GameStatePlayerView.Assets.Agents
+        Agents agents = GameStatePlayerView.Assets.Agents
             .Where(agent => agent.CanBeSentOnMission)
             .Take(agentCount)
-            .ToList();
+            .ToAgents();
 
         Debug.Assert(agents.Count == agentCount);
 
         LaunchMission(site, agents);
     }
 
-    public void LaunchMission(MissionSite site, List<Agent> agents)
+    public void LaunchMission(MissionSite site, Agents agents)
         => GameSession.ApplyPlayerAction(new LaunchMissionPlayerAction(_log, site, agents));
 
     // kja3 introduce "SerializedJsonFile" abstraction that will retain the serialization options

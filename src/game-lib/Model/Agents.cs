@@ -7,29 +7,31 @@ public class Agents : List<Agent>
 
     public int UpkeepCost => Alive.Count * Agent.UpkeepCost;
 
-    public List<Agent> InTransit => this.Where(agent => agent.IsInTransit).ToList();
+    public Agents InTransit => this.Where(agent => agent.IsInTransit).ToAgents();
 
-    public List<Agent> ArrivingNextTurn => this.Where(agent => agent.IsArrivingNextTurn).ToList();
+    public Agents ArrivingNextTurn => this.Where(agent => agent.IsArrivingNextTurn).ToAgents();
 
-    public List<Agent> Available => this.Where(agent => agent.IsAvailable).ToList();
+    public Agents Available => this.Where(agent => agent.IsAvailable).ToAgents();
 
-    public List<Agent> OnMission => this.Where(agent => agent.IsOnMission).ToList();
+    public Agents OnMission => this.Where(agent => agent.IsOnMission).ToAgents();
 
-    public List<Agent> GatheringIntel => this.Where(agent => agent.IsGatheringIntel).ToList();
+    public Agents GatheringIntel => this.Where(agent => agent.IsGatheringIntel).ToAgents();
 
-    public List<Agent> GeneratingIncome => this.Where(agent => agent.IsGeneratingIncome).ToList();
+    public Agents GeneratingIncome => this.Where(agent => agent.IsGeneratingIncome).ToAgents();
 
-    public List<Agent> CanBeSentOnMission => this.Where(agent => agent.CanBeSentOnMission).ToList();
+    public Agents CanBeSentOnMission => this.Where(agent => agent.CanBeSentOnMission).ToAgents();
 
-    public List<Agent> CanBeSentOnMissionNextTurn => this.Where(agent => agent.CanBeSentOnMissionNextTurn).ToList();
+    public Agents CanBeSentOnMissionNextTurn => this.Where(agent => agent.CanBeSentOnMissionNextTurn).ToAgents();
 
-    // kja2 make all other methods return Agents
     // kj2 maybe it would be better to move non-Alive (terminated) agent to a separate collection.
-    public Agents Alive => new Agents(this.Where(agent => agent.IsAlive).ToList());
+    public Agents Alive => this.Where(agent => agent.IsAlive).ToAgents();
 
-    public List<Agent> Recallable
-        => this.Where(agent => agent.IsRecallable).ToList();
+    public Agents Recallable
+        => this.Where(agent => agent.IsRecallable).ToAgents();
 
-    public List<Agent> OnSpecificMission(Mission mission)
-        => this.Where(agent => agent.IsOnMission && agent.CurrentMission == mission).ToList();
+    public Agents OnSpecificMission(Mission mission)
+        => this.Where(agent => agent.IsOnMission && agent.CurrentMission == mission).ToAgents();
+
+    public void AssertCanBeSentOnMission()
+        => Debug.Assert(this.All(agent => agent.CanBeSentOnMission));
 }

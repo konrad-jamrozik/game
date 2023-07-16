@@ -32,7 +32,7 @@ public class BasicAIPlayerIntellect : IAIPlayerIntellect
         while (CanLaunchSomeMission(state))
         {
             MissionSite site = ChooseMissionSite(state);
-            List<Agent> agents = ChooseAgents(state);
+            Agents agents = ChooseAgents(state);
 
             controller.LaunchMission(site, agents);
         }
@@ -50,8 +50,9 @@ public class BasicAIPlayerIntellect : IAIPlayerIntellect
         while (agents.CanBeSentOnMissionNextTurn.Count < DesiredAgentMinimalReserve(state)
                && agents.Recallable.Count > 0)
         {
-            // kja2 use reusable random here
-            Agent agentToRecall = agents.Recallable.RandomSubset(1).Single();
+            // kja2 refactor
+            int agentIndex = controller.Random.Next(agents.Recallable.Count);
+            Agent agentToRecall = agents.Recallable[agentIndex];
             controller.RecallAgent(agentToRecall);
         }
     }
@@ -82,11 +83,11 @@ public class BasicAIPlayerIntellect : IAIPlayerIntellect
     private static MissionSite ChooseMissionSite(GameStatePlayerView state)
         => state.MissionSites.First(site => site.IsActive);
 
-    private static List<Agent> ChooseAgents(GameStatePlayerView state)
+    private static Agents ChooseAgents(GameStatePlayerView state)
     {
-        List<Agent> agents = state.Assets.Agents.CanBeSentOnMission
+        Agents agents = state.Assets.Agents.CanBeSentOnMission
             .Take(state.Assets.CurrentTransportCapacity)
-            .ToList();
+            .ToAgents();
 
         Debug.Assert(agents.Count > 0);
 

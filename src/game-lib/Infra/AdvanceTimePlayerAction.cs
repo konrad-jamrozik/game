@@ -53,7 +53,7 @@ public class AdvanceTimePlayerAction : PlayerAction
         foreach (Mission mission in state.Missions.Active)
         {
             _log.Info($"Evaluating mission with ID {mission.Id}");
-            List<Agent> agentsOnMission = state.Assets.Agents.OnSpecificMission(mission);
+            Agents agentsOnMission = state.Assets.Agents.OnSpecificMission(mission);
             foreach (Agent agent in agentsOnMission)
             {
                 int survivalRoll = _random.Next(100) + 1;

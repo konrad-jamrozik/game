@@ -6,14 +6,14 @@ public class LaunchMissionPlayerAction : PlayerAction
 {
     private readonly ILog _log;
     private readonly MissionSite _site;
-    private readonly List<Agent> _agents;
+    private readonly Agents _agents;
 
-    public LaunchMissionPlayerAction(ILog log, MissionSite site, List<Agent> agents)
+    public LaunchMissionPlayerAction(ILog log, MissionSite site, Agents agents)
     {
+        agents.AssertCanBeSentOnMission();
         _log = log;
         _site = site;
         _agents = agents;
-        // kja2 pass Agents instead of List<Agent> and assert all of them can be launched on a mission
     }
 
     public override void Apply(GameState state)
