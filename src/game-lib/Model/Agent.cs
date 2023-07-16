@@ -66,6 +66,9 @@ public class Agent
     public bool CanBeSentOnMission => IsAvailable || IsTraining;
 
     [JsonIgnore]
+    public bool CanBeSacked => IsAvailable || IsTraining;
+
+    [JsonIgnore]
     public bool IsInBase => IsAvailable || IsTraining || IsRecovering;
 
     [JsonIgnore] 
@@ -131,10 +134,10 @@ public class Agent
         CurrentState = State.InTransit;
     }
 
-    public void Terminate()
+    public void Terminate(bool sack = false)
     {
         Debug.Assert(IsAlive);
-        Debug.Assert(IsOnMission);
+        Debug.Assert(sack ? CanBeSacked : IsOnMission);
         CurrentState = State.Terminated;
         CurrentMission = null;
         AssertMissionInvariant();

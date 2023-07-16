@@ -51,6 +51,9 @@ public class Agents : List<Agent>
     public void AssertCanBeSentOnMission()
         => Debug.Assert(this.All(agent => agent.CanBeSentOnMission));
 
+    public void AssertCanBeSacked()
+        => Debug.Assert(this.All(agent => agent.CanBeSacked));
+
     private void AssertAliveness(IEnumerable<Agent> agents)
     {
         if (_terminated)

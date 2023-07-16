@@ -59,8 +59,11 @@ public class GameSessionController
     public void HireAgents(int count)
         => GameSession.ApplyPlayerAction(new HireAgentsPlayerAction(_log, count));
 
-    public void FireAgents(IEnumerable<string> agentNames)
-        => throw new NotImplementedException();
+    public void SackAgent(int id)
+        => GameSession.ApplyPlayerAction(
+            new SackAgentsPlayerAction(
+                _log,
+                GameSession.CurrentGameState.Assets.Agents.Single(agent => agent.Id == id).ToAgents()));
 
     public void SendAgentToTraining(Agent agent)
         => GameSession.ApplyPlayerAction(new SendAgentToTrainingPlayerAction(_log, agent));

@@ -48,10 +48,10 @@ public class GameState
     public int NextMissionId => Missions.Count;
     public int NextMissionSiteId => MissionSites.Count;
 
-    public void Terminate(Agent agent)
+    public void Terminate(Agent agent, bool sack = false)
     {
         Assets.Agents.Remove(agent);
-        agent.Terminate();
+        agent.Terminate(sack);
         TerminatedAgents.Add(agent);
     }
 }

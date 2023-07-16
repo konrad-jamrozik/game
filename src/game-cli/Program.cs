@@ -47,7 +47,8 @@ internal static class Program
 
     private static void InvokeFireAgents(GameSessionController game, IEnumerable<string> agentNames)
     {
-        game.FireAgents(agentNames);
+        // not implemented; commented below is obsolete generated code.
+        // game.SackAgents(agentNames);
         Console.WriteLine($"Fired agents: {string.Join(", ", agentNames)}");
     }
 }

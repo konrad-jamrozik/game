@@ -150,8 +150,8 @@ public class GameSessionTests
         // Need to advance time here so that hired agents are no longer InTransit and can be
         // sent on a mission.
         controller.AdvanceTime();
-        
-        // kja add here "SackAgent" to verify agent termination save/load
+
+        controller.SackAgent(id: 0);
 
         controller.LaunchMission(
             controller.GameStatePlayerView.MissionSites.First(),
