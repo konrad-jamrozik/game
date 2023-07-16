@@ -38,7 +38,7 @@ public class GameState
                 agents: new Agents()),
             new MissionSites(),
             new Missions(),
-            terminatedAgents: new Agents());
+            terminatedAgents: new Agents(terminated: true));
 
     public int UpdateCount { get; set; }
 
@@ -51,7 +51,7 @@ public class GameState
     public void Terminate(Agent agent)
     {
         Assets.Agents.Remove(agent);
-        TerminatedAgents.Add(agent);
         agent.Terminate();
+        TerminatedAgents.Add(agent);
     }
 }
