@@ -1,4 +1,5 @@
 using UfoGameLib.Infra;
+using UfoGameLib.Model;
 
 namespace UfoGameLib;
 
@@ -18,6 +19,8 @@ public class AIPlayer
     {
         _log = log;
         _controller = controller;
+        Debug.Assert(_controller.GameStatePlayerView.CurrentTurn == Timeline.InitialTurn);
+
         var intellectMap = new Dictionary<Intellect, IAIPlayerIntellect>
         {
             [Intellect.Basic] = new BasicAIPlayerIntellect(_log),
@@ -26,12 +29,12 @@ public class AIPlayer
         _intellect = intellectMap[intellect];
     }
 
-    // kja2 put here turn limit and use it in tests; currently tests hardcode limit of 30.
-    public void PlayGameSession()
+    public void PlayGameSession(int turnLimit)
     {
+        Debug.Assert(turnLimit is >= Timeline.InitialTurn and <= GameState.MaxTurnLimit);
         GameStatePlayerView state = _controller.GameStatePlayerView;
 
-        while (!state.IsGameOver)
+        while (!state.IsGameOver && state.CurrentTurn < turnLimit)
         {
             _intellect.PlayGameTurn(state, _controller);
 

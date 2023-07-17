@@ -39,7 +39,7 @@ public class AIPlayerTests
             intellect);
 
         // Act
-        aiPlayer.PlayGameSession();
+        aiPlayer.PlayGameSession(turnLimit: 30);
 
         // Assert: no exception was thrown and the program didn't loop indefinitely.
     }

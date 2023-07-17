@@ -4,11 +4,14 @@ namespace UfoGameLib.Infra;
 
 public class GameState
 {
+    public const int MaxTurnLimit = 1000;
     public readonly Timeline Timeline;
     public readonly Assets Assets;
     public readonly MissionSites MissionSites;
     public readonly Missions Missions;
     public readonly Agents TerminatedAgents;
+
+    public int UpdateCount;
 
     public GameState(
         int updateCount,
@@ -29,7 +32,7 @@ public class GameState
     public static GameState NewInitialGameState()
         => new GameState(
             updateCount: 0,
-            new Timeline(currentTurn: 1),
+            new Timeline(currentTurn: Timeline.InitialTurn),
             new Assets(
                 currentMoney: 500,
                 currentIntel: 0,
@@ -41,10 +44,8 @@ public class GameState
             new Missions(),
             terminatedAgents: new Agents(terminated: true));
 
-    public int UpdateCount;
-
-    // kja3 for now game ends in 30 turns, to prevent the program from hanging.
-    public bool IsGameOver => Assets.CurrentMoney < 0 || Timeline.CurrentTurn > 30;
+    // The "Timeline.CurrentTurn <= MaxTurnLimit" is to protect against infinite loops.
+    public bool IsGameOver => Assets.CurrentMoney < 0 || Timeline.CurrentTurn > MaxTurnLimit;
     public int NextAgentId => Assets.Agents.Count + TerminatedAgents.Count;
     public int NextMissionId => Missions.Count;
     public int NextMissionSiteId => MissionSites.Count;
