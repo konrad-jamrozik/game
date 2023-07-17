@@ -1,4 +1,3 @@
-using UfoGameLib.Controller;
 using UfoGameLib.Lib;
 
 namespace UfoGameLib.Infra;
@@ -14,7 +13,7 @@ namespace UfoGameLib.Infra;
 /// </summary>
 public class GameSession
 {
-    public readonly RandomGen RandomGen;
+    public readonly RandomGen RandomGen; // kja is it even needed here? Same for log, and this entire class.
     public GameState CurrentGameState = GameState.NewInitialGameState();
 
     // Populated when CurrentGameState is overridden, e.g. because it got
@@ -27,26 +26,5 @@ public class GameSession
     {
         Log = log;
         RandomGen = randomGen;
-    }
-
-    public void ApplyPlayerAction(PlayerAction action)
-        => ApplyPlayerActions(action);
-
-
-    public void ApplyPlayerActions(params PlayerAction[] actionsData)
-    {
-        PlayerActions actions = new PlayerActions(actionsData);
-        GameStateUpdateLog log = UpdateGameState(CurrentGameState, actions);
-    }
-
-    private static GameStateUpdateLog UpdateGameState(
-        GameState state,
-        PlayerActions actions)
-    {
-        Debug.Assert(!state.IsGameOver);
-        actions.Apply(state);
-        
-        // Currently GameStateUpdateLog is just a stub.
-        return new GameStateUpdateLog();
     }
 }

@@ -56,29 +56,29 @@ public class GameSessionController
     public GameStatePlayerView GameStatePlayerView => new GameStatePlayerView(GameSession);
 
     public void AdvanceTime()
-        => GameSession.ApplyPlayerAction(new AdvanceTimePlayerAction(_log, RandomGen));
+        => PlayerActions.Apply(new AdvanceTimePlayerAction(_log, RandomGen), GameSession.CurrentGameState);
 
     public void HireAgents(int count)
-        => GameSession.ApplyPlayerAction(new HireAgentsPlayerAction(_log, count));
+        => PlayerActions.Apply(new HireAgentsPlayerAction(_log, count), GameSession.CurrentGameState);
 
     public void SackAgent(int id)
-        => GameSession.ApplyPlayerAction(
-            new SackAgentsPlayerAction(
+        => PlayerActions.Apply(new SackAgentsPlayerAction(
                 _log,
-                GameSession.CurrentGameState.Assets.Agents.Single(agent => agent.Id == id).ToAgents()));
+                GameSession.CurrentGameState.Assets.Agents.Single(agent => agent.Id == id).ToAgents()),
+            GameSession.CurrentGameState);
 
     public void SendAgentsToTraining(Agents agents)
-        => GameSession.ApplyPlayerAction(new SendAgentsToTrainingPlayerAction(_log, agents));
+        => PlayerActions.Apply(new SendAgentsToTrainingPlayerAction(_log, agents), GameSession.CurrentGameState);
 
     public void SendAgentsToGenerateIncome(Agents agents)
-        => GameSession.ApplyPlayerAction(new SendAgentsToGenerateIncomePlayerAction(_log, agents));
+        => PlayerActions.Apply(new SendAgentsToGenerateIncomePlayerAction(_log, agents), GameSession.CurrentGameState);
 
     public void SendAgentsToGatherIntel(Agents agents)
-        => GameSession.ApplyPlayerAction(new SendAgentsToGatherIntelPlayerAction(_log, agents));
+        => PlayerActions.Apply(new SendAgentsToGatherIntelPlayerAction(_log, agents), GameSession.CurrentGameState);
 
 
     public void RecallAgents(Agents agents)
-        => GameSession.ApplyPlayerAction(new RecallAgentsPlayerAction(_log, agents));
+        => PlayerActions.Apply(new RecallAgentsPlayerAction(_log, agents), GameSession.CurrentGameState);
 
     /// <summary>
     /// Convenience method. LaunchMission, but instead of choosing specific agents,
@@ -97,7 +97,7 @@ public class GameSessionController
     }
 
     public void LaunchMission(MissionSite site, Agents agents)
-        => GameSession.ApplyPlayerAction(new LaunchMissionPlayerAction(_log, site, agents));
+        => PlayerActions.Apply(new LaunchMissionPlayerAction(_log, site, agents), GameSession.CurrentGameState);
 
     // kja3 introduce "SerializedJsonFile" abstraction that will retain the serialization options
     public void Save()

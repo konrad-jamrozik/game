@@ -8,8 +8,13 @@ public class PlayerActions : List<PlayerAction>
     {
     }
 
-    public void Apply(GameState state)
+    public static void Apply(PlayerAction action, GameState state)
+        => new PlayerActions(new[] { action }).Apply(state);
+
+
+    public GameStateUpdateLog Apply(GameState state)
     {
+        Debug.Assert(!state.IsGameOver);
         ForEach(action =>
         {
             action.Apply(state);
@@ -18,5 +23,7 @@ public class PlayerActions : List<PlayerAction>
             // 5 times with 2 agents or 1 time with 10 agents.
             state.UpdateCount += 1;
         });
+        // Currently GameStateUpdateLog is just a stub.
+        return new GameStateUpdateLog();
     }
 }
