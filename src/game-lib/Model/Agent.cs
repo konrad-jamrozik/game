@@ -86,7 +86,6 @@ public class Agent
     [JsonIgnore]
     public bool IsArrivingNextTurnMaybe => IsArrivingNextTurnForSure || IsOnMission;
 
-
     [JsonIgnore]
     public bool IsDoingOps => IsGatheringIntel || IsGeneratingIncome;
 
@@ -102,24 +101,28 @@ public class Agent
     public void SendToTraining()
     {
         Debug.Assert(CanBeSentOnMission);
+        Debug.Assert(!IsTraining);
         CurrentState = State.Training;
     }
 
     public void GatherIntel()
     {
         Debug.Assert(CanBeSentOnMission);
+        Debug.Assert(!IsGatheringIntel);
         CurrentState = State.GatheringIntel;
     }
 
     public void GenerateIncome()
     {
         Debug.Assert(CanBeSentOnMission);
+        Debug.Assert(!IsGeneratingIncome);
         CurrentState = State.GeneratingIncome;
     }
 
     public void SendOnMission(Mission mission)
     {
         Debug.Assert(CanBeSentOnMission);
+        Debug.Assert(!IsOnMission);
         CurrentState = State.OnMission;
         CurrentMission = mission;
         AssertMissionInvariant();
@@ -143,6 +146,7 @@ public class Agent
     public void Terminate(bool sack = false)
     {
         Debug.Assert(IsAlive);
+        Debug.Assert(!IsTerminated);
         Debug.Assert(sack ? CanBeSacked : IsOnMission);
         CurrentState = State.Terminated;
         CurrentMission = null;

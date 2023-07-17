@@ -65,14 +65,15 @@ public class GameSessionController
                 _log,
                 GameSession.CurrentGameState.Assets.Agents.Single(agent => agent.Id == id).ToAgents()));
 
-    public void SendAgentToTraining(Agent agent)
-        => GameSession.ApplyPlayerAction(new SendAgentToTrainingPlayerAction(_log, agent));
+    public void SendAgentsToTraining(Agents agents)
+        => GameSession.ApplyPlayerAction(new SendAgentsToTrainingPlayerAction(_log, agents));
 
-    public void SendAgentToGatherIntel(Agent agent)
-        => GameSession.ApplyPlayerAction(new SendAgentToGatherIntelPlayerAction(_log, agent));
+    public void SendAgentsToGenerateIncome(Agents agents)
+        => GameSession.ApplyPlayerAction(new SendAgentsToGenerateIncomePlayerAction(_log, agents));
 
-    public void SendAgentToGenerateIncome(Agent agent)
-        => GameSession.ApplyPlayerAction(new SendAgentToGenerateIncomePlayerAction(_log, agent));
+    public void SendAgentsToGatherIntel(Agents agents)
+        => GameSession.ApplyPlayerAction(new SendAgentsToGatherIntelPlayerAction(_log, agents));
+
 
     public void RecallAgents(Agents agents)
         => GameSession.ApplyPlayerAction(new RecallAgentsPlayerAction(_log, agents));

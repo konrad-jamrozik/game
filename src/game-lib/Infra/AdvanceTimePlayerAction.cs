@@ -93,7 +93,7 @@ public class AdvanceTimePlayerAction : PlayerAction
     private static void UpdateAgentStates(GameState state)
     {
         state.Assets.Agents.InTransit.ForEach(agent => agent.MakeAvailable());
-        state.Assets.Agents.Training.ForEach(agent => agent.TurnsTrained++);
+        state.Assets.Agents.InTraining.ForEach(agent => agent.TurnsTrained++);
     }
 
     private void CreateMissionSites(GameState state)

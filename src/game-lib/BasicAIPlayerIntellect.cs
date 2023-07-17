@@ -5,13 +5,6 @@ namespace UfoGameLib;
 
 public class BasicAIPlayerIntellect : IAIPlayerIntellect
 {
-    private static readonly Dictionary<int, Action<GameSessionController, Agent>> AgentActionMap =
-        new Dictionary<int, Action<GameSessionController, Agent>>
-        {
-            [1] = (controller, agent) => controller.SendAgentToGatherIntel(agent),
-            [2] = (controller, agent) => controller.SendAgentToGenerateIncome(agent),
-        };
-
     private readonly ILog _log;
 
     public BasicAIPlayerIntellect(ILog log)
@@ -148,65 +141,62 @@ public class BasicAIPlayerIntellect : IAIPlayerIntellect
     private void AssignAvailableAgents(GameStatePlayerView state, GameSessionController controller)
     {
         int desiredAgentReserve = DesiredAgentMinimalReserve(state);
-        int availableAgents = state.Assets.Agents.Available.Count;
-        int agentsArrivingNextTurn = state.Assets.Agents.ArrivingNextTurnForSure.Count; // kja check if I should use "Maybe" instead of "ForSure" here
+        Agents agents = state.Assets.Agents;
+
+        int initialAgentsGeneratingIncome = agents.GeneratingIncome.Count;
+        int initialAgentsGatheringIntel = agents.GatheringIntel.Count;
+        int initialAgentsInTraining = agents.InTraining.Count;
+        int initialAvailableAgents = agents.Available.Count;
+
+        Agents agentsCanBeSentOnMissionNextTurnForSure = agents.CanBeSentOnMissionNextTurnForSure;
 
         // Example cases:
         // availableAgents: 10
-        // canBeSentOnMissionNextTurn: 17 (10 available + 3 in transit, 4 on mission)
+        // canBeSentOnMissionNextTurnForSure: 17 (10 available + 7 in transit(, 4 on mission)
         //
         // Case 1:
         // desiredAgentReserve: 6
         // 17 - 6 = 11
-        // Because only 10 agents are available, all will be assigned to ops.
+        // Because only 10 agents are available, all will be sent to ops.
         //
         // Case 2:
         // desiredAgentReserve: 12
         // 17 - 12 = 5
         //
-        // Because 10 agents are available, 5 will be assigned to ops, while 5 will be assigned to training.
-        // This way, the next turn there will be 12 agents in reserve:
+        // Because 10 agents are available, 5 will be sent to ops, while 5 will be sent to training.
+        // This way, the next turn there will be 12 agents in reserve (as desired):
         //   5 in training, 3 currently in transit and 4 currently on mission.
-        int agentsToAssignToOps = Math.Min(
-            availableAgents, 
-            Math.Max(state.Assets.Agents.CanBeSentOnMissionNextTurnForSure.Count - desiredAgentReserve, 0)); // kja check if I should use "Maybe" instead of "ForSure" here
+        int agentsToSendToOps = Math.Min(
+            agents.Available.Count, 
+            Math.Max(agentsCanBeSentOnMissionNextTurnForSure.Count - desiredAgentReserve, 0));
         
-        // Agents assigned to training, unlike agents assigned to ops, can be reassigned immediately, hence
-        // they count towards the desired agent reserve.
-        int agentsToAssignToTraining = availableAgents - agentsToAssignToOps;
-        int agentsAssignedToOps = 0;
-        int agentsAssignedToTraining = 0;
+        int agentsToSendToGenerateIncome = agentsToSendToOps / 2;
+        int agentsToSendToGatherIntel = agentsToSendToOps - agentsToSendToGenerateIncome;
 
-        while (state.Assets.Agents.CanBeSentOnMissionNextTurnForSure.Count > desiredAgentReserve // kja check if I should use "Maybe" instead of "ForSure" here
-               && state.Assets.Agents.Available.Count > 0)
-        {
-            Agent agentToAssign = state.Assets.Agents.Available.RandomSubset(1).Single();
-            controller.RandomGen.Pick(AgentActionMap).Invoke(controller, agentToAssign);
-            agentsAssignedToOps++;
-        }
+        controller.SendAgentsToGenerateIncome(
+            controller.RandomGen.Pick(agents.Available, agentsToSendToGenerateIncome).ToAgents());
+        controller.SendAgentsToGatherIntel(
+            controller.RandomGen.Pick(agents.Available, agentsToSendToGatherIntel).ToAgents());
 
-        state.Assets.Agents.Available.ForEach(agent =>
-        {
-            controller.SendAgentToTraining(agent);
-            agentsAssignedToTraining++;
-        });
+        int agentsSentToTraining = agents.Available.Count;
+        
+        // Send all remaining agents to training. Such agents are available immediately,
+        // so they count towards the desired agent reserve.
+        controller.SendAgentsToTraining(agents.Available);
 
         _log.Info(
             $"AIPlayer: AssignAvailableAgents: " +
-            $"agentsAssignedToOps: {agentsToAssignToOps}, " +
-            $"agentsAssignedToTraining: {agentsAssignedToTraining} | " +
+            $"agentsSentToOps: {agentsToSendToOps}, " +
+            $"agentsSentToGenerateIncome: {agentsToSendToGenerateIncome}, " +
+            $"agentsSentToGatherIntel: {agentsToSendToGatherIntel}, " +
+            $"agentsSentToTraining: {agentsSentToTraining} | " +
             $"desiredAgentReserve: {desiredAgentReserve}, " +
-            $"availableAgents: {availableAgents}, " +
-            $"agentsArrivingNextTurn: {agentsArrivingNextTurn}.");
+            $"availableAgents: {initialAvailableAgents}.");
 
-        Debug.Assert(
-            agentsAssignedToOps == agentsToAssignToOps, 
-            $"agentsAssignedToOps: {agentsAssignedToOps} == agentsToAssignToOps: {agentsToAssignToOps}");
-
-        Debug.Assert(
-            agentsAssignedToTraining == agentsToAssignToTraining,
-            $"agentsAssignedToTraining: {agentsAssignedToTraining} == agentsToAssignToTraining: {agentsToAssignToOps}");
-
+        Debug.Assert(state.Assets.Agents.GeneratingIncome.Count == initialAgentsGeneratingIncome + agentsToSendToGenerateIncome);
+        Debug.Assert(state.Assets.Agents.GatheringIntel.Count == initialAgentsGatheringIntel + agentsToSendToGatherIntel);
+        Debug.Assert(state.Assets.Agents.InTraining.Count == initialAgentsInTraining + agentsSentToTraining);
+        Debug.Assert(state.Assets.Agents.Available.Count == 0);
     }
 }
 
