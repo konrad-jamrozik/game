@@ -2,6 +2,7 @@ using Lib.OS;
 using Lib.Tests.Json;
 using UfoGameLib.Controller;
 using UfoGameLib.Infra;
+using UfoGameLib.Lib;
 using UfoGameLib.Model;
 
 namespace UfoGameLib.Tests;

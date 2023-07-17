@@ -1,4 +1,4 @@
-namespace UfoGameLib.Infra;
+namespace UfoGameLib.Lib;
 
 public class RandomGen
 {

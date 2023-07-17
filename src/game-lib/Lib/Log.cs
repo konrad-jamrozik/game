@@ -1,7 +1,7 @@
 using System.Runtime.CompilerServices;
 using System.Text;
 
-namespace UfoGameLib.Infra;
+namespace UfoGameLib.Lib;
 
 public class Log : ILog
 {

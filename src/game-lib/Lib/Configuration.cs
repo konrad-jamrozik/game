@@ -1,7 +1,7 @@
 ﻿using Lib.OS;
 using File = Lib.OS.File;
 
-namespace UfoGameLib.Infra;
+namespace UfoGameLib.Lib;
 
 public class Configuration
 {

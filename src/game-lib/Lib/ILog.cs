@@ -1,6 +1,6 @@
 using System.Runtime.CompilerServices;
 
-namespace UfoGameLib.Infra;
+namespace UfoGameLib.Lib;
 
 public interface ILog : IDisposable
 {
