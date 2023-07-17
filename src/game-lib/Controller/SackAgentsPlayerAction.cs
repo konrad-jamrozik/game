@@ -1,6 +1,7 @@
+using UfoGameLib.Infra;
 using UfoGameLib.Model;
 
-namespace UfoGameLib.Infra;
+namespace UfoGameLib.Controller;
 
 public class SackAgentsPlayerAction : PlayerAction
 {

@@ -1,4 +1,6 @@
-namespace UfoGameLib.Infra;
+using UfoGameLib.Infra;
+
+namespace UfoGameLib.Controller;
 
 public abstract class PlayerAction
 {

@@ -1,8 +1,9 @@
 using System.Text.Json;
 using Lib.Json;
+using UfoGameLib.Infra;
 using UfoGameLib.Model;
 
-namespace UfoGameLib.Infra;
+namespace UfoGameLib.Controller;
 
 /// <summary>
 /// Represents means for controlling GameSession, to be called by client logic (e.g. CLI) acting on behalf of
