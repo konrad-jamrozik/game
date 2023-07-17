@@ -5,8 +5,16 @@ namespace UfoGameLib.Model;
 
 public class Mission : IIdentifiable
 {
+    public enum State
+    {
+        Active,
+        Successful,
+        Failed
+    }
+
     public MissionSite Site;
-    public bool IsActive;
+    public bool IsActive; // kja to be deleted, subsumed by CurrentState
+    public State CurrentState;
 
     public Mission(int id, MissionSite site)
     {
@@ -19,14 +27,16 @@ public class Mission : IIdentifiable
         // This mission just got constructed so it is active until it gets evaluated
         // on time advancement.
         IsActive = true;
+        CurrentState = State.Active;
     }
 
     [JsonConstructor]
-    public Mission(int id, bool isActive, MissionSite site)
+    public Mission(int id, bool isActive, State currentState, MissionSite site)
     {
         Id = id;
         Site = site;
         IsActive = isActive;
+        CurrentState = currentState;
     }
 
     public int Id { get; }

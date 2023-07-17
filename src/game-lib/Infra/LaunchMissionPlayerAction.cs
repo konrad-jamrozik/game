@@ -23,6 +23,10 @@ public class LaunchMissionPlayerAction : PlayerAction
         Debug.Assert(_agents.Count > 0);
         _agents.ForEach(agent => Debug.Assert(agent.CanBeSentOnMission));
         Debug.Assert(state.Assets.CurrentTransportCapacity >= _agents.Count);
+        Debug.Assert(_agents.Count >= _site.RequiredSurvivingAgentsForSuccess, 
+            $"Cannot launch a mission with not enough agents to win it! " +
+            $"_agents.Count: {_agents.Count} " +
+            $">= _site.RequiredSurvivingAgentsForSuccess: {_site.RequiredSurvivingAgentsForSuccess}");
 
         int missionId = state.NextMissionId;
         var mission = new Mission(missionId, _site);

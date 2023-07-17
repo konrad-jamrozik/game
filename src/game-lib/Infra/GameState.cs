@@ -41,7 +41,7 @@ public class GameState
             new Missions(),
             terminatedAgents: new Agents(terminated: true));
 
-    public int UpdateCount { get; set; }
+    public int UpdateCount;
 
     // kja3 for now game ends in 30 turns, to prevent the program from hanging.
     public bool IsGameOver => Assets.CurrentMoney < 0 || Timeline.CurrentTurn > 30;

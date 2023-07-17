@@ -64,34 +64,57 @@ public class AdvanceTimePlayerAction : PlayerAction
         int agentsTerminatedCount = 0;
         foreach (Mission mission in state.Missions.Active)
         {
-            _log.Info($"Evaluating mission with ID {mission.Id}. Difficulty: {mission.Site.Difficulty}");
-            Agents agentsOnMission = state.Assets.Agents.OnSpecificMission(mission);
-            foreach (Agent agent in agentsOnMission)
-            {
-                int agentDeathChance = Math.Max(mission.Site.Difficulty - agent.TurnsTrained, 0);
+            int agentsTerminatedOnMissionCount = EvaluateMission(state, mission);
 
-                int survivalRoll = _randomGen.Roll1To100();
-                
-                if (survivalRoll <= agentDeathChance)
-                {
-                    state.Terminate(agent);
-                    _log.Info(
-                        $"Agent with ID {agent.Id,4} terminated. Turns trained: {agent.TurnsTrained}. " +
-                        $"Roll: {survivalRoll,3} <= {agentDeathChance}");
-                    agentsTerminatedCount++;
-                }
-                else
-                {
-                    agent.MakeAvailable();
-                    _log.Info(
-                        $"Agent with ID {agent.Id,4} survived.   Turns trained: {agent.TurnsTrained}. " +
-                        $"Roll: {survivalRoll,3} >  {agentDeathChance}");
-                }
-            }
-            mission.IsActive = false;
+            agentsTerminatedCount += agentsTerminatedOnMissionCount;
         }
 
         return agentsTerminatedCount;
+    }
+
+    private int EvaluateMission(GameState state, Mission mission)
+    {
+        Debug.Assert(mission.CurrentState == Mission.State.Active);
+        int agentsTerminated = 0;
+        int agentsSurviving = 0;
+        Agents agentsOnMission = state.Assets.Agents.OnSpecificMission(mission);
+        int agentsSent = agentsOnMission.Count;
+        foreach (Agent agent in agentsOnMission)
+        {
+            int agentDeathChance = Math.Max(mission.Site.Difficulty - agent.TurnsTrained, 0);
+
+            int survivalRoll = _randomGen.Roll1To100();
+
+            if (survivalRoll <= agentDeathChance)
+            {
+                state.Terminate(agent);
+                _log.Info(
+                    $"Agent with ID {agent.Id,4} terminated. Turns trained: {agent.TurnsTrained}. " +
+                    $"Roll: {survivalRoll,3} <= {agentDeathChance}");
+                agentsTerminated++;
+            }
+            else
+            {
+                agent.MakeAvailable();
+                _log.Info(
+                    $"Agent with ID {agent.Id,4} survived.   Turns trained: {agent.TurnsTrained}. " +
+                    $"Roll: {survivalRoll,3} >  {agentDeathChance}");
+                agentsSurviving++;
+            }
+        }
+
+        mission.IsActive = false;
+        int agentsRequired = mission.Site.RequiredSurvivingAgentsForSuccess;
+        mission.CurrentState = agentsSurviving >= agentsRequired
+            ? Mission.State.Successful
+            : Mission.State.Failed;
+        
+        _log.Info($"Evaluated mission with ID {mission.Id}. result: {mission.CurrentState,10}, " +
+                  $"difficulty: {mission.Site.Difficulty}, " +
+                  $"agents: surviving / required: {agentsSurviving} / {agentsRequired}, " +
+                  $"terminated / sent: {agentsTerminated} / {agentsSent}.");
+
+        return agentsTerminated;
     }
 
     private static void UpdateAgentStates(GameState state)
@@ -112,5 +135,5 @@ public class AdvanceTimePlayerAction : PlayerAction
     }
 
     private int ComputeMissionSiteDifficulty(int currentTurn)
-        => currentTurn + 30 + _randomGen.Roll0To(30);
+        => currentTurn + MissionSite.BaseMissionSiteDifficulty + _randomGen.Roll0To(30);
 }

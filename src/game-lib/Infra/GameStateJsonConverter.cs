@@ -110,6 +110,7 @@ class GameStateJsonConverter : JsonConverterSupportingReferences<GameState>
                     => new Mission(
                         id: DeserializeInt(missionObj,nameof(Mission.Id)),
                         isActive: DeserializeBool(missionObj, nameof(Mission.IsActive)),
+                        currentState: DeserializeEnum<Mission.State>(missionObj, nameof(Mission.CurrentState)),
                         site: missionSite!)));
 
         JsonNode assetsNode = gameStateNode[nameof(GameState.Assets)]!;
