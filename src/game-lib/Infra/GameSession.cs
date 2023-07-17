@@ -17,6 +17,7 @@ public class GameSession
     // Populated when CurrentGameState is overridden, e.g. because it got
     // loaded from a save file.
     public GameState? PreviousGameState = null;
+
     private ILog Log;
 
     public GameSession(ILog log, RandomGen randomGen)

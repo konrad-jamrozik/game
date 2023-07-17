@@ -43,7 +43,6 @@ public abstract class JsonConverterSupportingReferences<T> : JsonConverter<T>
             arrayItem => { ReplaceObjectPropertyWithRef(arrayItem!.AsObject(), propName); });
     }
 
-    
     protected TItem Deserialize<TItem>(JsonNode parent)
         => parent[typeof(TItem).Name].Deserialize<TItem>(SerializationOptions)!;
 

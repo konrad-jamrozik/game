@@ -6,12 +6,14 @@ namespace UfoGameLib.Model;
 public class MissionSite : IIdentifiable
 {
     public bool IsActive;
+    public readonly int Difficulty;
 
     [JsonConstructor]
-    public MissionSite(int id)
+    public MissionSite(int id, int difficulty)
     {
         Id = id;
         IsActive = true;
+        Difficulty = difficulty;
     }
 
     public int Id { get; }

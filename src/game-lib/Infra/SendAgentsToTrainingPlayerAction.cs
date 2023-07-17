@@ -9,7 +9,7 @@ public class SendAgentsToTrainingPlayerAction : PlayerAction
 
     public SendAgentsToTrainingPlayerAction(ILog log, Agents agents)
     {
-        _log = log;
+        _log = log; 
         _agents = agents;
     }
 
