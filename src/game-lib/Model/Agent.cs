@@ -1,4 +1,5 @@
 using System.Text.Json.Serialization;
+using UfoGameLib.Rules;
 
 namespace UfoGameLib.Model;
 

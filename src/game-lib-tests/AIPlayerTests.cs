@@ -1,5 +1,6 @@
 using Lib.OS;
 using UfoGameLib.Infra;
+using UfoGameLib.Players;
 
 namespace UfoGameLib.Tests;
 

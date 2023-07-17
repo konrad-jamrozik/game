@@ -1,6 +1,6 @@
 using UfoGameLib.Infra;
 
-namespace UfoGameLib;
+namespace UfoGameLib.Players;
 
 public class DoNothingAIPlayerIntellect : IAIPlayerIntellect
 {

@@ -1,7 +1,7 @@
 using UfoGameLib.Infra;
 using UfoGameLib.Model;
 
-namespace UfoGameLib;
+namespace UfoGameLib.Players;
 
 public class BasicAIPlayerIntellect : IAIPlayerIntellect
 {

@@ -1,4 +1,5 @@
 using UfoGameLib.Model;
+using UfoGameLib.Rules;
 
 namespace UfoGameLib.Infra;
 

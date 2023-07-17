@@ -1,4 +1,5 @@
 using UfoGameLib.Model;
+using UfoGameLib.Rules;
 
 namespace UfoGameLib.Infra;
 
@@ -19,9 +20,7 @@ public class AdvanceTimePlayerAction : PlayerAction
         _log.Info("----- Evaluating next turn");
         state.Timeline.CurrentTurn++;
 
-        // The ,4 is alignment specifier per:
-        // https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/tokens/interpolated#structure-of-an-interpolated-string
-
+  
         int agentsTerminated = EvaluateMissions(state);
 
         // Each turn all transport capacity gets freed up.
@@ -46,6 +45,8 @@ public class AdvanceTimePlayerAction : PlayerAction
 
         CreateMissionSites(state);
 
+        // The ,4 is alignment specifier per:
+        // https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/tokens/interpolated#structure-of-an-interpolated-string
         _log.Info($"===== Turn {state.Timeline.CurrentTurn,4} :");
         _log.Info($"    | Agents alive: {state.Assets.Agents.Count}, " +
                   $"Agents terminated this turn: {agentsTerminated}.");
