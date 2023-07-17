@@ -61,7 +61,7 @@ public class GameSessionTests
     [Test]
     public void BasicHappyPathGameSessionWorks()
     {
-        var session = new GameSession(_log, _randomGen);
+        var session = new GameSession(_randomGen);
         var controller = new GameSessionController(_config, _log, session);
 
         GameState startingState = session.CurrentGameState;
@@ -104,7 +104,7 @@ public class GameSessionTests
     [Test]
     public void LoadingPreviousGameStateOverridesCurrentState()
     {
-        var session = new GameSession(_log, _randomGen);
+        var session = new GameSession(_randomGen);
         var controller = new GameSessionController(_config, _log, session);
 
         int savedTurn = controller.GameStatePlayerView.CurrentTurn;
@@ -143,7 +143,7 @@ public class GameSessionTests
     [Test]
     public void RoundTrippingSavingAndLoadingGameStateWithActiveMissionBehavesCorrectly()
     {
-        var session = new GameSession(_log, _randomGen);
+        var session = new GameSession(_randomGen);
         var controller = new GameSessionController(_config, _log, session);
 
         controller.AdvanceTime();
@@ -187,7 +187,7 @@ public class GameSessionTests
     [Test]
     public void RoundTrippingSavingAndLoadingGameStateBehavesCorrectly()
     {
-        var session = new GameSession(_log, _randomGen);
+        var session = new GameSession(_randomGen);
         var controller = new GameSessionController(_config, _log, session);
 
         controller.AdvanceTime();

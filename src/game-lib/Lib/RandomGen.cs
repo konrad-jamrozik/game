@@ -1,5 +1,7 @@
 namespace UfoGameLib.Lib;
 
+// Note: currently upon save/load the random gets re-randomized.
+// To fix that, the Save file should include a seed used to recreate upon load.
 public class RandomGen
 {
     private readonly Random _random;

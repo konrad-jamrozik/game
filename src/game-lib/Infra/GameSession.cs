@@ -13,18 +13,15 @@ namespace UfoGameLib.Infra;
 /// </summary>
 public class GameSession
 {
-    public readonly RandomGen RandomGen; // kja is it even needed here? Same for log, and this entire class.
+    public readonly RandomGen RandomGen;
     public GameState CurrentGameState = GameState.NewInitialGameState();
 
     // Populated when CurrentGameState is overridden, e.g. because it got
     // loaded from a save file.
     public GameState? PreviousGameState = null;
 
-    private ILog Log;
-
-    public GameSession(ILog log, RandomGen randomGen)
+    public GameSession(RandomGen randomGen)
     {
-        Log = log;
         RandomGen = randomGen;
     }
 }

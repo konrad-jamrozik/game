@@ -38,7 +38,7 @@ public class AIPlayerTests
     {
         var aiPlayer = new AIPlayer(
             _log,
-            new GameSessionController(_config, _log, new GameSession(_log, _randomGen)),
+            new GameSessionController(_config, _log, new GameSession(_randomGen)),
             intellect);
 
         // Act

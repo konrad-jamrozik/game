@@ -15,7 +15,7 @@ internal static class Program
         using var log = new Log(config);
         var randomGen = new RandomGen(new Random());
 
-        var controller = new GameSessionController(config, log, new GameSession(log, randomGen));
+        var controller = new GameSessionController(config, log, new GameSession(randomGen));
 
         // Need to support here the various scenarios described in GameSessionController comment.
 
