@@ -1,4 +1,5 @@
 using System.Text.Json.Serialization;
+using UfoGameLib.Rules;
 
 namespace UfoGameLib.Model;
 
@@ -15,9 +16,6 @@ public class Agent
         Recovering, // kja2 Recovering Currently unused
         Terminated
     }
-
-    public static readonly int HireCost = 50;
-    public static readonly int UpkeepCost = 5;
 
     public readonly int Id;
     public State CurrentState;

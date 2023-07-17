@@ -2,6 +2,7 @@ using UfoGameLib.Controller;
 using UfoGameLib.Infra;
 using UfoGameLib.Lib;
 using UfoGameLib.Model;
+using UfoGameLib.Rules;
 
 namespace UfoGameLib.Players;
 
@@ -30,13 +31,7 @@ public class BasicAIPlayerIntellect : IAIPlayerIntellect
             Agents agents = ChooseAgents(state);
 
             // kja currently there is no incentive for launching missions. They don't give anything.
-            // Need to implement consequence of mission failure and success, as well
-            // as not engaging in mission before its expiration.
-            // Hence need to implement:
-            // - mission expiration after N turns
-            // - support: + on mission win, - on mission loss or expiration
-            // Game to be lost when support gets too low. Starts at 100, loss
-            // at 0.
+            // Remains to be implemented: mission expiration.
             controller.LaunchMission(site, agents);
         }
 
@@ -118,16 +113,16 @@ public class BasicAIPlayerIntellect : IAIPlayerIntellect
 
         int agentsMissingToDesired = desiredAgentCount - state.Assets.Agents.Count;
 
-        int moneyAvailableFor = state.Assets.Money / Agent.HireCost;
+        int moneyAvailableFor = state.Assets.Money / Ruleset.AgentHireCost;
 
         // The resulting total upkeep of all agents, including the agents
         // to be hired now, cannot exceed the available funding.
         int maxTolerableUpkeepCost = state.Assets.Funding;
         int currentUpkeepCost = state.Assets.Agents.UpkeepCost;
         int maxUpkeepIncrease = maxTolerableUpkeepCost - currentUpkeepCost;
-        int maxAgentIncreaseByUpkeep = maxUpkeepIncrease / Agent.UpkeepCost;
+        int maxAgentIncreaseByUpkeep = maxUpkeepIncrease / Ruleset.AgentUpkeepCost;
         // If there is enough money in the bank to pay an agent for 10 turns, then we can hire them.
-        int maxAgentIncreaseByMoneyReserves = state.Assets.Money / (Agent.UpkeepCost * 10);
+        int maxAgentIncreaseByMoneyReserves = state.Assets.Money / (Ruleset.AgentUpkeepCost * 10);
         int maxAgentIncrease = maxAgentIncreaseByUpkeep + maxAgentIncreaseByMoneyReserves;
 
         int agentsToHire = Math.Min(

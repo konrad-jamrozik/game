@@ -22,25 +22,31 @@ public class AdvanceTimePlayerAction : PlayerAction
         _log.Info("----- Evaluating next turn");
         state.Timeline.CurrentTurn++;
 
-  
-        int agentsTerminated = EvaluateMissions(state);
+        // Agents cost upkeep. Note we compute upkeep before evaluating missions.
+        // This means that if an agent is lost during the mission, we still pay for their upkeep.
+        int agentUpkeep = state.Assets.Agents.UpkeepCost;
+
+        (int successfulMissions, int failedMissions, int agentsTerminated) = EvaluateMissions(state);
+
+        int fundingChange = Ruleset.ComputeFundingChange(successfulMissions, failedMissions);
+        int supportChange = Ruleset.ComputeSupportChange(successfulMissions, failedMissions);
+
+        // Note this funding change will get taken into account when computing money change this turn.
+        state.Assets.Funding += fundingChange;
+        state.Assets.Support += supportChange;
 
         // Each turn all transport capacity gets freed up.
         state.Assets.CurrentTransportCapacity = state.Assets.MaxTransportCapacity;
-
-        // Agents cost upkeep.
-        int agentUpkeep = state.Assets.Agents.UpkeepCost;
-
+        
         // Each agent generates income equal to their upkeep times 3.
-        int incomeGenerated = state.Assets.Agents.GeneratingIncome.Count * Agent.UpkeepCost * 3;
+        int incomeGenerated = state.Assets.Agents.GeneratingIncome.Count * Ruleset.AgentUpkeepCost * 3; // kja this formula should be in ruleset
 
-        int moneyAdjustment = state.Assets.Funding + incomeGenerated - agentUpkeep;
+        int moneyChange = state.Assets.Funding + incomeGenerated - agentUpkeep;
 
-        state.Assets.Money += moneyAdjustment;
-        state.Assets.Money += incomeGenerated;
+        state.Assets.Money += moneyChange;
 
         // Each agent gathers 5 intel per turn.
-        int intelGathered = state.Assets.Agents.GatheringIntel.Count * 5;
+        int intelGathered = state.Assets.Agents.GatheringIntel.Count * 5; // kja this *5 should be in ruleset
         state.Assets.Intel += intelGathered;
 
         UpdateAgentStates(state);
@@ -50,39 +56,53 @@ public class AdvanceTimePlayerAction : PlayerAction
         // The ,4 is alignment specifier per:
         // https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/tokens/interpolated#structure-of-an-interpolated-string
         _log.Info($"===== Turn {state.Timeline.CurrentTurn,4} :");
+        _log.Info($"    | Successful missions: {successfulMissions}, " +
+                  $"Failed missions: {failedMissions}.");
         _log.Info($"    | Agents alive: {state.Assets.Agents.Count}, " +
                   $"Agents terminated this turn: {agentsTerminated}.");
         _log.Info($"    | Money: {state.Assets.Money}, " +
-                  $"Money adjustment: {moneyAdjustment}, " +
+                  $"Money change: {moneyChange}, " +
                   $"Funding: {state.Assets.Funding}, " +
                   $"Income generated: {incomeGenerated}, " +
                   $"Agent upkeep: {agentUpkeep}.");
         _log.Info($"    | Intel: {state.Assets.Intel}, " +
                   $"Intel gathered: {intelGathered}.");
+        _log.Info($"    | Funding: {state.Assets.Funding}, " +
+                  $"Funding change: {fundingChange}.");
+        _log.Info($"    | Support: {state.Assets.Support}, " +
+                  $"Support change: {supportChange}.");
         _log.Info("");
     }
 
-    private int EvaluateMissions(GameState state)
+    private (int successfulMissions, int failedMissions, int totalAgentsTerminated) EvaluateMissions(GameState state)
     {
-        int agentsTerminatedCount = 0;
+        int totalAgentsTerminated = 0;
+        int successfulMissions = 0;
+        int failedMissions = 0;
+
         foreach (Mission mission in state.Missions.Active)
         {
-            int agentsTerminatedOnMissionCount = EvaluateMission(state, mission);
+            (bool missionSuccess, int agentsTerminated) = EvaluateMission(state, mission);
 
-            agentsTerminatedCount += agentsTerminatedOnMissionCount;
+            totalAgentsTerminated += agentsTerminated;
+            if (missionSuccess)
+                successfulMissions++;
+            else
+                failedMissions++;
         }
 
-        return agentsTerminatedCount;
+        return (successfulMissions, failedMissions, totalAgentsTerminated);
     }
 
-    private int EvaluateMission(GameState state, Mission mission)
+    private (bool success, int agentsTerminated) EvaluateMission(GameState state, Mission mission)
     {
         Debug.Assert(mission.CurrentState == Mission.State.Active);
 
         (int agentsSent, int agentsSurviving, int agentsTerminated) = EvaluateAgentsOnMission(state, mission);
 
         int agentsRequired = Ruleset.RequiredSurvivingAgentsForSuccess(mission.Site);
-        mission.CurrentState = Ruleset.MissionSuccessful(mission, agentsSurviving)
+        bool missionSuccessful = Ruleset.MissionSuccessful(mission, agentsSurviving);
+        mission.CurrentState = missionSuccessful
             ? Mission.State.Success
             : Mission.State.Failed;
         
@@ -91,7 +111,7 @@ public class AdvanceTimePlayerAction : PlayerAction
                   $"agents: surviving / required: {agentsSurviving} / {agentsRequired}, " +
                   $"terminated / sent: {agentsTerminated} / {agentsSent}.");
 
-        return agentsTerminated;
+        return (missionSuccessful, agentsTerminated);
     }
 
     private (int agentsSent, int agentsSurviving, int agentsTerminated) EvaluateAgentsOnMission(
@@ -131,7 +151,7 @@ public class AdvanceTimePlayerAction : PlayerAction
 
     private void CreateMissionSites(GameState state)
     {
-        if (state.Timeline.CurrentTurn % 3 == 0)
+        if (state.Timeline.CurrentTurn % 3 == 0) // kja this formula should be in ruleset
         {
             int siteId = state.NextMissionSiteId;
             int difficulty = Ruleset.RollMissionSiteDifficulty(state.Timeline.CurrentTurn, _randomGen);

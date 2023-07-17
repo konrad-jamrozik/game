@@ -1,3 +1,5 @@
+using UfoGameLib.Rules;
+
 namespace UfoGameLib.Model;
 
 public class Agents : List<Agent>
@@ -24,7 +26,7 @@ public class Agents : List<Agent>
         base.AddRange(agentsList);
     }
 
-    public int UpkeepCost => Count * Agent.UpkeepCost;
+    public int UpkeepCost => Count * Ruleset.AgentUpkeepCost;
 
     public Agents InTransit => this.Where(agent => agent.IsInTransit).ToAgents();
 

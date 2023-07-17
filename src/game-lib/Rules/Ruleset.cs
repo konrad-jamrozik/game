@@ -5,6 +5,16 @@ namespace UfoGameLib.Rules;
 
 public static class Ruleset
 {
+    public const int InitialMoney = 500;
+    public const int InitialIntel = 0;
+    public const int InitialFunding = 20;
+    public const int InitialSupport = 30;
+    public const int InitialMaxTransportCapacity = 4;
+
+    public const int AgentHireCost = 50;
+
+    public const int AgentUpkeepCost = 5;
+
     public const int AgentSurvivalRollUpperBound = 100;
 
     public const int AgentTrainingCoefficient = 1;
@@ -53,4 +63,10 @@ public static class Ruleset
         Debug.Assert(result >= 1);
         return result;
     }
+
+    public static int ComputeFundingChange(int successfulMissions, int failedMissions)
+        => successfulMissions * 5 - failedMissions * 1;
+
+    public static int ComputeSupportChange(int successfulMissions, int failedMissions)
+        => successfulMissions * 20 - failedMissions * 5;
 }

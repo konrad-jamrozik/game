@@ -11,7 +11,6 @@ public class PlayerActions : List<PlayerAction>
     public static void Apply(PlayerAction action, GameState state)
         => new PlayerActions(new[] { action }).Apply(state);
 
-
     public GameStateUpdateLog Apply(GameState state)
     {
         Debug.Assert(!state.IsGameOver);

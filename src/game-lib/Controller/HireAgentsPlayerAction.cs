@@ -7,9 +7,7 @@ namespace UfoGameLib.Controller;
 public class HireAgentsPlayerAction : PlayerAction
 {
     private readonly ILog _log;
-
     private readonly int _count;
-
 
     public HireAgentsPlayerAction(ILog log, int count)
     {

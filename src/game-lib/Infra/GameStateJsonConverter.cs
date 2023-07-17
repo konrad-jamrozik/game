@@ -129,6 +129,7 @@ class GameStateJsonConverter : JsonConverterSupportingReferences<GameState>
             money: DeserializeInt(assetsNode, nameof(Assets.Money)),
             intel: DeserializeInt(assetsNode, nameof(Assets.Intel)),
             funding: DeserializeInt(assetsNode, nameof(Assets.Funding)),
+            support: DeserializeInt(assetsNode, nameof(Assets.Support)),
             currentTransportCapacity: DeserializeInt(assetsNode, nameof(Assets.CurrentTransportCapacity)),
             maxTransportCapacity: DeserializeInt(assetsNode, nameof(Assets.MaxTransportCapacity)),
             agents: agents);

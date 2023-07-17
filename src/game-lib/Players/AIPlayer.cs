@@ -43,6 +43,12 @@ public class AIPlayer
             _controller.AdvanceTime();
         }
 
+        _log.Info($"Game over! " +
+                  $"money: {state.Assets.Money}, " +
+                  $"funding: {state.Assets.Funding}, " +
+                  $"support: {state.Assets.Support}, " +
+                  $"turn: {state.CurrentTurn} / {turnLimit}.");
+
         _controller.Save();
     }
 }
