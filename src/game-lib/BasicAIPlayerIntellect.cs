@@ -28,6 +28,13 @@ public class BasicAIPlayerIntellect : IAIPlayerIntellect
             Agents agents = ChooseAgents(state);
 
             // kja currently there is no incentive for launching missions. They don't give anything.
+            // Need to implement consequence of mission failure and success, as well
+            // as not engaging in mission before its expiration.
+            // Hence need to implement:
+            // - mission expiration after N turns
+            // - support: + on mission win, - on mission loss or expiration
+            // Game to be lost when support gets too low. Starts at 100, loss
+            // at 0.
             controller.LaunchMission(site, agents);
         }
 

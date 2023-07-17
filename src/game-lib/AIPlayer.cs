@@ -26,7 +26,7 @@ public class AIPlayer
         _intellect = intellectMap[intellect];
     }
 
-    // kja put here turn limit and use it in tests; currently tests hardcode limit of 30.
+    // kja2 put here turn limit and use it in tests; currently tests hardcode limit of 30.
     public void PlayGameSession()
     {
         GameStatePlayerView state = _controller.GameStatePlayerView;
