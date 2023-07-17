@@ -81,7 +81,7 @@ public class AdvanceTimePlayerAction : PlayerAction
         int agentsSent = agentsOnMission.Count;
         foreach (Agent agent in agentsOnMission)
         {
-            int agentDeathChance = Math.Max(mission.Site.Difficulty - agent.TurnsTrained, 0);
+            int agentDeathChance = Math.Max(mission.Site.Difficulty - agent.SurvivalSkill, 0);
 
             int survivalRoll = _randomGen.Roll1To100();
 
@@ -89,7 +89,7 @@ public class AdvanceTimePlayerAction : PlayerAction
             {
                 state.Terminate(agent);
                 _log.Info(
-                    $"Agent with ID {agent.Id,4} terminated. Turns trained: {agent.TurnsTrained}. " +
+                    $"Agent with ID {agent.Id,4} terminated. Skill: {agent.SurvivalSkill,3}. " +
                     $"Roll: {survivalRoll,3} <= {agentDeathChance}");
                 agentsTerminated++;
             }
@@ -97,7 +97,7 @@ public class AdvanceTimePlayerAction : PlayerAction
             {
                 agent.MakeAvailable();
                 _log.Info(
-                    $"Agent with ID {agent.Id,4} survived.   Turns trained: {agent.TurnsTrained}. " +
+                    $"Agent with ID {agent.Id,4} survived.   Skill: {agent.SurvivalSkill,3}. " +
                     $"Roll: {survivalRoll,3} >  {agentDeathChance}");
                 agentsSurviving++;
             }
@@ -135,5 +135,8 @@ public class AdvanceTimePlayerAction : PlayerAction
     }
 
     private int ComputeMissionSiteDifficulty(int currentTurn)
-        => currentTurn + MissionSite.BaseMissionSiteDifficulty + _randomGen.Roll0To(30);
+    // Note that currently the only way of increasing agents survivability of difficulty
+    // is via training. As such, if difficulty due to turn would grow at least as fast as Agent.TrainingCoefficient,
+    // then at some point missions would become impossible, as all agents would die.
+        => Agent.TrainingCoefficient/4 + MissionSite.BaseMissionSiteDifficulty + _randomGen.Roll0To(30);
 }

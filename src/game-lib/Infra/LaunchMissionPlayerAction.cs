@@ -27,6 +27,7 @@ public class LaunchMissionPlayerAction : PlayerAction
             $"Cannot launch a mission with not enough agents to win it! " +
             $"_agents.Count: {_agents.Count} " +
             $">= _site.RequiredSurvivingAgentsForSuccess: {_site.RequiredSurvivingAgentsForSuccess}");
+        // kja add here assert checking that every agent needs non-zero chance of survival.
 
         int missionId = state.NextMissionId;
         var mission = new Mission(missionId, _site);
