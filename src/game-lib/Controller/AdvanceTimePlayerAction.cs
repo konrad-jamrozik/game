@@ -134,7 +134,7 @@ public class AdvanceTimePlayerAction : PlayerAction
         if (state.Timeline.CurrentTurn % 3 == 0)
         {
             int siteId = state.NextMissionSiteId;
-            int difficulty = Ruleset.MissionSiteDifficulty(state.Timeline.CurrentTurn, _randomGen);
+            int difficulty = Ruleset.RollMissionSiteDifficulty(state.Timeline.CurrentTurn, _randomGen);
             _log.Info($"Add MissionSite with Id: {siteId}, difficulty: {difficulty}");
             state.MissionSites.Add(new MissionSite(siteId, difficulty));
         }

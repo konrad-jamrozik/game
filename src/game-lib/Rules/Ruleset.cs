@@ -39,12 +39,12 @@ public static class Ruleset
 
     public static int AgentSurvivalSkill(Agent agent) => agent.TurnsTrained * AgentTrainingCoefficient;
 
-    public static int MissionSiteDifficulty(int currentTurn, RandomGen randomGen)
+    public static int RollMissionSiteDifficulty(int currentTurn, RandomGen randomGen)
         // Note that currently the only way of increasing agents survivability of difficulty
         // is via training. As such, if difficulty due to turn would grow at least as fast as Agent.TrainingCoefficient,
         // then at some point missions would become impossible, as all agents would die.
         => BaseMissionSiteDifficulty 
-           + (currentTurn * AgentTrainingCoefficient/4)
+           + (currentTurn * AgentTrainingCoefficient / 4)
            + randomGen.Roll0To(30);
 
     public static int RequiredSurvivingAgentsForSuccess(MissionSite site)
