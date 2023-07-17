@@ -1,5 +1,4 @@
 using System.Text.Json.Serialization;
-using UfoGameLib.Rules;
 
 namespace UfoGameLib.Model;
 
@@ -41,9 +40,6 @@ public class Agent
         TurnsTrained = turnsTrained;
         AssertMissionInvariant();
     }
-
-    [JsonIgnore]
-    public int SurvivalSkill => Ruleset.AgentSurvivalSkill(this);
 
     [JsonIgnore]
     public bool IsAvailable => CurrentState == State.Available;

@@ -21,7 +21,7 @@ public static class Ruleset
         int deathThreshold = AgentDeathThreshold(agent, mission);
         bool survived = survivalRoll > deathThreshold;
         log.Info(
-            $"Agent with ID {agent.Id,4} survived: {survived,5}. Skill: {agent.SurvivalSkill,3}. " +
+            $"Agent with ID {agent.Id,4} survived: {survived,5}. Skill: {AgentSurvivalSkill(agent),3}. " +
             $"Roll: {survivalRoll,3} { (survived ? "> " : "<=") } {deathThreshold}");
 
         return survived;
@@ -33,7 +33,7 @@ public static class Ruleset
         return agentsSurviving >= agentsRequired;
     }
 
-    public static int AgentDeathThreshold(Agent agent, Mission mission) => Math.Max(mission.Site.Difficulty - agent.SurvivalSkill, 0);
+    public static int AgentDeathThreshold(Agent agent, Mission mission) => Math.Max(mission.Site.Difficulty - AgentSurvivalSkill(agent), 0);
 
     public static bool AgentCanSurvive(Agent agent, Mission mission) => AgentDeathThreshold(agent, mission) <= AgentSurvivalRollUpperBound;
 
