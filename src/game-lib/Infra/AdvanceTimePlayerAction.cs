@@ -22,7 +22,7 @@ public class AdvanceTimePlayerAction : PlayerAction
         // The ,4 is alignment specifier per:
         // https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/tokens/interpolated#structure-of-an-interpolated-string
 
-        int agentsTerminated = EvaluateActiveMissions(state);
+        int agentsTerminated = EvaluateMissions(state);
 
         // Each turn all transport capacity gets freed up.
         state.Assets.CurrentTransportCapacity = state.Assets.MaxTransportCapacity;
@@ -59,7 +59,7 @@ public class AdvanceTimePlayerAction : PlayerAction
         _log.Info("");
     }
 
-    private int EvaluateActiveMissions(GameState state)
+    private int EvaluateMissions(GameState state)
     {
         int agentsTerminatedCount = 0;
         foreach (Mission mission in state.Missions.Active)
@@ -75,12 +75,32 @@ public class AdvanceTimePlayerAction : PlayerAction
     private int EvaluateMission(GameState state, Mission mission)
     {
         Debug.Assert(mission.CurrentState == Mission.State.Active);
-        int agentsTerminated = 0;
-        int agentsSurviving = 0;
-        Agents agentsOnMission = state.Assets.Agents.OnSpecificMission(mission);
-        int agentsSent = agentsOnMission.Count;
 
-        // kja extract method from this foreach
+        (int agentsSent, int agentsSurviving, int agentsTerminated) = EvaluateAgentsOnMission(state, mission);
+
+        int agentsRequired = Ruleset.RequiredSurvivingAgentsForSuccess(mission.Site);
+        mission.CurrentState = Ruleset.MissionSuccessful(mission, agentsSurviving)
+            ? Mission.State.Success
+            : Mission.State.Failed;
+        
+        _log.Info($"Evaluated mission with ID {mission.Id}. result: {mission.CurrentState,7}, " +
+                  $"difficulty: {mission.Site.Difficulty}, " +
+                  $"agents: surviving / required: {agentsSurviving} / {agentsRequired}, " +
+                  $"terminated / sent: {agentsTerminated} / {agentsSent}.");
+
+        return agentsTerminated;
+    }
+
+    private (int agentsSent, int agentsSurviving, int agentsTerminated) EvaluateAgentsOnMission(
+        GameState state,
+        Mission mission)
+    {
+        Agents agentsOnMission = state.Assets.Agents.OnSpecificMission(mission);
+        
+        int agentsSent = agentsOnMission.Count;
+        int agentsSurviving = 0;
+        int agentsTerminated = 0;
+
         foreach (Agent agent in agentsOnMission)
         {
             bool survived = Ruleset.RollForAgentSurvival(agent, mission, _randomGen, _log);
@@ -97,17 +117,7 @@ public class AdvanceTimePlayerAction : PlayerAction
             }
         }
 
-        int agentsRequired = Ruleset.RequiredSurvivingAgentsForSuccess(mission.Site);
-        mission.CurrentState = Ruleset.MissionSuccessful(mission, agentsSurviving)
-            ? Mission.State.Success
-            : Mission.State.Failed;
-        
-        _log.Info($"Evaluated mission with ID {mission.Id}. result: {mission.CurrentState,7}, " +
-                  $"difficulty: {mission.Site.Difficulty}, " +
-                  $"agents: surviving / required: {agentsSurviving} / {agentsRequired}, " +
-                  $"terminated / sent: {agentsTerminated} / {agentsSent}.");
-
-        return agentsTerminated;
+        return (agentsSent, agentsSurviving, agentsTerminated);
     }
 
     private static void UpdateAgentStates(GameState state)
