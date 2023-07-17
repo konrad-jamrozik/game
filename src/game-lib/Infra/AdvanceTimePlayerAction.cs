@@ -103,7 +103,6 @@ public class AdvanceTimePlayerAction : PlayerAction
             }
         }
 
-        mission.IsActive = false;
         int agentsRequired = mission.Site.RequiredSurvivingAgentsForSuccess;
         mission.CurrentState = agentsSurviving >= agentsRequired
             ? Mission.State.Successful
