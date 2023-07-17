@@ -36,12 +36,12 @@ public class AdvanceTimePlayerAction : PlayerAction
 
         int moneyAdjustment = state.Assets.Funding + incomeGenerated - agentUpkeep;
 
-        state.Assets.CurrentMoney += moneyAdjustment;
-        state.Assets.CurrentMoney += incomeGenerated;
+        state.Assets.Money += moneyAdjustment;
+        state.Assets.Money += incomeGenerated;
 
         // Each agent gathers 5 intel per turn.
         int intelGathered = state.Assets.Agents.GatheringIntel.Count * 5;
-        state.Assets.CurrentIntel += intelGathered;
+        state.Assets.Intel += intelGathered;
 
         UpdateAgentStates(state);
 
@@ -52,12 +52,12 @@ public class AdvanceTimePlayerAction : PlayerAction
         _log.Info($"===== Turn {state.Timeline.CurrentTurn,4} :");
         _log.Info($"    | Agents alive: {state.Assets.Agents.Count}, " +
                   $"Agents terminated this turn: {agentsTerminated}.");
-        _log.Info($"    | CurrentMoney: {state.Assets.CurrentMoney}, " +
+        _log.Info($"    | Money: {state.Assets.Money}, " +
                   $"Money adjustment: {moneyAdjustment}, " +
                   $"Funding: {state.Assets.Funding}, " +
                   $"Income generated: {incomeGenerated}, " +
                   $"Agent upkeep: {agentUpkeep}.");
-        _log.Info($"    | CurrentIntel: {state.Assets.CurrentIntel}, " +
+        _log.Info($"    | Intel: {state.Assets.Intel}, " +
                   $"Intel gathered: {intelGathered}.");
         _log.Info("");
     }

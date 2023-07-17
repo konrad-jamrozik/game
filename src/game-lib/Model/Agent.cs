@@ -24,11 +24,9 @@ public class Agent
     public Mission? CurrentMission;
     public int TurnsTrained;
 
-    public Agent(int id)
+    // ReSharper disable once IntroduceOptionalParameters.Global
+    public Agent(int id) : this(id, State.InTransit, currentMission: null, turnsTrained: 0)
     {
-        Id = id;
-        CurrentState = State.InTransit;
-        TurnsTrained = 0;
     }
 
     [JsonConstructor]

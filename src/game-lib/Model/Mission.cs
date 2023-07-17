@@ -15,17 +15,16 @@ public class Mission : IIdentifiable
     public MissionSite Site;
     public State CurrentState;
 
-    public Mission(int id, MissionSite site)
-    {
-        Debug.Assert(site.IsActive);
-
-        Id = id;
-        Site = site;
-        // MissionSite is no longer active because this mission was launched on it.
-        Site.IsActive = false;
+    public Mission(int id, MissionSite site) : this(
+        id, 
         // This mission just got constructed so it is active until it gets evaluated
         // on time advancement.
-        CurrentState = State.Active;
+        State.Active, 
+        site)
+    {
+        Debug.Assert(site.IsActive);
+        // MissionSite is no longer active because this mission was launched on it.
+        Site.IsActive = false;
     }
 
     [JsonConstructor]

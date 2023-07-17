@@ -118,7 +118,7 @@ public class BasicAIPlayerIntellect : IAIPlayerIntellect
 
         int agentsMissingToDesired = desiredAgentCount - state.Assets.Agents.Count;
 
-        int moneyAvailableFor = state.Assets.CurrentMoney / Agent.HireCost;
+        int moneyAvailableFor = state.Assets.Money / Agent.HireCost;
 
         // The resulting total upkeep of all agents, including the agents
         // to be hired now, cannot exceed the available funding.
@@ -127,7 +127,7 @@ public class BasicAIPlayerIntellect : IAIPlayerIntellect
         int maxUpkeepIncrease = maxTolerableUpkeepCost - currentUpkeepCost;
         int maxAgentIncreaseByUpkeep = maxUpkeepIncrease / Agent.UpkeepCost;
         // If there is enough money in the bank to pay an agent for 10 turns, then we can hire them.
-        int maxAgentIncreaseByMoneyReserves = state.Assets.CurrentMoney / (Agent.UpkeepCost * 10);
+        int maxAgentIncreaseByMoneyReserves = state.Assets.Money / (Agent.UpkeepCost * 10);
         int maxAgentIncrease = maxAgentIncreaseByUpkeep + maxAgentIncreaseByMoneyReserves;
 
         int agentsToHire = Math.Min(

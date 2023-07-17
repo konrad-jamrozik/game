@@ -126,10 +126,10 @@ class GameStateJsonConverter : JsonConverterSupportingReferences<GameState>
                         turnsTrained: DeserializeInt(agentObj, nameof(Agent.TurnsTrained)))));
 
         var assets = new Assets(
-            currentMoney: DeserializeInt(assetsNode, nameof(Assets.CurrentMoney)),
-            currentIntel: DeserializeInt(assetsNode, nameof(Assets.CurrentIntel)),
-            currentTransportCapacity: DeserializeInt(assetsNode, nameof(Assets.CurrentTransportCapacity)),
+            money: DeserializeInt(assetsNode, nameof(Assets.Money)),
+            intel: DeserializeInt(assetsNode, nameof(Assets.Intel)),
             funding: DeserializeInt(assetsNode, nameof(Assets.Funding)),
+            currentTransportCapacity: DeserializeInt(assetsNode, nameof(Assets.CurrentTransportCapacity)),
             maxTransportCapacity: DeserializeInt(assetsNode, nameof(Assets.MaxTransportCapacity)),
             agents: agents);
 

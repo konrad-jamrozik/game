@@ -34,10 +34,10 @@ public class GameState
             updateCount: 0,
             new Timeline(currentTurn: Timeline.InitialTurn),
             new Assets(
-                currentMoney: 500,
-                currentIntel: 0,
-                currentTransportCapacity: 4,
+                money: 500,
+                intel: 0,
                 funding: 20,
+                currentTransportCapacity: 4,
                 maxTransportCapacity: 4,
                 agents: new Agents()),
             new MissionSites(),
@@ -45,7 +45,7 @@ public class GameState
             terminatedAgents: new Agents(terminated: true));
 
     // The "Timeline.CurrentTurn <= MaxTurnLimit" is to protect against infinite loops.
-    public bool IsGameOver => Assets.CurrentMoney < 0 || Timeline.CurrentTurn > MaxTurnLimit;
+    public bool IsGameOver => Assets.Money < 0 || Timeline.CurrentTurn > MaxTurnLimit;
     public int NextAgentId => Assets.Agents.Count + TerminatedAgents.Count;
     public int NextMissionId => Missions.Count;
     public int NextMissionSiteId => MissionSites.Count;
