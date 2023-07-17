@@ -3,6 +3,7 @@ using UfoGameLib.Model;
 
 namespace UfoGameLib;
 
+// kja move AIPlayer related classes to namespace
 public class AIPlayer
 {
     public enum Intellect

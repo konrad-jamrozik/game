@@ -16,8 +16,6 @@ public class Agent
         Terminated
     }
 
-    public const int TrainingCoefficient = 1;
-
     public static readonly int HireCost = 50;
     public static readonly int UpkeepCost = 5;
 
@@ -44,7 +42,7 @@ public class Agent
     }
 
     [JsonIgnore]
-    public int SurvivalSkill => TurnsTrained * TrainingCoefficient;
+    public int SurvivalSkill => Ruleset.AgentSurvivalSkill(this);
 
     [JsonIgnore]
     public bool IsAvailable => CurrentState == State.Available;

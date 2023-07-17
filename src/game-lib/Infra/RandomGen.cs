@@ -9,9 +9,11 @@ public class RandomGen
         _random = random;
     }
 
-    public int Roll1To100() => _random.Next(100) + 1;
+    public int Roll1To(int n) => _random.Next(n) + 1;
 
     public int Roll0To(int n) => _random.Next(n+1);
+
+    public int Roll(int min, int max) => min + Roll0To(max - min);
 
     // ReSharper disable once MemberCanBePrivate.Global
     public T Pick<T>(List<T> items)

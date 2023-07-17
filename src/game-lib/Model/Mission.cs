@@ -8,7 +8,7 @@ public class Mission : IIdentifiable
     public enum State
     {
         Active,
-        Successful,
+        Success,
         Failed
     }
 

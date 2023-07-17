@@ -79,36 +79,30 @@ public class AdvanceTimePlayerAction : PlayerAction
         int agentsSurviving = 0;
         Agents agentsOnMission = state.Assets.Agents.OnSpecificMission(mission);
         int agentsSent = agentsOnMission.Count;
+
+        // kja extract method from this foreach
         foreach (Agent agent in agentsOnMission)
         {
-            int agentDeathChance = Math.Max(mission.Site.Difficulty - agent.SurvivalSkill, 0);
+            bool survived = Ruleset.RollForAgentSurvival(agent, mission, _randomGen, _log);
 
-            int survivalRoll = _randomGen.Roll1To100();
-
-            if (survivalRoll <= agentDeathChance)
+            if (survived)
             {
-                state.Terminate(agent);
-                _log.Info(
-                    $"Agent with ID {agent.Id,4} terminated. Skill: {agent.SurvivalSkill,3}. " +
-                    $"Roll: {survivalRoll,3} <= {agentDeathChance}");
-                agentsTerminated++;
+                agent.MakeAvailable();
+                agentsSurviving++;
             }
             else
             {
-                agent.MakeAvailable();
-                _log.Info(
-                    $"Agent with ID {agent.Id,4} survived.   Skill: {agent.SurvivalSkill,3}. " +
-                    $"Roll: {survivalRoll,3} >  {agentDeathChance}");
-                agentsSurviving++;
+                state.Terminate(agent);
+                agentsTerminated++;
             }
         }
 
-        int agentsRequired = mission.Site.RequiredSurvivingAgentsForSuccess;
-        mission.CurrentState = agentsSurviving >= agentsRequired
-            ? Mission.State.Successful
+        int agentsRequired = Ruleset.RequiredSurvivingAgentsForSuccess(mission.Site);
+        mission.CurrentState = Ruleset.MissionSuccessful(mission, agentsSurviving)
+            ? Mission.State.Success
             : Mission.State.Failed;
         
-        _log.Info($"Evaluated mission with ID {mission.Id}. result: {mission.CurrentState,10}, " +
+        _log.Info($"Evaluated mission with ID {mission.Id}. result: {mission.CurrentState,7}, " +
                   $"difficulty: {mission.Site.Difficulty}, " +
                   $"agents: surviving / required: {agentsSurviving} / {agentsRequired}, " +
                   $"terminated / sent: {agentsTerminated} / {agentsSent}.");
@@ -127,15 +121,9 @@ public class AdvanceTimePlayerAction : PlayerAction
         if (state.Timeline.CurrentTurn % 3 == 0)
         {
             int siteId = state.NextMissionSiteId;
-            int difficulty = ComputeMissionSiteDifficulty(state.Timeline.CurrentTurn);
+            int difficulty = Ruleset.MissionSiteDifficulty(state.Timeline.CurrentTurn, _randomGen);
             _log.Info($"Add MissionSite with Id: {siteId}, difficulty: {difficulty}");
             state.MissionSites.Add(new MissionSite(siteId, difficulty));
         }
     }
-
-    private int ComputeMissionSiteDifficulty(int currentTurn)
-    // Note that currently the only way of increasing agents survivability of difficulty
-    // is via training. As such, if difficulty due to turn would grow at least as fast as Agent.TrainingCoefficient,
-    // then at some point missions would become impossible, as all agents would die.
-        => Agent.TrainingCoefficient/4 + MissionSite.BaseMissionSiteDifficulty + _randomGen.Roll0To(30);
 }
