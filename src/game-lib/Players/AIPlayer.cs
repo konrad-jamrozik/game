@@ -44,7 +44,9 @@ public class AIPlayer
         }
 
         _log.Info($"Game over! " +
+                  $"Game result: {(state.IsGameLost ? "lost" : state.IsGameWon ? "won" : "undecided")}, " +
                   $"money: {state.Assets.Money}, " +
+                  $"intel: {state.Assets.Intel}, " +
                   $"funding: {state.Assets.Funding}, " +
                   $"support: {state.Assets.Support}, " +
                   $"turn: {state.CurrentTurn} / {turnLimit}.");

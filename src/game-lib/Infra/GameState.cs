@@ -45,12 +45,16 @@ public class GameState
             new Missions(),
             terminatedAgents: new Agents(terminated: true));
 
-    // kja need to add concept of winning the game. Win enough missions against each faction (first need to add factions).
-    public bool IsGameOver => Assets.Money == 0 
-                              || Assets.Funding == 0 
-                              || Assets.Support == 0 
+    public bool IsGameOver => IsGameLost 
+                              || IsGameWon
                               // This condition is here to protect against infinite loops.
                               || Timeline.CurrentTurn > MaxTurnLimit;
+
+    public bool IsGameLost => Assets.Money == 0
+                              || Assets.Funding == 0
+                              || Assets.Support == 0;
+
+    public bool IsGameWon => Assets.Intel >= Ruleset.IntelToWin;
 
     public int NextAgentId => Assets.Agents.Count + TerminatedAgents.Count;
     public int NextMissionId => Missions.Count;

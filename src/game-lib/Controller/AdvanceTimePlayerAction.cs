@@ -28,7 +28,7 @@ public class AdvanceTimePlayerAction : PlayerAction
 
         (int successfulMissions, int failedMissions, int agentsTerminated) = EvaluateMissions(state);
 
-        int supportChangeFromExpiredMissionSites = UpdateActiveMissionSites(state);
+        (int supportChangeFromExpiredMissionSites, int expiredMissions) = UpdateActiveMissionSites(state);
 
         int fundingChange = Ruleset.ComputeFundingChange(successfulMissions, failedMissions);
         int supportChangeFromMissions = Ruleset.ComputeSupportChangeFromMissions(successfulMissions, failedMissions);
@@ -59,7 +59,8 @@ public class AdvanceTimePlayerAction : PlayerAction
         // https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/tokens/interpolated#structure-of-an-interpolated-string
         _log.Info($"===== Turn {state.Timeline.CurrentTurn,4} :");
         _log.Info($"    | Successful missions: {successfulMissions}, " +
-                  $"Failed missions: {failedMissions}.");
+                  $"Failed missions: {failedMissions}, " +
+                  $"Expired missions: {expiredMissions}.");
         _log.Info($"    | Agents alive: {state.Assets.Agents.Count}, " +
                   $"Agents terminated this turn: {agentsTerminated}.");
         _log.Info($"    | Money: {state.Assets.Money}, " +
@@ -153,9 +154,10 @@ public class AdvanceTimePlayerAction : PlayerAction
         state.Assets.Agents.InTraining.ForEach(agent => agent.TurnsTrained++);
     }
 
-    private int UpdateActiveMissionSites(GameState state)
+    private (int supportChange, int expiredMissions) UpdateActiveMissionSites(GameState state)
     {
         int supportChange = 0;
+        int expiredMissions = 0;
         state.MissionSites.Active.ForEach(
             missionSite =>
             {
@@ -165,11 +167,12 @@ public class AdvanceTimePlayerAction : PlayerAction
                 {
                     missionSite.IsActive = false;
                     supportChange -= Ruleset.SupportPenaltyForExpiringMissionSite();
+                    expiredMissions++;
                     _log.Info($"Mission site with ID: {missionSite.Id,3} expired!");
                 }
             }
         );
-        return supportChange;
+        return (supportChange, expiredMissions);
     }
 
     private void CreateMissionSites(GameState state)
