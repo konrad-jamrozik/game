@@ -38,15 +38,14 @@ public class AdvanceTimePlayerAction : PlayerAction
         // Each turn all transport capacity gets freed up.
         state.Assets.CurrentTransportCapacity = state.Assets.MaxTransportCapacity;
         
-        // Each agent generates income equal to their upkeep times 3.
-        int incomeGenerated = state.Assets.Agents.GeneratingIncome.Count * Ruleset.AgentUpkeepCost * 3; // kja this formula should be in ruleset
+        int incomeGenerated = state.Assets.Agents.GeneratingIncome.Count * Ruleset.IncomeGeneratedPerAgent();
 
         int moneyChange = state.Assets.Funding + incomeGenerated - agentUpkeep;
 
         state.Assets.Money += moneyChange;
 
         // Each agent gathers 5 intel per turn.
-        int intelGathered = state.Assets.Agents.GatheringIntel.Count * 5; // kja this *5 should be in ruleset
+        int intelGathered = state.Assets.Agents.GatheringIntel.Count * Ruleset.IntelGatheredPerAgent();
         state.Assets.Intel += intelGathered;
 
         UpdateAgentStates(state);
@@ -151,7 +150,7 @@ public class AdvanceTimePlayerAction : PlayerAction
 
     private void CreateMissionSites(GameState state)
     {
-        if (state.Timeline.CurrentTurn % 3 == 0) // kja this formula should be in ruleset
+        if (state.Timeline.CurrentTurn % 3 == 0)
         {
             int siteId = state.NextMissionSiteId;
             int difficulty = Ruleset.RollMissionSiteDifficulty(state.Timeline.CurrentTurn, _randomGen);

@@ -69,4 +69,8 @@ public static class Ruleset
 
     public static int ComputeSupportChange(int successfulMissions, int failedMissions)
         => successfulMissions * 20 - failedMissions * 5;
+
+    public static int IncomeGeneratedPerAgent() => AgentUpkeepCost * 3;
+
+    public static int IntelGatheredPerAgent() => 5;
 }
