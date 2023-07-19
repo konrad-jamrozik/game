@@ -9,6 +9,7 @@ namespace UfoGameLib.Players;
 public class BasicAIPlayerIntellect : IAIPlayerIntellect
 {
     private const int MinimumAcceptableAgentSurvivalChance = 20; // percent
+    private const int MoneyThresholdToFocusOnGatheringIntel = 1000;
     private readonly ILog _log;
 
     public BasicAIPlayerIntellect(ILog log)
@@ -220,7 +221,10 @@ public class BasicAIPlayerIntellect : IAIPlayerIntellect
             agents.Available.Count,
             Math.Max(agentsCanBeSentOnMissionNextTurnForSure.Count - desiredAgentReserve, 0));
 
-        int agentsToSendToGenerateIncome = agentsToSendToOps / 2;
+        int agentsToSendToGenerateIncome = 
+            state.Assets.Money < MoneyThresholdToFocusOnGatheringIntel 
+                ? agentsToSendToOps / 2 
+                : 0;
         int agentsToSendToGatherIntel = agentsToSendToOps - agentsToSendToGenerateIncome;
 
         controller.SendAgentsToGenerateIncome(
