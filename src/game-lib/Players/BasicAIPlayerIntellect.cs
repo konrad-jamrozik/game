@@ -29,9 +29,6 @@ public class BasicAIPlayerIntellect : IAIPlayerIntellect
         {
             MissionSite site = ChooseMissionSite(state);
             Agents agents = ChooseAgents(state);
-
-            // kja currently there is no incentive for launching missions. They don't give anything.
-            // Remains to be implemented: mission expiration.
             controller.LaunchMission(site, agents);
         }
 
@@ -83,13 +80,11 @@ public class BasicAIPlayerIntellect : IAIPlayerIntellect
     /// - recovery
     /// - operations, like gathering intel or generating income.
     /// </summary>
-    /// <param name="state"></param>
-    /// <returns></returns>
     private static int DesiredAgentFullComplement(GameStatePlayerView state)
         => state.Assets.MaxTransportCapacity * 2;
 
     private static bool CanLaunchSomeMission(GameStatePlayerView state)
-        => state.MissionSites.Any(site => site.IsActive)
+        => state.MissionSites.Active.Any()
            && state.Assets.CurrentTransportCapacity > 0
            && state.Assets.Agents.Any(agent => agent.CanBeSentOnMission);
 

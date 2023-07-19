@@ -19,7 +19,6 @@ public class AIPlayerTests
         _log = new Log(_config);
     }
 
-
     [Test]
     public void DoNothingAIPlayerIntellectPlaysGameUntilConclusion()
         => AIPlayerPlaysGameUntilConclusion(AIPlayer.Intellect.DoNothing);

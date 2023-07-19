@@ -25,7 +25,7 @@ public class Configuration
         //   [repo_root]/saves/
         //
         var saveFileDir = new Dir(fs, "./../../../../saves");
-        SaveFile = new File(saveFileDir, "savegame.txt");
+        SaveFile = new File(saveFileDir, "savegame.json");
         LogFile = new File(saveFileDir, "log.txt");
         // kja3 should have method here that returns handle to Lib.OS.File represented by SaveFileName
     }

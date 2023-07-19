@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using UfoGameLib.Rules;
 
 namespace UfoGameLib.Model;
@@ -5,6 +6,11 @@ namespace UfoGameLib.Model;
 public class Agents : List<Agent>
 {
     private readonly bool _terminated;
+
+    [JsonConstructor]
+    public Agents()
+    {
+    }
 
     public Agents(IEnumerable<Agent>? agents = null, bool terminated = false)
     {

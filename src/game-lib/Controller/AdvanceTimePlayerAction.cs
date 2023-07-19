@@ -28,8 +28,11 @@ public class AdvanceTimePlayerAction : PlayerAction
 
         (int successfulMissions, int failedMissions, int agentsTerminated) = EvaluateMissions(state);
 
+        int supportChangeFromExpiredMissionSites = UpdateActiveMissionSites(state);
+
         int fundingChange = Ruleset.ComputeFundingChange(successfulMissions, failedMissions);
-        int supportChange = Ruleset.ComputeSupportChange(successfulMissions, failedMissions);
+        int supportChangeFromMissions = Ruleset.ComputeSupportChangeFromMissions(successfulMissions, failedMissions);
+        int supportChange = supportChangeFromMissions + supportChangeFromExpiredMissionSites;
 
         // Note this funding change will get taken into account when computing money change this turn.
         state.Assets.Funding += fundingChange;
@@ -69,7 +72,9 @@ public class AdvanceTimePlayerAction : PlayerAction
         _log.Info($"    | Funding: {state.Assets.Funding}, " +
                   $"Funding change: {fundingChange}.");
         _log.Info($"    | Support: {state.Assets.Support}, " +
-                  $"Support change: {supportChange}.");
+                  $"Support change: {supportChange}, " +
+                  $"Support change from missions: {supportChangeFromMissions}, " +
+                  $"Support change from expired missions: {supportChangeFromExpiredMissionSites}.");
         _log.Info("");
     }
 
@@ -148,6 +153,25 @@ public class AdvanceTimePlayerAction : PlayerAction
         state.Assets.Agents.InTraining.ForEach(agent => agent.TurnsTrained++);
     }
 
+    private int UpdateActiveMissionSites(GameState state)
+    {
+        int supportChange = 0;
+        state.MissionSites.Active.ForEach(
+            missionSite =>
+            {
+                if (missionSite.ExpiresIn > 0)
+                    missionSite.ExpiresIn--;
+                else
+                {
+                    missionSite.IsActive = false;
+                    supportChange -= Ruleset.SupportPenaltyForExpiringMissionSite();
+                    _log.Info($"Mission site with ID {missionSite.Id,3} expired!");
+                }
+            }
+        );
+        return supportChange;
+    }
+
     private void CreateMissionSites(GameState state)
     {
         if (state.Timeline.CurrentTurn % 3 == 0)
@@ -155,7 +179,7 @@ public class AdvanceTimePlayerAction : PlayerAction
             int siteId = state.NextMissionSiteId;
             int difficulty = Ruleset.RollMissionSiteDifficulty(state.Timeline.CurrentTurn, _randomGen);
             _log.Info($"Add MissionSite with Id: {siteId}, difficulty: {difficulty}");
-            state.MissionSites.Add(new MissionSite(siteId, difficulty));
+            state.MissionSites.Add(new MissionSite(siteId, difficulty, expiresIn: 3));
         }
     }
 }

@@ -7,13 +7,17 @@ public class MissionSite : IIdentifiable
 {
     public readonly int Difficulty;
     public bool IsActive;
+    public int ExpiresIn;
 
     [JsonConstructor]
-    public MissionSite(int id, int difficulty)
+    public MissionSite(int id, int difficulty, int expiresIn)
     {
+        Debug.Assert(Difficulty >= 0);
+        Debug.Assert(ExpiresIn >= 0);
         Id = id;
         IsActive = true;
         Difficulty = difficulty;
+        ExpiresIn = expiresIn;
     }
 
     public int Id { get; }

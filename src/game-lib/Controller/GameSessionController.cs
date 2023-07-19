@@ -76,7 +76,6 @@ public class GameSessionController
     public void SendAgentsToGatherIntel(Agents agents)
         => PlayerActions.Apply(new SendAgentsToGatherIntelPlayerAction(_log, agents), GameSession.CurrentGameState);
 
-
     public void RecallAgents(Agents agents)
         => PlayerActions.Apply(new RecallAgentsPlayerAction(_log, agents), GameSession.CurrentGameState);
 

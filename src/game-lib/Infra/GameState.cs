@@ -45,6 +45,7 @@ public class GameState
             new Missions(),
             terminatedAgents: new Agents(terminated: true));
 
+    // kja need to add concept of winning the game. Win enough missions against each faction (first need to add factions).
     public bool IsGameOver => Assets.Money == 0 
                               || Assets.Funding == 0 
                               || Assets.Support == 0 
