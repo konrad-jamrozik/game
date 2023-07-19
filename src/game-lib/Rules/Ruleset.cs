@@ -43,9 +43,19 @@ public static class Ruleset
         return agentsSurviving >= agentsRequired;
     }
 
-    public static int AgentDeathThreshold(Agent agent, Mission mission) => Math.Max(mission.Site.Difficulty - AgentSurvivalSkill(agent), 0);
+    public static bool AgentCanSurvive(Agent agent, Mission mission)
+        => AgentCanSurvive(agent, mission.Site.Difficulty);
 
-    public static bool AgentCanSurvive(Agent agent, Mission mission) => AgentDeathThreshold(agent, mission) <= AgentSurvivalRollUpperBound;
+    public static bool AgentCanSurvive(Agent agent, int difficulty)
+        => AgentDeathThreshold(agent, difficulty) <= AgentSurvivalRollUpperBound;
+
+    public static int AgentDeathThreshold(Agent agent, Mission mission)
+        => AgentDeathThreshold(agent, mission.Site.Difficulty);
+
+    public static int AgentDeathThreshold(Agent agent, int difficulty)
+        => Math.Max(
+            difficulty - AgentSurvivalSkill(agent),
+            0);
 
     public static int AgentSurvivalSkill(Agent agent) => agent.TurnsTrained * AgentTrainingCoefficient;
 

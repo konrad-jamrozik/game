@@ -5,7 +5,7 @@ namespace UfoGameLib.Model;
 public class Assets
 {
     public int Money;
-    public int Intel;
+    public int Intel; // kja2 currently Intel has no use
     public int Funding;
     public int Support;
     public int CurrentTransportCapacity;
