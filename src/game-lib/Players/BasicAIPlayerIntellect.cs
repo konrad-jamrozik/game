@@ -8,6 +8,7 @@ namespace UfoGameLib.Players;
 
 public class BasicAIPlayerIntellect : IAIPlayerIntellect
 {
+    private const int MinimumAcceptableAgentSurvivalChance = 20; // percent
     private readonly ILog _log;
 
     public BasicAIPlayerIntellect(ILog log)
@@ -25,14 +26,54 @@ public class BasicAIPlayerIntellect : IAIPlayerIntellect
 
         RecallAgents(state, controller);
 
-        while (CanLaunchSomeMission(state))
-        {
-            MissionSite site = ChooseMissionSite(state);
-            Agents agents = ChooseAgents(state);
-            controller.LaunchMission(site, agents);
-        }
+        LaunchMissions(state, controller);
 
         AssignAvailableAgents(state, controller);
+    }
+
+    private static bool NoMissionsAvailable(GameStatePlayerView state) => !state.MissionSites.Active.Any();
+
+    private static bool NoAgentsCanBeSentOnMission(GameStatePlayerView state)
+        => !state.Assets.Agents.CanBeSentOnMission.Any();
+
+    private static bool NoTransportCapacityAvailable(GameStatePlayerView state)
+        => !TransportCapacityAvailable(state);
+
+    private static bool TransportCapacityAvailable(GameStatePlayerView state)
+        => state.Assets.CurrentTransportCapacity > 0;
+
+    /// <summary>
+    /// This is the desired minimum of agents that should be available for sending on missions and base defense.
+    /// </summary>
+    private static int DesiredAgentMinimalReserve(GameStatePlayerView state)
+        => state.Assets.MaxTransportCapacity;
+
+    /// <summary>
+    /// This is the desired amount of agents for full operational capacity, including:
+    /// - launching mission
+    /// - defending base / training
+    /// - recovery
+    /// - operations, like gathering intel or generating income.
+    /// </summary>
+    private static int DesiredAgentFullComplement(GameStatePlayerView state)
+        => state.Assets.MaxTransportCapacity * 2;
+
+    private void LaunchMissions(GameStatePlayerView state, GameSessionController controller)
+    {
+        if (NoMissionsAvailable(state) || NoAgentsCanBeSentOnMission(state) || NoTransportCapacityAvailable(state))
+            return;
+
+        var missionSitesOrdByDifficulty = state.MissionSites.Active.OrderBy(site => site.Difficulty).ToMissionSites();
+
+        while (missionSitesOrdByDifficulty.Any() && TransportCapacityAvailable(state))
+        {
+            var site = missionSitesOrdByDifficulty.First();
+            Agents agents = ChooseAgents(site, state);
+            if (agents.Any())
+                controller.LaunchMission(site, agents);
+            else
+                break;
+        }
     }
 
     private void RecallAgents(GameStatePlayerView state, GameSessionController controller)
@@ -57,7 +98,7 @@ public class BasicAIPlayerIntellect : IAIPlayerIntellect
         controller.RecallAgents(agentsToRecall);
 
         _log.Info(
-            $"AIPlayer: RecallAgents: " +
+            $"RecallAgents: " +
             $"agentsRecalled: {agentsToRecall.Count}, " +
             $"generatingIncome: {recalledGeneratingIncome}, " +
             $"gatheringIntel: {recalledGatheringIntel} | " +
@@ -67,37 +108,47 @@ public class BasicAIPlayerIntellect : IAIPlayerIntellect
             $"recallableAgents: {recallableAgentsCount}.");
     }
 
-    /// <summary>
-    /// This is the desired minimum of agents that should be available for sending on missions and base defense.
-    /// </summary>
-    private static int DesiredAgentMinimalReserve(GameStatePlayerView state)
-        => state.Assets.MaxTransportCapacity;
-
-    /// <summary>
-    /// This is the desired amount of agents for full operational capacity, including:
-    /// - launching mission
-    /// - defending base / training
-    /// - recovery
-    /// - operations, like gathering intel or generating income.
-    /// </summary>
-    private static int DesiredAgentFullComplement(GameStatePlayerView state)
-        => state.Assets.MaxTransportCapacity * 2;
-
-    private static bool CanLaunchSomeMission(GameStatePlayerView state)
-        => state.MissionSites.Active.Any()
-           && state.Assets.CurrentTransportCapacity > 0
-           && state.Assets.Agents.Any(agent => agent.CanBeSentOnMission);
-
-    private static MissionSite ChooseMissionSite(GameStatePlayerView state)
-        => state.MissionSites.First(site => site.IsActive);
-
-    private static Agents ChooseAgents(GameStatePlayerView state)
+    private Agents ChooseAgents(MissionSite site, GameStatePlayerView state)
     {
-        Agents agents = state.Assets.Agents.CanBeSentOnMission
+        Debug.Assert(state.Assets.CurrentTransportCapacity > 0);
+        _log.Info($"Choosing agents to launch for mission site ID: {site.Id}");
+
+        Agents candidateAgents = state.Assets.Agents.CanBeSentOnMission.OrderByDescending(Ruleset.AgentSurvivalSkill)
+            .ToAgents();
+
+        if (!candidateAgents.Any())
+        {
+            _log.Info($"There are no agents left. Not launching mission for site ID: {site.Id}");
+            return new Agents();
+        }
+
+        Agents candidateAgentsThatCanSurvive = candidateAgents
+            .Where(agent => Ruleset.AgentSurvivalChance(agent, site.Difficulty) >= MinimumAcceptableAgentSurvivalChance)
+            .ToAgents();
+
+        if (!candidateAgentsThatCanSurvive.Any())
+        {
+            _log.Info(
+                $"There are {candidateAgents.Count} agents left but no agents that could survive mission site " +
+                $"with difficulty {site.Difficulty} with " +
+                $"the minimum acceptable survival chance of {MinimumAcceptableAgentSurvivalChance}%. " +
+                $"Not launching mission for site ID: {site.Id}");
+            return new Agents();
+        }
+
+        Agents agents = candidateAgentsThatCanSurvive
             .Take(state.Assets.CurrentTransportCapacity)
             .ToAgents();
 
-        Debug.Assert(agents.Count > 0);
+        int requiredSurvivingAgentsForSuccess = Ruleset.RequiredSurvivingAgentsForSuccess(site);
+        if (requiredSurvivingAgentsForSuccess > agents.Count)
+        {
+            _log.Info(
+                $"There are {agents.Count} agents that could be transported to the mission site and survive, " +
+                $"but the mission site requires at least {requiredSurvivingAgentsForSuccess} agents. " +
+                $"Not launching mission for site ID: {site.Id}");
+            return new Agents();
+        }
 
         return agents;
     }
@@ -125,7 +176,7 @@ public class BasicAIPlayerIntellect : IAIPlayerIntellect
             maxAgentIncrease);
 
         _log.Info(
-            $"AIPlayer: ComputeAgentsToHire: " +
+            $"ComputeAgentsToHire: " +
             $"agentsToHire: {agentsToHire} | " +
             $"desiredAgentCount: {desiredAgentCount}, " +
             $"agentsMissingToDesired: {agentsMissingToDesired}, " +
@@ -166,9 +217,9 @@ public class BasicAIPlayerIntellect : IAIPlayerIntellect
         // This way, the next turn there will be 12 agents in reserve (as desired):
         //   5 in training, 3 currently in transit and 4 currently on mission.
         int agentsToSendToOps = Math.Min(
-            agents.Available.Count, 
+            agents.Available.Count,
             Math.Max(agentsCanBeSentOnMissionNextTurnForSure.Count - desiredAgentReserve, 0));
-        
+
         int agentsToSendToGenerateIncome = agentsToSendToOps / 2;
         int agentsToSendToGatherIntel = agentsToSendToOps - agentsToSendToGenerateIncome;
 
@@ -178,13 +229,13 @@ public class BasicAIPlayerIntellect : IAIPlayerIntellect
             controller.RandomGen.Pick(agents.Available, agentsToSendToGatherIntel).ToAgents());
 
         int agentsSentToTraining = agents.Available.Count;
-        
+
         // Send all remaining agents to training. Such agents are available immediately,
         // so they count towards the desired agent reserve.
         controller.SendAgentsToTraining(agents.Available);
 
         _log.Info(
-            $"AIPlayer: AssignAvailableAgents: " +
+            $"AssignAvailableAgents: " +
             $"agentsSentToOps: {agentsToSendToOps}, " +
             $"agentsSentToGenerateIncome: {agentsToSendToGenerateIncome}, " +
             $"agentsSentToGatherIntel: {agentsToSendToGatherIntel}, " +
@@ -192,8 +243,10 @@ public class BasicAIPlayerIntellect : IAIPlayerIntellect
             $"desiredAgentReserve: {desiredAgentReserve}, " +
             $"availableAgents: {initialAvailableAgents}.");
 
-        Debug.Assert(state.Assets.Agents.GeneratingIncome.Count == initialAgentsGeneratingIncome + agentsToSendToGenerateIncome);
-        Debug.Assert(state.Assets.Agents.GatheringIntel.Count == initialAgentsGatheringIntel + agentsToSendToGatherIntel);
+        Debug.Assert(
+            state.Assets.Agents.GeneratingIncome.Count == initialAgentsGeneratingIncome + agentsToSendToGenerateIncome);
+        Debug.Assert(
+            state.Assets.Agents.GatheringIntel.Count == initialAgentsGatheringIntel + agentsToSendToGatherIntel);
         Debug.Assert(state.Assets.Agents.InTraining.Count == initialAgentsInTraining + agentsSentToTraining);
         Debug.Assert(state.Assets.Agents.Available.Count == 0);
     }

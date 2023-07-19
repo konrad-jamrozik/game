@@ -28,14 +28,23 @@ public static class Ruleset
         ILog log)
     {
         int survivalRoll = randomGen.Roll1To(AgentSurvivalRollUpperBound);
-        int deathThreshold = AgentDeathThreshold(agent, mission);
-        bool survived = survivalRoll > deathThreshold;
+        int survivalThreshold = AgentSurvivalThreshold(agent, mission);
+
+        // For an agent to survive, they must roll above the survival threshold, in the range [1..100].
+        // Survival threshold of 0 means agent always survives. 
+        // Survival threshold of 100 means agent never survives.
+        bool survived = survivalRoll > survivalThreshold;
         log.Info(
             $"Agent with ID {agent.Id,4} survived: {survived,5}. Skill: {AgentSurvivalSkill(agent),3}. " +
-            $"Roll: {survivalRoll,3} { (survived ? "> " : "<=") } {deathThreshold}");
+            $"Roll: {survivalRoll,3} { (survived ? "> " : "<=") } {survivalThreshold}");
 
         return survived;
     }
+
+    // The implementation of this method is a formula describing 
+    // the implementation of RollForAgentSurvival.
+    public static int AgentSurvivalChance(Agent agent, int difficulty)
+        => AgentSurvivalRollUpperBound - AgentSurvivalThreshold(agent, difficulty);
 
     public static bool MissionSuccessful(Mission mission, int agentsSurviving)
     {
@@ -47,25 +56,29 @@ public static class Ruleset
         => AgentCanSurvive(agent, mission.Site.Difficulty);
 
     public static bool AgentCanSurvive(Agent agent, int difficulty)
-        => AgentDeathThreshold(agent, difficulty) <= AgentSurvivalRollUpperBound;
+        => AgentSurvivalThreshold(agent, difficulty) <= AgentSurvivalRollUpperBound;
 
-    public static int AgentDeathThreshold(Agent agent, Mission mission)
-        => AgentDeathThreshold(agent, mission.Site.Difficulty);
+    public static int AgentSurvivalThreshold(Agent agent, Mission mission)
+        => AgentSurvivalThreshold(agent, mission.Site.Difficulty);
 
-    public static int AgentDeathThreshold(Agent agent, int difficulty)
+    public static int AgentSurvivalThreshold(Agent agent, int difficulty)
         => Math.Max(
             difficulty - AgentSurvivalSkill(agent),
             0);
 
     public static int AgentSurvivalSkill(Agent agent) => agent.TurnsTrained * AgentTrainingCoefficient;
 
-    public static int RollMissionSiteDifficulty(int currentTurn, RandomGen randomGen)
+    public static (int difficulty, int difficultyFromTurn, int roll) RollMissionSiteDifficulty(
+            int currentTurn,
+            RandomGen randomGen)
+    {
         // Note that currently the only way of increasing agents survivability of difficulty
         // is via training. As such, if difficulty due to turn would grow at least as fast as Agent.TrainingCoefficient,
         // then at some point missions would become impossible, as all agents would die.
-        => BaseMissionSiteDifficulty 
-           + (currentTurn * AgentTrainingCoefficient / 4)
-           + randomGen.Roll0To(30);
+        int roll = randomGen.Roll0To(30);
+        int difficultyFromTurn = currentTurn * AgentTrainingCoefficient / 2;
+        return (BaseMissionSiteDifficulty + difficultyFromTurn + roll, difficultyFromTurn, roll);
+    }
 
     public static int RequiredSurvivingAgentsForSuccess(MissionSite site)
     {

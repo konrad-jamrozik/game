@@ -26,7 +26,6 @@ public class LaunchMissionPlayerAction : PlayerAction
         Debug.Assert(_agents.Count > 0);
         _agents.ForEach(agent => Debug.Assert(agent.CanBeSentOnMission));
         Debug.Assert(state.Assets.CurrentTransportCapacity >= _agents.Count);
-        // kja improve the AI player so it doesn't trip over this
         Debug.Assert(_agents.Count >= Ruleset.RequiredSurvivingAgentsForSuccess(_site), 
             $"Cannot launch a mission with not enough agents to win it! " +
             $"_agents.Count: {_agents.Count} " +
@@ -35,7 +34,6 @@ public class LaunchMissionPlayerAction : PlayerAction
         int missionId = state.NextMissionId;
         var mission = new Mission(missionId, _site);
 
-        // kja improve the AI player so it doesn't trip over this
         Debug.Assert(_agents.All(agent => Ruleset.AgentCanSurvive(agent, mission)));
 
         state.Missions.Add(mission);
@@ -44,6 +42,6 @@ public class LaunchMissionPlayerAction : PlayerAction
 
         state.Assets.CurrentTransportCapacity -= _agents.Count;
 
-        _log.Info($"Launch mission. MissionId: {mission.Id}, SiteId: {_site.Id}, AgentCount: {_agents.Count}");
+        _log.Info($"Launch mission. MissionID: {mission.Id}, SiteID: {_site.Id}, AgentCount: {_agents.Count}");
     }
 }

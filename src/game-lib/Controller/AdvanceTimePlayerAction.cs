@@ -110,7 +110,7 @@ public class AdvanceTimePlayerAction : PlayerAction
             ? Mission.State.Success
             : Mission.State.Failed;
         
-        _log.Info($"Evaluated mission with ID {mission.Id}. result: {mission.CurrentState,7}, " +
+        _log.Info($"Evaluated mission with ID: {mission.Id}. result: {mission.CurrentState,7}, " +
                   $"difficulty: {mission.Site.Difficulty}, " +
                   $"agents: surviving / required: {agentsSurviving} / {agentsRequired}, " +
                   $"terminated / sent: {agentsTerminated} / {agentsSent}.");
@@ -165,7 +165,7 @@ public class AdvanceTimePlayerAction : PlayerAction
                 {
                     missionSite.IsActive = false;
                     supportChange -= Ruleset.SupportPenaltyForExpiringMissionSite();
-                    _log.Info($"Mission site with ID {missionSite.Id,3} expired!");
+                    _log.Info($"Mission site with ID: {missionSite.Id,3} expired!");
                 }
             }
         );
@@ -177,8 +177,12 @@ public class AdvanceTimePlayerAction : PlayerAction
         if (state.Timeline.CurrentTurn % 3 == 0)
         {
             int siteId = state.NextMissionSiteId;
-            int difficulty = Ruleset.RollMissionSiteDifficulty(state.Timeline.CurrentTurn, _randomGen);
-            _log.Info($"Add MissionSite with Id: {siteId}, difficulty: {difficulty}");
+            (int difficulty, int difficultyFromTurn, int roll) =
+                Ruleset.RollMissionSiteDifficulty(state.Timeline.CurrentTurn, _randomGen);
+            _log.Info($"Add MissionSite with ID: {siteId}, " +
+                      $"difficulty: {difficulty}, " +
+                      $"difficultyFromTurn: {difficultyFromTurn}, " +
+                      $"difficultyRoll: {roll}.");
             state.MissionSites.Add(new MissionSite(siteId, difficulty, expiresIn: 3));
         }
     }
