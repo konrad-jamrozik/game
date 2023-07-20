@@ -12,7 +12,7 @@ public class Agent
         Training,
         GatheringIntel,
         GeneratingIncome,
-        Recovering, // kja2 Recovering Currently unused
+        Recovering,
         Terminated
     }
 
@@ -20,20 +20,22 @@ public class Agent
     public State CurrentState;
     public Mission? CurrentMission;
     public int TurnsTrained;
+    public int RecoversIn;
 
     // ReSharper disable once IntroduceOptionalParameters.Global
-    public Agent(int id) : this(id, State.InTransit, currentMission: null, turnsTrained: 0)
+    public Agent(int id) : this(id, State.InTransit, currentMission: null, turnsTrained: 0, recoversIn: 0)
     {
     }
 
     [JsonConstructor]
-    public Agent(int id, State currentState, Mission? currentMission, int turnsTrained)
+    public Agent(int id, State currentState, Mission? currentMission, int turnsTrained, int recoversIn)
     {
         Id = id;
         CurrentState = currentState;
         CurrentMission = currentMission;
         TurnsTrained = turnsTrained;
         AssertMissionInvariant();
+        RecoversIn = recoversIn;
     }
 
     [JsonIgnore]
@@ -52,7 +54,15 @@ public class Agent
     public bool IsGeneratingIncome => CurrentState == State.GeneratingIncome;
 
     [JsonIgnore]
-    public bool IsRecovering => CurrentState == State.Recovering;
+    public bool IsRecovering
+    {
+        get
+        {
+            bool isRecovering = CurrentState == State.Recovering;
+            Debug.Assert(!isRecovering || RecoversIn > 0);
+            return isRecovering;
+        }
+    }
 
     [JsonIgnore]
     public bool IsInTransit => CurrentState == State.InTransit;
@@ -130,6 +140,29 @@ public class Agent
             CurrentMission = null;
         CurrentState = State.Available;
         AssertMissionInvariant();
+    }
+
+    public void SetRecoversIn(int recoversIn)
+    {
+        Debug.Assert(recoversIn > 0);
+        
+        if (IsOnMission)
+            CurrentMission = null;
+
+        CurrentState = State.Recovering;
+        RecoversIn = recoversIn;
+
+        AssertMissionInvariant();
+    }
+
+    public void TickRecovery()
+    {
+        Debug.Assert(RecoversIn > 0);
+
+        RecoversIn--;
+
+        if (RecoversIn == 0)
+            MakeAvailable();
     }
 
     public void Recall()

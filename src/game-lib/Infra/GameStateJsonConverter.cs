@@ -123,7 +123,8 @@ class GameStateJsonConverter : JsonConverterSupportingReferences<GameState>
                         id: DeserializeInt(agentObj,nameof(Agent.Id)),
                         currentState: DeserializeEnum<Agent.State>(agentObj, nameof(Agent.CurrentState)),
                         currentMission: mission,
-                        turnsTrained: DeserializeInt(agentObj, nameof(Agent.TurnsTrained)))));
+                        turnsTrained: DeserializeInt(agentObj, nameof(Agent.TurnsTrained)),
+                        recoversIn: DeserializeInt(agentObj, nameof(Agent.RecoversIn)))));
 
         var assets = new Assets(
             money: DeserializeInt(assetsNode, nameof(Assets.Money)),

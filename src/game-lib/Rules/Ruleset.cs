@@ -20,7 +20,7 @@ public static class Ruleset
 
     public const int BaseMissionSiteDifficulty = 30;
 
-    public static bool RollForAgentSurvival(
+    public static (bool survived, int recoversIn) RollForAgentSurvival(
         Agent agent,
         Mission mission,
         RandomGen randomGen,
@@ -33,11 +33,28 @@ public static class Ruleset
         // Survival threshold of 0 means agent always survives. 
         // Survival threshold of 100 means agent never survives.
         bool survived = survivalRoll > survivalThreshold;
+        int recoversIn = ComputeRecoversIn(survived, survivalRoll, survivalThreshold);
         log.Info(
-            $"Agent with ID {agent.Id,4} survived: {survived,5}. Skill: {AgentSurvivalSkill(agent),3}. " +
-            $"Roll: {survivalRoll,3} { (survived ? "> " : "<=") } {survivalThreshold}");
+            $"Agent with ID {agent.Id,4} survived: {survived,5}. " +
+            $"Skill: {AgentSurvivalSkill(agent),3}. " +
+            $"Roll: {survivalRoll,3} { (survived ? "> " : "<=") } {survivalThreshold}." +
+            $"{(survived ? $" RecoversIn: {recoversIn,3}." : "")}"
+            );
 
-        return survived;
+        return (survived, recoversIn);
+    }
+
+    private static int ComputeRecoversIn(bool survived, int survivalRoll, int survivalThreshold)
+    {
+        if (!survived)
+            return 0;
+
+        int aboveThreshold = survivalRoll - survivalThreshold;
+        Debug.Assert(aboveThreshold  >= 1);
+
+        int recoversIn = Math.Max(31 - aboveThreshold, 0);
+
+        return recoversIn;
     }
 
     // The implementation of this method is a formula describing 

@@ -131,27 +131,38 @@ public class AdvanceTimePlayerAction : PlayerAction
 
         foreach (Agent agent in agentsOnMission)
         {
-            bool survived = Ruleset.RollForAgentSurvival(agent, mission, _randomGen, _log);
+            (bool survived, int recoversIn) = Ruleset.RollForAgentSurvival(agent, mission, _randomGen, _log);
 
             if (survived)
             {
-                agent.MakeAvailable();
                 agentsSurviving++;
+                if (recoversIn > 0)
+                    agent.SetRecoversIn(recoversIn);
+                else
+                    agent.MakeAvailable();
             }
             else
             {
-                state.Terminate(agent);
                 agentsTerminated++;
+                state.Terminate(agent);
             }
         }
 
         return (agentsSent, agentsSurviving, agentsTerminated);
     }
 
-    private static void UpdateAgentStates(GameState state)
+    private void UpdateAgentStates(GameState state)
     {
         state.Assets.Agents.InTransit.ForEach(agent => agent.MakeAvailable());
         state.Assets.Agents.InTraining.ForEach(agent => agent.TurnsTrained++);
+        state.Assets.Agents.Recovering.ForEach(agent =>
+        {
+            agent.TickRecovery();
+            if (agent.IsAvailable)
+            {
+                _log.Info($"Agent with ID: {agent.Id,3} fully recovered! Skill: {Ruleset.AgentSurvivalSkill(agent),3}.");
+            }
+        });
     }
 
     private (int supportChange, int expiredMissions) UpdateActiveMissionSites(GameState state)
