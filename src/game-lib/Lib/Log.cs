@@ -1,5 +1,6 @@
 using System.Runtime.CompilerServices;
 using System.Text;
+using UfoGameLib.Controller;
 
 namespace UfoGameLib.Lib;
 
@@ -21,6 +22,10 @@ public class Log : ILog
         [CallerFilePath] string? callerFilePath = null,
         [CallerMemberName] string? callerMemberName = null)
     {
+        // kja temp disable logs except GameStateDiff
+        if (!callerFilePath!.Contains(nameof(GameStateDiff)))
+            return;
+
         string log = LogPrefix(callerFilePath, callerMemberName) + message;
         Console.WriteLine(log);
         _logs.AppendLine(log);

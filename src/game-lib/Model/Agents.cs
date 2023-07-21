@@ -4,14 +4,14 @@ namespace UfoGameLib.Model;
 
 public class Agents : List<Agent>
 {
-    private readonly bool _terminated;
+    private readonly bool? _terminated;
 
     [JsonConstructor]
     public Agents()
     {
     }
 
-    public Agents(IEnumerable<Agent>? agents = null, bool terminated = false)
+    public Agents(IEnumerable<Agent>? agents = null, bool? terminated = false)
     {
         _terminated = terminated;
         AddRange(agents ?? new List<Agent>());
@@ -71,10 +71,17 @@ public class Agents : List<Agent>
 
     private void AssertAliveness(IEnumerable<Agent> agents)
     {
-        if (_terminated)
-            AssertTerminated(agents);
-        else
-            AssertAlive(agents);
+        switch (_terminated)
+        {
+            case null:
+                return;
+            case true:
+                AssertTerminated(agents);
+                break;
+            default:
+                AssertAlive(agents);
+                break;
+        }
     }
 
     private void AssertTerminated(IEnumerable<Agent> agents)

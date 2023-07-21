@@ -88,7 +88,7 @@ public class GameSessionTests
         Assert.Multiple(() => {
             Assert.That(finalState.Timeline.CurrentTurn, Is.EqualTo(4), "currentTurn");
             Assert.That(
-                finalState.Assets.Agents.Count + finalState.TerminatedAgents.Count,
+                finalState.AllAgents.Count,
                 Is.EqualTo(3),
                 "agentsHiredCount");
             Assert.That(finalState.Missions, Has.Count.EqualTo(1), "missionsLaunchedCount");

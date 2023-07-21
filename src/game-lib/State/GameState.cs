@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using UfoGameLib.Model;
 
 namespace UfoGameLib.State;
@@ -55,7 +56,7 @@ public class GameState
 
     public bool IsGameWon => Assets.Intel >= Ruleset.IntelToWin;
 
-    public int NextAgentId => Assets.Agents.Count + TerminatedAgents.Count;
+    public int NextAgentId => AllAgents.Count;
     public int NextMissionId => Missions.Count;
     public int NextMissionSiteId => MissionSites.Count;
 
@@ -65,4 +66,7 @@ public class GameState
         agent.Terminate(sack);
         TerminatedAgents.Add(agent);
     }
+
+    [JsonIgnore]
+    public Agents AllAgents => (Assets.Agents.Concat(TerminatedAgents).ToAgents(terminated: null));
 }
