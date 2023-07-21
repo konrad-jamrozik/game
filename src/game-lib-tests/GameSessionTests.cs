@@ -63,6 +63,7 @@ public class GameSessionTests
     {
         var session = new GameSession(_randomGen);
         var controller = new GameSessionController(_config, _log, session);
+        var turnController = controller.TurnController;
 
         GameState startingState = session.CurrentGameState;
 
@@ -75,11 +76,11 @@ public class GameSessionTests
             });
 
         // Act
-        controller.HireAgents(count: 3);
+        turnController.HireAgents(count: 3);
         controller.AdvanceTime();
         controller.AdvanceTime();
         MissionSite site = controller.GameStatePlayerView.MissionSites.First();
-        controller.LaunchMission(site, agentCount: 3);
+        turnController.LaunchMission(site, agentCount: 3);
         controller.AdvanceTime();
 
         var finalState = session.CurrentGameState;
@@ -145,17 +146,18 @@ public class GameSessionTests
     {
         var session = new GameSession(_randomGen);
         var controller = new GameSessionController(_config, _log, session);
+        var turnController = controller.TurnController;
 
         controller.AdvanceTime();
         controller.AdvanceTime();
-        controller.HireAgents(5);
+        turnController.HireAgents(5);
         // Need to advance time here so that hired agents are no longer InTransit and can be
         // sent on a mission.
         controller.AdvanceTime();
 
-        controller.SackAgent(id: 0);
+        turnController.SackAgent(id: 0);
 
-        controller.LaunchMission(
+        turnController.LaunchMission(
             controller.GameStatePlayerView.MissionSites.First(),
             agentCount: 3);
 
@@ -189,15 +191,16 @@ public class GameSessionTests
     {
         var session = new GameSession(_randomGen);
         var controller = new GameSessionController(_config, _log, session);
+        var turnController = controller.TurnController;
 
         controller.AdvanceTime();
         controller.AdvanceTime();
-        controller.HireAgents(10);
+        turnController.HireAgents(10);
         // Need to advance time here so that hired agents are no longer InTransit and can be
         // sent on a mission.
         controller.AdvanceTime();
 
-        controller.LaunchMission(
+        turnController.LaunchMission(
             controller.GameStatePlayerView.MissionSites.First(),
             agentCount: controller.GameStatePlayerView.Assets.CurrentTransportCapacity);
 

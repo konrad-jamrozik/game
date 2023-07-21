@@ -34,16 +34,16 @@ internal static class Program
         Console.WriteLine("Time advanced.");
     }
 
-    private static void InvokeHireAgents(GameSessionController game, int count)
+    private static void InvokeHireAgents(GameSessionController controller, int count)
     {
-        game.HireAgents(count);
+        controller.TurnController.HireAgents(count);
         Console.WriteLine($"Hired {count} agents.");
     }
 
-    private static void InvokeLaunchMission(GameSessionController game, int siteId, int count, string region)
+    private static void InvokeLaunchMission(GameSessionController controller, int siteId, int count, string region)
     {
-        MissionSite site = game.GameStatePlayerView.MissionSites.Single(site => site.Id == siteId);
-        game.LaunchMission(site, count);
+        MissionSite site = controller.GameStatePlayerView.MissionSites.Single(site => site.Id == siteId);
+        controller.TurnController.LaunchMission(site, count);
         Console.WriteLine($"Launched mission with {count} agents in region {region}.");
     }
 

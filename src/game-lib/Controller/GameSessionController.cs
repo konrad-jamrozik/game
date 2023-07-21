@@ -40,20 +40,18 @@ namespace UfoGameLib.Controller;
 public class GameSessionController
 {
     public static readonly JsonSerializerOptions SaveJsonSerializerOptions = JsonSerializerOptions();
+    public readonly GameTurnController TurnController;
     protected readonly GameSession GameSession;
     private readonly Configuration _config;
     private readonly ILog _log;
-    private readonly GameTurnController _turnController;
 
     public GameSessionController(Configuration config, ILog log, GameSession gameSession)
     {
         _config = config;
         _log = log;
         GameSession = gameSession;
-        _turnController = new GameTurnController(_log, GameSession.CurrentGameState);
+        TurnController = new GameTurnController(_log, GameSession.RandomGen, GameSession.CurrentGameState);
     }
-
-    public RandomGen RandomGen => GameSession.RandomGen;
 
     public GameStatePlayerView GameStatePlayerView => new GameStatePlayerView(GameSession);
 
@@ -62,11 +60,11 @@ public class GameSessionController
         Debug.Assert(GameStatePlayerView.CurrentTurn == Timeline.InitialTurn);
         Debug.Assert(turnLimit is >= Timeline.InitialTurn and <= GameState.MaxTurnLimit);
 
-        GameStatePlayerView state = GameStatePlayerView;
+        GameState state = GameSession.CurrentGameState;
 
-        while (!state.IsGameOver && state.CurrentTurn < turnLimit)
+        while (!state.IsGameOver && state.Timeline.CurrentTurn < turnLimit)
         {
-            player.PlayGameTurn(state, this);
+            player.PlayGameTurn(GameStatePlayerView, TurnController);
 
             AdvanceTime();
         }
@@ -77,41 +75,14 @@ public class GameSessionController
                   $"intel: {state.Assets.Intel}, " +
                   $"funding: {state.Assets.Funding}, " +
                   $"support: {state.Assets.Support}, " +
-                  $"turn: {state.CurrentTurn} / {turnLimit}.");
+                  $"turn: {state.Timeline.CurrentTurn} / {turnLimit}.");
 
         Save();
     }
 
     public void AdvanceTime()
-        => PlayerActions.Apply(new AdvanceTimePlayerAction(_log, RandomGen), GameSession.CurrentGameState);
+        => PlayerActions.Apply(new AdvanceTimePlayerAction(_log, GameSession.RandomGen), GameSession.CurrentGameState);
 
-    public void HireAgents(int count)
-        => _turnController.HireAgents(count);
-
-    public void SackAgent(int id)
-        => _turnController.SackAgent(id);
-
-    public void SendAgentsToTraining(Agents agents)
-        => _turnController.SendAgentsToTraining(agents);
-
-    public void SendAgentsToGenerateIncome(Agents agents)
-        => _turnController.SendAgentsToGenerateIncome(agents);
-
-    public void SendAgentsToGatherIntel(Agents agents)
-        => _turnController.SendAgentsToGatherIntel(agents);
-
-    public void RecallAgents(Agents agents)
-        => _turnController.RecallAgents(agents);
-
-    /// <summary>
-    /// Convenience method. LaunchMission, but instead of choosing specific agents,
-    /// choose up to first agentCount agents that can be sent on a mission.
-    /// </summary>
-    public void LaunchMission(MissionSite site, int agentCount)
-        => _turnController.LaunchMission(site, agentCount);
-
-    public void LaunchMission(MissionSite site, Agents agents)
-        => _turnController.LaunchMission(site, agents);
 
     // kja3 introduce "SerializedJsonFile" abstraction that will retain the serialization options
     public void Save()

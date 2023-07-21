@@ -16,7 +16,7 @@ public class BasicAIPlayerIntellect : IPlayer
         _log = log;
     }
 
-    public void PlayGameTurn(GameStatePlayerView state, GameSessionController controller)
+    public void PlayGameTurn(GameStatePlayerView state, GameTurnController controller)
     {
         int agentsToHire = ComputeAgentsToHire(state);
         if (agentsToHire > 0)
@@ -56,7 +56,7 @@ public class BasicAIPlayerIntellect : IPlayer
     private static int DesiredAgentFullComplement(GameStatePlayerView state)
         => state.Assets.MaxTransportCapacity * 2;
 
-    private void LaunchMissions(GameStatePlayerView state, GameSessionController controller)
+    private void LaunchMissions(GameStatePlayerView state, GameTurnController controller)
     {
         if (NoMissionsAvailable(state) || NoAgentsCanBeSentOnMission(state) || NoTransportCapacityAvailable(state))
             return;
@@ -74,7 +74,7 @@ public class BasicAIPlayerIntellect : IPlayer
         }
     }
 
-    private void RecallAgents(GameStatePlayerView state, GameSessionController controller)
+    private void RecallAgents(GameStatePlayerView state, GameTurnController controller)
     {
         Agents agents = state.Assets.Agents;
 
@@ -186,7 +186,7 @@ public class BasicAIPlayerIntellect : IPlayer
         return agentsToHire;
     }
 
-    private void AssignAvailableAgents(GameStatePlayerView state, GameSessionController controller)
+    private void AssignAvailableAgents(GameStatePlayerView state, GameTurnController controller)
     {
         int desiredAgentReserve = DesiredAgentMinimalReserve(state);
         Agents agents = state.Assets.Agents;

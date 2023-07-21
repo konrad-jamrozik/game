@@ -9,11 +9,14 @@ public class GameTurnController
     private readonly ILog _log;
     private readonly GameState _gameState;
 
-    public GameTurnController(ILog log, GameState gameState)
+    public GameTurnController(ILog log, RandomGen randomGen, GameState gameState)
     {
         _log = log;
+        RandomGen = randomGen;
         _gameState = gameState;
     }
+
+    public RandomGen RandomGen { get; }
 
     public void HireAgents(int count)
         => PlayerActions.Apply(new HireAgentsPlayerAction(_log, count), _gameState);
