@@ -1,4 +1,3 @@
-using Lib.Primitives;
 using UfoGameLib.Lib;
 using UfoGameLib.Model;
 using UfoGameLib.State;
@@ -35,6 +34,7 @@ internal class GameStateDiff
             });
     }
 
+    // kja this is not that useful, at least for now.
     private string AgentDiffLog(Agent? prev, Agent curr)
     {
         string prevState = prev?.CurrentState.ToString() ?? "";

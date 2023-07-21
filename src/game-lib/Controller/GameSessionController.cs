@@ -84,6 +84,9 @@ public class GameSessionController
 
         // kja read all the previous diff reports and create game timeline json report for various entities, like 
         // player resource stats and agents whereabouts.
+        // Dump the data to Csv, so it can be post-processed, e.g. by Excel. Maybe TabularData from lib will help.
+        // In Excel, all one will have to do is to hit refresh on the data sources once the simulation reruns
+        // and dumps results to .csv files.
 
         _log.Info($"Game over! " +
                   $"Game result: {(state.IsGameLost ? "lost" : state.IsGameWon ? "won" : "undecided")}, " +
