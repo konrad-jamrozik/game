@@ -1,4 +1,4 @@
-namespace UfoGameLib.Infra;
+namespace UfoGameLib.State;
 
 public class GameStateUpdateLog
 {}

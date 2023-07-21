@@ -1,5 +1,5 @@
 using UfoGameLib.Controller;
-using UfoGameLib.Infra;
+using UfoGameLib.State;
 
 namespace UfoGameLib.Players;
 

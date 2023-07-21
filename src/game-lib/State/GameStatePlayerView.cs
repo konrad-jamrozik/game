@@ -1,6 +1,6 @@
 using UfoGameLib.Model;
 
-namespace UfoGameLib.Infra;
+namespace UfoGameLib.State;
 
 public class GameStatePlayerView
 {

@@ -1,6 +1,6 @@
-using UfoGameLib.Infra;
 using UfoGameLib.Lib;
 using UfoGameLib.Model;
+using UfoGameLib.State;
 
 namespace UfoGameLib.Controller;
 

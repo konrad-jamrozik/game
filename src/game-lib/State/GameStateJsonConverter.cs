@@ -4,7 +4,7 @@ using System.Text.Json.Serialization;
 using Lib.Json;
 using UfoGameLib.Model;
 
-namespace UfoGameLib.Infra;
+namespace UfoGameLib.State;
 
 /// <summary>
 /// This converter exists to enable saving the GameState to file system as json

@@ -1,8 +1,8 @@
 using Lib.OS;
 using UfoGameLib.Controller;
-using UfoGameLib.Infra;
 using UfoGameLib.Lib;
 using UfoGameLib.Players;
+using UfoGameLib.State;
 
 namespace UfoGameLib.Tests;
 

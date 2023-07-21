@@ -1,6 +1,6 @@
 using UfoGameLib.Lib;
 
-namespace UfoGameLib.Infra;
+namespace UfoGameLib.State;
 
 /// <summary>
 /// GameSession represents an instance of a game session (a playthrough).
