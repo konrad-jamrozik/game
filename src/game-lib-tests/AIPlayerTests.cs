@@ -25,7 +25,7 @@ public class AIPlayerTests
 
     [Test]
     public void BasicAIPlayerIntellectPlaysGameUntilConclusion()
-        => AIPlayerPlaysGameUntilConclusion(AIPlayer.Intellect.Basic, turnLimit: 20); // kja temp different. Should be 200.
+        => AIPlayerPlaysGameUntilConclusion(AIPlayer.Intellect.Basic, turnLimit: 50);
 
     [TearDown]
     public void TearDown()

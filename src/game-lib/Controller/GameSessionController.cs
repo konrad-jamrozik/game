@@ -1,4 +1,3 @@
-using System.Text.Json;
 using Lib.Json;
 using UfoGameLib.Lib;
 using UfoGameLib.Model;
@@ -39,7 +38,6 @@ namespace UfoGameLib.Controller;
 /// </summary>
 public class GameSessionController
 {
-    public static readonly JsonSerializerOptions SaveJsonSerializerOptions = JsonSerializerOptions();
     public readonly GameTurnController TurnController;
     protected readonly GameSession GameSession;
     private readonly Configuration _config;
@@ -65,7 +63,7 @@ public class GameSessionController
         while (!state.IsGameOver && state.Timeline.CurrentTurn < turnLimit)
         {
             // This persists the game state at player turn beginning.
-            PersistGameStateAsPrevious();
+            GameSession.SaveState();
 
             player.PlayGameTurn(GameStatePlayerView, TurnController);
 
@@ -74,7 +72,7 @@ public class GameSessionController
 
             // This persists the game state after the player took their actions in their turn,
             // but before the turn time was advanced.
-            PersistGameStateAsPrevious();
+            GameSession.SaveState();
 
             AdvanceTime();
 
@@ -108,9 +106,6 @@ public class GameSessionController
         new GameStateDiff(prev, curr).PrintTo(_log);
     }
 
-    private void PersistGameStateAsPrevious()
-        => GameSession.PreviousGameState = GameSession.CurrentGameState.Clone(SaveJsonSerializerOptions);
-
     public void AdvanceTime()
         => PlayerActions.Apply(new AdvanceTimePlayerAction(_log, GameSession.RandomGen), GameSession.CurrentGameState);
 
@@ -123,43 +118,15 @@ public class GameSessionController
 
     public GameState Load()
     {
-        var loadedGameState =
-            _config.SaveFile.FromJsonTo<GameState>(SaveJsonSerializerOptions);
+        GameSession.SaveState();
 
-        GameSession.PreviousGameState = GameSession.CurrentGameState;
-        GameSession.CurrentGameState = loadedGameState;
+        GameSession.CurrentGameState =
+            _config.SaveFile.FromJsonTo<GameState>(GameSession.StateJsonSerializerOptions);
 
         _log.Info($"Loaded game state from {_config.SaveFile.FullPath}");
-        return loadedGameState;
-    }
-
-    private static JsonSerializerOptions JsonSerializerOptions()
-    {
-        // The difference between the returned options and converterOptions
-        // is that options has Converters defined, while converterOptions
-        // doesn't. If instead we would try to use options in place
-        // of converterOptions, then we will would end up in infinite loop of:
-        // options --> have converter --> the converter has options -->
-        // these options have converter --> ...
-        //
-        // Note that the JsonStringEnumConverter() defined within converterOptions
-        // is a "leaf" Converter in the sense it doesn't need any other of the settings
-        // defined in the options of which it is part of.
-
-        // Define "base" JsonSerializerOptions that do not have Converters defined.
-        var converterOptions = GameStateJsonConverter.JsonSerializerOptions();
-
-        // Define the "top-level" options to be returned, having the same settings
-        // as "converterOptions".
-        var options = new JsonSerializerOptions(converterOptions);
-
-        // Attach Converters to "options" but not "converterOptions"
-        options.Converters.Add(new GameStateJsonConverter());
-
-
-        return options;
+        return GameSession.CurrentGameState;
     }
 
     private string CurrentGameStateSerializedAsJsonString()
-        => GameSession.CurrentGameState.ToIndentedUnsafeJsonString(SaveJsonSerializerOptions);
+        => GameSession.CurrentGameState.ToIndentedUnsafeJsonString(GameSession.StateJsonSerializerOptions);
 }

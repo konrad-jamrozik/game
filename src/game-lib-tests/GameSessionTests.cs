@@ -171,7 +171,7 @@ public class GameSessionTests
         new JsonDiffAssertion(
                 session.PreviousGameState!,
                 session.CurrentGameState,
-                GameSessionController.SaveJsonSerializerOptions)
+                GameSession.StateJsonSerializerOptions)
             .Assert();
     }
 
@@ -218,7 +218,7 @@ public class GameSessionTests
         new JsonDiffAssertion(
                 session.PreviousGameState!,
                 session.CurrentGameState,
-                GameSessionController.SaveJsonSerializerOptions)
+                GameSession.StateJsonSerializerOptions)
             .Assert();
 
         GameStatePlayerView state = controller.GameStatePlayerView;
