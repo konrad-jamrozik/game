@@ -1,7 +1,6 @@
 using UfoGameLib.Lib;
-using UfoGameLib.Model;
 
-namespace UfoGameLib.Rules;
+namespace UfoGameLib.Model;
 
 public static class Ruleset
 {
