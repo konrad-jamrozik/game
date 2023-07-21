@@ -1,11 +1,10 @@
 using UfoGameLib.Controller;
 using UfoGameLib.Lib;
-using UfoGameLib.Model;
 using UfoGameLib.State;
 
 namespace UfoGameLib.Players;
 
-public class AIPlayer
+public class AIPlayer : IPlayer
 {
     public enum Intellect
     {
@@ -13,44 +12,19 @@ public class AIPlayer
         Basic
     }
 
-    private readonly ILog _log;
-    private readonly GameSessionController _controller;
-    private readonly IAIPlayerIntellect _intellect;
+    private readonly IPlayer _intellect;
 
-    public AIPlayer(ILog log, GameSessionController controller, Intellect intellect)
+    public AIPlayer(ILog log, Intellect intellect)
     {
-        _log = log;
-        _controller = controller;
-        Debug.Assert(_controller.GameStatePlayerView.CurrentTurn == Timeline.InitialTurn);
-
-        var intellectMap = new Dictionary<Intellect, IAIPlayerIntellect>
+        var intellectMap = new Dictionary<Intellect, IPlayer>
         {
-            [Intellect.Basic] = new BasicAIPlayerIntellect(_log),
+            [Intellect.Basic] = new BasicAIPlayerIntellect(log),
             [Intellect.DoNothing] = new DoNothingAIPlayerIntellect(),
         };
         _intellect = intellectMap[intellect];
     }
 
-    public void PlayGameSession(int turnLimit)
-    {
-        Debug.Assert(turnLimit is >= Timeline.InitialTurn and <= GameState.MaxTurnLimit);
-        GameStatePlayerView state = _controller.GameStatePlayerView;
 
-        while (!state.IsGameOver && state.CurrentTurn < turnLimit)
-        {
-            _intellect.PlayGameTurn(state, _controller);
-
-            _controller.AdvanceTime();
-        }
-
-        _log.Info($"Game over! " +
-                  $"Game result: {(state.IsGameLost ? "lost" : state.IsGameWon ? "won" : "undecided")}, " +
-                  $"money: {state.Assets.Money}, " +
-                  $"intel: {state.Assets.Intel}, " +
-                  $"funding: {state.Assets.Funding}, " +
-                  $"support: {state.Assets.Support}, " +
-                  $"turn: {state.CurrentTurn} / {turnLimit}.");
-
-        _controller.Save();
-    }
+    public void PlayGameTurn(GameStatePlayerView state, GameSessionController controller)
+        => _intellect.PlayGameTurn(state, controller);
 }

@@ -5,7 +5,7 @@ using UfoGameLib.State;
 
 namespace UfoGameLib.Players;
 
-public class BasicAIPlayerIntellect : IAIPlayerIntellect
+public class BasicAIPlayerIntellect : IPlayer
 {
     private const int MinimumAcceptableAgentSurvivalChance = 20; // percent
     private const int MoneyThresholdToFocusOnGatheringIntel = 1000;

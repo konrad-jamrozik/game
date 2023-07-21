@@ -55,6 +55,31 @@ public class GameSessionController
 
     public GameStatePlayerView GameStatePlayerView => new GameStatePlayerView(GameSession);
 
+    public void PlayGameSession(int turnLimit, IPlayer player)
+    {
+        Debug.Assert(GameStatePlayerView.CurrentTurn == Timeline.InitialTurn);
+        Debug.Assert(turnLimit is >= Timeline.InitialTurn and <= GameState.MaxTurnLimit);
+
+        GameStatePlayerView state = GameStatePlayerView;
+
+        while (!state.IsGameOver && state.CurrentTurn < turnLimit)
+        {
+            player.PlayGameTurn(state, this);
+
+            AdvanceTime();
+        }
+
+        _log.Info($"Game over! " +
+                  $"Game result: {(state.IsGameLost ? "lost" : state.IsGameWon ? "won" : "undecided")}, " +
+                  $"money: {state.Assets.Money}, " +
+                  $"intel: {state.Assets.Intel}, " +
+                  $"funding: {state.Assets.Funding}, " +
+                  $"support: {state.Assets.Support}, " +
+                  $"turn: {state.CurrentTurn} / {turnLimit}.");
+
+        Save();
+    }
+
     public void AdvanceTime()
         => PlayerActions.Apply(new AdvanceTimePlayerAction(_log, RandomGen), GameSession.CurrentGameState);
 

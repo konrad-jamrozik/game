@@ -3,7 +3,7 @@ using UfoGameLib.State;
 
 namespace UfoGameLib.Players;
 
-public class DoNothingAIPlayerIntellect : IAIPlayerIntellect
+public class DoNothingAIPlayerIntellect : IPlayer
 {
     public void PlayGameTurn(GameStatePlayerView state, GameSessionController controller)
     {

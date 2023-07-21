@@ -35,13 +35,11 @@ public class AIPlayerTests
 
     private void AIPlayerPlaysGameUntilConclusion(AIPlayer.Intellect intellect)
     {
-        var aiPlayer = new AIPlayer(
-            _log,
-            new GameSessionController(_config, _log, new GameSession(_randomGen)),
-            intellect);
+        var controller = new GameSessionController(_config, _log, new GameSession(_randomGen));
+        var aiPlayer = new AIPlayer(_log, intellect);
 
         // Act
-        aiPlayer.PlayGameSession(turnLimit: 200);
+        controller.PlayGameSession(turnLimit: 200, aiPlayer);
 
         // Assert: no exception was thrown and the program didn't loop indefinitely.
     }
