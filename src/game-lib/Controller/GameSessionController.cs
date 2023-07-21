@@ -64,10 +64,21 @@ public class GameSessionController
 
         while (!state.IsGameOver && state.Timeline.CurrentTurn < turnLimit)
         {
+            // kja here: persist current game state as "previous"
+
             player.PlayGameTurn(GameStatePlayerView, TurnController);
 
+            // kja here: 1. generate state diff report between current and previous.
+            //           2. persist current game state as "previous"
+
             AdvanceTime();
+
+            // kja here: 1. generate state diff report between current and previous.
+            //           2. persist current game state as "previous"
         }
+
+        // kja read all the previous diff reports and create game timeline json report for various entities, like 
+        // player resource stats and agents whereabouts.
 
         _log.Info($"Game over! " +
                   $"Game result: {(state.IsGameLost ? "lost" : state.IsGameWon ? "won" : "undecided")}, " +
