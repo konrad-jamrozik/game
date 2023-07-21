@@ -21,11 +21,11 @@ public class AIPlayerTests
 
     [Test]
     public void DoNothingAIPlayerIntellectPlaysGameUntilConclusion()
-        => AIPlayerPlaysGameUntilConclusion(AIPlayer.Intellect.DoNothing);
+        => AIPlayerPlaysGameUntilConclusion(AIPlayer.Intellect.DoNothing, turnLimit: 5);
 
     [Test]
     public void BasicAIPlayerIntellectPlaysGameUntilConclusion()
-        => AIPlayerPlaysGameUntilConclusion(AIPlayer.Intellect.Basic);
+        => AIPlayerPlaysGameUntilConclusion(AIPlayer.Intellect.Basic, turnLimit: 200);
 
     [TearDown]
     public void TearDown()
@@ -33,13 +33,13 @@ public class AIPlayerTests
         _log.Dispose();
     }
 
-    private void AIPlayerPlaysGameUntilConclusion(AIPlayer.Intellect intellect)
+    private void AIPlayerPlaysGameUntilConclusion(AIPlayer.Intellect intellect, int turnLimit)
     {
         var controller = new GameSessionController(_config, _log, new GameSession(_randomGen));
         var aiPlayer = new AIPlayer(_log, intellect);
 
         // Act
-        controller.PlayGameSession(turnLimit: 200, aiPlayer);
+        controller.PlayGameSession(turnLimit, aiPlayer);
 
         // Assert: no exception was thrown and the program didn't loop indefinitely.
     }

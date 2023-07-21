@@ -64,17 +64,22 @@ public class GameSessionController
 
         while (!state.IsGameOver && state.Timeline.CurrentTurn < turnLimit)
         {
-            // kja here: persist current game state as "previous"
+            // This persists the game state at player turn beginning.
+            PersistGameStateAsPrevious();
 
             player.PlayGameTurn(GameStatePlayerView, TurnController);
 
-            // kja here: 1. generate state diff report between current and previous.
-            //           2. persist current game state as "previous"
+            // This state diff shows what actions the player took.
+            DiffPreviousAndCurrentGameState();
+
+            // This persists the game state after the player took their actions in their turn,
+            // but before the turn time was advanced.
+            PersistGameStateAsPrevious();
 
             AdvanceTime();
 
-            // kja here: 1. generate state diff report between current and previous.
-            //           2. persist current game state as "previous"
+            // This state diff shows the result of the action the player took in their turn.
+            DiffPreviousAndCurrentGameState();
         }
 
         // kja read all the previous diff reports and create game timeline json report for various entities, like 
@@ -91,9 +96,20 @@ public class GameSessionController
         Save();
     }
 
+    private void DiffPreviousAndCurrentGameState()
+    {
+        Debug.Assert(GameSession.PreviousGameState != null);
+        Debug.Assert(GameSession.PreviousGameState != GameSession.CurrentGameState);
+        GameState prev = GameSession.PreviousGameState;
+        GameState curr = GameSession.CurrentGameState;
+        new GameStateDiff(prev, curr).PrintTo(_log);
+    }
+
+    private void PersistGameStateAsPrevious()
+        => GameSession.PreviousGameState = GameSession.CurrentGameState.Clone(SaveJsonSerializerOptions);
+
     public void AdvanceTime()
         => PlayerActions.Apply(new AdvanceTimePlayerAction(_log, GameSession.RandomGen), GameSession.CurrentGameState);
-
 
     // kja3 introduce "SerializedJsonFile" abstraction that will retain the serialization options
     public void Save()
