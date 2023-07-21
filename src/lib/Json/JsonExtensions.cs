@@ -3,10 +3,10 @@ using System.Linq;
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using Lib.OS;
 using Lib.Primitives;
 using Newtonsoft.Json.Linq;
 using Environment = System.Environment;
+using File = Lib.OS.File;
 
 namespace Lib.Json;
 
@@ -75,6 +75,12 @@ public static class JsonExtensions
 
     public static string ToIndentedUnsafeJsonString(this object data, JsonSerializerOptions? options = null) =>
         JsonSerializer.Serialize(data, options ?? SerializerOptionsIndentedUnsafe);
+
+    public static T Clone<T>(this T data, JsonSerializerOptions? options = null)
+    {
+        byte[] bytes = JsonSerializer.SerializeToUtf8Bytes(data, options);
+        return JsonSerializer.Deserialize<T>(bytes, options)!;
+    }
 
     /// <remarks>
     /// Based on https://stackoverflow.com/a/58193164/986533
