@@ -133,7 +133,7 @@ public class GameSessionController
         {
             "Turn", "Money", "Intel", "Funding", "Upkeep cost", "Support", "Transport cap.",
             "Agents", "In training", "Generating income", "Gathering intel", "Recovering", "Terminated agents", 
-            "Successful missions", "Failed missions", "Expired mission sites", "Avg diff. last 5",
+            "Launched missions", "Successful missions", "Failed missions", "Expired mission sites", "Avg diff. last 5",
             "Avg agent skill", "Max agent skill", "Max survival on last"
         };
 
@@ -152,10 +152,6 @@ public class GameSessionController
                         ? state.Assets.Agents.MaxBy(Ruleset.AgentSurvivalSkill)
                         : null;
                     
-                    lastMissionSiteMaxAgentSurvivalChance = mostSkilledAgent != null && lastMissionSiteDifficulty > 0
-                        ? Ruleset.AgentSurvivalChance(mostSkilledAgent, lastMissionSiteDifficulty)
-                        : 0;
-                    
                     double avgDiffLast5MissionSites = state.MissionSites.Any()
                         ? Math.Round(state.MissionSites.TakeLast(5).Average(site => site.Difficulty)) : 0;
 
@@ -164,6 +160,10 @@ public class GameSessionController
                         : 0;
                     
                     int maxAgentSkill = mostSkilledAgent != null ? Ruleset.AgentSurvivalSkill(mostSkilledAgent) : 0;
+
+                    lastMissionSiteMaxAgentSurvivalChance = mostSkilledAgent != null && lastMissionSiteDifficulty > 0
+                        ? Math.Max(Ruleset.AgentSurvivalChance(mostSkilledAgent, lastMissionSiteDifficulty), 0)
+                        : 0;
 
                     object[] stateData =
                     {
@@ -180,6 +180,7 @@ public class GameSessionController
                         state.Assets.Agents.GatheringIntel.Count,
                         state.Assets.Agents.Recovering.Count,
                         state.TerminatedAgents.Count,
+                        state.Missions.Launched.Count,
                         state.Missions.Successful.Count,
                         state.Missions.Failed.Count,
                         state.MissionSites.Expired.Count,

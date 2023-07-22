@@ -17,4 +17,6 @@ public class Missions : List<Mission>
     public List<Mission> Successful => this.Where(mission => mission.IsSuccessful).ToList();
 
     public List<Mission> Failed => this.Where(mission => mission.IsFailed).ToList();
+
+    public List<Mission> Launched => this.Where(mission => mission.WasLaunched).ToList();
 }

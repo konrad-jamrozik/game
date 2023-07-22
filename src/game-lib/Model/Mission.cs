@@ -44,6 +44,9 @@ public class Mission : IIdentifiable
     [JsonIgnore]
     public bool IsFailed => CurrentState == State.Failed;
 
+    [JsonIgnore]
+    public bool WasLaunched => IsSuccessful || IsFailed;
+
     public int Id { get; }
 
     [JsonIgnore]
