@@ -25,5 +25,6 @@ public class MissionSite : IIdentifiable
 
     public int Id { get; }
 
-    public override string ToString() => $"Site: {Id,4}";
+    [JsonIgnore]
+    public string LogString => $"Site: {Id,4}";
 }

@@ -90,7 +90,7 @@ public class AdvanceTimePlayerAction : PlayerAction
             ? Mission.State.Successful
             : Mission.State.Failed;
         
-        _log.Info($"Evaluated {mission}. result: {mission.CurrentState,7}, " +
+        _log.Info($"Evaluated {mission.LogString}. result: {mission.CurrentState,7}, " +
                   $"difficulty: {mission.Site.Difficulty}, " +
                   $"agents: surviving / required: {agentsSurviving} / {agentsRequired}, " +
                   $"terminated / sent: {agentsTerminated} / {agentsSent}.");
@@ -139,7 +139,7 @@ public class AdvanceTimePlayerAction : PlayerAction
             agent.TickRecovery();
             if (agent.IsAvailable)
             {
-                _log.Info($"{agent} fully recovered! Skill: {Ruleset.AgentSurvivalSkill(agent),3}.");
+                _log.Info($"{agent.LogString} fully recovered! Skill: {Ruleset.AgentSurvivalSkill(agent),3}.");
             }
         });
     }
@@ -158,7 +158,7 @@ public class AdvanceTimePlayerAction : PlayerAction
                     missionSite.IsActive = false;
                     supportChange -= Ruleset.SupportPenaltyForExpiringMissionSite();
                     expiredMissions++;
-                    _log.Info($"{missionSite} expired!");
+                    _log.Info($"{missionSite.LogString} expired!");
                 }
             }
         );

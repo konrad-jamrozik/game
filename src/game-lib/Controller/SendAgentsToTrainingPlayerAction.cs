@@ -19,7 +19,7 @@ public class SendAgentsToTrainingPlayerAction : PlayerAction
     {
         _agents.ForEach(agent =>
         {
-            _log.Info($"Send {agent} to training. Was in state: {agent.CurrentState}.");
+            _log.Info($"Send {agent.LogString} to training. Was in state: {agent.CurrentState}.");
             agent.SendToTraining();
         });
     }

@@ -24,7 +24,7 @@ public class SackAgentsPlayerAction : PlayerAction
         foreach (Agent agent in _agents)
         {
             state.Terminate(agent, sack: true);
-            _log.Info($"Sacked {agent}.");
+            _log.Info($"Sacked {agent.LogString}.");
         }
     }
 }

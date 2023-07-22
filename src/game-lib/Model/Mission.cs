@@ -46,5 +46,6 @@ public class Mission : IIdentifiable
 
     public int Id { get; }
 
-    public override string ToString() => $"MissionID: {Id,3}";
+    [JsonIgnore]
+    public string LogString => $"MissionID: {Id,3}";
 }

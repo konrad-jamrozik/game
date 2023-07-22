@@ -19,7 +19,7 @@ public class RecallAgentsPlayerAction : PlayerAction
     {
         _agents.ForEach(agent =>
         {
-            _log.Info($"Recall {agent}. Was in state: {agent.CurrentState}.");
+            _log.Info($"Recall {agent.LogString}. Was in state: {agent.CurrentState}.");
             agent.Recall();
         });
     }

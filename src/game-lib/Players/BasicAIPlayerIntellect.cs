@@ -115,7 +115,7 @@ public class BasicAIPlayerIntellect : IPlayer
 
         if (!candidateAgents.Any())
         {
-            _log.Info($"[AI] There are no agents left. Not launching mission for {site}.");
+            _log.Info($"[AI] There are no agents left. Not launching mission for {site.LogString}.");
             return new Agents();
         }
 
@@ -129,7 +129,7 @@ public class BasicAIPlayerIntellect : IPlayer
                 $"[AI] There are {candidateAgents.Count} agents left but no agents that could survive mission site " +
                 $"with difficulty {site.Difficulty} with " +
                 $"the minimum acceptable survival chance of {MinimumAcceptableAgentSurvivalChance}%. " +
-                $"Not launching mission for {site}.");
+                $"Not launching mission for {site.LogString}.");
             return new Agents();
         }
 
@@ -143,7 +143,7 @@ public class BasicAIPlayerIntellect : IPlayer
             _log.Info(
                 $"[AI] There are {agents.Count} agents that could be transported to the mission site and survive, " +
                 $"but the mission site requires at least {requiredSurvivingAgentsForSuccess} agents. " +
-                $"Not launching mission for site {site}.");
+                $"Not launching mission for site {site.LogString}.");
             return new Agents();
         }
 

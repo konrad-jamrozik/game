@@ -57,6 +57,6 @@ internal class GameStateDiff
             ? $"{prevRecoversIn,3} -> {currRecoversIn,-3}" 
             : $"{prevRecoversIn,3}    {"",-3}";
 
-        return $"{curr} | State: {stateLog,36} | Skill: {skillLog,10} | RecoversIn: {recoversInLog,10}";
+        return $"{curr.LogString} | State: {stateLog,36} | Skill: {skillLog,10} | RecoversIn: {recoversInLog,10}";
     }
 }
