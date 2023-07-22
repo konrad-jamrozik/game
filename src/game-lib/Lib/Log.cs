@@ -29,11 +29,18 @@ public class Log : ILog
         _logs.AppendLine(log);
     }
 
-    public void Dispose()
+    public void Flush()
     {
-        _config.LogFile.WriteAllText(_logs.ToString());
-        Console.WriteLine($"Wrote logs to {_config.LogFile.FullPath}");
+        if (_logs.Length > 0)
+        {
+            _config.LogFile.WriteAllText(_logs.ToString());
+            Console.WriteLine($"Wrote logs to {_config.LogFile.FullPath}");
+            _logs.Clear();
+        }
     }
+
+    public void Dispose()
+        => Flush();
 
     private string LogPrefix(string? callerFilePath, string? callerMemberName)
     {

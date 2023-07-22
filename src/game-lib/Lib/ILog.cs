@@ -8,4 +8,6 @@ public interface ILog : IDisposable
         string message,
         [CallerFilePath] string? callerFilePath = null,
         [CallerMemberName] string? callerMemberName = null);
+
+    public void Flush();
 }

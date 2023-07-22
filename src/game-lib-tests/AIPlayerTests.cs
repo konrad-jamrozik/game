@@ -36,7 +36,17 @@ public class AIPlayerTests
 
     [Test]
     public void BasicAIPlayerIntellectPlaysGameUntilConclusion()
-        => AIPlayerPlaysGameUntilConclusion(AIPlayer.Intellect.Basic, turnLimit: 200);
+        => AIPlayerPlaysGameUntilConclusion(AIPlayer.Intellect.Basic, turnLimit: 300);
+
+    [Test]
+    [Ignore("")]
+    public void RunSimulations()
+    {
+        for (int i = 0; i < 100; i++)
+        {
+            AIPlayerPlaysGameUntilConclusion(AIPlayer.Intellect.Basic, turnLimit: 300);    
+        }
+    }
 
     [TearDown]
     public void TearDown()

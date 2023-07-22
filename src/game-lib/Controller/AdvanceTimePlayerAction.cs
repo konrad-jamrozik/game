@@ -17,8 +17,9 @@ public class AdvanceTimePlayerAction : PlayerAction
 
     public override void Apply(GameState state)
     {
-        // _log.Info("");
-        // _log.Info("----- Evaluating current turn");
+        _log.Info("");
+        _log.Info("----- Advancing time");
+        _log.Info("");
 
         // Agents cost upkeep. Note we compute upkeep before evaluating missions.
         // This means that if an agent is lost during the mission, we still pay for their upkeep.

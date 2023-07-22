@@ -22,6 +22,5 @@ public class BuyTransportCapacityPlayerAction : PlayerAction
         _log.Info($"Buy transport capacity. Count: {_capacity}. Cost: {buyingCost}");
         state.Assets.Money -= buyingCost;
         state.Assets.MaxTransportCapacity += _capacity;
-
     }
 }

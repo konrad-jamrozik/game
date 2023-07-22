@@ -94,14 +94,16 @@ public class GameSessionController
         _log.Info($"Money: {state.Assets.Money}, " +
                   $"Intel: {state.Assets.Intel}, " +
                   $"Funding: {state.Assets.Funding}, " +
+                  $"Upkeep: {state.Assets.Agents.UpkeepCost}, " +
                   $"Support: {state.Assets.Support}, " +
                   $"Transport cap.: {state.Assets.MaxTransportCapacity}, " +
                   $"Turn: {state.Timeline.CurrentTurn-1} / {turnLimit}.");
-        _log.Info("");
 
         Save();
 
         new GameSessionStatsCsvReport(_log, _config.DataCsvFile, GameSession).Write();
+
+        _log.Flush();
     }
 
     public void AdvanceTime()
