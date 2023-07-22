@@ -51,11 +51,11 @@ public class AdvanceTimePlayerAction : PlayerAction
 
         UpdateAgentStates(state);
 
-        CreateMissionSites(state);
-
         // LogTurnInfo(...)
 
         state.Timeline.CurrentTurn++;
+
+        CreateMissionSites(state);
     }
 
     private (int successfulMissions, int failedMissions, int totalAgentsTerminated) EvaluateMissions(GameState state)
