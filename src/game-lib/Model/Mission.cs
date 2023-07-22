@@ -45,4 +45,6 @@ public class Mission : IIdentifiable
     public bool IsFailed => CurrentState == State.Failed;
 
     public int Id { get; }
+
+    public override string ToString() => $"MissionID: {Id,3}";
 }

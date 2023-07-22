@@ -17,8 +17,8 @@ public class AdvanceTimePlayerAction : PlayerAction
 
     public override void Apply(GameState state)
     {
-        _log.Info("");
-        _log.Info("----- Evaluating current turn");
+        // _log.Info("");
+        // _log.Info("----- Evaluating current turn");
 
         // Agents cost upkeep. Note we compute upkeep before evaluating missions.
         // This means that if an agent is lost during the mission, we still pay for their upkeep.
@@ -53,28 +53,7 @@ public class AdvanceTimePlayerAction : PlayerAction
 
         CreateMissionSites(state);
 
-        // The ,4 is alignment specifier per:
-        // https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/tokens/interpolated#structure-of-an-interpolated-string
-        _log.Info($"===== Turn {state.Timeline.CurrentTurn,4} :");
-        _log.Info($"    | Successful missions: {successfulMissions}, " +
-                  $"Failed missions: {failedMissions}, " +
-                  $"Expired missions: {expiredMissions}.");
-        _log.Info($"    | Agents alive: {state.Assets.Agents.Count}, " +
-                  $"Agents terminated this turn: {agentsTerminated}.");
-        _log.Info($"    | Money: {state.Assets.Money}, " +
-                  $"Money change: {moneyChange}, " +
-                  $"Funding: {state.Assets.Funding}, " +
-                  $"Income generated: {incomeGenerated}, " +
-                  $"Agent upkeep: {agentUpkeep}.");
-        _log.Info($"    | Intel: {state.Assets.Intel}, " +
-                  $"Intel gathered: {intelGathered}.");
-        _log.Info($"    | Funding: {state.Assets.Funding}, " +
-                  $"Funding change: {fundingChange}.");
-        _log.Info($"    | Support: {state.Assets.Support}, " +
-                  $"Support change: {supportChange}, " +
-                  $"Support change from missions: {supportChangeFromMissions}, " +
-                  $"Support change from expired missions: {supportChangeFromExpiredMissionSites}.");
-        _log.Info("");
+        // LogTurnInfo(...)
 
         state.Timeline.CurrentTurn++;
     }
@@ -111,7 +90,7 @@ public class AdvanceTimePlayerAction : PlayerAction
             ? Mission.State.Successful
             : Mission.State.Failed;
         
-        _log.Info($"Evaluated mission with ID: {mission.Id}. result: {mission.CurrentState,7}, " +
+        _log.Info($"Evaluated {mission}. result: {mission.CurrentState,7}, " +
                   $"difficulty: {mission.Site.Difficulty}, " +
                   $"agents: surviving / required: {agentsSurviving} / {agentsRequired}, " +
                   $"terminated / sent: {agentsTerminated} / {agentsSent}.");
@@ -160,7 +139,7 @@ public class AdvanceTimePlayerAction : PlayerAction
             agent.TickRecovery();
             if (agent.IsAvailable)
             {
-                _log.Info($"Agent with ID: {agent.Id,3} fully recovered! Skill: {Ruleset.AgentSurvivalSkill(agent),3}.");
+                _log.Info($"{agent} fully recovered! Skill: {Ruleset.AgentSurvivalSkill(agent),3}.");
             }
         });
     }
@@ -179,7 +158,7 @@ public class AdvanceTimePlayerAction : PlayerAction
                     missionSite.IsActive = false;
                     supportChange -= Ruleset.SupportPenaltyForExpiringMissionSite();
                     expiredMissions++;
-                    _log.Info($"Mission site with ID: {missionSite.Id,3} expired!");
+                    _log.Info($"{missionSite} expired!");
                 }
             }
         );
@@ -200,4 +179,50 @@ public class AdvanceTimePlayerAction : PlayerAction
             state.MissionSites.Add(new MissionSite(siteId, difficulty, expiresIn: 3));
         }
     }
+
+    private void LogTurnInfo(
+        GameState state,
+        int successfulMissions,
+        int failedMissions,
+        int expiredMissions,
+        int agentsTerminated,
+        int moneyChange,
+        int incomeGenerated,
+        int agentUpkeep,
+        int intelGathered,
+        int fundingChange,
+        int supportChange,
+        int supportChangeFromMissions,
+        int supportChangeFromExpiredMissionSites)
+    {
+        // The ,4 is alignment specifier per:
+        // https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/tokens/interpolated#structure-of-an-interpolated-string
+        _log.Info($"===== Turn {state.Timeline.CurrentTurn,4} :");
+        _log.Info(
+            $"    | Successful missions: {successfulMissions}, " +
+            $"Failed missions: {failedMissions}, " +
+            $"Expired missions: {expiredMissions}.");
+        _log.Info(
+            $"    | Agents alive: {state.Assets.Agents.Count}, " +
+            $"Agents terminated this turn: {agentsTerminated}.");
+        _log.Info(
+            $"    | Money: {state.Assets.Money}, " +
+            $"Money change: {moneyChange}, " +
+            $"Funding: {state.Assets.Funding}, " +
+            $"Income generated: {incomeGenerated}, " +
+            $"Agent upkeep: {agentUpkeep}.");
+        _log.Info(
+            $"    | Intel: {state.Assets.Intel}, " +
+            $"Intel gathered: {intelGathered}.");
+        _log.Info(
+            $"    | Funding: {state.Assets.Funding}, " +
+            $"Funding change: {fundingChange}.");
+        _log.Info(
+            $"    | Support: {state.Assets.Support}, " +
+            $"Support change: {supportChange}, " +
+            $"Support change from missions: {supportChangeFromMissions}, " +
+            $"Support change from expired missions: {supportChangeFromExpiredMissionSites}.");
+        _log.Info("");
+    }
+
 }

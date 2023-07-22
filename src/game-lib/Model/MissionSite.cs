@@ -24,4 +24,6 @@ public class MissionSite : IIdentifiable
     public bool IsExpired => !IsActive && ExpiresIn == 0;
 
     public int Id { get; }
+
+    public override string ToString() => $"Site: {Id,4}";
 }

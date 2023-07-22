@@ -181,6 +181,8 @@ public class Agent
         AssertMissionInvariant();
     }
 
+    public override string ToString() => $"AgentID: {Id,4}";
+
     private void AssertMissionInvariant()
     {
         Debug.Assert(

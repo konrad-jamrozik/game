@@ -65,6 +65,10 @@ public class GameSessionController
 
         while (!state.IsGameOver && state.Timeline.CurrentTurn <= turnLimit)
         {
+            _log.Info("");
+            _log.Info($"===== Turn {state.Timeline.CurrentTurn}");
+            _log.Info("");
+
             // This persists the game state at player turn beginning.
             GameSession.SaveState();
 
@@ -83,13 +87,16 @@ public class GameSessionController
             DiffPreviousAndCurrentGameState();
         }
 
-        _log.Info($"Game over! " +
-                  $"Game result: {(state.IsGameLost ? "lost" : state.IsGameWon ? "won" : "undecided")}, " +
-                  $"money: {state.Assets.Money}, " +
-                  $"intel: {state.Assets.Intel}, " +
-                  $"funding: {state.Assets.Funding}, " +
-                  $"support: {state.Assets.Support}, " +
-                  $"turn: {state.Timeline.CurrentTurn-1} / {turnLimit}.");
+        _log.Info("");
+        _log.Info(
+            $"===== Game over! " +
+            $"Game result: {(state.IsGameLost ? "lost" : state.IsGameWon ? "won" : "undecided")}");
+        _log.Info($"Money: {state.Assets.Money}, " +
+                  $"Intel: {state.Assets.Intel}, " +
+                  $"Funding: {state.Assets.Funding}, " +
+                  $"Support: {state.Assets.Support}, " +
+                  $"Turn: {state.Timeline.CurrentTurn-1} / {turnLimit}.");
+        _log.Info("");
 
         Save();
 
@@ -119,11 +126,6 @@ public class GameSessionController
 
     private void SaveGameSessionDataToCsvFile()
     {
-        // kja read all the previous diff reports and create game timeline json report for various entities, like 
-        // player resource stats and agents whereabouts.
-        // Dump the data to Csv, so it can be post-processed, e.g. by Excel. Maybe TabularData from lib will help.
-        // In Excel, all one will have to do is to hit refresh on the data sources once the simulation reruns
-        // and dumps results to .csv files.
         List<GameState> gameStates =
             GameSession.PastGameStates.Concat(GameSession.CurrentGameState.WrapInList()).ToList();
 

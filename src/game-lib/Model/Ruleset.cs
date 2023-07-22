@@ -34,7 +34,7 @@ public static class Ruleset
         bool survived = survivalRoll > survivalThreshold;
         int recoversIn = ComputeRecoversIn(survived, survivalRoll, survivalThreshold);
         log.Info(
-            $"Agent with ID {agent.Id,4} survived: {survived,5}. " +
+            $"{agent} survived: {survived,5}. " +
             $"Skill: {AgentSurvivalSkill(agent),3}. " +
             $"Roll: {survivalRoll,3} { (survived ? "> " : "<=") } {survivalThreshold}." +
             $"{(survived ? $" RecoversIn: {recoversIn,3}." : "")}"

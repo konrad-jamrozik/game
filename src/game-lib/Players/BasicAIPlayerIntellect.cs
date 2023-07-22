@@ -96,7 +96,7 @@ public class BasicAIPlayerIntellect : IPlayer
         controller.RecallAgents(agentsToRecall);
 
         _log.Info(
-            $"RecallAgents: " +
+            $"[AI] RecallAgents: " +
             $"agentsRecalled: {agentsToRecall.Count}, " +
             $"generatingIncome: {recalledGeneratingIncome}, " +
             $"gatheringIntel: {recalledGatheringIntel} | " +
@@ -109,14 +109,13 @@ public class BasicAIPlayerIntellect : IPlayer
     private Agents ChooseAgents(MissionSite site, GameStatePlayerView state)
     {
         Debug.Assert(state.Assets.CurrentTransportCapacity > 0);
-        _log.Info($"Choosing agents to launch for mission site ID: {site.Id}");
 
         Agents candidateAgents = state.Assets.Agents.CanBeSentOnMission.OrderByDescending(Ruleset.AgentSurvivalSkill)
             .ToAgents();
 
         if (!candidateAgents.Any())
         {
-            _log.Info($"There are no agents left. Not launching mission for site ID: {site.Id}");
+            _log.Info($"[AI] There are no agents left. Not launching mission for {site}.");
             return new Agents();
         }
 
@@ -127,10 +126,10 @@ public class BasicAIPlayerIntellect : IPlayer
         if (!candidateAgentsThatCanSurvive.Any())
         {
             _log.Info(
-                $"There are {candidateAgents.Count} agents left but no agents that could survive mission site " +
+                $"[AI] There are {candidateAgents.Count} agents left but no agents that could survive mission site " +
                 $"with difficulty {site.Difficulty} with " +
                 $"the minimum acceptable survival chance of {MinimumAcceptableAgentSurvivalChance}%. " +
-                $"Not launching mission for site ID: {site.Id}");
+                $"Not launching mission for {site}.");
             return new Agents();
         }
 
@@ -142,9 +141,9 @@ public class BasicAIPlayerIntellect : IPlayer
         if (requiredSurvivingAgentsForSuccess > agents.Count)
         {
             _log.Info(
-                $"There are {agents.Count} agents that could be transported to the mission site and survive, " +
+                $"[AI] There are {agents.Count} agents that could be transported to the mission site and survive, " +
                 $"but the mission site requires at least {requiredSurvivingAgentsForSuccess} agents. " +
-                $"Not launching mission for site ID: {site.Id}");
+                $"Not launching mission for site {site}.");
             return new Agents();
         }
 
@@ -174,7 +173,7 @@ public class BasicAIPlayerIntellect : IPlayer
             maxAgentIncrease);
 
         _log.Info(
-            $"ComputeAgentsToHire: " +
+            $"[AI] ComputeAgentsToHire: " +
             $"agentsToHire: {agentsToHire} | " +
             $"desiredAgentCount: {desiredAgentCount}, " +
             $"agentsMissingToDesired: {agentsMissingToDesired}, " +
@@ -236,7 +235,7 @@ public class BasicAIPlayerIntellect : IPlayer
         controller.SendAgentsToTraining(agents.Available);
 
         _log.Info(
-            $"AssignAvailableAgents: " +
+            $"[AI] AssignAvailableAgents: " +
             $"agentsSentToOps: {agentsToSendToOps}, " +
             $"agentsSentToGenerateIncome: {agentsToSendToGenerateIncome}, " +
             $"agentsSentToGatherIntel: {agentsToSendToGatherIntel}, " +
