@@ -32,4 +32,6 @@ public class RandomGen
         TKey pickedKey = Pick(keyList);
         return dict[pickedKey];
     }
+
+    public bool FlipCoin() => _random.Next(2) == 1;
 }

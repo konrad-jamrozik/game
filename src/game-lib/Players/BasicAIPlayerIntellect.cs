@@ -8,7 +8,6 @@ namespace UfoGameLib.Players;
 public class BasicAIPlayerIntellect : IPlayer
 {
     private const int MinimumAcceptableAgentSurvivalChance = 20; // percent
-    private const int MoneyThresholdToFocusOnGatheringIntel = 1000;
     private const int MoneyThresholdToBuyTransportCapacity = 600;
     private readonly ILog _log;
 
@@ -35,7 +34,14 @@ public class BasicAIPlayerIntellect : IPlayer
     }
 
     private int ComputeTransportCapacityToBuy(GameStatePlayerView state)
-        => state.Assets.Money >= MoneyThresholdToBuyTransportCapacity ? 1 : 0;
+        => state.Assets.Money >= MoneyThresholdToBuyTransportCapacity 
+           // The number of current agents has to be at least the current max transport capacity,
+           // which is still significantly below full complement.
+           // There is no point in increasing the transport capacity if we cannot even 
+           // get close to the full complement of agents.
+           && state.Assets.Agents.Count >= state.Assets.MaxTransportCapacity 
+            ? 1 
+            : 0;
 
     private static bool NoMissionsAvailable(GameStatePlayerView state) => !state.MissionSites.Active.Any();
 
@@ -134,7 +140,7 @@ public class BasicAIPlayerIntellect : IPlayer
         if (!candidateAgentsThatCanSurvive.Any())
         {
             _log.Info(
-                $"[AI] There are {candidateAgents.Count} agents left but no agents that could survive mission site " +
+                $"[AI] There are {candidateAgents.Count} agents available but no agents that could survive mission site " +
                 $"with difficulty {site.Difficulty} with " +
                 $"the minimum acceptable survival chance of {MinimumAcceptableAgentSurvivalChance}%. " +
                 $"Not launching mission for {site.LogString}.");
@@ -207,7 +213,7 @@ public class BasicAIPlayerIntellect : IPlayer
 
         // Example cases:
         // availableAgents: 10
-        // canBeSentOnMissionNextTurnForSure: 17 (10 available + 7 in transit(, 4 on mission)
+        // canBeSentOnMissionNextTurnForSure: 17 (10 available + 7 in transit)
         //
         // Case 1:
         // desiredAgentReserve: 6
@@ -220,16 +226,21 @@ public class BasicAIPlayerIntellect : IPlayer
         //
         // Because 10 agents are available, 5 will be sent to ops, while 5 will be sent to training.
         // This way, the next turn there will be 12 agents in reserve (as desired):
-        //   5 in training, 3 currently in transit and 4 currently on mission.
+        //   5 in training and 7 currently in transit.
         int agentsToSendToOps = Math.Min(
             agents.Available.Count,
             Math.Max(agentsCanBeSentOnMissionNextTurnForSure.Count - desiredAgentReserve, 0));
 
-        int agentsToSendToGenerateIncome = 
-            state.Assets.Money < MoneyThresholdToFocusOnGatheringIntel 
-                ? agentsToSendToOps / 2 
-                : 0;
-        int agentsToSendToGatherIntel = agentsToSendToOps - agentsToSendToGenerateIncome;
+        int agentsToSendToGenerateIncome = agentsToSendToOps / 2;
+        int agentsToSendToGatherIntel = agentsToSendToOps / 2;
+        if (agentsToSendToOps % 2 == 1)
+        {
+            if (controller.RandomGen.FlipCoin())
+                agentsToSendToGenerateIncome++;
+            else
+                agentsToSendToGatherIntel++;
+        }
+        Debug.Assert(agentsToSendToGenerateIncome + agentsToSendToGatherIntel == agentsToSendToOps);
 
         controller.SendAgentsToGenerateIncome(
             controller.RandomGen.Pick(agents.Available, agentsToSendToGenerateIncome).ToAgents());
