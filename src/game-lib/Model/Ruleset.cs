@@ -1,4 +1,5 @@
 using UfoGameLib.Lib;
+using UfoGameLib.State;
 
 namespace UfoGameLib.Model;
 
@@ -102,15 +103,16 @@ public static class Ruleset
         return result;
     }
 
-    public static int ComputeFundingChange(int successfulMissions, int failedMissions)
-        => successfulMissions * 5 - failedMissions * 1;
+    public static int ComputeFundingChange(int successfulMissions, int failedMissions, int expiredMissions)
+        => successfulMissions * 5 - failedMissions * 1 - expiredMissions * 1;
 
-    public static int ComputeSupportChangeFromMissions(int successfulMissions, int failedMissions)
-        => successfulMissions * 20 - failedMissions * 5;
+    public static int ComputeSupportChange(int successfulMissions, int failedMissions, int expiredMissions)
+        => successfulMissions * 20 - failedMissions * 5 - expiredMissions * 5;
+
+    public static int ComputeMoneyChange(int funding, int incomeGenerated, int agentUpkeep)
+        => funding + incomeGenerated - agentUpkeep;
 
     public static int IncomeGeneratedPerAgent() => AgentUpkeepCost * 3;
 
     public static int IntelGatheredPerAgent() => 5;
-
-    public static int SupportPenaltyForExpiringMissionSite() => 5;
 }

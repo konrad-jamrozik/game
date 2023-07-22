@@ -26,13 +26,13 @@ public class AdvanceTimePlayerAction : PlayerAction
 
         (int successfulMissions, int failedMissions, int agentsTerminated) = EvaluateMissions(state);
 
-        (int supportChangeFromExpiredMissionSites, int expiredMissions) = UpdateActiveMissionSites(state);
+        int expiredMissions = UpdateActiveMissionSites(state);
 
-        int fundingChange = Ruleset.ComputeFundingChange(successfulMissions, failedMissions);
-        int supportChangeFromMissions = Ruleset.ComputeSupportChangeFromMissions(successfulMissions, failedMissions);
-        int supportChange = supportChangeFromMissions + supportChangeFromExpiredMissionSites;
+        int fundingChange = Ruleset.ComputeFundingChange(successfulMissions, failedMissions, expiredMissions);
+        int supportChange = Ruleset.ComputeSupportChange(successfulMissions, failedMissions, expiredMissions);
 
-        // Note this funding change will get taken into account when computing money change this turn.
+        // Note this funding change will get taken into account when computing money change this turn,
+        // as money change is computed downstream.
         state.Assets.Funding += fundingChange;
         state.Assets.Support += supportChange;
 
@@ -41,7 +41,7 @@ public class AdvanceTimePlayerAction : PlayerAction
         
         int incomeGenerated = state.Assets.Agents.GeneratingIncome.Count * Ruleset.IncomeGeneratedPerAgent();
 
-        int moneyChange = state.Assets.Funding + incomeGenerated - agentUpkeep;
+        int moneyChange = Ruleset.ComputeMoneyChange(state.Assets.Funding, incomeGenerated, agentUpkeep);
 
         state.Assets.Money += moneyChange;
 
@@ -144,9 +144,8 @@ public class AdvanceTimePlayerAction : PlayerAction
         });
     }
 
-    private (int supportChange, int expiredMissions) UpdateActiveMissionSites(GameState state)
+    private int UpdateActiveMissionSites(GameState state)
     {
-        int supportChange = 0;
         int expiredMissions = 0;
         state.MissionSites.Active.ForEach(
             missionSite =>
@@ -156,13 +155,12 @@ public class AdvanceTimePlayerAction : PlayerAction
                 else
                 {
                     missionSite.IsActive = false;
-                    supportChange -= Ruleset.SupportPenaltyForExpiringMissionSite();
                     expiredMissions++;
                     _log.Info($"{missionSite.LogString} expired!");
                 }
             }
         );
-        return (supportChange, expiredMissions);
+        return expiredMissions;
     }
 
     private void CreateMissionSites(GameState state)
