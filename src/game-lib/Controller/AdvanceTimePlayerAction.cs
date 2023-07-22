@@ -172,11 +172,13 @@ public class AdvanceTimePlayerAction : PlayerAction
             int siteId = state.NextMissionSiteId;
             (int difficulty, int difficultyFromTurn, int roll) =
                 Ruleset.RollMissionSiteDifficulty(state.Timeline.CurrentTurn, _randomGen);
-            _log.Info($"Add MissionSite with ID: {siteId}, " +
+            var site = new MissionSite(siteId, difficulty, expiresIn: 3);
+            state.MissionSites.Add(site);
+            _log.Info($"Add {site.LogString} : " +
                       $"difficulty: {difficulty}, " +
                       $"difficultyFromTurn: {difficultyFromTurn}, " +
                       $"difficultyRoll: {roll}.");
-            state.MissionSites.Add(new MissionSite(siteId, difficulty, expiresIn: 3));
+            
         }
     }
 

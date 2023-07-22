@@ -10,7 +10,7 @@ public static class Ruleset
     public const int InitialSupport = 30;
     public const int InitialMaxTransportCapacity = 4;
 
-    public const int IntelToWin = 1000;
+    public const int IntelToWin = 3000;
 
     public const int AgentHireCost = 50;
     public const int AgentUpkeepCost = 5;

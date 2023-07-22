@@ -26,5 +26,5 @@ public class MissionSite : IIdentifiable
     public int Id { get; }
 
     [JsonIgnore]
-    public string LogString => $"Site: {Id,4}";
+    public string LogString => $"SiteID: {Id,3}";
 }
