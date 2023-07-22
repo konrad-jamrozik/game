@@ -1,10 +1,8 @@
-using Lib.Data;
 using Lib.Json;
-using Lib.Primitives;
-using UfoGameLib.Lib;
-using UfoGameLib.Model;
 using UfoGameLib.State;
 using Timeline = UfoGameLib.Model.Timeline;
+
+using UfoGameLib.Lib;
 
 namespace UfoGameLib.Controller;
 
@@ -100,7 +98,7 @@ public class GameSessionController
 
         Save();
 
-        SaveGameSessionDataToCsvFile();
+        new GameSessionStatsCsvReport(_log, _config.DataCsvFile, GameSession).Write();
     }
 
     public void AdvanceTime()
@@ -124,79 +122,6 @@ public class GameSessionController
         return GameSession.CurrentGameState;
     }
 
-    private void SaveGameSessionDataToCsvFile()
-    {
-        List<GameState> gameStates =
-            GameSession.PastGameStates.Concat(GameSession.CurrentGameState.WrapInList()).ToList();
-
-        object[] headerRow =
-        {
-            "Turn", "Money", "Intel", "Funding", "Upkeep cost", "Support", "Transport cap.",
-            "Agents", "In training", "Generating income", "Gathering intel", "Recovering", "Terminated agents", 
-            "Launched missions", "Successful missions", "Failed missions", "Expired mission sites", "Avg diff. last 5",
-            "Avg agent skill", "Max agent skill", "Max survival on last"
-        };
-
-        int lastMissionSiteMaxAgentSurvivalChance;
-
-        object[][] dataRows = gameStates
-            // We are selecting every second state, because these are the states at the end of turn,
-            // after player made their actions *AND* the turn time advanced.
-            .Where((_, i) => (i % 2 == 0))
-            .Select(
-                state =>
-                {
-                    int lastMissionSiteDifficulty = state.MissionSites.Any() ? state.MissionSites.TakeLast(1).Single().Difficulty : 0;
-                    
-                    Agent? mostSkilledAgent = state.Assets.Agents.Any()
-                        ? state.Assets.Agents.MaxBy(Ruleset.AgentSurvivalSkill)
-                        : null;
-                    
-                    double avgDiffLast5MissionSites = state.MissionSites.Any()
-                        ? Math.Round(state.MissionSites.TakeLast(5).Average(site => site.Difficulty)) : 0;
-
-                    double avgAgentSkill = state.Assets.Agents.Any()
-                        ? Math.Round(state.Assets.Agents.Average(Ruleset.AgentSurvivalSkill), 2)
-                        : 0;
-                    
-                    int maxAgentSkill = mostSkilledAgent != null ? Ruleset.AgentSurvivalSkill(mostSkilledAgent) : 0;
-
-                    lastMissionSiteMaxAgentSurvivalChance = mostSkilledAgent != null && lastMissionSiteDifficulty > 0
-                        ? Math.Max(Ruleset.AgentSurvivalChance(mostSkilledAgent, lastMissionSiteDifficulty), 0)
-                        : 0;
-
-                    object[] stateData =
-                    {
-                        state.Timeline.CurrentTurn,
-                        state.Assets.Money / 10,
-                        state.Assets.Intel,
-                        state.Assets.Funding,
-                        state.Assets.Agents.UpkeepCost,
-                        state.Assets.Support,
-                        state.Assets.MaxTransportCapacity,
-                        state.Assets.Agents.Count,
-                        state.Assets.Agents.InTraining.Count,
-                        state.Assets.Agents.GeneratingIncome.Count,
-                        state.Assets.Agents.GatheringIntel.Count,
-                        state.Assets.Agents.Recovering.Count,
-                        state.TerminatedAgents.Count,
-                        state.Missions.Launched.Count,
-                        state.Missions.Successful.Count,
-                        state.Missions.Failed.Count,
-                        state.MissionSites.Expired.Count,
-                        avgDiffLast5MissionSites,
-                        avgAgentSkill,
-                        maxAgentSkill,
-                        lastMissionSiteMaxAgentSurvivalChance
-                    };
-                    return stateData;
-                }).ToArray();
-
-        Debug.Assert(headerRow.Length == dataRows[0].Length);
-
-        SaveToCsvFile(new TabularData(headerRow, dataRows));
-    }
-
     private void DiffPreviousAndCurrentGameState()
     {
         Debug.Assert(GameSession.PreviousGameState != null);
@@ -204,12 +129,6 @@ public class GameSessionController
         GameState prev = GameSession.PreviousGameState;
         GameState curr = GameSession.CurrentGameState;
         new GameStateDiff(prev, curr).PrintTo(_log);
-    }
-
-    private void SaveToCsvFile(TabularData data)
-    {
-        new CsvFile(_config.DataCsvFile, data).Write();
-        _log.Info($"Saved game data .csv report to {_config.DataCsvFile.FullPath}");
     }
 
     private string CurrentGameStateSerializedAsJsonString()
