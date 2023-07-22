@@ -13,4 +13,8 @@ public class Missions : List<Mission>
         => AddRange(missions ?? new List<Mission>());
 
     public List<Mission> Active => this.Where(mission => mission.IsActive).ToList();
+
+    public List<Mission> Successful => this.Where(mission => mission.IsSuccessful).ToList();
+
+    public List<Mission> Failed => this.Where(mission => mission.IsFailed).ToList();
 }

@@ -2,6 +2,7 @@ using Lib.Data;
 using Lib.Json;
 using Lib.Primitives;
 using UfoGameLib.Lib;
+using UfoGameLib.Model;
 using UfoGameLib.State;
 using Timeline = UfoGameLib.Model.Timeline;
 
@@ -62,7 +63,7 @@ public class GameSessionController
 
         GameState state = GameSession.CurrentGameState;
 
-        while (!state.IsGameOver && state.Timeline.CurrentTurn < turnLimit)
+        while (!state.IsGameOver && state.Timeline.CurrentTurn <= turnLimit)
         {
             // This persists the game state at player turn beginning.
             GameSession.SaveState();
@@ -88,7 +89,7 @@ public class GameSessionController
                   $"intel: {state.Assets.Intel}, " +
                   $"funding: {state.Assets.Funding}, " +
                   $"support: {state.Assets.Support}, " +
-                  $"turn: {state.Timeline.CurrentTurn} / {turnLimit}.");
+                  $"turn: {state.Timeline.CurrentTurn-1} / {turnLimit}.");
 
         Save();
 
@@ -127,12 +128,17 @@ public class GameSessionController
             GameSession.PastGameStates.Concat(GameSession.CurrentGameState.WrapInList()).ToList();
 
         object[] headerRow =
-            { "Turn", "Money", "Intel", "Funding", "Support", "Agents" }; // kja , "Terminated agents", "Successful missions", "Failed missions", "Most skilled agent" };
+        {
+            "Turn", "Money", "Intel", "Funding", "Support", "Transport cap.",
+            "Agents", "In training", "Generating income", "Gathering intel", "Terminated agents", 
+            "Successful missions", "Failed missions", "Expired mission sites", 
+            "Avg agent skill", "Max agent skill"
+        };
 
         object[][] dataRows = gameStates
             // We are selecting every second state, because these are the states at the end of turn,
             // after player made their actions *AND* the turn time advanced.
-            .Where((state, i) => (i % 2 == 0))
+            .Where((_, i) => (i % 2 == 0))
             .Select(
                 state =>
                 {
@@ -143,10 +149,22 @@ public class GameSessionController
                         state.Assets.Intel,
                         state.Assets.Funding,
                         state.Assets.Support,
-                        state.Assets.Agents.Count
+                        state.Assets.MaxTransportCapacity,
+                        state.Assets.Agents.Count,
+                        state.Assets.Agents.InTraining.Count,
+                        state.Assets.Agents.GeneratingIncome.Count,
+                        state.Assets.Agents.GatheringIntel.Count,
+                        state.TerminatedAgents.Count,
+                        state.Missions.Successful.Count,
+                        state.Missions.Failed.Count,
+                        state.MissionSites.Expired.Count,
+                        state.Assets.Agents.Any() ? Math.Round(state.Assets.Agents.Average(Ruleset.AgentSurvivalSkill), 2) : 0,
+                        state.Assets.Agents.Any() ? state.Assets.Agents.Max(Ruleset.AgentSurvivalSkill) : 0
                     };
                     return stateData;
                 }).ToArray();
+
+        Debug.Assert(headerRow.Length == dataRows[0].Length);
 
         SaveToCsvFile(new TabularData(headerRow, dataRows));
     }

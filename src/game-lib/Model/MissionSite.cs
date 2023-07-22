@@ -20,5 +20,8 @@ public class MissionSite : IIdentifiable
         ExpiresIn = expiresIn;
     }
 
+    [JsonIgnore]
+    public bool IsExpired => !IsActive && ExpiresIn == 0;
+
     public int Id { get; }
 }

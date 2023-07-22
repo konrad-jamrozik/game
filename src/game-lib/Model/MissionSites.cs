@@ -13,4 +13,6 @@ public class MissionSites : List<MissionSite>
         => AddRange(missionSites ?? new List<MissionSite>());
 
     public MissionSites Active => this.Where(missionSite => missionSite.IsActive).ToMissionSites();
+
+    public MissionSites Expired => this.Where(missionSite => missionSite.IsExpired).ToMissionSites();
 }

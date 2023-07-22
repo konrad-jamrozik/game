@@ -18,8 +18,7 @@ public class AdvanceTimePlayerAction : PlayerAction
     public override void Apply(GameState state)
     {
         _log.Info("");
-        _log.Info("----- Evaluating next turn");
-        state.Timeline.CurrentTurn++;
+        _log.Info("----- Evaluating current turn");
 
         // Agents cost upkeep. Note we compute upkeep before evaluating missions.
         // This means that if an agent is lost during the mission, we still pay for their upkeep.
@@ -76,6 +75,8 @@ public class AdvanceTimePlayerAction : PlayerAction
                   $"Support change from missions: {supportChangeFromMissions}, " +
                   $"Support change from expired missions: {supportChangeFromExpiredMissionSites}.");
         _log.Info("");
+
+        state.Timeline.CurrentTurn++;
     }
 
     private (int successfulMissions, int failedMissions, int totalAgentsTerminated) EvaluateMissions(GameState state)
@@ -107,7 +108,7 @@ public class AdvanceTimePlayerAction : PlayerAction
         int agentsRequired = Ruleset.RequiredSurvivingAgentsForSuccess(mission.Site);
         bool missionSuccessful = Ruleset.MissionSuccessful(mission, agentsSurviving);
         mission.CurrentState = missionSuccessful
-            ? Mission.State.Success
+            ? Mission.State.Successful
             : Mission.State.Failed;
         
         _log.Info($"Evaluated mission with ID: {mission.Id}. result: {mission.CurrentState,7}, " +

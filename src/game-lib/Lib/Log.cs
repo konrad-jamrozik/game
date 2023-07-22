@@ -22,9 +22,8 @@ public class Log : ILog
         [CallerFilePath] string? callerFilePath = null,
         [CallerMemberName] string? callerMemberName = null)
     {
-        // kja temp disable logs except GameStateDiff
-        if (!callerFilePath!.Contains(nameof(GameStateDiff)))
-            return;
+        // if (!callerFilePath!.Contains(nameof(GameStateDiff)))
+        //     return;
 
         string log = LogPrefix(callerFilePath, callerMemberName) + message;
         Console.WriteLine(log);

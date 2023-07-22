@@ -8,7 +8,7 @@ public class Mission : IIdentifiable
     public enum State
     {
         Active,
-        Success,
+        Successful,
         Failed
     }
 
@@ -37,6 +37,12 @@ public class Mission : IIdentifiable
 
     [JsonIgnore]
     public bool IsActive => CurrentState == State.Active;
+
+    [JsonIgnore]
+    public bool IsSuccessful => CurrentState == State.Successful;
+
+    [JsonIgnore]
+    public bool IsFailed => CurrentState == State.Failed;
 
     public int Id { get; }
 }
