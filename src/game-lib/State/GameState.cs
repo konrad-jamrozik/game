@@ -50,9 +50,9 @@ public class GameState
                               // This condition is here to protect against infinite loops.
                               || Timeline.CurrentTurn > MaxTurnLimit;
 
-    public bool IsGameLost => Assets.Money == 0
-                              || Assets.Funding == 0
-                              || Assets.Support == 0;
+    public bool IsGameLost => Assets.Money <= 0
+                              || Assets.Funding <= 0
+                              || Assets.Support <= 0;
 
     public bool IsGameWon => Assets.Intel >= Ruleset.IntelToWin;
 
