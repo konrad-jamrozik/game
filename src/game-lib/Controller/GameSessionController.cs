@@ -1,7 +1,9 @@
+using Lib.Data;
 using Lib.Json;
+using Lib.Primitives;
 using UfoGameLib.Lib;
-using UfoGameLib.Model;
 using UfoGameLib.State;
+using Timeline = UfoGameLib.Model.Timeline;
 
 namespace UfoGameLib.Controller;
 
@@ -80,12 +82,6 @@ public class GameSessionController
             DiffPreviousAndCurrentGameState();
         }
 
-        // kja read all the previous diff reports and create game timeline json report for various entities, like 
-        // player resource stats and agents whereabouts.
-        // Dump the data to Csv, so it can be post-processed, e.g. by Excel. Maybe TabularData from lib will help.
-        // In Excel, all one will have to do is to hit refresh on the data sources once the simulation reruns
-        // and dumps results to .csv files.
-
         _log.Info($"Game over! " +
                   $"Game result: {(state.IsGameLost ? "lost" : state.IsGameWon ? "won" : "undecided")}, " +
                   $"money: {state.Assets.Money}, " +
@@ -95,15 +91,8 @@ public class GameSessionController
                   $"turn: {state.Timeline.CurrentTurn} / {turnLimit}.");
 
         Save();
-    }
 
-    private void DiffPreviousAndCurrentGameState()
-    {
-        Debug.Assert(GameSession.PreviousGameState != null);
-        Debug.Assert(GameSession.PreviousGameState != GameSession.CurrentGameState);
-        GameState prev = GameSession.PreviousGameState;
-        GameState curr = GameSession.CurrentGameState;
-        new GameStateDiff(prev, curr).PrintTo(_log);
+        SaveGameSessionDataToCsvFile();
     }
 
     public void AdvanceTime()
@@ -125,6 +114,56 @@ public class GameSessionController
 
         _log.Info($"Loaded game state from {_config.SaveFile.FullPath}");
         return GameSession.CurrentGameState;
+    }
+
+    private void SaveGameSessionDataToCsvFile()
+    {
+        // kja read all the previous diff reports and create game timeline json report for various entities, like 
+        // player resource stats and agents whereabouts.
+        // Dump the data to Csv, so it can be post-processed, e.g. by Excel. Maybe TabularData from lib will help.
+        // In Excel, all one will have to do is to hit refresh on the data sources once the simulation reruns
+        // and dumps results to .csv files.
+        List<GameState> gameStates =
+            GameSession.PastGameStates.Concat(GameSession.CurrentGameState.WrapInList()).ToList();
+
+        object[] headerRow =
+            { "Turn", "Money", "Intel", "Funding", "Support", "Agents" }; // kja , "Terminated agents", "Successful missions", "Failed missions", "Most skilled agent" };
+
+        object[][] dataRows = gameStates
+            // We are selecting every second state, because these are the states at the end of turn,
+            // after player made their actions *AND* the turn time advanced.
+            .Where((state, i) => (i % 2 == 0))
+            .Select(
+                state =>
+                {
+                    object[] stateData =
+                    {
+                        state.Timeline.CurrentTurn,
+                        state.Assets.Money,
+                        state.Assets.Intel,
+                        state.Assets.Funding,
+                        state.Assets.Support,
+                        state.Assets.Agents.Count
+                    };
+                    return stateData;
+                }).ToArray();
+
+        SaveToCsvFile(new TabularData(headerRow, dataRows));
+    }
+
+    private void DiffPreviousAndCurrentGameState()
+    {
+        Debug.Assert(GameSession.PreviousGameState != null);
+        Debug.Assert(GameSession.PreviousGameState != GameSession.CurrentGameState);
+        GameState prev = GameSession.PreviousGameState;
+        GameState curr = GameSession.CurrentGameState;
+        new GameStateDiff(prev, curr).PrintTo(_log);
+    }
+
+    private void SaveToCsvFile(TabularData data)
+    {
+        new CsvFile(_config.DataCsvFile, data).Write();
+        _log.Info($"Saved game data .csv report to {_config.DataCsvFile.FullPath}");
     }
 
     private string CurrentGameStateSerializedAsJsonString()

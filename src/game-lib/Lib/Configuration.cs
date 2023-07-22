@@ -9,6 +9,8 @@ public class Configuration
 
     public readonly File LogFile;
 
+    public readonly File DataCsvFile;
+
     public readonly bool IncludeCallerTypeNameInLog = false;
 
     public readonly bool IncludeCallerMemberNameInLog = false;
@@ -27,6 +29,7 @@ public class Configuration
         var saveFileDir = new Dir(fs, "./../../../../saves");
         SaveFile = new File(saveFileDir, "savegame.json");
         LogFile = new File(saveFileDir, "log.txt");
+        DataCsvFile = new File(saveFileDir, "data.csv");
         // kja3 should have method here that returns handle to Lib.OS.File represented by SaveFileName
     }
 }
