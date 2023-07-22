@@ -9,6 +9,7 @@ public class BasicAIPlayerIntellect : IPlayer
 {
     private const int MinimumAcceptableAgentSurvivalChance = 20; // percent
     private const int MoneyThresholdToFocusOnGatheringIntel = 1000;
+    private const int MoneyThresholdToBuyTransportCapacity = 600;
     private readonly ILog _log;
 
     public BasicAIPlayerIntellect(ILog log)
@@ -22,12 +23,19 @@ public class BasicAIPlayerIntellect : IPlayer
         if (agentsToHire > 0)
             controller.HireAgents(agentsToHire);
 
+        int transportCapacityToBuy = ComputeTransportCapacityToBuy(state);
+        if (transportCapacityToBuy > 0)
+            controller.BuyTransportCapacity(transportCapacityToBuy);
+
         RecallAgents(state, controller);
 
         LaunchMissions(state, controller);
 
         AssignAvailableAgents(state, controller);
     }
+
+    private int ComputeTransportCapacityToBuy(GameStatePlayerView state)
+        => state.Assets.Money >= MoneyThresholdToBuyTransportCapacity ? 1 : 0;
 
     private static bool NoMissionsAvailable(GameStatePlayerView state) => !state.MissionSites.Active.Any();
 

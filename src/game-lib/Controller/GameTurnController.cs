@@ -21,6 +21,9 @@ public class GameTurnController
     public void HireAgents(int count)
         => PlayerActions.Apply(new HireAgentsPlayerAction(_log, count), _gameState);
 
+    public void BuyTransportCapacity(int capacity)
+        => PlayerActions.Apply(new BuyTransportCapacityPlayerAction(_log, capacity), _gameState);
+
     public void SackAgent(int id)
         => PlayerActions.Apply(new SackAgentsPlayerAction(
                 _log,

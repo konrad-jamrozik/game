@@ -115,4 +115,7 @@ public static class Ruleset
     public static int IncomeGeneratedPerAgent() => AgentUpkeepCost * 3;
 
     public static int IntelGatheredPerAgent() => 5;
+
+    public static int TransportCapacityBuyingCost(int capacity)
+        => capacity * 200;
 }

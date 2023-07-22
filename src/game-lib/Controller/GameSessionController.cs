@@ -72,6 +72,8 @@ public class GameSessionController
 
             player.PlayGameTurn(GameStatePlayerView, TurnController);
 
+            Debug.Assert(!state.IsGameOver);
+
             // This state diff shows what actions the player took.
             DiffPreviousAndCurrentGameState();
 
@@ -93,6 +95,7 @@ public class GameSessionController
                   $"Intel: {state.Assets.Intel}, " +
                   $"Funding: {state.Assets.Funding}, " +
                   $"Support: {state.Assets.Support}, " +
+                  $"Transport cap.: {state.Assets.MaxTransportCapacity}, " +
                   $"Turn: {state.Timeline.CurrentTurn-1} / {turnLimit}.");
         _log.Info("");
 
