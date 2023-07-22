@@ -12,9 +12,10 @@ public static class EnumerableMoreLinqExtensions
         this IEnumerable<TSource> source,
         Action<TSource> action) => MoreEnumerable.ForEach(source, action);
 
-    public static IExtremaEnumerable<TSource> MaxBy<TSource, TKey>(
-        this IEnumerable<TSource> source,
-        Func<TSource, TKey> selectKey) => MoreEnumerable.MaxBy(source, selectKey);
+    // Conflict with https://learn.microsoft.com/en-us/dotnet/api/system.linq.enumerable.maxby?view=net-7.0
+    // public static IExtremaEnumerable<TSource> MaxBy<TSource, TKey>(
+    //     this IEnumerable<TSource> source,
+    //     Func<TSource, TKey> selectKey) => MoreEnumerable.MaxBy(source, selectKey);
 
     public static void AssertDistinctBy<TSource, TKey>(
         this IEnumerable<TSource> source,

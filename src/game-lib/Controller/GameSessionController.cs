@@ -131,11 +131,13 @@ public class GameSessionController
 
         object[] headerRow =
         {
-            "Turn", "Money", "Intel", "Funding", "Support", "Transport cap.",
+            "Turn", "Money", "Intel", "Funding", "Upkeep cost", "Support", "Transport cap.",
             "Agents", "In training", "Generating income", "Gathering intel", "Recovering", "Terminated agents", 
-            "Successful missions", "Failed missions", "Expired mission sites", "Avg diff. last 5", 
-            "Avg agent skill", "Max agent skill"
+            "Successful missions", "Failed missions", "Expired mission sites", "Avg diff. last 5",
+            "Avg agent skill", "Max agent skill", "Max survival on last"
         };
+
+        int lastMissionSiteMaxAgentSurvivalChance;
 
         object[][] dataRows = gameStates
             // We are selecting every second state, because these are the states at the end of turn,
@@ -144,12 +146,32 @@ public class GameSessionController
             .Select(
                 state =>
                 {
+                    int lastMissionSiteDifficulty = state.MissionSites.Any() ? state.MissionSites.TakeLast(1).Single().Difficulty : 0;
+                    
+                    Agent? mostSkilledAgent = state.Assets.Agents.Any()
+                        ? state.Assets.Agents.MaxBy(Ruleset.AgentSurvivalSkill)
+                        : null;
+                    
+                    lastMissionSiteMaxAgentSurvivalChance = mostSkilledAgent != null && lastMissionSiteDifficulty > 0
+                        ? Ruleset.AgentSurvivalChance(mostSkilledAgent, lastMissionSiteDifficulty)
+                        : 0;
+                    
+                    double avgDiffLast5MissionSites = state.MissionSites.Any()
+                        ? Math.Round(state.MissionSites.TakeLast(5).Average(site => site.Difficulty)) : 0;
+
+                    double avgAgentSkill = state.Assets.Agents.Any()
+                        ? Math.Round(state.Assets.Agents.Average(Ruleset.AgentSurvivalSkill), 2)
+                        : 0;
+                    
+                    int maxAgentSkill = mostSkilledAgent != null ? Ruleset.AgentSurvivalSkill(mostSkilledAgent) : 0;
+
                     object[] stateData =
                     {
                         state.Timeline.CurrentTurn,
                         state.Assets.Money / 10,
                         state.Assets.Intel,
                         state.Assets.Funding,
+                        state.Assets.Agents.UpkeepCost,
                         state.Assets.Support,
                         state.Assets.MaxTransportCapacity,
                         state.Assets.Agents.Count,
@@ -161,13 +183,10 @@ public class GameSessionController
                         state.Missions.Successful.Count,
                         state.Missions.Failed.Count,
                         state.MissionSites.Expired.Count,
-                        state.MissionSites.Any()
-                            ? Math.Round(
-                                MoreEnumerable.TakeLast(state.MissionSites, 5)
-                                    .Average(site => site.Difficulty))
-                            : 0,
-                        state.Assets.Agents.Any() ? Math.Round(state.Assets.Agents.Average(Ruleset.AgentSurvivalSkill), 2) : 0,
-                        state.Assets.Agents.Any() ? state.Assets.Agents.Max(Ruleset.AgentSurvivalSkill) : 0
+                        avgDiffLast5MissionSites,
+                        avgAgentSkill,
+                        maxAgentSkill,
+                        lastMissionSiteMaxAgentSurvivalChance
                     };
                     return stateData;
                 }).ToArray();

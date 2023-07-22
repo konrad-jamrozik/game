@@ -1,3 +1,5 @@
+using MoreLinq;
+
 namespace UfoGameLib.Lib;
 
 // Note: currently upon save/load the random gets re-randomized.

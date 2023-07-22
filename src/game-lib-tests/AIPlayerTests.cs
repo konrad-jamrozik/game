@@ -20,6 +20,17 @@ public class AIPlayerTests
     }
 
     [Test]
+    public void Scratchpad()
+    {
+        List<int> foo = new List<int> { 1, 2, 3, 4, 5, 6, 7 };
+        List<int> taken = foo[^7..];
+        for (int i = 0; i < taken.Count; i++)
+        {
+            Console.Out.WriteLine($"i {i}: {taken[i]}");
+        }
+    }
+
+    [Test]
     public void DoNothingAIPlayerIntellectPlaysGameUntilConclusion()
         => AIPlayerPlaysGameUntilConclusion(AIPlayer.Intellect.DoNothing, turnLimit: 5);
 

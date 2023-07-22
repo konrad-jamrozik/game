@@ -1,3 +1,4 @@
+using MoreLinq;
 using UfoGameLib.Lib;
 using UfoGameLib.Model;
 using UfoGameLib.State;
@@ -24,14 +25,17 @@ internal class GameStateDiff
                 : $"===== GSDiff: Result of turn {_prev.Timeline.CurrentTurn}");
         log.Info("");
 
-        List<(Agent? prev, Agent? curr)> agentDiffs = _prev.AllAgents.OrderBy(a => a.Id)
-            .ZipLongest(_curr.AllAgents.OrderBy(a => a.Id), (prev, curr) => (prev, curr)).ToList();
+        List<(Agent? prev, Agent curr)> agentDiffs = _prev.AllAgents.OrderBy(a => a.Id)
+            .ZipLongest(
+                _curr.AllAgents.OrderBy(a => a.Id),
+                (prev, curr) => (prev, curr!))
+            .ToList();
 
         agentDiffs.ForEach(
             agentDiff =>
             {
                 if (agentDiff.prev is not { IsTerminated: true })
-                    log.Info(AgentDiffLog(agentDiff.prev, agentDiff.curr!));
+                    log.Info(AgentDiffLog(agentDiff.prev, agentDiff.curr));
             });
     }
 
