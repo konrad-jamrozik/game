@@ -130,8 +130,8 @@ public class GameSessionController
         object[] headerRow =
         {
             "Turn", "Money", "Intel", "Funding", "Support", "Transport cap.",
-            "Agents", "In training", "Generating income", "Gathering intel", "Terminated agents", 
-            "Successful missions", "Failed missions", "Expired mission sites", 
+            "Agents", "In training", "Generating income", "Gathering intel", "Recovering", "Terminated agents", 
+            "Successful missions", "Failed missions", "Expired mission sites", "Avg diff. last 5", 
             "Avg agent skill", "Max agent skill"
         };
 
@@ -145,7 +145,7 @@ public class GameSessionController
                     object[] stateData =
                     {
                         state.Timeline.CurrentTurn,
-                        state.Assets.Money,
+                        state.Assets.Money / 10,
                         state.Assets.Intel,
                         state.Assets.Funding,
                         state.Assets.Support,
@@ -154,10 +154,16 @@ public class GameSessionController
                         state.Assets.Agents.InTraining.Count,
                         state.Assets.Agents.GeneratingIncome.Count,
                         state.Assets.Agents.GatheringIntel.Count,
+                        state.Assets.Agents.Recovering.Count,
                         state.TerminatedAgents.Count,
                         state.Missions.Successful.Count,
                         state.Missions.Failed.Count,
                         state.MissionSites.Expired.Count,
+                        state.MissionSites.Any()
+                            ? Math.Round(
+                                MoreEnumerable.TakeLast(state.MissionSites, 5)
+                                    .Average(site => site.Difficulty))
+                            : 0,
                         state.Assets.Agents.Any() ? Math.Round(state.Assets.Agents.Average(Ruleset.AgentSurvivalSkill), 2) : 0,
                         state.Assets.Agents.Any() ? state.Assets.Agents.Max(Ruleset.AgentSurvivalSkill) : 0
                     };
