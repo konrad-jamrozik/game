@@ -32,6 +32,7 @@ public class TurnStatsReport
 
     private static object[] HeaderRow => new object[]
     {
+        // kja need to add: money from generated income; median survival on last
         "Turn", "Money", "Intel", "Funding", "Upkeep cost", "Support", "Transport cap.",
         "Agents", "In training", "Generating income", "Gathering intel", "Recovering", "Terminated agents",
         "Launched missions", "Successful missions", "Failed missions", "Expired mission sites", "Avg diff. last 5",
