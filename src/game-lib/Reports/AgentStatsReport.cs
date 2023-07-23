@@ -7,7 +7,6 @@ using File = Lib.OS.File;
 
 namespace UfoGameLib.Reports;
 
-// kja output this to a csv file and create Excel table out of it
 public class AgentStatsReport : CsvFileReport
 {
     private const int TopAgents = 5;
@@ -58,14 +57,36 @@ public class AgentStatsReport : CsvFileReport
 
     private static object[] HeaderRow => new object[]
     {
-         // kja curr work
+        // $" | TsInRecovery: {agent.TurnsInRecovery,3}";
+         "ID", "Skill", "Turn hired", "Turn term.", "Ts survived", 
+         "Mis survived", "Mis succeeded", "Mis failed",
+         "Ts in training", "Ts genIncome", "Ts gathIntel", "Ts in ops", "Ts inRecovery"
     };
 
     private static object[][] DataRows(GameState gameState)
     {
-        return new object[][] { }; // kja curr work
+        // kja introduce gameState.Timeline.LastTurn
+        int lastTurn = gameState.Timeline.CurrentTurn - 1;
+        return gameState.AllAgents.OrderBy(agent => agent.Id).Select(
+            agent => new object[]
+            {
+                agent.Id,
+                agent.SurvivalSkill,
+                agent.TurnHired,
+                agent.TurnTerminated!,
+                TurnsSurvived(agent, lastTurn),
+                agent.MissionsSurvived,
+                agent.MissionsSucceeded,
+                agent.MissionsFailed,
+                agent.TurnsInTraining,
+                agent.TurnsGeneratingIncome,
+                agent.TurnsGatheringIntel,
+                agent.TurnsInOps,
+                agent.TurnsInRecovery
+            }).ToArray();
     }
 
+    // kja make this property on Agent
     private static int TurnsSurvived(Agent agent, int lastTurn)
     {
         int agentEndTurn = agent.TurnTerminated ?? lastTurn;
@@ -90,7 +111,6 @@ public class AgentStatsReport : CsvFileReport
 
         return $"{agent.LogString}" +
                $" | Skill: {agent.SurvivalSkill,3}" +
-               $" | Terminated: {agent.IsTerminated,5}" +
                $" | T.Hired: {agent.TurnHired,3}" +
                $" | T.Term.: {agent.TurnTerminated,3}" +
                $" | TsSurvived: {turnsSurvived,3}" +
