@@ -177,17 +177,25 @@ public class Agent
         Debug.Assert(!IsOnMission);
         CurrentState = State.OnMission;
         CurrentMission = mission;
-        MissionsLaunched++;
+        // Note:
+        // We are not increasing MissionsLaunched here
+        // as it would screw up various computations,
+        // like e.g. computation of the agent skill during the mission
+        // would already take into the account experience from that mission
+        // itself, but shouldn't.
+        // Instead, we increment this when we finish evaluating a mission
+        // and also increment either the count of successful or of failed 
+        // missions.
         AssertMissionInvariants();
     }
 
-    public void MakeAvailable(bool onMission = false)
+    public void MakeAvailable()
     {
         Debug.Assert(!IsAvailable);
         if (IsOnMission)
             CurrentMission = null;
         CurrentState = State.Available;
-        AssertMissionInvariants(onMission);
+        AssertMissionInvariants();
     }
 
     public void SetRecoversIn(int recoversIn)
@@ -200,11 +208,12 @@ public class Agent
         CurrentState = State.Recovering;
         RecoversIn = recoversIn;
 
-        AssertMissionInvariants(onMission: true);
+        AssertMissionInvariants();
     }
 
     public void TickRecovery()
     {
+        Debug.Assert(IsRecovering);
         Debug.Assert(RecoversIn > 0);
 
         RecoversIn--;
@@ -229,13 +238,13 @@ public class Agent
         CurrentState = State.Terminated;
         TurnTerminated = turnTerminated;
         CurrentMission = null;
-        AssertMissionInvariants(onMission: !sack);
+        AssertMissionInvariants();
     }
 
     [JsonIgnore]
     public string LogString => $"AgentID: {Id,4}";
 
-    private void AssertMissionInvariants(bool onMission = false)
+    private void AssertMissionInvariants()
     {
         Debug.Assert(
             IsOnMission == (CurrentMission != null),
@@ -244,6 +253,6 @@ public class Agent
         Debug.Assert(MissionsLaunched >= 0);
         Debug.Assert(MissionsSucceeded >= 0);
         Debug.Assert(MissionsFailed >= 0);
-        Debug.Assert(MissionsLaunched == MissionsSucceeded + MissionsFailed + (IsOnMission || onMission ? 1 : 0));
+        Debug.Assert(MissionsLaunched == MissionsSucceeded + MissionsFailed);
     }
 }

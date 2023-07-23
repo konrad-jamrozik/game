@@ -96,9 +96,9 @@ public class AdvanceTimePlayerAction : PlayerAction
         UpdateAgentMissionStats(agentsOnMission, missionSuccessful);
         
         _log.Info($"Evaluated {mission.LogString}. result: {mission.CurrentState,7}, " +
-                  $"difficulty: {mission.Site.Difficulty}, " +
-                  $"agents: surviving / required: {agentsSurviving} / {agentsRequired}, " +
-                  $"terminated / sent: {agentsTerminated} / {agentsSent}.");
+                  $"difficulty: {mission.Site.Difficulty,3}, " +
+                  $"agents: surviving / required: {agentsSurviving,3} / {agentsRequired,3}, " +
+                  $"terminated / sent: {agentsTerminated,3} / {agentsSent,3}.");
 
         return (missionSuccessful, agentsTerminated);
     }
@@ -108,6 +108,7 @@ public class AdvanceTimePlayerAction : PlayerAction
         agentsOnMission.ForEach(
             agent =>
             {
+                agent.MissionsLaunched++;
                 if (missionSuccessful)
                     agent.MissionsSucceeded++;
                 else
@@ -134,7 +135,7 @@ public class AdvanceTimePlayerAction : PlayerAction
                 if (recoversIn > 0)
                     agent.SetRecoversIn(recoversIn);
                 else
-                    agent.MakeAvailable(onMission: true);
+                    agent.MakeAvailable();
             }
             else
             {
@@ -181,6 +182,8 @@ public class AdvanceTimePlayerAction : PlayerAction
         return expiredMissions;
     }
 
+    // kja to make simulation more interesting: create easier missions from time to time and
+    // make AI player send less experienced soldiers on it.
     private void CreateMissionSites(GameState state)
     {
         if (state.Timeline.CurrentTurn % 3 == 0)

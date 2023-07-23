@@ -1,5 +1,4 @@
 using UfoGameLib.Lib;
-using UfoGameLib.State;
 
 namespace UfoGameLib.Model;
 
@@ -37,7 +36,7 @@ public static class Ruleset
         log.Info(
             $"{agent.LogString} survived {mission.LogString} : {survived,5}. " +
             $"Skill: {AgentSurvivalSkill(agent),3}, Difficulty: {mission.Site.Difficulty,3}, " +
-            $"Roll: {survivalRoll,3} { (survived ? "> " : "<=") } {survivalThreshold}," +
+            $"Roll: {survivalRoll,3} { (survived ? "> " : "<=") } {survivalThreshold,3}," +
             $"{(survived ? $" RecoversIn: {recoversIn,3}" : "")}"
             );
 
@@ -83,8 +82,25 @@ public static class Ruleset
             0);
 
     // kja add Agent.SurvivalSkill delegate
-    // kja increase skill by MissionsLaunched / Succeeded / Failed
-    public static int AgentSurvivalSkill(Agent agent) => agent.TurnsInTraining * AgentTrainingCoefficient;
+    public static int AgentSurvivalSkill(Agent agent)
+        => agent.TurnsInTraining * AgentTrainingCoefficient + SkillFromMissions(agent);
+
+    private static readonly int[] SkillFromEachFirstMission = { 18, 15, 12, 9, 6 };
+
+    private static readonly int SkillFromEachMissionBeyondFirstMissions = SkillFromEachFirstMission[^1];
+
+    private static int SkillFromMissions(Agent agent)
+    {
+        // Note: here we implicitly assume that if we are computing agent skill to see how
+        // the agent fared on given mission, then agent.MissionsLaunched does not include
+        // that mission yet. Otherwise, consider border case of first mission: the agent would
+        // immediately get the huge boost for first mission, which is not intended.
+        int missionCount = agent.MissionsLaunched;
+        Debug.Assert(missionCount >= 0);
+        int skillFromFirstMissions = SkillFromEachFirstMission.Take(missionCount).Sum();
+        int missionsBeyondFirstMissions = Math.Max(missionCount - SkillFromEachFirstMission.Length, 0);
+        return skillFromFirstMissions + missionsBeyondFirstMissions * SkillFromEachMissionBeyondFirstMissions;
+    }
 
     public static (int difficulty, int difficultyFromTurn, int roll) RollMissionSiteDifficulty(
             int currentTurn,
