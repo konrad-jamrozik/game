@@ -46,7 +46,7 @@ public class GameSessionStatsReport
 
         Agents mostSkilledAgents = MostSkilledAgents(gameStates, TopAgents);
         Agents longestSurvivingAgents = LongestSurvivingAgents(gameStates, TopAgents, lastTurn);
-        Agents agentsSurvivingMostMissions = AgentsSurvivingMostMissions(gameStates, TopAgents);
+        Agents agentsOnMostMissions = AgentsOnMostMissions(gameStates, TopAgents);
 
         _log.Info("");
         _log.Info($"Top {TopAgents} most skilled agents:");
@@ -57,8 +57,8 @@ public class GameSessionStatsReport
         LogAgents(longestSurvivingAgents, lastTurn);
         _log.Info("");
 
-        _log.Info($"Top {TopAgents} agents surviving most missions:");
-        LogAgents(agentsSurvivingMostMissions, lastTurn);
+        _log.Info($"Top {TopAgents} agents by missions sent to:");
+        LogAgents(agentsOnMostMissions, lastTurn);
         _log.Info("");
     }
 
@@ -76,13 +76,13 @@ public class GameSessionStatsReport
                $", TurnHired: {agent.TurnHired,3}" +
                $", TurnTerminated: {agent.TurnTerminated,3}" +
                $", TurnsSurvived: {turnsSurvived,3}" +
-               $", MissionsLaunched: ?" +
-               $", MissionsSuccessful: ?" +
-               $", MissionsFailed: ?" +
-               $", DaysInTraining: ?" +
-               $", DaysGeneratingIncome: ?" +
-               $", DaysGatheringIntel: ?" +
-               $", DaysRecovering: ?";
+               $", MissionsLaunched: {agent.MissionsLaunched}" +
+               $", MissionsSucceeded: {agent.MissionsSucceeded}" +
+               $", MissionsFailed: {agent.MissionsFailed}" +
+               $", TurnsTraining: {agent.TurnsTrained}" +
+               $", TurnsGeneratingIncome: ?" +
+               $", TurnsGatheringIntel: ?" +
+               $", TurnsRecovering: ?";
     }
 
     private static int TurnsSurvived(Agent agent, int lastTurn)
@@ -106,10 +106,12 @@ public class GameSessionStatsReport
             .Take(top)
             .ToAgents(terminated: null);
 
-    private Agents AgentsSurvivingMostMissions(List<GameState> gameStates, int top)
-    {
-        return new Agents();
-    }
+    private Agents AgentsOnMostMissions(List<GameState> gameStates, int top)
+        => gameStates.Last().AllAgents
+            .OrderByDescending(agent => agent.MissionsLaunched)
+            .ThenBy(agent => agent.Id)
+            .Take(top)
+            .ToAgents(terminated: null);
 
     private static object[] HeaderRow => new object[]
     {

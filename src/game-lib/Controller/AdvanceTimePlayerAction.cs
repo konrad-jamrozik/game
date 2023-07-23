@@ -83,13 +83,17 @@ public class AdvanceTimePlayerAction : PlayerAction
     {
         Debug.Assert(mission.CurrentState == Mission.State.Active);
 
-        (int agentsSent, int agentsSurviving, int agentsTerminated) = EvaluateAgentsOnMission(state, mission);
+        Agents agentsOnMission = state.Assets.Agents.OnSpecificMission(mission);
+
+        (int agentsSent, int agentsSurviving, int agentsTerminated) = EvaluateAgentsOnMission(state, mission, agentsOnMission);
 
         int agentsRequired = Ruleset.RequiredSurvivingAgentsForSuccess(mission.Site);
         bool missionSuccessful = Ruleset.MissionSuccessful(mission, agentsSurviving);
         mission.CurrentState = missionSuccessful
             ? Mission.State.Successful
             : Mission.State.Failed;
+
+        UpdateAgentMissionStats(agentsOnMission, missionSuccessful);
         
         _log.Info($"Evaluated {mission.LogString}. result: {mission.CurrentState,7}, " +
                   $"difficulty: {mission.Site.Difficulty}, " +
@@ -99,12 +103,23 @@ public class AdvanceTimePlayerAction : PlayerAction
         return (missionSuccessful, agentsTerminated);
     }
 
+    private static void UpdateAgentMissionStats(Agents agentsOnMission, bool missionSuccessful)
+    {
+        agentsOnMission.ForEach(
+            agent =>
+            {
+                if (missionSuccessful)
+                    agent.MissionsSucceeded++;
+                else
+                    agent.MissionsFailed++;
+            });
+    }
+
     private (int agentsSent, int agentsSurviving, int agentsTerminated) EvaluateAgentsOnMission(
         GameState state,
-        Mission mission)
+        Mission mission,
+        Agents agentsOnMission)
     {
-        Agents agentsOnMission = state.Assets.Agents.OnSpecificMission(mission);
-        
         int agentsSent = agentsOnMission.Count;
         int agentsSurviving = 0;
         int agentsTerminated = 0;
@@ -119,7 +134,7 @@ public class AdvanceTimePlayerAction : PlayerAction
                 if (recoversIn > 0)
                     agent.SetRecoversIn(recoversIn);
                 else
-                    agent.MakeAvailable();
+                    agent.MakeAvailable(onMission: true);
             }
             else
             {
@@ -174,9 +189,9 @@ public class AdvanceTimePlayerAction : PlayerAction
             var site = new MissionSite(siteId, difficulty, expiresIn: 3);
             state.MissionSites.Add(site);
             _log.Info($"Add {site.LogString} : " +
-                      $"difficulty: {difficulty}, " +
-                      $"difficultyFromTurn: {difficultyFromTurn}, " +
-                      $"difficultyRoll: {roll}.");
+                      $"difficulty: {difficulty,3}, " +
+                      $"difficultyFromTurn: {difficultyFromTurn,3}, " +
+                      $"difficultyRoll: {roll,2}.");
             
         }
     }

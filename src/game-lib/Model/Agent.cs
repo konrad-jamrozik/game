@@ -25,6 +25,10 @@ public class Agent
     public readonly int TurnHired;
     public int? TurnTerminated;
 
+    public int MissionsLaunched;
+    public int MissionsSucceeded;
+    public int MissionsFailed;
+
     // ReSharper disable once IntroduceOptionalParameters.Global
     public Agent(int id, int turnHired) : this(
         id,
@@ -32,8 +36,11 @@ public class Agent
         currentMission: null,
         turnsTrained: 0,
         recoversIn: 0,
-        turnHired,
-        turnTerminated: null)
+        turnHired: turnHired,
+        turnTerminated: null,
+        missionsLaunched: 0,
+        missionsSucceeded: 0,
+        missionsFailed: 0)
     {
     }
 
@@ -45,17 +52,24 @@ public class Agent
         int turnsTrained,
         int recoversIn,
         int turnHired,
-        int? turnTerminated)
+        int? turnTerminated,
+        int missionsLaunched,
+        int missionsSucceeded,
+        int missionsFailed)
     {
         Id = id;
         CurrentState = currentState;
         CurrentMission = currentMission;
         TurnsTrained = turnsTrained;
-        AssertMissionInvariant();
         RecoversIn = recoversIn;
         TurnHired = turnHired;
         TurnTerminated = turnTerminated;
-        Debug.Assert(turnTerminated == null || TurnHired <= TurnTerminated);
+        MissionsLaunched = missionsLaunched;
+        MissionsSucceeded = missionsSucceeded;
+        MissionsFailed = missionsFailed;
+        Debug.Assert(TurnHired >= 1);
+        Debug.Assert(TurnTerminated == null || TurnHired <= TurnTerminated);
+        AssertMissionInvariants();
     }
 
     [JsonIgnore]
@@ -150,16 +164,17 @@ public class Agent
         Debug.Assert(!IsOnMission);
         CurrentState = State.OnMission;
         CurrentMission = mission;
-        AssertMissionInvariant();
+        MissionsLaunched++;
+        AssertMissionInvariants();
     }
 
-    public void MakeAvailable()
+    public void MakeAvailable(bool onMission = false)
     {
         Debug.Assert(!IsAvailable);
         if (IsOnMission)
             CurrentMission = null;
         CurrentState = State.Available;
-        AssertMissionInvariant();
+        AssertMissionInvariants(onMission);
     }
 
     public void SetRecoversIn(int recoversIn)
@@ -172,7 +187,7 @@ public class Agent
         CurrentState = State.Recovering;
         RecoversIn = recoversIn;
 
-        AssertMissionInvariant();
+        AssertMissionInvariants(onMission: true);
     }
 
     public void TickRecovery()
@@ -200,16 +215,21 @@ public class Agent
         CurrentState = State.Terminated;
         TurnTerminated = turnTerminated;
         CurrentMission = null;
-        AssertMissionInvariant();
+        AssertMissionInvariants(onMission: !sack);
     }
 
     [JsonIgnore]
     public string LogString => $"AgentID: {Id,4}";
 
-    private void AssertMissionInvariant()
+    private void AssertMissionInvariants(bool onMission = false)
     {
         Debug.Assert(
             IsOnMission == (CurrentMission != null),
             $"IsOnMission: {IsOnMission} == (CurrentMission != null): {CurrentMission != null}");
+        
+        Debug.Assert(MissionsLaunched >= 0);
+        Debug.Assert(MissionsSucceeded >= 0);
+        Debug.Assert(MissionsFailed >= 0);
+        Debug.Assert(MissionsLaunched == MissionsSucceeded + MissionsFailed + (IsOnMission || onMission ? 1 : 0));
     }
 }
