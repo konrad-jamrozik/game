@@ -19,7 +19,6 @@ public class Agent
     public readonly int Id;
     public State CurrentState;
     public Mission? CurrentMission;
-    public int TurnsTrained;
     public int RecoversIn;
 
     public readonly int TurnHired;
@@ -29,6 +28,7 @@ public class Agent
     public int MissionsSucceeded;
     public int MissionsFailed;
 
+    public int TurnsInTraining;
     public int TurnsGeneratingIncome;
     public int TurnsGatheringIntel;
     public int TurnsInRecovery;
@@ -38,13 +38,13 @@ public class Agent
         id,
         State.InTransit,
         currentMission: null,
-        turnsTrained: 0,
         recoversIn: 0,
         turnHired: turnHired,
         turnTerminated: null,
         missionsLaunched: 0,
         missionsSucceeded: 0,
         missionsFailed: 0,
+        turnsInTraining: 0,
         turnsGeneratingIncome: 0,
         turnsGatheringIntel: 0,
         turnsInRecovery: 0)
@@ -56,13 +56,13 @@ public class Agent
         int id,
         State currentState,
         Mission? currentMission,
-        int turnsTrained,
         int recoversIn,
         int turnHired,
         int? turnTerminated,
         int missionsLaunched,
         int missionsSucceeded,
         int missionsFailed,
+        int turnsInTraining,
         int turnsGeneratingIncome,
         int turnsGatheringIntel,
         int turnsInRecovery)
@@ -70,7 +70,7 @@ public class Agent
         Id = id;
         CurrentState = currentState;
         CurrentMission = currentMission;
-        TurnsTrained = turnsTrained;
+        TurnsInTraining = turnsInTraining;
         RecoversIn = recoversIn;
         TurnHired = turnHired;
         TurnTerminated = turnTerminated;

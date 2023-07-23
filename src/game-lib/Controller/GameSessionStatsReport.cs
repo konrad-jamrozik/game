@@ -109,7 +109,7 @@ public class GameSessionStatsReport
                $", MissionsLaunched: {agent.MissionsLaunched,3}" +
                $", MissionsSucceeded: {agent.MissionsSucceeded,3}" +
                $", MissionsFailed: {agent.MissionsFailed,3}" +
-               $", TurnsTraining: {agent.TurnsTrained,3}" +
+               $", TurnsInTraining: {agent.TurnsInTraining,3}" +
                $", TurnsGeneratingIncome: {agent.TurnsGeneratingIncome,3}" +
                $", TurnsGatheringIntel: {agent.TurnsGeneratingIncome,3}" +
                $", TurnsInRecovery: {agent.TurnsInRecovery,3}";
@@ -146,7 +146,7 @@ public class GameSessionStatsReport
 
     private Agents AgentsMostTrained(List<GameState> gameStates, int top)
         => gameStates.Last().AllAgents
-            .OrderByDescending(agent => agent.TurnsTrained)
+            .OrderByDescending(agent => agent.TurnsInTraining)
             .ThenBy(agent => agent.Id)
             .Take(top)
             .ToAgents(terminated: null);
