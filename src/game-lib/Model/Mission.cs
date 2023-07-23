@@ -15,6 +15,11 @@ public class Mission : IIdentifiable
     public MissionSite Site;
     public State CurrentState;
 
+    // kja to add
+    // public int AgentsSent;
+    // public int AgentsSurvived;
+    // public int AgentsTerminated;
+
     public Mission(int id, MissionSite site) : this(
         id, 
         // This mission just got constructed so it is active until it gets evaluated

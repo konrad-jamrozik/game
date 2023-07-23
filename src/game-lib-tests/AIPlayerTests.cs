@@ -32,7 +32,7 @@ public class AIPlayerTests
 
     [Test]
     public void DoNothingAIPlayerIntellectPlaysGameUntilConclusion()
-        => AIPlayerPlaysGameUntilConclusion(AIPlayer.Intellect.DoNothing, turnLimit: 5);
+        => AIPlayerPlaysGameUntilConclusion(AIPlayer.Intellect.DoNothing, turnLimit: 10);
 
     [Test]
     public void BasicAIPlayerIntellectPlaysGameUntilConclusion()

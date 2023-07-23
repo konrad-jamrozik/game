@@ -171,11 +171,9 @@ public class AdvanceTimePlayerAction : PlayerAction
         state.MissionSites.Active.ForEach(
             missionSite =>
             {
-                if (missionSite.ExpiresIn > 0)
-                    missionSite.ExpiresIn--;
-                else
+                var expired = missionSite.TickExpiration(state.Timeline.CurrentTurn);
+                if (expired)
                 {
-                    missionSite.IsActive = false;
                     expiredMissions++;
                     _log.Info($"{missionSite.LogString} expired!");
                 }
@@ -193,7 +191,7 @@ public class AdvanceTimePlayerAction : PlayerAction
             int siteId = state.NextMissionSiteId;
             (int difficulty, int difficultyFromTurn, int roll) =
                 Ruleset.RollMissionSiteDifficulty(state.Timeline.CurrentTurn, _randomGen);
-            var site = new MissionSite(siteId, difficulty, expiresIn: 3);
+            var site = new MissionSite(siteId, turnAppeared: state.Timeline.CurrentTurn, difficulty, expiresIn: 3);
             state.MissionSites.Add(site);
             _log.Info($"Add {site.LogString} : " +
                       $"difficulty: {difficulty,3}, " +
