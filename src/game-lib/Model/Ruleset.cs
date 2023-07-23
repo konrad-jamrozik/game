@@ -71,7 +71,7 @@ public static class Ruleset
         => AgentCanSurvive(agent, mission.Site.Difficulty);
 
     public static bool AgentCanSurvive(Agent agent, int difficulty)
-        => AgentSurvivalThreshold(agent, difficulty) <= AgentSurvivalRollUpperBound;
+        => AgentSurvivalThreshold(agent, difficulty) < AgentSurvivalRollUpperBound;
 
     public static int AgentSurvivalThreshold(Agent agent, Mission mission)
         => AgentSurvivalThreshold(agent, mission.Site.Difficulty);
