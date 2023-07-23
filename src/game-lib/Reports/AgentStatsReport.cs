@@ -23,7 +23,7 @@ public class AgentStatsReport
 
         Agents agentsWithMostSkill = TopAgentsBy(Ruleset.AgentSurvivalSkill);
         Agents agentsSurvivingLongest = TopAgentsBy(agent => TurnsSurvived(agent, lastTurn));
-        Agents agentsOnMostMissions = TopAgentsBy(agent => agent.MissionsLaunched);
+        Agents agentsSurvivingMostMissions = TopAgentsBy(agent => agent.MissionsSurvived);
         Agents agentsMostTrained = TopAgentsBy(agent => agent.TurnsInTraining);
         Agents agentsOnMostIncomeGeneratingOps = TopAgentsBy(agent => agent.TurnsGeneratingIncome);
         Agents agentsOnMostIntelGatheringOps = TopAgentsBy(agent => agent.TurnsGatheringIntel);

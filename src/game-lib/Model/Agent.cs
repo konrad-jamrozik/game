@@ -24,7 +24,7 @@ public class Agent
     public readonly int TurnHired;
     public int? TurnTerminated;
 
-    public int MissionsLaunched;
+    public int MissionsSurvived;
     public int MissionsSucceeded;
     public int MissionsFailed;
 
@@ -41,7 +41,7 @@ public class Agent
         recoversIn: 0,
         turnHired: turnHired,
         turnTerminated: null,
-        missionsLaunched: 0,
+        missionsSurvived: 0,
         missionsSucceeded: 0,
         missionsFailed: 0,
         turnsInTraining: 0,
@@ -59,7 +59,7 @@ public class Agent
         int recoversIn,
         int turnHired,
         int? turnTerminated,
-        int missionsLaunched,
+        int missionsSurvived,
         int missionsSucceeded,
         int missionsFailed,
         int turnsInTraining,
@@ -74,7 +74,7 @@ public class Agent
         RecoversIn = recoversIn;
         TurnHired = turnHired;
         TurnTerminated = turnTerminated;
-        MissionsLaunched = missionsLaunched;
+        MissionsSurvived = missionsSurvived;
         MissionsSucceeded = missionsSucceeded;
         MissionsFailed = missionsFailed;
         TurnsGeneratingIncome = turnsGeneratingIncome;
@@ -148,7 +148,7 @@ public class Agent
     public bool IsAway => IsInTransit || IsDoingOps || IsOnMission;
 
     [JsonIgnore]
-    public bool IsAlive => (IsInBase || IsAway) && !IsTerminated;
+    public bool IsAlive => /* (IsInBase || IsAway) && */ !IsTerminated;
 
     public void SendToTraining()
     {
@@ -232,7 +232,6 @@ public class Agent
     public void Terminate(int turnTerminated, bool sack = false)
     {
         Debug.Assert(IsAlive);
-        Debug.Assert(!IsTerminated);
         Debug.Assert(sack ? CanBeSacked : IsOnMission);
         Debug.Assert(turnTerminated >= TurnHired);
         CurrentState = State.Terminated;
@@ -250,9 +249,12 @@ public class Agent
             IsOnMission == (CurrentMission != null),
             $"IsOnMission: {IsOnMission} == (CurrentMission != null): {CurrentMission != null}");
         
-        Debug.Assert(MissionsLaunched >= 0);
+        Debug.Assert(MissionsSurvived >= 0);
         Debug.Assert(MissionsSucceeded >= 0);
         Debug.Assert(MissionsFailed >= 0);
-        Debug.Assert(MissionsLaunched == MissionsSucceeded + MissionsFailed);
+        // If agent didn't survive their last mission, it's outcome still counts towards their
+        // missions succeeded or failed, that's why this comparison allows the difference of 1.
+        Debug.Assert(MissionsSucceeded + MissionsFailed >= MissionsSurvived);
+        Debug.Assert(MissionsSucceeded + MissionsFailed <= MissionsSurvived + 1);
     }
 }

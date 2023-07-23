@@ -91,14 +91,13 @@ public static class Ruleset
 
     private static int SkillFromMissions(Agent agent)
     {
-        // Note: here we implicitly assume that if we are computing agent skill to see how
-        // the agent fared on given mission, then agent.MissionsLaunched does not include
+        // Note: the implicit assumption here is that if this method is called to compute if agent survived
+        // a mission they are currently on, then agent.MissionsSurvived does not include
         // that mission yet. Otherwise, consider border case of first mission: the agent would
-        // immediately get the huge boost for first mission, which is not intended.
-        int missionCount = agent.MissionsLaunched;
-        Debug.Assert(missionCount >= 0);
-        int skillFromFirstMissions = SkillFromEachFirstMission.Take(missionCount).Sum();
-        int missionsBeyondFirstMissions = Math.Max(missionCount - SkillFromEachFirstMission.Length, 0);
+        // immediately get the huge boost for surviving first mission, which is not intended.
+        Debug.Assert(agent.MissionsSurvived >= 0);
+        int skillFromFirstMissions = SkillFromEachFirstMission.Take(agent.MissionsSurvived).Sum();
+        int missionsBeyondFirstMissions = Math.Max(agent.MissionsSurvived - SkillFromEachFirstMission.Length, 0);
         return skillFromFirstMissions + missionsBeyondFirstMissions * SkillFromEachMissionBeyondFirstMissions;
     }
 

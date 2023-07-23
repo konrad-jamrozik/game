@@ -108,10 +108,9 @@ public class AdvanceTimePlayerAction : PlayerAction
         agentsOnMission.ForEach(
             agent =>
             {
-                // kja this leads to a bug: when agent died on the mission, this still results in him getting the skill points from it via SkillFromMissions,
-                // which skews the final game stats.
-                // I think I need to change it to: MissionsSurvived.
-                agent.MissionsLaunched++;
+                if (agent.IsAlive)
+                    agent.MissionsSurvived++;
+
                 if (missionSuccessful)
                     agent.MissionsSucceeded++;
                 else
