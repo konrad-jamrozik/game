@@ -25,7 +25,7 @@ public class AgentStatsReport
 
         (string header, Func<Agent, int> orderBy)[] data = 
         {
-            ("skill", Ruleset.AgentSurvivalSkill),
+            ("skill", agent => agent.SurvivalSkill),
             ("turns survived", agent => TurnsSurvived(agent, lastTurn)),
             ("missions survived", agent => agent.MissionsSurvived),
             ("turns in training", agent => agent.TurnsInTraining),
@@ -67,7 +67,7 @@ public class AgentStatsReport
         Debug.Assert(turnsSurvived >= 0);
 
         return $"{agent.LogString}" +
-               $" | Skill: {Ruleset.AgentSurvivalSkill(agent),3}" +
+               $" | Skill: {agent.SurvivalSkill,3}" +
                $" | Terminated: {agent.IsTerminated,5}" +
                $" | T.Hired: {agent.TurnHired,3}" +
                $" | T.Term.: {agent.TurnTerminated,3}" +

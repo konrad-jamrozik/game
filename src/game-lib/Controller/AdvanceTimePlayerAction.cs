@@ -160,7 +160,7 @@ public class AdvanceTimePlayerAction : PlayerAction
             agent.TickRecovery();
             if (agent.IsAvailable)
             {
-                _log.Info($"{agent.LogString} fully recovered! Skill: {Ruleset.AgentSurvivalSkill(agent),3}.");
+                _log.Info($"{agent.LogString} fully recovered! Skill: {agent.SurvivalSkill,3}.");
             }
         });
     }

@@ -37,7 +37,7 @@ public static class Ruleset
         int recoversIn = ComputeRecoversIn(survived, survivalRoll, survivalThreshold);
         log.Info(
             $"{agent.LogString} survived {mission.LogString} : {survived,5}. " +
-            $"Skill: {AgentSurvivalSkill(agent),3}, Difficulty: {mission.Site.Difficulty,3}, " +
+            $"Skill: {agent.SurvivalSkill,3}, Difficulty: {mission.Site.Difficulty,3}, " +
             $"Roll: {survivalRoll,3} { (survived ? "> " : "<=") } {survivalThreshold,3}," +
             $"{(survived ? $" RecoversIn: {recoversIn,3}" : "")}"
             );
@@ -84,10 +84,9 @@ public static class Ruleset
 
     public static int AgentSurvivalThreshold(Agent agent, int difficulty)
         => Math.Max(
-            difficulty - AgentSurvivalSkill(agent),
+            difficulty - agent.SurvivalSkill,
             MinSurvivalThreshold);
 
-    // kja add Agent.SurvivalSkill delegate
     public static int AgentSurvivalSkill(Agent agent)
         => agent.TurnsInTraining * AgentTrainingCoefficient + SkillFromMissions(agent);
 

@@ -124,7 +124,8 @@ public class BasicAIPlayerIntellect : IPlayer
     {
         Debug.Assert(state.Assets.CurrentTransportCapacity > 0);
 
-        Agents candidateAgents = state.Assets.Agents.CanBeSentOnMission.OrderByDescending(Ruleset.AgentSurvivalSkill)
+        Agents candidateAgents = state.Assets.Agents.CanBeSentOnMission
+            .OrderByDescending(agent => agent.SurvivalSkill)
             .ToAgents();
 
         if (!candidateAgents.Any())

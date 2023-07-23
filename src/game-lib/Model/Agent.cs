@@ -86,6 +86,9 @@ public class Agent
     }
 
     [JsonIgnore]
+    public int SurvivalSkill => Ruleset.AgentSurvivalSkill(this);
+
+    [JsonIgnore]
     public bool IsAvailable => CurrentState == State.Available;
 
     [JsonIgnore]

@@ -60,7 +60,7 @@ public class TurnStatsReport
                         state.MissionSites.Any() ? state.MissionSites.TakeLast(1).Single().Difficulty : 0;
 
                     Agent? mostSkilledAgent = state.Assets.Agents.Any()
-                        ? state.Assets.Agents.MaxBy(Ruleset.AgentSurvivalSkill)
+                        ? state.Assets.Agents.MaxBy(agent => agent.SurvivalSkill)
                         : null;
 
                     double avgDiffLast5MissionSites = state.MissionSites.Any()
@@ -68,10 +68,10 @@ public class TurnStatsReport
                         : 0;
 
                     double avgAgentSkill = state.Assets.Agents.Any()
-                        ? Math.Round(state.Assets.Agents.Average(Ruleset.AgentSurvivalSkill), 2)
+                        ? Math.Round(state.Assets.Agents.Average(agent => agent.SurvivalSkill), 2)
                         : 0;
 
-                    int maxAgentSkill = mostSkilledAgent != null ? Ruleset.AgentSurvivalSkill(mostSkilledAgent) : 0;
+                    int maxAgentSkill = mostSkilledAgent?.SurvivalSkill ?? 0;
 
                     lastMissionSiteMaxAgentSurvivalChance = mostSkilledAgent != null && lastMissionSiteDifficulty > 0
                         ? Math.Max(Ruleset.AgentSurvivalChance(mostSkilledAgent, lastMissionSiteDifficulty), 0)

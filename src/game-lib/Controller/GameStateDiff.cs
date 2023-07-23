@@ -49,8 +49,8 @@ internal class GameStateDiff
             ? $"{prevState,16} -> {currState,-16}" 
             : $"{prevState,16}    {"",-16}";
 
-        string prevSkill = prev != null ? Ruleset.AgentSurvivalSkill(prev).ToString() : "";
-        string currSkill = Ruleset.AgentSurvivalSkill(curr).ToString();
+        string prevSkill = prev != null ? prev.SurvivalSkill.ToString() : "";
+        string currSkill = curr.SurvivalSkill.ToString();
         string skillLog = prevSkill != currSkill 
             ? $"{prevSkill,3} -> {currSkill,-3}" 
             : $"{prevSkill,3}    {"",-3}";
