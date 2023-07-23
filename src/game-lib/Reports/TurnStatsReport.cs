@@ -9,14 +9,14 @@ namespace UfoGameLib.Reports;
 public class TurnStatsReport : CsvFileReport
 {
     private readonly ILog _log;
-    private readonly File _csvFile;
     private readonly List<GameState> _gameStates;
+    private readonly File _csvFile;
 
-    public TurnStatsReport(ILog log, File csvFile, List<GameState> gameStates)
+    public TurnStatsReport(ILog log, List<GameState> gameStates, File csvFile)
     {
         _log = log;
-        _csvFile = csvFile;
         _gameStates = gameStates;
+        _csvFile = csvFile;
     }
 
     public void Write()
@@ -27,7 +27,7 @@ public class TurnStatsReport : CsvFileReport
 
         Debug.Assert(headerRow.Length == dataRows[0].Length);
 
-        SaveToCsvFile(_log, _csvFile, new TabularData(headerRow, dataRows), dataDescription: "turns");
+        SaveToCsvFile(_log, dataDescription: "turns", new TabularData(headerRow, dataRows), _csvFile);
     }
 
     private static object[] HeaderRow => new object[]
