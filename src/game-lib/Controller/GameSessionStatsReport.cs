@@ -24,16 +24,8 @@ public class GameSessionStatsReport
         List<GameState> gameStates =
             _gameSession.PastGameStates.Concat(_gameSession.CurrentGameState.WrapInList()).ToList();
 
-        // kja LogMissionStats
-        // Includes: most bloody mission
-        // Top 5 hardest missions
-        // Top 5 won hardest mission
-        // Top 5 missions by terminated agents
-        // Top 5 won missions by terminated agents
-        // Top 5 missions with least amount of agents lost
-        // Top 5 lost missions with least amount of agents lost
-
         new AgentStatsReport(_log, _gameSession.CurrentGameState).Write();
+        new MissionStatsReport(_log, _gameSession.CurrentGameState).Write();
         new TurnStatsReport(_log, _csvFile, gameStates).Write();
     }
 }
