@@ -6,7 +6,7 @@ using File = Lib.OS.File;
 
 namespace UfoGameLib.Reports;
 
-public class TurnStatsReport
+public class TurnStatsReport : CsvFileReport
 {
     private readonly ILog _log;
     private readonly File _csvFile;
@@ -27,7 +27,7 @@ public class TurnStatsReport
 
         Debug.Assert(headerRow.Length == dataRows[0].Length);
 
-        SaveToCsvFile(new TabularData(headerRow, dataRows));
+        SaveToCsvFile(_log, _csvFile, new TabularData(headerRow, dataRows), dataDescription: "turns");
     }
 
     private static object[] HeaderRow => new object[]
@@ -104,11 +104,5 @@ public class TurnStatsReport
                     return stateData;
                 }).ToArray();
         return dataRows;
-    }
-
-    private void SaveToCsvFile(TabularData data)
-    {
-        new CsvFile(_csvFile, data).Write();
-        _log.Info($"Saved game data .csv report to {_csvFile.FullPath}");
     }
 }
