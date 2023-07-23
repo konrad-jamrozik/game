@@ -150,6 +150,8 @@ public class AdvanceTimePlayerAction : PlayerAction
     {
         state.Assets.Agents.InTransit.ForEach(agent => agent.MakeAvailable());
         state.Assets.Agents.InTraining.ForEach(agent => agent.TurnsTrained++);
+        state.Assets.Agents.GeneratingIncome.ForEach(agent => agent.TurnsGeneratingIncome++);
+        state.Assets.Agents.GatheringIntel.ForEach(agent => agent.TurnsGatheringIntel++);
         state.Assets.Agents.Recovering.ForEach(agent =>
         {
             agent.TickRecovery();

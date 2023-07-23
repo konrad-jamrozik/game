@@ -129,7 +129,10 @@ class GameStateJsonConverter : JsonConverterSupportingReferences<GameState>
                         turnTerminated: DeserializeNullableInt(agentObj, nameof(Agent.TurnTerminated)),
                         missionsLaunched: DeserializeInt(agentObj, nameof(Agent.MissionsLaunched)),
                         missionsSucceeded: DeserializeInt(agentObj, nameof(Agent.MissionsSucceeded)),
-                        missionsFailed: DeserializeInt(agentObj, nameof(Agent.MissionsFailed)))));
+                        missionsFailed: DeserializeInt(agentObj, nameof(Agent.MissionsFailed)),
+                        turnsGeneratingIncome: DeserializeInt(agentObj, nameof(Agent.TurnsGeneratingIncome)),
+                        turnsGatheringIntel: DeserializeInt(agentObj, nameof(Agent.TurnsGatheringIntel)),
+                        turnsInRecovery: DeserializeInt(agentObj, nameof(Agent.TurnsInRecovery)))));
 
         var assets = new Assets(
             money: DeserializeInt(assetsNode, nameof(Assets.Money)),

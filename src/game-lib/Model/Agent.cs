@@ -29,6 +29,10 @@ public class Agent
     public int MissionsSucceeded;
     public int MissionsFailed;
 
+    public int TurnsGeneratingIncome;
+    public int TurnsGatheringIntel;
+    public int TurnsInRecovery;
+
     // ReSharper disable once IntroduceOptionalParameters.Global
     public Agent(int id, int turnHired) : this(
         id,
@@ -40,7 +44,10 @@ public class Agent
         turnTerminated: null,
         missionsLaunched: 0,
         missionsSucceeded: 0,
-        missionsFailed: 0)
+        missionsFailed: 0,
+        turnsGeneratingIncome: 0,
+        turnsGatheringIntel: 0,
+        turnsInRecovery: 0)
     {
     }
 
@@ -55,7 +62,10 @@ public class Agent
         int? turnTerminated,
         int missionsLaunched,
         int missionsSucceeded,
-        int missionsFailed)
+        int missionsFailed,
+        int turnsGeneratingIncome,
+        int turnsGatheringIntel,
+        int turnsInRecovery)
     {
         Id = id;
         CurrentState = currentState;
@@ -67,6 +77,9 @@ public class Agent
         MissionsLaunched = missionsLaunched;
         MissionsSucceeded = missionsSucceeded;
         MissionsFailed = missionsFailed;
+        TurnsGeneratingIncome = turnsGeneratingIncome;
+        TurnsGatheringIntel = turnsGatheringIntel;
+        TurnsInRecovery = turnsInRecovery;
         Debug.Assert(TurnHired >= 1);
         Debug.Assert(TurnTerminated == null || TurnHired <= TurnTerminated);
         AssertMissionInvariants();
@@ -195,6 +208,7 @@ public class Agent
         Debug.Assert(RecoversIn > 0);
 
         RecoversIn--;
+        TurnsInRecovery++;
 
         if (RecoversIn == 0)
             MakeAvailable();

@@ -36,9 +36,9 @@ public static class Ruleset
         int recoversIn = ComputeRecoversIn(survived, survivalRoll, survivalThreshold);
         log.Info(
             $"{agent.LogString} survived {mission.LogString} : {survived,5}. " +
-            $"Skill: {AgentSurvivalSkill(agent),3}. " +
-            $"Roll: {survivalRoll,3} { (survived ? "> " : "<=") } {survivalThreshold}." +
-            $"{(survived ? $" RecoversIn: {recoversIn,3}." : "")}"
+            $"Skill: {AgentSurvivalSkill(agent),3}, Difficulty: {mission.Site.Difficulty,3}, " +
+            $"Roll: {survivalRoll,3} { (survived ? "> " : "<=") } {survivalThreshold}," +
+            $"{(survived ? $" RecoversIn: {recoversIn,3}" : "")}"
             );
 
         return (survived, recoversIn);

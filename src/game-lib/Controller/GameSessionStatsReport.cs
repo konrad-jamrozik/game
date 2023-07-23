@@ -29,6 +29,15 @@ public class GameSessionStatsReport
 
         LogAgentsStats(gameStates);
 
+        // kja LogMissionStats
+        // Includes: most bloody mission
+        // Top 5 hardest missions
+        // Top 5 won hardest mission
+        // Top 5 missions by terminated agents
+        // Top 5 won missions by terminated agents
+        // Top 5 missions with least amount of agents lost
+        // Top 5 lost missions with least amount of agents lost
+
         // kja introduce class: TurnStats
         object[] headerRow = HeaderRow;
 
@@ -44,21 +53,42 @@ public class GameSessionStatsReport
     {
         int lastTurn = _gameSession.CurrentGameState.Timeline.CurrentTurn - 1;
 
-        Agents mostSkilledAgents = MostSkilledAgents(gameStates, TopAgents);
-        Agents longestSurvivingAgents = LongestSurvivingAgents(gameStates, TopAgents, lastTurn);
+        Agents agentsWithMostSkill = AgentsWithMostSkill(gameStates, TopAgents);
+        Agents agentsSurvivingLongest = AgentsSurvivingLongest(gameStates, TopAgents, lastTurn);
         Agents agentsOnMostMissions = AgentsOnMostMissions(gameStates, TopAgents);
+        Agents agentsMostTrained = AgentsMostTrained(gameStates, TopAgents);
+        Agents agentsOnMostIncomeGeneratingOps = AgentsOnMostIncomeGeneratingOps(gameStates, TopAgents);
+        Agents agentsOnMostIntelGatheringOps = AgentsOnMostIntelGatheringOps(gameStates, TopAgents);
+        Agents agentsMostInRecovery = AgentsMostInRecovery(gameStates, TopAgents);
 
+        // kja dedup this LogAgentsStats code
         _log.Info("");
-        _log.Info($"Top {TopAgents} most skilled agents:");
-        LogAgents(mostSkilledAgents, lastTurn);
-        _log.Info("");
-
-        _log.Info($"Top {TopAgents} longest surviving agents:");
-        LogAgents(longestSurvivingAgents, lastTurn);
+        _log.Info($"Top {TopAgents} agents by skill:");
+        LogAgents(agentsWithMostSkill, lastTurn);
         _log.Info("");
 
-        _log.Info($"Top {TopAgents} agents by missions sent to:");
+        _log.Info($"Top {TopAgents} agents by turns survived:");
+        LogAgents(agentsSurvivingLongest, lastTurn);
+        _log.Info("");
+
+        _log.Info($"Top {TopAgents} agents by missions launched:");
         LogAgents(agentsOnMostMissions, lastTurn);
+        _log.Info("");
+
+        _log.Info($"Top {TopAgents} agents by turns trained:");
+        LogAgents(agentsMostTrained, lastTurn);
+        _log.Info("");
+
+        _log.Info($"Top {TopAgents} agents by turns generating income:");
+        LogAgents(agentsOnMostIncomeGeneratingOps, lastTurn);
+        _log.Info("");
+
+        _log.Info($"Top {TopAgents} agents by turns gathering intel:");
+        LogAgents(agentsOnMostIntelGatheringOps, lastTurn);
+        _log.Info("");
+
+        _log.Info($"Top {TopAgents} agents by turns in recovery:");
+        LogAgents(agentsMostInRecovery, lastTurn);
         _log.Info("");
     }
 
@@ -76,13 +106,13 @@ public class GameSessionStatsReport
                $", TurnHired: {agent.TurnHired,3}" +
                $", TurnTerminated: {agent.TurnTerminated,3}" +
                $", TurnsSurvived: {turnsSurvived,3}" +
-               $", MissionsLaunched: {agent.MissionsLaunched}" +
-               $", MissionsSucceeded: {agent.MissionsSucceeded}" +
-               $", MissionsFailed: {agent.MissionsFailed}" +
-               $", TurnsTraining: {agent.TurnsTrained}" +
-               $", TurnsGeneratingIncome: ?" +
-               $", TurnsGatheringIntel: ?" +
-               $", TurnsRecovering: ?";
+               $", MissionsLaunched: {agent.MissionsLaunched,3}" +
+               $", MissionsSucceeded: {agent.MissionsSucceeded,3}" +
+               $", MissionsFailed: {agent.MissionsFailed,3}" +
+               $", TurnsTraining: {agent.TurnsTrained,3}" +
+               $", TurnsGeneratingIncome: {agent.TurnsGeneratingIncome,3}" +
+               $", TurnsGatheringIntel: {agent.TurnsGeneratingIncome,3}" +
+               $", TurnsInRecovery: {agent.TurnsInRecovery,3}";
     }
 
     private static int TurnsSurvived(Agent agent, int lastTurn)
@@ -92,14 +122,15 @@ public class GameSessionStatsReport
         return turnsSurvived;
     }
 
-    private Agents MostSkilledAgents(List<GameState> gameStates, int top)
+    // kja dedup these Agents .. Most methods
+    private Agents AgentsWithMostSkill(List<GameState> gameStates, int top)
         => gameStates.Last().AllAgents
             .OrderByDescending(Ruleset.AgentSurvivalSkill)
             .ThenBy(agent => agent.Id)
             .Take(top)
             .ToAgents(terminated: null);
 
-    private Agents LongestSurvivingAgents(List<GameState> gameStates, int top, int lastTurn)
+    private Agents AgentsSurvivingLongest(List<GameState> gameStates, int top, int lastTurn)
         => gameStates.Last().AllAgents
             .OrderByDescending(agent => TurnsSurvived(agent, lastTurn))
             .ThenBy(agent => agent.Id)
@@ -109,6 +140,34 @@ public class GameSessionStatsReport
     private Agents AgentsOnMostMissions(List<GameState> gameStates, int top)
         => gameStates.Last().AllAgents
             .OrderByDescending(agent => agent.MissionsLaunched)
+            .ThenBy(agent => agent.Id)
+            .Take(top)
+            .ToAgents(terminated: null);
+
+    private Agents AgentsMostTrained(List<GameState> gameStates, int top)
+        => gameStates.Last().AllAgents
+            .OrderByDescending(agent => agent.TurnsTrained)
+            .ThenBy(agent => agent.Id)
+            .Take(top)
+            .ToAgents(terminated: null);
+
+    private Agents AgentsOnMostIncomeGeneratingOps(List<GameState> gameStates, int top)
+        => gameStates.Last().AllAgents
+            .OrderByDescending(agent => agent.TurnsGeneratingIncome)
+            .ThenBy(agent => agent.Id)
+            .Take(top)
+            .ToAgents(terminated: null);
+
+    private Agents AgentsOnMostIntelGatheringOps(List<GameState> gameStates, int top)
+        => gameStates.Last().AllAgents
+            .OrderByDescending(agent => agent.TurnsGatheringIntel)
+            .ThenBy(agent => agent.Id)
+            .Take(top)
+            .ToAgents(terminated: null);
+
+    private Agents AgentsMostInRecovery(List<GameState> gameStates, int top)
+        => gameStates.Last().AllAgents
+            .OrderByDescending(agent => agent.TurnsInRecovery)
             .ThenBy(agent => agent.Id)
             .Take(top)
             .ToAgents(terminated: null);
