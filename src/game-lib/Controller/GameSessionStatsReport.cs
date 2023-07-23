@@ -7,14 +7,14 @@ using File = Lib.OS.File;
 
 namespace UfoGameLib.Controller;
 
-public class GameSessionStatsCsvReport
+public class GameSessionStatsReport
 {
     private readonly ILog _log;
     private readonly File _csvFile;
     private readonly GameSession _gameSession;
 
 
-    public GameSessionStatsCsvReport(ILog log, File csvFile, GameSession gameSession)
+    public GameSessionStatsReport(ILog log, File csvFile, GameSession gameSession)
     {
         _log = log;
         _csvFile = csvFile;

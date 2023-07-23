@@ -101,7 +101,7 @@ public class GameSessionController
 
         Save();
 
-        new GameSessionStatsCsvReport(_log, _config.DataCsvFile, GameSession).Write();
+        new GameSessionStatsReport(_log, _config.DataCsvFile, GameSession).Write();
 
         _log.Flush();
     }
