@@ -1,9 +1,11 @@
+using Lib.Primitives;
 using UfoGameLib.Lib;
 using UfoGameLib.Model;
 using UfoGameLib.State;
 
 namespace UfoGameLib.Reports;
 
+// kja output this to a csv file and create Excel table out of it
 public class AgentStatsReport
 {
     private const int TopAgents = 5;
@@ -21,44 +23,40 @@ public class AgentStatsReport
     {
         int lastTurn = _gameState.Timeline.CurrentTurn - 1;
 
-        Agents agentsWithMostSkill = TopAgentsBy(Ruleset.AgentSurvivalSkill);
-        Agents agentsSurvivingLongest = TopAgentsBy(agent => TurnsSurvived(agent, lastTurn));
-        Agents agentsSurvivingMostMissions = TopAgentsBy(agent => agent.MissionsSurvived);
-        Agents agentsMostTrained = TopAgentsBy(agent => agent.TurnsInTraining);
-        Agents agentsOnMostIncomeGeneratingOps = TopAgentsBy(agent => agent.TurnsGeneratingIncome);
-        Agents agentsOnMostIntelGatheringOps = TopAgentsBy(agent => agent.TurnsGatheringIntel);
-        Agents agentsMostInRecovery = TopAgentsBy(agent => agent.TurnsInRecovery);
+        (string header, Func<Agent, int> orderBy)[] data = 
+        {
+            ("skill", Ruleset.AgentSurvivalSkill),
+            ("turns survived", agent => TurnsSurvived(agent, lastTurn)),
+            ("missions survived", agent => agent.MissionsSurvived),
+            ("turns in training", agent => agent.TurnsInTraining),
+            ("turns generating income", agent => agent.TurnsGeneratingIncome),
+            ("turns gathering intel", agent => agent.TurnsGatheringIntel),
+            ("turns in recovery", agent => agent.TurnsInRecovery)
+        };
 
-        // kja dedup this LogAgentsStats code
-        _log.Info("");
-        _log.Info($"Top {TopAgents} agents by skill:");
-        LogAgents(agentsWithMostSkill, lastTurn);
-        _log.Info("");
-
-        _log.Info($"Top {TopAgents} agents by turns survived:");
-        LogAgents(agentsSurvivingLongest, lastTurn);
-        _log.Info("");
-
-        _log.Info($"Top {TopAgents} agents by missions survived:");
-        LogAgents(agentsSurvivingMostMissions, lastTurn);
-        _log.Info("");
-
-        _log.Info($"Top {TopAgents} agents by turns in training:");
-        LogAgents(agentsMostTrained, lastTurn);
-        _log.Info("");
-
-        _log.Info($"Top {TopAgents} agents by turns generating income:");
-        LogAgents(agentsOnMostIncomeGeneratingOps, lastTurn);
-        _log.Info("");
-
-        _log.Info($"Top {TopAgents} agents by turns gathering intel:");
-        LogAgents(agentsOnMostIntelGatheringOps, lastTurn);
-        _log.Info("");
-
-        _log.Info($"Top {TopAgents} agents by turns in recovery:");
-        LogAgents(agentsMostInRecovery, lastTurn);
-        _log.Info("");
+        data.ForEach(
+            row =>
+            {
+                _log.Info("");
+                _log.Info($"Top {TopAgents} agents by {row.header}:");
+                LogAgents(TopAgentsBy(row.orderBy), lastTurn);
+                _log.Info("");
+            });
     }
+
+    private static int TurnsSurvived(Agent agent, int lastTurn)
+    {
+        int agentEndTurn = agent.TurnTerminated ?? lastTurn;
+        int turnsSurvived = agentEndTurn - agent.TurnHired;
+        return turnsSurvived;
+    }
+
+    private Agents TopAgentsBy(Func<Agent, int> orderBy)
+        => _gameState.AllAgents
+            .OrderByDescending(orderBy)
+            .ThenBy(agent => agent.Id)
+            .Take(TopAgents)
+            .ToAgents(terminated: null);
 
     private void LogAgents(Agents agents, int lastTurn)
         => agents.ForEach(agent => _log.Info(AgentLogString(agent, lastTurn)));
@@ -82,18 +80,4 @@ public class AgentStatsReport
                $" | TsGathIntel: {agent.TurnsGeneratingIncome,3}" +
                $" | TsInRecovery: {agent.TurnsInRecovery,3}";
     }
-
-    private static int TurnsSurvived(Agent agent, int lastTurn)
-    {
-        int agentEndTurn = agent.TurnTerminated ?? lastTurn;
-        int turnsSurvived = agentEndTurn - agent.TurnHired;
-        return turnsSurvived;
-    }
-
-    private Agents TopAgentsBy(Func<Agent, int> orderBy)
-        => _gameState.AllAgents
-            .OrderByDescending(orderBy)
-            .ThenBy(agent => agent.Id)
-            .Take(TopAgents)
-            .ToAgents(terminated: null);
 }
