@@ -4,7 +4,7 @@ using UfoGameLib.Model;
 using UfoGameLib.State;
 using File = Lib.OS.File;
 
-namespace UfoGameLib.Controller;
+namespace UfoGameLib.Reports;
 
 public class TurnStatsReport
 {

@@ -1,7 +1,7 @@
 using UfoGameLib.Lib;
 using UfoGameLib.State;
 
-namespace UfoGameLib.Controller;
+namespace UfoGameLib.Reports;
 
 public class MissionStatsReport
 {

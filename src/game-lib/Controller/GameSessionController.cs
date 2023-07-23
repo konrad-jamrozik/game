@@ -3,6 +3,7 @@ using UfoGameLib.State;
 using Timeline = UfoGameLib.Model.Timeline;
 
 using UfoGameLib.Lib;
+using UfoGameLib.Reports;
 
 namespace UfoGameLib.Controller;
 

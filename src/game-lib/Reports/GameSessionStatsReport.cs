@@ -1,9 +1,10 @@
 using Lib.Primitives;
+using UfoGameLib.Controller;
 using UfoGameLib.Lib;
 using UfoGameLib.State;
 using File = Lib.OS.File;
 
-namespace UfoGameLib.Controller;
+namespace UfoGameLib.Reports;
 
 public class GameSessionStatsReport
 {
