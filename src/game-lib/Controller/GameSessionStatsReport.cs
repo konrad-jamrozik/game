@@ -42,11 +42,11 @@ public class GameSessionStatsReport
     // kja introduce class: AgentsStats
     private void LogAgentsStats(List<GameState> gameStates)
     {
-        Agents mostSkilledAgents = MostSkilledAgents(gameStates, TopAgents);
-        Agents longestSurvivingAgents = LongestSurvivingAgents(gameStates);
-        Agents agentsSurvivingMostMissions = AgentsSurvivingMostMissions(gameStates);
-
         int lastTurn = _gameSession.CurrentGameState.Timeline.CurrentTurn - 1;
+
+        Agents mostSkilledAgents = MostSkilledAgents(gameStates, TopAgents);
+        Agents longestSurvivingAgents = LongestSurvivingAgents(gameStates, TopAgents, lastTurn);
+        Agents agentsSurvivingMostMissions = AgentsSurvivingMostMissions(gameStates, TopAgents);
 
         _log.Info("");
         _log.Info($"Top {TopAgents} most skilled agents:");
@@ -67,8 +67,7 @@ public class GameSessionStatsReport
 
     private static string AgentLogString(Agent agent, int lastTurn)
     {
-        int agentEndTurn = agent.TurnTerminated ?? lastTurn;
-        int turnsSurvived = agentEndTurn - agent.TurnHired;
+        int turnsSurvived = TurnsSurvived(agent, lastTurn);
         Debug.Assert(turnsSurvived >= 0);
 
         return $"{agent.LogString}" +
@@ -86,21 +85,28 @@ public class GameSessionStatsReport
                $", DaysRecovering: ?";
     }
 
-    private Agents MostSkilledAgents(List<GameState> gameStates, int top)
+    private static int TurnsSurvived(Agent agent, int lastTurn)
     {
-        return gameStates.Last().AllAgents
+        int agentEndTurn = agent.TurnTerminated ?? lastTurn;
+        int turnsSurvived = agentEndTurn - agent.TurnHired;
+        return turnsSurvived;
+    }
+
+    private Agents MostSkilledAgents(List<GameState> gameStates, int top)
+        => gameStates.Last().AllAgents
             .OrderByDescending(Ruleset.AgentSurvivalSkill)
             .ThenBy(agent => agent.Id)
             .Take(top)
             .ToAgents(terminated: null);
-    }
 
-    private Agents LongestSurvivingAgents(List<GameState> gameStates)
-    {
-        return new Agents();
-    }
+    private Agents LongestSurvivingAgents(List<GameState> gameStates, int top, int lastTurn)
+        => gameStates.Last().AllAgents
+            .OrderByDescending(agent => TurnsSurvived(agent, lastTurn))
+            .ThenBy(agent => agent.Id)
+            .Take(top)
+            .ToAgents(terminated: null);
 
-    private Agents AgentsSurvivingMostMissions(List<GameState> gameStates)
+    private Agents AgentsSurvivingMostMissions(List<GameState> gameStates, int top)
     {
         return new Agents();
     }
