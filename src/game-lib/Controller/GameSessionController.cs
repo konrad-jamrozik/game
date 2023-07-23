@@ -111,9 +111,9 @@ public class GameSessionController
         new GameSessionStatsReport(
                 _log,
                 GameSession,
-                _config.TurnsReportCsvFile,
-                _config.AgentsReportCsvFile,
-                _config.MissionsReportCsvFile)
+                _config.TurnReportCsvFile,
+                _config.AgentReportCsvFile,
+                _config.MissionSiteReportCsvFile)
             .Write();
         _log.Flush();
     }

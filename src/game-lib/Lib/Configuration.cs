@@ -9,11 +9,11 @@ public class Configuration
 
     public readonly File LogFile;
 
-    public readonly File TurnsReportCsvFile;
+    public readonly File TurnReportCsvFile;
 
-    public readonly File AgentsReportCsvFile;
+    public readonly File AgentReportCsvFile;
 
-    public readonly File MissionsReportCsvFile;
+    public readonly File MissionSiteReportCsvFile;
 
     public readonly bool IncludeCallerTypeNameInLog = false;
 
@@ -33,9 +33,9 @@ public class Configuration
         var saveFileDir = new Dir(fs, "./../../../../saves");
         SaveFile = new File(saveFileDir, "savegame.json");
         LogFile = new File(saveFileDir, "log.txt");
-        TurnsReportCsvFile = new File(saveFileDir, "turns_report.csv");
-        AgentsReportCsvFile = new File(saveFileDir, "agents_report.csv");
-        MissionsReportCsvFile = new File(saveFileDir, "missions_report.csv");
+        TurnReportCsvFile = new File(saveFileDir, "turns_report.csv");
+        AgentReportCsvFile = new File(saveFileDir, "agents_report.csv");
+        MissionSiteReportCsvFile = new File(saveFileDir, "mission_sites_report.csv");
         // kja3 should have method here that returns handle to Lib.OS.File represented by SaveFileName
     }
 }

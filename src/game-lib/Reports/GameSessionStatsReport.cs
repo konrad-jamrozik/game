@@ -9,23 +9,23 @@ public class GameSessionStatsReport
 {
     private readonly ILog _log;
     private readonly GameSession _gameSession;
-    private readonly File _turnsReportCsvFile;
-    private readonly File _agentsReportCsvFile;
-    private readonly File _missionsReportCsvFile;
+    private readonly File _turnReportCsvFile;
+    private readonly File _agentReportCsvFile;
+    private readonly File _missionSiteReportCsvFile;
 
 
     public GameSessionStatsReport(
         ILog log,
         GameSession gameSession,
-        File turnsReportCsvFile,
-        File agentsReportCsvFile,
-        File missionsReportCsvFile)
+        File turnReportCsvFile,
+        File agentReportCsvFile,
+        File missionSiteReportCsvFile)
     {
         _log = log;
         _gameSession = gameSession;
-        _turnsReportCsvFile = turnsReportCsvFile;
-        _agentsReportCsvFile = agentsReportCsvFile;
-        _missionsReportCsvFile = missionsReportCsvFile;
+        _turnReportCsvFile = turnReportCsvFile;
+        _agentReportCsvFile = agentReportCsvFile;
+        _missionSiteReportCsvFile = missionSiteReportCsvFile;
     }
 
     public void Write()
@@ -33,8 +33,8 @@ public class GameSessionStatsReport
         List<GameState> gameStates =
             _gameSession.PastGameStates.Concat(_gameSession.CurrentGameState.WrapInList()).ToList();
 
-        new TurnStatsReport(_log, gameStates, _turnsReportCsvFile).Write();
-        new AgentStatsReport(_log, _gameSession.CurrentGameState, _agentsReportCsvFile).Write();
-        new MissionStatsReport(_log, _gameSession.CurrentGameState, _missionsReportCsvFile).Write();
+        new TurnStatsReport(_log, gameStates, _turnReportCsvFile).Write();
+        new AgentStatsReport(_log, _gameSession.CurrentGameState, _agentReportCsvFile).Write();
+        new MissionSiteStatsReport(_log, _gameSession.CurrentGameState, _missionSiteReportCsvFile).Write();
     }
 }
