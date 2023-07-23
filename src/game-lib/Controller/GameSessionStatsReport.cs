@@ -27,46 +27,82 @@ public class GameSessionStatsReport
         List<GameState> gameStates =
             _gameSession.PastGameStates.Concat(_gameSession.CurrentGameState.WrapInList()).ToList();
 
+        LogAgentsStats(gameStates);
+
+        // kja introduce class: TurnStats
         object[] headerRow = HeaderRow;
 
         object[][] dataRows = DataRows(gameStates);
-
-        Agents mostSkilledAgents = MostSkilledAgents(gameStates, TopAgents);
-        Agents longestSurvivingAgents = LongestSurvivingAgents(gameStates);
-        Agents agentsSurvivingMostMissions = AgentsSurvivingMostMissions(gameStates);
-
-        _log.Info("");
-        _log.Info($"Top {TopAgents} most skilled agents:");
-        mostSkilledAgents.ForEach(agent => _log.Info(AgentLogString(agent)) );
-        _log.Info("");
-
-        _log.Info($"Top {TopAgents} longest surviving agents:");
-        longestSurvivingAgents.ForEach(agent => _log.Info(AgentLogString(agent)) );
-        _log.Info("");
-
-        _log.Info($"Top {TopAgents} agents surviving most missions:");
-        agentsSurvivingMostMissions.ForEach(agent => _log.Info(AgentLogString(agent)) );
-        _log.Info("");
 
         Debug.Assert(headerRow.Length == dataRows[0].Length);
 
         SaveToCsvFile(new TabularData(headerRow, dataRows));
     }
 
-    private static string AgentLogString(Agent agent)
+    // kja introduce class: AgentsStats
+    private void LogAgentsStats(List<GameState> gameStates)
     {
-        return $"{agent.LogString} " +
-               $"| Skill: {Ruleset.AgentSurvivalSkill(agent),3} " +
-               $"| Terminated: {agent.IsTerminated,5} " +
-               $"| TurnHired: ? " +
-               $"| TurnTerminated: ? " +
-               $"| DaysInTraining: ? " + 
-               $"| DaysGeneratingIncome: ? " + 
-               $"| DaysGatheringIntel: ? " + 
-               $"| DaysRecovering: ? " + 
-               $"| MissionsLaunched: ? " + 
-               $"| MissionsSuccessful: ? " + 
-               $"| MissionsFailed: ? ";
+        Agents mostSkilledAgents = MostSkilledAgents(gameStates, TopAgents);
+        Agents longestSurvivingAgents = LongestSurvivingAgents(gameStates);
+        Agents agentsSurvivingMostMissions = AgentsSurvivingMostMissions(gameStates);
+
+        int lastTurn = _gameSession.CurrentGameState.Timeline.CurrentTurn - 1;
+
+        _log.Info("");
+        _log.Info($"Top {TopAgents} most skilled agents:");
+        LogAgents(mostSkilledAgents, lastTurn);
+        _log.Info("");
+
+        _log.Info($"Top {TopAgents} longest surviving agents:");
+        LogAgents(longestSurvivingAgents, lastTurn);
+        _log.Info("");
+
+        _log.Info($"Top {TopAgents} agents surviving most missions:");
+        LogAgents(agentsSurvivingMostMissions, lastTurn);
+        _log.Info("");
+    }
+
+    private void LogAgents(Agents agents, int lastTurn)
+        => agents.ForEach(agent => _log.Info(AgentLogString(agent, lastTurn)));
+
+    private static string AgentLogString(Agent agent, int lastTurn)
+    {
+        int agentEndTurn = agent.TurnTerminated ?? lastTurn;
+        int turnsSurvived = agentEndTurn - agent.TurnHired;
+        Debug.Assert(turnsSurvived >= 0);
+
+        return $"{agent.LogString}" +
+               $", Skill: {Ruleset.AgentSurvivalSkill(agent),3}" +
+               $", Terminated: {agent.IsTerminated,5}" +
+               $", TurnHired: {agent.TurnHired,3}" +
+               $", TurnTerminated: {agent.TurnTerminated,3}" +
+               $", TurnsSurvived: {turnsSurvived,3}" +
+               $", MissionsLaunched: ?" +
+               $", MissionsSuccessful: ?" +
+               $", MissionsFailed: ?" +
+               $", DaysInTraining: ?" +
+               $", DaysGeneratingIncome: ?" +
+               $", DaysGatheringIntel: ?" +
+               $", DaysRecovering: ?";
+    }
+
+    private Agents MostSkilledAgents(List<GameState> gameStates, int top)
+    {
+        return gameStates.Last().AllAgents
+            .OrderByDescending(Ruleset.AgentSurvivalSkill)
+            .ThenBy(agent => agent.Id)
+            .Take(top)
+            .ToAgents(terminated: null);
+    }
+
+    private Agents LongestSurvivingAgents(List<GameState> gameStates)
+    {
+        return new Agents();
+    }
+
+    private Agents AgentsSurvivingMostMissions(List<GameState> gameStates)
+    {
+        return new Agents();
     }
 
     private static object[] HeaderRow => new object[]
@@ -136,25 +172,6 @@ public class GameSessionStatsReport
                     return stateData;
                 }).ToArray();
         return dataRows;
-    }
-
-    private Agents MostSkilledAgents(List<GameState> gameStates, int top)
-    {
-        return gameStates.Last().AllAgents
-            .OrderByDescending(Ruleset.AgentSurvivalSkill)
-            .ThenBy(agent => agent.Id)
-            .Take(top)
-            .ToAgents(terminated: null);
-    }
-
-    private Agents LongestSurvivingAgents(List<GameState> gameStates)
-    {
-        return new Agents();
-    }
-
-    private Agents AgentsSurvivingMostMissions(List<GameState> gameStates)
-    {
-        return new Agents();
     }
 
     private void SaveToCsvFile(TabularData data)

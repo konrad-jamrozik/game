@@ -64,6 +64,12 @@ public abstract class JsonConverterSupportingReferences<T> : JsonConverter<T>
     protected int DeserializeInt(JsonNode node, string propName)
         => node[propName]!.GetValue<int>();
 
+    protected int? DeserializeNullableInt(JsonNode node, string propName)
+    {
+        JsonNode? propVal = node[propName];
+        return propVal?.GetValue<int>() ?? null;
+    }
+
     protected bool DeserializeBool(JsonNode node, string propName)
         => node[propName]!.GetValue<bool>();
 

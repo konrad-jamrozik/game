@@ -19,6 +19,6 @@ public class HireAgentsPlayerAction : PlayerAction
     {
         _log.Info($"Hire agents. Count: {_count}");
         for (int i = 0; i < _count; i++)
-            state.Assets.Agents.Add(new Agent(state.NextAgentId));
+            state.Assets.Agents.Add(new Agent(state.NextAgentId, state.Timeline.CurrentTurn));
     }
 }

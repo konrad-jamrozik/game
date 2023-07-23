@@ -97,9 +97,13 @@ public class GameSessionController
                   $"Upkeep: {state.Assets.Agents.UpkeepCost}, " +
                   $"Support: {state.Assets.Support}, " +
                   $"Transport cap.: {state.Assets.MaxTransportCapacity}, " +
+                  $"Missions launched: {state.Missions.Count}, " +
+                  $"Missions successful: {state.Missions.Successful.Count}, " +
+                  $"Missions failed: {state.Missions.Failed.Count}, " +
+                  $"Mission sites expired: {state.MissionSites.Expired.Count}, " +
                   $"Agents: {state.Assets.Agents.Count}, " +
                   $"Terminated agents: {state.TerminatedAgents.Count}, " + 
-                  $"Turn: {state.Timeline.CurrentTurn-1} / {turnLimit}.");
+                  $"Turn: {state.Timeline.CurrentTurn - 1} / {turnLimit}.");
 
         Save();
 

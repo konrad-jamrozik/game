@@ -22,13 +22,30 @@ public class Agent
     public int TurnsTrained;
     public int RecoversIn;
 
+    public readonly int TurnHired;
+    public int? TurnTerminated;
+
     // ReSharper disable once IntroduceOptionalParameters.Global
-    public Agent(int id) : this(id, State.InTransit, currentMission: null, turnsTrained: 0, recoversIn: 0)
+    public Agent(int id, int turnHired) : this(
+        id,
+        State.InTransit,
+        currentMission: null,
+        turnsTrained: 0,
+        recoversIn: 0,
+        turnHired,
+        turnTerminated: null)
     {
     }
 
     [JsonConstructor]
-    public Agent(int id, State currentState, Mission? currentMission, int turnsTrained, int recoversIn)
+    public Agent(
+        int id,
+        State currentState,
+        Mission? currentMission,
+        int turnsTrained,
+        int recoversIn,
+        int turnHired,
+        int? turnTerminated)
     {
         Id = id;
         CurrentState = currentState;
@@ -36,6 +53,9 @@ public class Agent
         TurnsTrained = turnsTrained;
         AssertMissionInvariant();
         RecoversIn = recoversIn;
+        TurnHired = turnHired;
+        TurnTerminated = turnTerminated;
+        Debug.Assert(turnTerminated == null || TurnHired <= TurnTerminated);
     }
 
     [JsonIgnore]
@@ -171,12 +191,14 @@ public class Agent
         CurrentState = State.InTransit;
     }
 
-    public void Terminate(bool sack = false)
+    public void Terminate(int turnTerminated, bool sack = false)
     {
         Debug.Assert(IsAlive);
         Debug.Assert(!IsTerminated);
         Debug.Assert(sack ? CanBeSacked : IsOnMission);
+        Debug.Assert(turnTerminated >= TurnHired);
         CurrentState = State.Terminated;
+        TurnTerminated = turnTerminated;
         CurrentMission = null;
         AssertMissionInvariant();
     }

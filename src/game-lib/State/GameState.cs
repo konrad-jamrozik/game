@@ -63,7 +63,7 @@ public class GameState
     public void Terminate(Agent agent, bool sack = false)
     {
         Assets.Agents.Remove(agent);
-        agent.Terminate(sack);
+        agent.Terminate(Timeline.CurrentTurn, sack);
         TerminatedAgents.Add(agent);
     }
 
