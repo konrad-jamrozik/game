@@ -43,7 +43,7 @@ public class AgentStatsReport
         LogAgents(agentsOnMostMissions, lastTurn);
         _log.Info("");
 
-        _log.Info($"Top {TopAgents} agents by turns trained:");
+        _log.Info($"Top {TopAgents} agents by turns in training:");
         LogAgents(agentsMostTrained, lastTurn);
         _log.Info("");
 
@@ -69,18 +69,18 @@ public class AgentStatsReport
         Debug.Assert(turnsSurvived >= 0);
 
         return $"{agent.LogString}" +
-               $", Skill: {Ruleset.AgentSurvivalSkill(agent),3}" +
-               $", Terminated: {agent.IsTerminated,5}" +
-               $", TurnHired: {agent.TurnHired,3}" +
-               $", TurnTerminated: {agent.TurnTerminated,3}" +
-               $", TurnsSurvived: {turnsSurvived,3}" +
-               $", MissionsLaunched: {agent.MissionsLaunched,3}" +
-               $", MissionsSucceeded: {agent.MissionsSucceeded,3}" +
-               $", MissionsFailed: {agent.MissionsFailed,3}" +
-               $", TurnsInTraining: {agent.TurnsInTraining,3}" +
-               $", TurnsGeneratingIncome: {agent.TurnsGeneratingIncome,3}" +
-               $", TurnsGatheringIntel: {agent.TurnsGeneratingIncome,3}" +
-               $", TurnsInRecovery: {agent.TurnsInRecovery,3}";
+               $" | Skill: {Ruleset.AgentSurvivalSkill(agent),3}" +
+               $" | Terminated: {agent.IsTerminated,5}" +
+               $" | T.Hired: {agent.TurnHired,3}" +
+               $" | T.Term.: {agent.TurnTerminated,3}" +
+               $" | TsSurvived: {turnsSurvived,3}" +
+               $" | Mis.Launched: {agent.MissionsLaunched,3}" +
+               $" | Mis.Succeeded: {agent.MissionsSucceeded,3}" +
+               $" | Mis.Failed: {agent.MissionsFailed,3}" +
+               $" | TsInTraining: {agent.TurnsInTraining,3}" +
+               $" | TsGenIncome: {agent.TurnsGeneratingIncome,3}" +
+               $" | TsGathIntel: {agent.TurnsGeneratingIncome,3}" +
+               $" | TsInRecovery: {agent.TurnsInRecovery,3}";
     }
 
     private static int TurnsSurvived(Agent agent, int lastTurn)
