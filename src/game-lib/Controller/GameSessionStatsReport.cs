@@ -26,14 +26,25 @@ public class GameSessionStatsReport
         List<GameState> gameStates =
             _gameSession.PastGameStates.Concat(_gameSession.CurrentGameState.WrapInList()).ToList();
 
-        object[] headerRow =
-        {
-            "Turn", "Money", "Intel", "Funding", "Upkeep cost", "Support", "Transport cap.",
-            "Agents", "In training", "Generating income", "Gathering intel", "Recovering", "Terminated agents", 
-            "Launched missions", "Successful missions", "Failed missions", "Expired mission sites", "Avg diff. last 5",
-            "Avg agent skill", "Max agent skill", "Max survival on last"
-        };
+        object[] headerRow = HeaderRow;
 
+        object[][] dataRows = DataRows(gameStates);
+
+        Debug.Assert(headerRow.Length == dataRows[0].Length);
+
+        SaveToCsvFile(new TabularData(headerRow, dataRows));
+    }
+
+    private static object[] HeaderRow => new object[]
+    {
+        "Turn", "Money", "Intel", "Funding", "Upkeep cost", "Support", "Transport cap.",
+        "Agents", "In training", "Generating income", "Gathering intel", "Recovering", "Terminated agents",
+        "Launched missions", "Successful missions", "Failed missions", "Expired mission sites", "Avg diff. last 5",
+        "Avg agent skill", "Max agent skill", "Max survival on last"
+    };
+
+    private static object[][] DataRows(List<GameState> gameStates)
+    {
         int lastMissionSiteMaxAgentSurvivalChance;
 
         object[][] dataRows = gameStates
@@ -43,19 +54,21 @@ public class GameSessionStatsReport
             .Select(
                 state =>
                 {
-                    int lastMissionSiteDifficulty = state.MissionSites.Any() ? state.MissionSites.TakeLast(1).Single().Difficulty : 0;
-                    
+                    int lastMissionSiteDifficulty =
+                        state.MissionSites.Any() ? state.MissionSites.TakeLast(1).Single().Difficulty : 0;
+
                     Agent? mostSkilledAgent = state.Assets.Agents.Any()
                         ? state.Assets.Agents.MaxBy(Ruleset.AgentSurvivalSkill)
                         : null;
-                    
+
                     double avgDiffLast5MissionSites = state.MissionSites.Any()
-                        ? Math.Round(state.MissionSites.TakeLast(5).Average(site => site.Difficulty)) : 0;
+                        ? Math.Round(state.MissionSites.TakeLast(5).Average(site => site.Difficulty))
+                        : 0;
 
                     double avgAgentSkill = state.Assets.Agents.Any()
                         ? Math.Round(state.Assets.Agents.Average(Ruleset.AgentSurvivalSkill), 2)
                         : 0;
-                    
+
                     int maxAgentSkill = mostSkilledAgent != null ? Ruleset.AgentSurvivalSkill(mostSkilledAgent) : 0;
 
                     lastMissionSiteMaxAgentSurvivalChance = mostSkilledAgent != null && lastMissionSiteDifficulty > 0
@@ -88,10 +101,7 @@ public class GameSessionStatsReport
                     };
                     return stateData;
                 }).ToArray();
-
-        Debug.Assert(headerRow.Length == dataRows[0].Length);
-
-        SaveToCsvFile(new TabularData(headerRow, dataRows));
+        return dataRows;
     }
 
 
