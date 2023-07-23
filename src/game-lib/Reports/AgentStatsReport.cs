@@ -39,8 +39,8 @@ public class AgentStatsReport
         LogAgents(agentsSurvivingLongest, lastTurn);
         _log.Info("");
 
-        _log.Info($"Top {TopAgents} agents by missions launched:");
-        LogAgents(agentsOnMostMissions, lastTurn);
+        _log.Info($"Top {TopAgents} agents by missions survived:");
+        LogAgents(agentsSurvivingMostMissions, lastTurn);
         _log.Info("");
 
         _log.Info($"Top {TopAgents} agents by turns in training:");
@@ -74,7 +74,7 @@ public class AgentStatsReport
                $" | T.Hired: {agent.TurnHired,3}" +
                $" | T.Term.: {agent.TurnTerminated,3}" +
                $" | TsSurvived: {turnsSurvived,3}" +
-               $" | Mis.Launched: {agent.MissionsLaunched,3}" +
+               $" | Mis.Survived: {agent.MissionsSurvived,3}" +
                $" | Mis.Succeeded: {agent.MissionsSucceeded,3}" +
                $" | Mis.Failed: {agent.MissionsFailed,3}" +
                $" | TsInTraining: {agent.TurnsInTraining,3}" +
