@@ -82,7 +82,8 @@ public static class Ruleset
             difficulty - AgentSurvivalSkill(agent),
             0);
 
-    // kja add Agent.SurvivalSkill
+    // kja add Agent.SurvivalSkill delegate
+    // kja increase skill by MissionsLaunched / Succeeded / Failed
     public static int AgentSurvivalSkill(Agent agent) => agent.TurnsTrained * AgentTrainingCoefficient;
 
     public static (int difficulty, int difficultyFromTurn, int roll) RollMissionSiteDifficulty(

@@ -38,6 +38,9 @@ public class AIPlayerTests
     public void BasicAIPlayerIntellectPlaysGameUntilConclusion()
         => AIPlayerPlaysGameUntilConclusion(AIPlayer.Intellect.Basic, turnLimit: 300);
 
+    // kja run this test in a way where no save games or logs are produced except the final log of
+    // "game over", for every single simulation run.
+    // Also no GameStates should be kept except the current one.
     [Test]
     [Ignore("")]
     public void RunSimulations()
