@@ -9,6 +9,7 @@ namespace UfoGameLib.Controller;
 
 public class GameSessionStatsReport
 {
+    private const int TopAgents = 5;
     private readonly ILog _log;
     private readonly File _csvFile;
     private readonly GameSession _gameSession;
@@ -30,9 +31,42 @@ public class GameSessionStatsReport
 
         object[][] dataRows = DataRows(gameStates);
 
+        Agents mostSkilledAgents = MostSkilledAgents(gameStates, TopAgents);
+        Agents longestSurvivingAgents = LongestSurvivingAgents(gameStates);
+        Agents agentsSurvivingMostMissions = AgentsSurvivingMostMissions(gameStates);
+
+        _log.Info("");
+        _log.Info($"Top {TopAgents} most skilled agents:");
+        mostSkilledAgents.ForEach(agent => _log.Info(AgentLogString(agent)) );
+        _log.Info("");
+
+        _log.Info($"Top {TopAgents} longest surviving agents:");
+        longestSurvivingAgents.ForEach(agent => _log.Info(AgentLogString(agent)) );
+        _log.Info("");
+
+        _log.Info($"Top {TopAgents} agents surviving most missions:");
+        agentsSurvivingMostMissions.ForEach(agent => _log.Info(AgentLogString(agent)) );
+        _log.Info("");
+
         Debug.Assert(headerRow.Length == dataRows[0].Length);
 
         SaveToCsvFile(new TabularData(headerRow, dataRows));
+    }
+
+    private static string AgentLogString(Agent agent)
+    {
+        return $"{agent.LogString} " +
+               $"| Skill: {Ruleset.AgentSurvivalSkill(agent),3} " +
+               $"| Terminated: {agent.IsTerminated,5} " +
+               $"| TurnHired: ? " +
+               $"| TurnTerminated: ? " +
+               $"| DaysInTraining: ? " + 
+               $"| DaysGeneratingIncome: ? " + 
+               $"| DaysGatheringIntel: ? " + 
+               $"| DaysRecovering: ? " + 
+               $"| MissionsLaunched: ? " + 
+               $"| MissionsSuccessful: ? " + 
+               $"| MissionsFailed: ? ";
     }
 
     private static object[] HeaderRow => new object[]
@@ -104,6 +138,24 @@ public class GameSessionStatsReport
         return dataRows;
     }
 
+    private Agents MostSkilledAgents(List<GameState> gameStates, int top)
+    {
+        return gameStates.Last().AllAgents
+            .OrderByDescending(Ruleset.AgentSurvivalSkill)
+            .ThenBy(agent => agent.Id)
+            .Take(top)
+            .ToAgents(terminated: null);
+    }
+
+    private Agents LongestSurvivingAgents(List<GameState> gameStates)
+    {
+        return new Agents();
+    }
+
+    private Agents AgentsSurvivingMostMissions(List<GameState> gameStates)
+    {
+        return new Agents();
+    }
 
     private void SaveToCsvFile(TabularData data)
     {

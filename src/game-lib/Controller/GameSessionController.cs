@@ -97,6 +97,8 @@ public class GameSessionController
                   $"Upkeep: {state.Assets.Agents.UpkeepCost}, " +
                   $"Support: {state.Assets.Support}, " +
                   $"Transport cap.: {state.Assets.MaxTransportCapacity}, " +
+                  $"Agents: {state.Assets.Agents.Count}, " +
+                  $"Terminated agents: {state.TerminatedAgents.Count}, " + 
                   $"Turn: {state.Timeline.CurrentTurn-1} / {turnLimit}.");
 
         Save();
