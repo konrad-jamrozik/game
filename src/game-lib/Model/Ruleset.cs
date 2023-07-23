@@ -18,6 +18,8 @@ public static class Ruleset
     public const int AgentTrainingCoefficient = 1;
 
     public const int BaseMissionSiteDifficulty = 30;
+    private const int MaxRecoversIn = 30;
+    private const int MinSurvivalThreshold = 1; // Any Agent always has at least 1% chance of dying
 
     public static (bool survived, int recoversIn) RollForAgentSurvival(
         Agent agent,
@@ -51,7 +53,11 @@ public static class Ruleset
         int aboveThreshold = survivalRoll - survivalThreshold;
         Debug.Assert(aboveThreshold  >= 1);
 
-        int recoversIn = Math.Max(31 - aboveThreshold, 0);
+        // Doing  "(aboveThreshold - 1)" instead of just "aboveThreshold"
+        // because "aboveThreshold" is always at least 1, so without
+        // "-1" the max value of "recoversIn" would be "MaxRecoversIn - 1"
+        // not "MaxRecoversIn".
+        int recoversIn = Math.Max(MaxRecoversIn - (aboveThreshold - 1), 0);
 
         return recoversIn;
     }
@@ -79,7 +85,7 @@ public static class Ruleset
     public static int AgentSurvivalThreshold(Agent agent, int difficulty)
         => Math.Max(
             difficulty - AgentSurvivalSkill(agent),
-            0);
+            MinSurvivalThreshold);
 
     // kja add Agent.SurvivalSkill delegate
     public static int AgentSurvivalSkill(Agent agent)
