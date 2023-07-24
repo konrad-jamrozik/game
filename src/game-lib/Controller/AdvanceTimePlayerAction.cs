@@ -87,7 +87,7 @@ public class AdvanceTimePlayerAction : PlayerAction
 
         (int agentsSent, int agentsSurviving, int agentsTerminated) = EvaluateAgentsOnMission(state, mission, agentsOnMission);
 
-        int agentsRequired = Ruleset.RequiredSurvivingAgentsForSuccess(mission.Site);
+        int agentsRequired = mission.Site.RequiredSurvivingAgentsForSuccess;
         bool missionSuccessful = Ruleset.MissionSuccessful(mission, agentsSurviving);
         mission.CurrentState = missionSuccessful
             ? Mission.State.Successful

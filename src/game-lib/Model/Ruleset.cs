@@ -69,7 +69,7 @@ public static class Ruleset
 
     public static bool MissionSuccessful(Mission mission, int agentsSurviving)
     {
-        int agentsRequired = RequiredSurvivingAgentsForSuccess(mission.Site);
+        int agentsRequired = mission.Site.RequiredSurvivingAgentsForSuccess;
         return agentsSurviving >= agentsRequired;
     }
 

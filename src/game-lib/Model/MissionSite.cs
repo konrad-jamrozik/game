@@ -41,7 +41,6 @@ public class MissionSite : IIdentifiable
     [JsonIgnore]
     public bool WasLaunched => TurnDeactivated >= 1 && !Expired && ExpiresIn == null;
 
-    // kja use this everywhere instead of Ruleset.RequiredSurvivingAgentsForSuccess
     [JsonIgnore]
     public int RequiredSurvivingAgentsForSuccess => Ruleset.RequiredSurvivingAgentsForSuccess(this);
 

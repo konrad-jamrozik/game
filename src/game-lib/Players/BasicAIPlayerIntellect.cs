@@ -152,7 +152,7 @@ public class BasicAIPlayerIntellect : IPlayer
             .Take(state.Assets.CurrentTransportCapacity)
             .ToAgents();
 
-        int requiredSurvivingAgentsForSuccess = Ruleset.RequiredSurvivingAgentsForSuccess(site);
+        int requiredSurvivingAgentsForSuccess = site.RequiredSurvivingAgentsForSuccess;
         if (requiredSurvivingAgentsForSuccess > agents.Count)
         {
             _log.Info(
