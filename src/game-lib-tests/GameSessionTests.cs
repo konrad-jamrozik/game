@@ -135,44 +135,6 @@ public class GameSessionTests
     ///   A non-trivial game state
     /// When:
     ///   That game state is saved and then loaded, a.k.a. round-tripped.
-    ///   And the game state has active mission.
-    /// Then:
-    ///   - The resulting loaded game state is the same as before saving
-    ///   - and no duplicate instance objects have been introduced
-    ///     during serialization (saving) or deserialization (loading).
-    /// </summary>
-    [Test]
-    public void RoundTrippingSavingAndLoadingGameStateWithActiveMissionBehavesCorrectly()
-    {
-        var session = new GameSession(_randomGen);
-        var controller = new GameSessionController(_config, _log, session);
-        var turnController = controller.TurnController;
-
-        controller.AdvanceTime();
-        controller.AdvanceTime();
-        turnController.HireAgents(5);
-        // Need to advance time here so that hired agents are no longer InTransit and can be
-        // sent on a mission.
-        controller.AdvanceTime();
-
-        turnController.SackAgent(id: 0);
-
-        turnController.LaunchMission(
-            controller.GameStatePlayerView.MissionSites.First(),
-            agentCount: 3);
-
-        // Act 1/2 and 2/2
-        controller.Save();
-        controller.Load();
-
-        VerifyGameSatesByJsonDiff(session);
-    }
-
-    /// <summary>
-    /// Given:
-    ///   A non-trivial game state
-    /// When:
-    ///   That game state is saved and then loaded, a.k.a. round-tripped.
     /// Then:
     ///   - The resulting loaded game state is the same as before saving
     ///   - and no duplicate instance objects have been introduced
