@@ -109,12 +109,11 @@ class GameStateJsonConverter : JsonConverterSupportingReferences<GameState>
                 (missionObj, missionSite)
                     => new Mission(
                         id: DeserializeInt(missionObj, nameof(Mission.Id)),
-                        currentState: DeserializeEnum<Mission.State>(missionObj, nameof(Mission.CurrentState)),
                         site: missionSite!,
                         agentsSent: DeserializeInt(missionObj, nameof(Mission.AgentsSent)),
+                        currentState: DeserializeEnum<Mission.State>(missionObj, nameof(Mission.CurrentState)),
                         agentsSurvived: DeserializeNullableInt(missionObj, nameof(Mission.AgentsSurvived)),
-                        agentsTerminated: DeserializeNullableInt(missionObj, nameof(Mission.AgentsTerminated))
-                    )));
+                        agentsTerminated: DeserializeNullableInt(missionObj, nameof(Mission.AgentsTerminated)))));
 
         JsonNode assetsNode = gameStateNode[nameof(GameState.Assets)]!;
         var agents = new Agents(
