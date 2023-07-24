@@ -21,15 +21,6 @@ public class MissionSiteStatsReport : CsvFileReport
 
     public void Write()
     {
-        // kja2 MissionSiteStatsReport
-        // Includes: most bloody mission
-        // Top 5 hardest missions
-        // Top 5 won hardest mission
-        // Top 5 missions by terminated agents
-        // Top 5 won missions by terminated agents
-        // Top 5 missions with least amount of agents lost
-        // Top 5 lost missions with least amount of agents lost
-        
         object[] headerRow = HeaderRow;
         
         object[][] dataRows = DataRows(_gameState);
