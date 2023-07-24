@@ -124,6 +124,7 @@ public class GameSessionController
     // kja3 introduce "SerializedJsonFile" abstraction that will retain the serialization options
     public void Save()
     {
+        GameSession.LastSavedGameState = GameSession.CurrentGameState;
         _config.SaveFile.WriteAllText(CurrentGameStateSerializedAsJsonString());
         _log.Info($"Saved game state to {_config.SaveFile.FullPath}");
     }

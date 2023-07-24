@@ -19,10 +19,11 @@ public class Agent
     public readonly int Id;
     public State CurrentState;
     public Mission? CurrentMission;
-    public int RecoversIn;
+    public int RecoversIn; // kja RecoversIn should be null if not recovering
 
     public readonly int TurnHired;
     public int? TurnTerminated;
+    // kja add: bool Sacked
 
     public int MissionsSurvived;
     public int MissionsSucceeded;

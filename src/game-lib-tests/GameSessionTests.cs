@@ -165,14 +165,7 @@ public class GameSessionTests
         controller.Save();
         controller.Load();
 
-        // Assume: session.PreviousGameState has game state as saved.
-        // Assume: session.CurrentGameState has game state as loaded.
-        // Assert that the GameState is the same after loading
-        new JsonDiffAssertion(
-                session.PreviousGameState!,
-                session.CurrentGameState,
-                GameSession.StateJsonSerializerOptions)
-            .Assert();
+        VerifyGameSatesByJsonDiff(session);
     }
 
     /// <summary>
@@ -199,38 +192,43 @@ public class GameSessionTests
         // Need to advance time here so that hired agents are no longer InTransit and can be
         // sent on a mission.
         controller.AdvanceTime();
+        turnController.SackAgent(id: 0);
 
+        GameStatePlayerView state = controller.GameStatePlayerView;
         turnController.LaunchMission(
-            controller.GameStatePlayerView.MissionSites.First(),
-            agentCount: controller.GameStatePlayerView.Assets.CurrentTransportCapacity);
+            state.MissionSites.First(),
+            agentCount: state.Assets.CurrentTransportCapacity);
 
         controller.AdvanceTime();
         controller.AdvanceTime();
         controller.AdvanceTime();
+        controller.AdvanceTime();
+        controller.AdvanceTime();
+        controller.AdvanceTime();
+        
+        Assert.Multiple(
+            () =>
+            {
+                Assert.That(state.MissionSites.Any(site => site.IsActive), Is.True);
+                Assert.That(state.MissionSites.Any(site => site.WasLaunched), Is.True);
+                Assert.That(state.MissionSites.Any(site => site.IsExpired), Is.True);
+            });
 
         // Act 1/2 and 2/2
         controller.Save();
         controller.Load();
 
-        // Assume: session.PreviousGameState has game state as saved.
-        // Assume: session.CurrentGameState has game state as loaded.
-        // Assert that the GameState is the same after loading
-        new JsonDiffAssertion(
-                session.PreviousGameState!,
-                session.CurrentGameState,
-                GameSession.StateJsonSerializerOptions)
-            .Assert();
+        VerifyGameSatesByJsonDiff(session);
 
-        GameStatePlayerView state = controller.GameStatePlayerView;
         Assert.Multiple(
             () =>
             {
-                Assert.That(state.CurrentTurn, Is.EqualTo(7));
+                Assert.That(state.CurrentTurn, Is.EqualTo(10));
                 Assert.That(
                     state.Assets.Agents.Count + state.TerminatedAgents.Count,
                     Is.EqualTo(10));
                 Assert.That(state.Missions, Has.Count.EqualTo(1));
-                Assert.That(state.MissionSites, Has.Count.EqualTo(2));
+                Assert.That(state.MissionSites, Has.Count.EqualTo(3));
 
                 // Test the references have been preserved,
                 // i.e. no duplicate object instances have been introduced.
@@ -240,30 +238,16 @@ public class GameSessionTests
             });
     }
 
-    [Test]
-    public void DeserializesExpiredMissionsSitesProperly()
+    private static void VerifyGameSatesByJsonDiff(GameSession session)
     {
-        var session = new GameSession(_randomGen);
-        var controller = new GameSessionController(_config, _log, session);
-
-        controller.AdvanceTime();
-        controller.AdvanceTime();
-        controller.AdvanceTime();
-        controller.AdvanceTime();
-        controller.AdvanceTime();
-        controller.AdvanceTime();
-        controller.AdvanceTime();
-        GameStatePlayerView state = controller.GameStatePlayerView;
-
-        Assert.That(state.MissionSites.Single(site => site.Id == 0).IsExpired, Is.True);
-        Assert.That(state.MissionSites.Single(site => site.Id == 1).IsExpired, Is.False);
-
-        // Act 1/2 and 2/2
-        controller.Save();
-        controller.Load();
-
-        Assert.That(state.MissionSites.Single(site => site.Id == 0).IsExpired, Is.True);
-        Assert.That(state.MissionSites.Single(site => site.Id == 1).IsExpired, Is.False);
+        // Assume: session.LastSavedGameState has game state as saved.
+        // Assume: session.CurrentGameState has game state as loaded.
+        // Assert that the GameState is the same after loading
+        new JsonDiffAssertion(
+                session.LastSavedGameState!,
+                session.CurrentGameState,
+                GameSession.StateJsonSerializerOptions)
+            .Assert();
     }
 
     [TearDown]
