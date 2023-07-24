@@ -52,8 +52,6 @@ public class AdvanceTimePlayerAction : PlayerAction
 
         UpdateAgentStates(state);
 
-        // LogTurnInfo(...)
-
         state.Timeline.CurrentTurn++;
 
         CreateMissionSites(state);
@@ -199,51 +197,4 @@ public class AdvanceTimePlayerAction : PlayerAction
                       $"difficultyRoll: {roll,2}.");
         }
     }
-
-    // kja to remove
-    private void LogTurnInfo(
-        GameState state,
-        int successfulMissions,
-        int failedMissions,
-        int expiredMissions,
-        int agentsTerminated,
-        int moneyChange,
-        int incomeGenerated,
-        int agentUpkeep,
-        int intelGathered,
-        int fundingChange,
-        int supportChange,
-        int supportChangeFromMissions,
-        int supportChangeFromExpiredMissionSites)
-    {
-        // The ,4 is alignment specifier per:
-        // https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/tokens/interpolated#structure-of-an-interpolated-string
-        _log.Info($"===== Turn {state.Timeline.CurrentTurn,4} :");
-        _log.Info(
-            $"    | Successful missions: {successfulMissions}, " +
-            $"Failed missions: {failedMissions}, " +
-            $"Expired missions: {expiredMissions}.");
-        _log.Info(
-            $"    | Agents alive: {state.Assets.Agents.Count}, " +
-            $"Agents terminated this turn: {agentsTerminated}.");
-        _log.Info(
-            $"    | Money: {state.Assets.Money}, " +
-            $"Money change: {moneyChange}, " +
-            $"Funding: {state.Assets.Funding}, " +
-            $"Income generated: {incomeGenerated}, " +
-            $"Agent upkeep: {agentUpkeep}.");
-        _log.Info(
-            $"    | Intel: {state.Assets.Intel}, " +
-            $"Intel gathered: {intelGathered}.");
-        _log.Info(
-            $"    | Funding: {state.Assets.Funding}, " +
-            $"Funding change: {fundingChange}.");
-        _log.Info(
-            $"    | Support: {state.Assets.Support}, " +
-            $"Support change: {supportChange}, " +
-            $"Support change from missions: {supportChangeFromMissions}, " +
-            $"Support change from expired missions: {supportChangeFromExpiredMissionSites}.");
-        _log.Info("");
-    }
-
 }
