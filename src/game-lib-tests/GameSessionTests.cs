@@ -240,6 +240,30 @@ public class GameSessionTests
             });
     }
 
+    [Test]
+    public void DeserializesExpiredMissionsSitesProperly()
+    {
+        var session = new GameSession(_randomGen);
+        var controller = new GameSessionController(_config, _log, session);
+
+        controller.AdvanceTime();
+        controller.AdvanceTime();
+        controller.AdvanceTime();
+        controller.AdvanceTime();
+        controller.AdvanceTime();
+        controller.AdvanceTime();
+        controller.AdvanceTime();
+        GameStatePlayerView state = controller.GameStatePlayerView;
+
+        Assert.That(state.MissionSites.Single(site => site.Id == 0).IsExpired, Is.True);
+
+        // Act 1/2 and 2/2
+        controller.Save();
+        controller.Load();
+
+        Assert.That(state.MissionSites.Single(site => site.Id == 0).IsExpired, Is.True);
+    }
+
     [TearDown]
     public void TearDown()
     {

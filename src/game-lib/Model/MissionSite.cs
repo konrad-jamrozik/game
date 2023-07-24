@@ -7,36 +7,49 @@ public class MissionSite : IIdentifiable
 {
     public readonly int Difficulty;
     public readonly int TurnAppeared;
-    public bool IsActive;
+    public int? TurnDeactivated { get; private set; }
+    public bool Expired { get; private set; }
     public int? ExpiresIn { get; private set; }
-    public int? TurnExpired { get; private set; }
 
-    // ReSharper disable once IntroduceOptionalParameters.Global
-    public MissionSite(int id, int turnAppeared, int difficulty, int expiresIn) : this(
+    // ReSharper disable once IntroduceOptionalParameters.Global // kja can get rid of it?
+    public MissionSite(int id, int difficulty, int turnAppeared, int expiresIn) : this(
         id,
         turnAppeared,
         difficulty,
-        expiresIn,
-        turnExpired: null)
+        turnDeactivated: null,
+        expired: false,
+        expiresIn: expiresIn)
     {
     }
 
     [JsonConstructor]
-    public MissionSite(int id, int turnAppeared, int difficulty, int? expiresIn, int? turnExpired)
+    public MissionSite(int id, int difficulty, int turnAppeared, int? turnDeactivated, bool expired, int? expiresIn)
     {
         Debug.Assert(Difficulty >= 0);
         Debug.Assert(ExpiresIn == null || ExpiresIn >= 0);
         Id = id;
-        TurnAppeared = turnAppeared;
-        IsActive = true;
         Difficulty = difficulty;
+        TurnAppeared = turnAppeared;
+        TurnDeactivated = turnDeactivated;
+        Expired = expired;
         ExpiresIn = expiresIn;
-        TurnExpired = turnExpired;
+        AssertStatusInvariant();
     }
 
     [JsonIgnore]
-    public bool IsExpired => !IsActive && ExpiresIn == null;
-    
+    public bool IsActive => TurnDeactivated == null && !Expired && ExpiresIn >= 0;
+
+    [JsonIgnore]
+    public bool IsExpired => TurnDeactivated >= 1 && Expired && ExpiresIn == null;
+
+    [JsonIgnore]
+    public bool WasLaunched => TurnDeactivated >= 1 && !Expired && ExpiresIn == null;
+
+    private void AssertStatusInvariant()
+    {
+        Debug.Assert(IsActive ^ IsExpired ^ WasLaunched);
+    }
+
     // kja use this everywhere instead of Ruleset.RequiredSurvivingAgentsForSuccess
     [JsonIgnore]
     public int RequiredSurvivingAgentsForSuccess => Ruleset.RequiredSurvivingAgentsForSuccess(this);
@@ -48,7 +61,7 @@ public class MissionSite : IIdentifiable
 
     public bool TickExpiration(int turn)
     {
-        Debug.Assert(IsActive && ExpiresIn >= 0);
+        Debug.Assert(IsActive);
         bool expired = false;
         if (ExpiresIn > 0)
             ExpiresIn--;
@@ -58,13 +71,24 @@ public class MissionSite : IIdentifiable
             expired = true;
         }
 
+        AssertStatusInvariant();
         return expired;
+    }
+
+    public void LaunchMission(int turnLaunched)
+    {
+        Debug.Assert(IsActive);
+        ExpiresIn = null;
+        TurnDeactivated = turnLaunched;
+        AssertStatusInvariant();
     }
 
     private void Expire(int turnExpired)
     {
-        Debug.Assert(IsActive && ExpiresIn == 0);
-        IsActive = false;
-        TurnExpired = turnExpired;
+        Debug.Assert(IsActive);
+        TurnDeactivated = turnExpired;
+        ExpiresIn = null;
+        Expired = true;
+        AssertStatusInvariant();
     }
 }

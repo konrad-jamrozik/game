@@ -20,7 +20,7 @@ public class Mission : IIdentifiable
     // public int AgentsSurvived;
     // public int AgentsTerminated;
 
-    public Mission(int id, MissionSite site) : this(
+    public Mission(int id, MissionSite site, int turn) : this(
         id, 
         // This mission just got constructed so it is active until it gets evaluated
         // on time advancement.
@@ -28,8 +28,7 @@ public class Mission : IIdentifiable
         site)
     {
         Debug.Assert(site.IsActive);
-        // MissionSite is no longer active because this mission was launched on it.
-        Site.IsActive = false;
+        site.LaunchMission(turn);
     }
 
     [JsonConstructor]

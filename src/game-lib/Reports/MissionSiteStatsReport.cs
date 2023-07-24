@@ -41,7 +41,7 @@ public class MissionSiteStatsReport : CsvFileReport
 
     private static object[] HeaderRow => new object[]
     {
-        "SiteID", "Difficulty", "T. appeared", "T. expired", "MissionID", "Successful"
+        "SiteID", "Difficulty", "T. appeared", "T. deact.", "Expired", "MissionID", "Successful"
     };
 
     private static object[][] DataRows(GameState gameState)
@@ -57,7 +57,8 @@ public class MissionSiteStatsReport : CsvFileReport
                     site.Id,
                     site.Difficulty,
                     site.TurnAppeared,
-                    site.TurnExpired!
+                    site.TurnDeactivated!,
+                    site.Expired
                 };
 
                 object[] missionData = mission != null
