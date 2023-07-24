@@ -21,7 +21,7 @@ public class MissionSiteStatsReport : CsvFileReport
 
     public void Write()
     {
-        // kja MissionSiteStatsReport
+        // kja2 MissionSiteStatsReport
         // Includes: most bloody mission
         // Top 5 hardest missions
         // Top 5 won hardest mission

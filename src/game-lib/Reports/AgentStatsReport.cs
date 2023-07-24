@@ -65,7 +65,7 @@ public class AgentStatsReport : CsvFileReport
 
     private static object[][] DataRows(GameState gameState)
     {
-        // kja introduce gameState.Timeline.LastTurn
+        // kja2 introduce gameState.Timeline.LastTurn
         int lastTurn = gameState.Timeline.CurrentTurn - 1;
         return gameState.AllAgents.OrderBy(agent => agent.Id).Select(
             agent => new object[]
@@ -86,7 +86,7 @@ public class AgentStatsReport : CsvFileReport
             }).ToArray();
     }
 
-    // kja make this property on Agent
+    // kja2 make this property on Agent
     private static int TurnsSurvived(Agent agent, int lastTurn)
     {
         int agentEndTurn = agent.TurnTerminated ?? lastTurn;

@@ -232,7 +232,7 @@ public class BasicAIPlayerIntellect : IPlayer
             agents.Available.Count,
             Math.Max(agentsCanBeSentOnMissionNextTurnForSure.Count - desiredAgentReserve, 0));
 
-        // kja need smarter approach to money management: if low of funds, assign more agents to generate income,
+        // kja2 need smarter approach to money management: if low of funds, assign more agents to generate income,
         // possibly by recalling agents. This takes priority even above minimum reserve.
         // Also, in a pinch can sack rookie agents.
 

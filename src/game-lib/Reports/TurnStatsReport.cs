@@ -32,7 +32,7 @@ public class TurnStatsReport : CsvFileReport
 
     private static object[] HeaderRow => new object[]
     {
-        // kja need to add to turn stats header row:
+        // kja2 need to add to turn stats header row:
         // - money from generated income;
         // - top 20% percentile agent skill
         // - top 40% percentile agent skill
