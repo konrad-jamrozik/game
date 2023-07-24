@@ -21,32 +21,6 @@ public class GameSession
     public readonly List<GameState> PastGameStates = new List<GameState>();
     public GameState CurrentGameState = GameState.NewInitialGameState();
 
-    /// <summary>
-    /// This field contains game the game state that was serialized by last call to .Save();
-    ///
-    /// This fields exists primarily to facilitate testing serialization and deserialization
-    /// behavior by making calls to Save(), then Load() and then using JsonDiff.
-    ///
-    /// Upon Save(), the saved game state is present in LastSavedGameState.
-    /// Upon Load(), the loaded save file is deserialized into CurrentGameState.
-    /// 
-    /// As a result, it is possible to do JsonDiff between LastSavedGameState
-    /// and CurrentGameState.
-    ///
-    /// Importantly, while the CurrentGameState went through the process of deserialization
-    /// due to a call to Load(), the LastSavedGameState didn't.
-    ///
-    /// Contrast this with the naive approach of obtaining the previous game state to JsonDiff
-    /// not from LastSavedGameState, but from PreviousGameState. This would be a mistake,
-    /// because PreviousGameState is obtained from a state that has been deserialized upon
-    /// a call to GameSession.SaveState(); from within Load().
-    ///
-    /// As a result, both previous and current JsonDiffed game state would have been deserialized,
-    /// hence not catching any bugs where deserialization fails to serialize some field properly.
-    /// 
-    /// </summary>
-    public GameState? LastSavedGameState = null;
-
     public GameSession(RandomGen randomGen)
     {
         RandomGen = randomGen;

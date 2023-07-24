@@ -102,13 +102,23 @@ public class GameSessionTests
         });
     }
 
+    /// <summary>
+    /// Given:
+    ///   A non-trivial game state
+    /// When:
+    ///   That game state is saved, modified (by advancing time) and then the
+    ///   game state is loaded.
+    /// Then:
+    ///   - Loading the game restored to how it was before it was saved.
+    /// </summary>
     [Test]
     public void LoadingPreviousGameStateOverridesCurrentState()
     {
         var session = new GameSession(_randomGen);
         var controller = new GameSessionController(_config, _log, session);
 
-        int savedTurn = controller.GameStatePlayerView.CurrentTurn;
+        GameStatePlayerView state = controller.GameStatePlayerView;
+        int savedTurn = state.CurrentTurn;
         GameState startingGameState = session.CurrentGameState;
 
         // Act 1/2
@@ -116,14 +126,17 @@ public class GameSessionTests
 
         controller.AdvanceTime();
         
-        Assert.That(controller.GameStatePlayerView.CurrentTurn, Is.EqualTo(savedTurn + 1), "savedTurn+1");
+        // Here we verify that advancing time has indeed modified the current
+        // game state
+        Assert.That(state.CurrentTurn, Is.EqualTo(controller.GameStatePlayerView.CurrentTurn));
+        Assert.That(state.CurrentTurn, Is.EqualTo(savedTurn + 1), "savedTurn+1");
         
         // Act 2/2
         GameState loadedGameState = controller.Load();
 
         Assert.That(loadedGameState, Is.EqualTo(session.CurrentGameState));
         Assert.That(loadedGameState, Is.Not.EqualTo(startingGameState));
-        Assert.That(controller.GameStatePlayerView.CurrentTurn, Is.EqualTo(savedTurn), "savedTurn");
+        Assert.That(state.CurrentTurn, Is.EqualTo(savedTurn), "savedTurn");
         Assert.That(
             startingGameState,
             Is.Not.EqualTo(loadedGameState),
@@ -176,11 +189,8 @@ public class GameSessionTests
                 Assert.That(state.MissionSites.Any(site => site.IsExpired), Is.True);
             });
 
-        // Act 1/2 and 2/2
-        controller.Save();
-        controller.Load();
-
-        VerifyGameSatesByJsonDiff(session);
+        // Act
+        VerifyGameSatesByJsonDiff(controller);
 
         Assert.Multiple(
             () =>
@@ -200,14 +210,21 @@ public class GameSessionTests
             });
     }
 
-    private static void VerifyGameSatesByJsonDiff(GameSession session)
+    private static void VerifyGameSatesByJsonDiff(GameSessionController controller)
     {
-        // Assume: session.LastSavedGameState has game state as saved.
-        // Assume: session.CurrentGameState has game state as loaded.
-        // Assert that the GameState is the same after loading
+        // Act 1/2 and 2/2
+        var lastSavedGameState = controller.Save();
+        var currentGameState = controller.Load();
+
+        // Assert: lastSavedGameState was never serialized to, or deserialized from json
+        // Assert: currentGameState was serialized to, and then deserialized from json.
+        // Note it especially important that lastSavedGameState was never serialized nor deserialized.
+        // If it was, then both the states would have been, and doing JsonDiff would not
+        // find any bugs where serialization or deserialization incorrectly handled a field.
+
         new JsonDiffAssertion(
-                session.LastSavedGameState!,
-                session.CurrentGameState,
+                lastSavedGameState,
+                currentGameState,
                 GameSession.StateJsonSerializerOptions)
             .Assert();
     }

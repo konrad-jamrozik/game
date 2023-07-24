@@ -41,6 +41,7 @@ namespace UfoGameLib.Controller;
 public class GameSessionController
 {
     public readonly GameTurnController TurnController;
+
     protected readonly GameSession GameSession;
     private readonly Configuration _config;
     private readonly ILog _log;
@@ -122,11 +123,11 @@ public class GameSessionController
         => PlayerActions.Apply(new AdvanceTimePlayerAction(_log, GameSession.RandomGen), GameSession.CurrentGameState);
 
     // kja3 introduce "SerializedJsonFile" abstraction that will retain the serialization options
-    public void Save()
+    public GameState Save()
     {
-        GameSession.LastSavedGameState = GameSession.CurrentGameState;
         _config.SaveFile.WriteAllText(CurrentGameStateSerializedAsJsonString());
         _log.Info($"Saved game state to {_config.SaveFile.FullPath}");
+        return GameSession.CurrentGameState;
     }
 
     public GameState Load()
