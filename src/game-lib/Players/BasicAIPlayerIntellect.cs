@@ -125,6 +125,8 @@ public class BasicAIPlayerIntellect : IPlayer
         Debug.Assert(state.Assets.CurrentTransportCapacity > 0);
 
         Agents candidateAgents = state.Assets.Agents.CanBeSentOnMission
+            // kja2 this leaves only few most elite agents. Should try to give chance to mid-tier agents, 
+            // depending on their survival chance.
             .OrderByDescending(agent => agent.SurvivalSkill)
             .ToAgents();
 

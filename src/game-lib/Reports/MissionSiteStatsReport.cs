@@ -41,7 +41,9 @@ public class MissionSiteStatsReport : CsvFileReport
 
     private static object[] HeaderRow => new object[]
     {
-        "SiteID", "Difficulty", "T. appeared", "T. deact.", "Expired", "MissionID", "Successful"
+        "SiteID", "MissionID", "Difficulty", "Turn appeared", "Turn deactivated", "Outcome",
+        "Agents sent", "Agents required", "Agents survived", "Agents terminated", "Survival ratio", 
+        "Expired", "Successful"
     };
 
     private static object[][] DataRows(GameState gameState)
@@ -51,29 +53,30 @@ public class MissionSiteStatsReport : CsvFileReport
             {
                 Mission ? mission = gameState.Missions.SingleOrDefault(mission => mission.Site == site);
                 Debug.Assert(mission == null || mission.WasLaunched);
+
+                int outcome = mission is { IsSuccessful: true } ? 1 : 0;
+                double? survivalRatio = mission != null
+                    ? Math.Round((double)mission.AgentsSurvived! / mission.AgentsSent, 2)
+                    : null;
                 
-                object[] siteData = 
+                object[] data =
                 {
                     site.Id,
+                    mission?.Id ?? null!,
                     site.Difficulty,
                     site.TurnAppeared,
                     site.TurnDeactivated!,
-                    site.Expired
+                    outcome,
+                    mission?.AgentsSent ?? null!,
+                    site.RequiredSurvivingAgentsForSuccess,
+                    mission?.AgentsSurvived! ?? null!,
+                    mission?.AgentsTerminated! ?? null!,
+                    survivalRatio!,
+                    site.Expired ? 1 : 0,
+                    mission != null ? (mission.IsSuccessful ? 1 : 0) : null!,
                 };
 
-                object[] missionData = mission != null
-                    ? new object[]
-                    {
-                        mission.Id,
-                        mission.IsSuccessful ? 1 : 0,
-
-                    }
-                    : new object[]
-                    {
-                        null!, null!
-                    };
-
-                return siteData.Concat(missionData).ToArray();
+                return data.ToArray();
 
             }).ToArray();
     }
