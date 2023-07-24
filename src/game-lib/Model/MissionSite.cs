@@ -7,23 +7,15 @@ public class MissionSite : IIdentifiable
 {
     public readonly int Difficulty;
     public readonly int TurnAppeared;
-    public int? TurnDeactivated { get; private set; }
-    public bool Expired { get; private set; }
-    public int? ExpiresIn { get; private set; }
-
-    // ReSharper disable once IntroduceOptionalParameters.Global // kja can get rid of it?
-    public MissionSite(int id, int difficulty, int turnAppeared, int expiresIn) : this(
-        id,
-        turnAppeared,
-        difficulty,
-        turnDeactivated: null,
-        expired: false,
-        expiresIn: expiresIn)
-    {
-    }
 
     [JsonConstructor]
-    public MissionSite(int id, int difficulty, int turnAppeared, int? turnDeactivated, bool expired, int? expiresIn)
+    public MissionSite(
+        int id,
+        int difficulty,
+        int turnAppeared,
+        int? expiresIn,
+        int? turnDeactivated = null,
+        bool expired = false)
     {
         Debug.Assert(Difficulty >= 0);
         Debug.Assert(ExpiresIn == null || ExpiresIn >= 0);
@@ -36,6 +28,10 @@ public class MissionSite : IIdentifiable
         AssertStatusInvariant();
     }
 
+    public int? TurnDeactivated { get; private set; }
+    public bool Expired { get; private set; }
+    public int? ExpiresIn { get; private set; }
+
     [JsonIgnore]
     public bool IsActive => TurnDeactivated == null && !Expired && ExpiresIn >= 0;
 
@@ -44,11 +40,6 @@ public class MissionSite : IIdentifiable
 
     [JsonIgnore]
     public bool WasLaunched => TurnDeactivated >= 1 && !Expired && ExpiresIn == null;
-
-    private void AssertStatusInvariant()
-    {
-        Debug.Assert(IsActive ^ IsExpired ^ WasLaunched);
-    }
 
     // kja use this everywhere instead of Ruleset.RequiredSurvivingAgentsForSuccess
     [JsonIgnore]
@@ -91,4 +82,7 @@ public class MissionSite : IIdentifiable
         Expired = true;
         AssertStatusInvariant();
     }
+
+    private void AssertStatusInvariant()
+        => Debug.Assert(IsActive ^ IsExpired ^ WasLaunched);
 }

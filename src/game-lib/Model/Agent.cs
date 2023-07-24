@@ -33,39 +33,21 @@ public class Agent
     public int TurnsGatheringIntel;
     public int TurnsInRecovery;
 
-    // ReSharper disable once IntroduceOptionalParameters.Global
-    public Agent(int id, int turnHired) : this(
-        id,
-        State.InTransit,
-        currentMission: null,
-        recoversIn: 0,
-        turnHired: turnHired,
-        turnTerminated: null,
-        missionsSurvived: 0,
-        missionsSucceeded: 0,
-        missionsFailed: 0,
-        turnsInTraining: 0,
-        turnsGeneratingIncome: 0,
-        turnsGatheringIntel: 0,
-        turnsInRecovery: 0)
-    {
-    }
-
     [JsonConstructor]
     public Agent(
         int id,
-        State currentState,
-        Mission? currentMission,
-        int recoversIn,
         int turnHired,
-        int? turnTerminated,
-        int missionsSurvived,
-        int missionsSucceeded,
-        int missionsFailed,
-        int turnsInTraining,
-        int turnsGeneratingIncome,
-        int turnsGatheringIntel,
-        int turnsInRecovery)
+        State currentState = State.InTransit,
+        Mission? currentMission = null,
+        int recoversIn = 0,
+        int? turnTerminated = null,
+        int missionsSurvived = 0,
+        int missionsSucceeded = 0,
+        int missionsFailed = 0,
+        int turnsInTraining = 0,
+        int turnsGeneratingIncome = 0,
+        int turnsGatheringIntel = 0,
+        int turnsInRecovery = 0)
     {
         Id = id;
         CurrentState = currentState;

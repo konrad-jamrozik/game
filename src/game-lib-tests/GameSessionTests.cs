@@ -256,12 +256,14 @@ public class GameSessionTests
         GameStatePlayerView state = controller.GameStatePlayerView;
 
         Assert.That(state.MissionSites.Single(site => site.Id == 0).IsExpired, Is.True);
+        Assert.That(state.MissionSites.Single(site => site.Id == 1).IsExpired, Is.False);
 
         // Act 1/2 and 2/2
         controller.Save();
         controller.Load();
 
         Assert.That(state.MissionSites.Single(site => site.Id == 0).IsExpired, Is.True);
+        Assert.That(state.MissionSites.Single(site => site.Id == 1).IsExpired, Is.False);
     }
 
     [TearDown]
