@@ -95,7 +95,7 @@ public class Agent
         get
         {
             bool isRecovering = CurrentState == State.Recovering;
-            Debug.Assert(!isRecovering || RecoversIn > 0);
+            Debug.Assert(!isRecovering || RecoversIn >= 1);
             return isRecovering;
         }
     }
@@ -189,7 +189,7 @@ public class Agent
 
     public void SetRecoversIn(int recoversIn)
     {
-        Debug.Assert(recoversIn > 0);
+        Debug.Assert(recoversIn >= 1);
         
         if (IsOnMission)
             CurrentMission = null;
@@ -203,7 +203,7 @@ public class Agent
     public void TickRecovery()
     {
         Debug.Assert(IsRecovering);
-        Debug.Assert(RecoversIn > 0);
+        Debug.Assert(RecoversIn >=1 );
 
         RecoversIn--;
         TurnsInRecovery++;
