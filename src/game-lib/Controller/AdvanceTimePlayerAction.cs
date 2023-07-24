@@ -25,12 +25,12 @@ public class AdvanceTimePlayerAction : PlayerAction
         // This means that if an agent is lost during the mission, we still pay for their upkeep.
         int agentUpkeep = state.Assets.Agents.UpkeepCost;
 
-        (int successfulMissions, int failedMissions, int agentsTerminated) = EvaluateMissions(state);
+        (int successfulMissions, int failedMissions) = EvaluateMissions(state);
 
-        int expiredMissions = UpdateActiveMissionSites(state);
+        int expiredMissionSites = UpdateActiveMissionSites(state);
 
-        int fundingChange = Ruleset.ComputeFundingChange(successfulMissions, failedMissions, expiredMissions);
-        int supportChange = Ruleset.ComputeSupportChange(successfulMissions, failedMissions, expiredMissions);
+        int fundingChange = Ruleset.ComputeFundingChange(successfulMissions, failedMissions, expiredMissionSites);
+        int supportChange = Ruleset.ComputeSupportChange(successfulMissions, failedMissions, expiredMissionSites);
 
         // Note this funding change will get taken into account when computing money change this turn,
         // as money change is computed downstream.
@@ -59,36 +59,35 @@ public class AdvanceTimePlayerAction : PlayerAction
         CreateMissionSites(state);
     }
 
-    private (int successfulMissions, int failedMissions, int totalAgentsTerminated) EvaluateMissions(GameState state)
+    private (int successfulMissions, int failedMissions) EvaluateMissions(GameState state)
     {
-        int totalAgentsTerminated = 0;
         int successfulMissions = 0;
         int failedMissions = 0;
 
         foreach (Mission mission in state.Missions.Active)
         {
-            (bool missionSuccess, int agentsTerminated) = EvaluateMission(state, mission);
+            bool missionSuccessful = EvaluateMission(state, mission);
 
-            totalAgentsTerminated += agentsTerminated;
-            if (missionSuccess)
+            if (missionSuccessful)
                 successfulMissions++;
             else
                 failedMissions++;
         }
 
-        return (successfulMissions, failedMissions, totalAgentsTerminated);
+        return (successfulMissions, failedMissions);
     }
 
-    private (bool success, int agentsTerminated) EvaluateMission(GameState state, Mission mission)
+    private bool EvaluateMission(GameState state, Mission mission)
     {
         Debug.Assert(mission.CurrentState == Mission.State.Active);
 
         Agents agentsOnMission = state.Assets.Agents.OnSpecificMission(mission);
 
-        (int agentsSent, int agentsSurviving, int agentsTerminated) = EvaluateAgentsOnMission(state, mission, agentsOnMission);
+        (int agentsSurvived, int agentsTerminated) = EvaluateAgentsOnMission(state, mission, agentsOnMission);
+        mission.ApplyAgentsResults(agentsSurvived, agentsTerminated);
 
         int agentsRequired = mission.Site.RequiredSurvivingAgentsForSuccess;
-        bool missionSuccessful = Ruleset.MissionSuccessful(mission, agentsSurviving);
+        bool missionSuccessful = Ruleset.MissionSuccessful(mission, agentsSurvived);
         mission.CurrentState = missionSuccessful
             ? Mission.State.Successful
             : Mission.State.Failed;
@@ -97,10 +96,10 @@ public class AdvanceTimePlayerAction : PlayerAction
         
         _log.Info($"Evaluated {mission.LogString}. result: {mission.CurrentState,7}, " +
                   $"difficulty: {mission.Site.Difficulty,3}, " +
-                  $"agents: surviving / required: {agentsSurviving,3} / {agentsRequired,3}, " +
-                  $"terminated / sent: {agentsTerminated,3} / {agentsSent,3}.");
+                  $"agents: surviving / required: {agentsSurvived,3} / {agentsRequired,3}, " +
+                  $"terminated / sent: {agentsTerminated,3} / {mission.AgentsSent,3}.");
 
-        return (missionSuccessful, agentsTerminated);
+        return missionSuccessful;
     }
 
     private static void UpdateAgentMissionStats(Agents agentsOnMission, bool missionSuccessful)
@@ -118,13 +117,14 @@ public class AdvanceTimePlayerAction : PlayerAction
             });
     }
 
-    private (int agentsSent, int agentsSurviving, int agentsTerminated) EvaluateAgentsOnMission(
+    private (int agentsSurvived, int agentsTerminated) EvaluateAgentsOnMission(
         GameState state,
         Mission mission,
         Agents agentsOnMission)
     {
         int agentsSent = agentsOnMission.Count;
-        int agentsSurviving = 0;
+        Debug.Assert(agentsSent == mission.AgentsSent);
+        int agentsSurvived = 0;
         int agentsTerminated = 0;
 
         foreach (Agent agent in agentsOnMission)
@@ -133,7 +133,7 @@ public class AdvanceTimePlayerAction : PlayerAction
 
             if (survived)
             {
-                agentsSurviving++;
+                agentsSurvived++;
                 if (recoversIn > 0)
                     agent.SetRecoversIn(recoversIn);
                 else
@@ -146,7 +146,7 @@ public class AdvanceTimePlayerAction : PlayerAction
             }
         }
 
-        return (agentsSent, agentsSurviving, agentsTerminated);
+        return (agentsSurvived, agentsTerminated);
     }
 
     private void UpdateAgentStates(GameState state)
@@ -200,6 +200,7 @@ public class AdvanceTimePlayerAction : PlayerAction
         }
     }
 
+    // kja to remove
     private void LogTurnInfo(
         GameState state,
         int successfulMissions,

@@ -31,7 +31,7 @@ public class LaunchMissionPlayerAction : PlayerAction
             $">= _site.RequiredSurvivingAgentsForSuccess: {_site.RequiredSurvivingAgentsForSuccess}");
 
         int missionId = state.NextMissionId;
-        var mission = new Mission(missionId, _site, state.Timeline.CurrentTurn);
+        var mission = new Mission(missionId, _site, state.Timeline.CurrentTurn, _agents.Count);
 
         Debug.Assert(_agents.All(agent => Ruleset.AgentCanSurvive(agent, mission)));
 

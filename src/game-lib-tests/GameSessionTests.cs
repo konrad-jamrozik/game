@@ -171,7 +171,7 @@ public class GameSessionTests
 
         GameStatePlayerView state = controller.GameStatePlayerView;
         turnController.LaunchMission(
-            state.MissionSites.First(),
+            state.MissionSites.Active.First(),
             agentCount: state.Assets.CurrentTransportCapacity);
 
         controller.AdvanceTime();
@@ -184,9 +184,12 @@ public class GameSessionTests
         Assert.Multiple(
             () =>
             {
-                Assert.That(state.MissionSites.Any(site => site.IsActive), Is.True);
-                Assert.That(state.MissionSites.Any(site => site.WasLaunched), Is.True);
-                Assert.That(state.MissionSites.Any(site => site.IsExpired), Is.True);
+                Assert.That(state.MissionSites.Active.Any(), Is.True);
+                Assert.That(state.MissionSites.Launched.Any(), Is.True);
+                Assert.That(state.MissionSites.Expired.Any(), Is.True);
+                // The fact this assert returns true confirms the need to have the test
+                // RoundTrippingSavingAndLoadingGameStateWithActiveMissionBehavesCorrectly
+                Assert.That(!state.Missions.Active.Any());
             });
 
         // Act
@@ -209,6 +212,37 @@ public class GameSessionTests
                     Is.SameAs(state.MissionSites[0]));
             });
     }
+
+    /// <summary>
+    /// This test is like RoundTrippingSavingAndLoadingGameStateBehavesCorrectly
+    /// but when the game is saved there is an active mission.
+    /// </summary>
+    [Test]
+    public void RoundTrippingSavingAndLoadingGameStateWithActiveMissionBehavesCorrectly()
+    {
+        var session = new GameSession(_randomGen);
+        var controller = new GameSessionController(_config, _log, session);
+        var turnController = controller.TurnController;
+        GameStatePlayerView state = controller.GameStatePlayerView;
+
+        controller.AdvanceTime();
+        turnController.HireAgents(10);
+        // Need to advance time here so that hired agents are no longer InTransit and can be
+        // sent on a mission.
+        controller.AdvanceTime();
+        
+        Assert.That(state.MissionSites.Active.Any(), Is.True);
+        
+        turnController.LaunchMission(
+            state.MissionSites.Active.First(),
+            agentCount: state.Assets.CurrentTransportCapacity);
+
+        Assert.That(state.Missions.Active.Any());
+
+        // Act
+        VerifyGameSatesByJsonDiff(controller);
+    }
+
 
     private static void VerifyGameSatesByJsonDiff(GameSessionController controller)
     {

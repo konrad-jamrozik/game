@@ -125,11 +125,11 @@ public static class Ruleset
         return result;
     }
 
-    public static int ComputeFundingChange(int successfulMissions, int failedMissions, int expiredMissions)
-        => successfulMissions * 5 - failedMissions * 1 - expiredMissions * 1;
+    public static int ComputeFundingChange(int successfulMissions, int failedMissions, int expiredMissionSites)
+        => successfulMissions * 5 - failedMissions * 1 - expiredMissionSites * 1;
 
-    public static int ComputeSupportChange(int successfulMissions, int failedMissions, int expiredMissions)
-        => successfulMissions * 20 - failedMissions * 5 - expiredMissions * 5;
+    public static int ComputeSupportChange(int successfulMissions, int failedMissions, int expiredMissionSites)
+        => successfulMissions * 20 - failedMissions * 5 - expiredMissionSites * 5;
 
     public static int ComputeMoneyChange(int funding, int incomeGenerated, int agentUpkeep)
         => funding + incomeGenerated - agentUpkeep;
