@@ -24,7 +24,7 @@ public class AgentStatsReport : CsvFileReport
 
     public void Write()
     {
-        int lastTurn = _gameState.Timeline.CurrentTurn - 1;
+        int lastTurn = _gameState.LastTurn;
 
         (string header, Func<Agent, int> orderBy)[] data = 
         {
@@ -65,8 +65,7 @@ public class AgentStatsReport : CsvFileReport
 
     private static object[][] DataRows(GameState gameState)
     {
-        // kja2 introduce gameState.Timeline.LastTurn
-        int lastTurn = gameState.Timeline.CurrentTurn - 1;
+        int lastTurn = gameState.LastTurn;
         return gameState.AllAgents.OrderBy(agent => agent.Id).Select(
             agent => new object[]
             {
