@@ -58,7 +58,7 @@ public class AgentStatsReport : CsvFileReport
     private static object[] HeaderRow => new object[]
     {
         // $" | TsInRecovery: {agent.TurnsInRecovery,3}";
-         "ID", "Skill", "Turn hired", "Turn term.", "Ts survived", 
+         "ID", "Skill", "Turn hired", "Turn term.", "Sacked", "Ts survived", 
          "Mis survived", "Mis succeeded", "Mis failed",
          "Ts in training", "Ts genIncome", "Ts gathIntel", "Ts in ops", "Ts inRecovery"
     };
@@ -74,6 +74,7 @@ public class AgentStatsReport : CsvFileReport
                 agent.SurvivalSkill,
                 agent.TurnHired,
                 agent.TurnTerminated!,
+                agent.Sacked ? 1 : 0,
                 TurnsSurvived(agent, lastTurn),
                 agent.MissionsSurvived,
                 agent.MissionsSucceeded,
@@ -113,6 +114,7 @@ public class AgentStatsReport : CsvFileReport
                $" | Skill: {agent.SurvivalSkill,3}" +
                $" | T.Hired: {agent.TurnHired,3}" +
                $" | T.Term.: {agent.TurnTerminated,3}" +
+               $" | Sacked.: {agent.Sacked,3}" +
                $" | TsSurvived: {turnsSurvived,3}" +
                $" | Mis.Survived: {agent.MissionsSurvived,3}" +
                $" | Mis.Succeeded: {agent.MissionsSucceeded,3}" +

@@ -56,7 +56,7 @@ internal class GameStateDiff
             : $"{prevSkill,3}    {"",-3}";
 
         string prevRecoversIn = prev?.RecoversIn.ToString() ?? "";
-        string currRecoversIn = curr.RecoversIn.ToString();
+        string currRecoversIn = curr.RecoversIn?.ToString() ?? "";
         string recoversInLog = prevRecoversIn != currRecoversIn
             ? $"{prevRecoversIn,3} -> {currRecoversIn,-3}" 
             : $"{prevRecoversIn,3}    {"",-3}";

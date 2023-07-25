@@ -19,11 +19,11 @@ public class Agent
     public readonly int Id;
     public State CurrentState;
     public Mission? CurrentMission;
-    public int RecoversIn; // kja RecoversIn should be null if not recovering
+    public int? RecoversIn;
 
     public readonly int TurnHired;
     public int? TurnTerminated;
-    // kja add: bool Sacked
+    public bool Sacked;
 
     public int MissionsSurvived;
     public int MissionsSucceeded;
@@ -40,8 +40,9 @@ public class Agent
         int turnHired,
         State currentState = State.InTransit,
         Mission? currentMission = null,
-        int recoversIn = 0,
+        int? recoversIn = null,
         int? turnTerminated = null,
+        bool sacked = false,
         int missionsSurvived = 0,
         int missionsSucceeded = 0,
         int missionsFailed = 0,
@@ -57,6 +58,7 @@ public class Agent
         RecoversIn = recoversIn;
         TurnHired = turnHired;
         TurnTerminated = turnTerminated;
+        Sacked = sacked;
         MissionsSurvived = missionsSurvived;
         MissionsSucceeded = missionsSucceeded;
         MissionsFailed = missionsFailed;
@@ -66,6 +68,9 @@ public class Agent
         Debug.Assert(TurnHired >= 1);
         Debug.Assert(TurnTerminated == null || TurnHired <= TurnTerminated);
         AssertMissionInvariants();
+        Debug.Assert(!sacked || turnTerminated != null);
+        Debug.Assert(!IsRecovering || RecoversIn >= 1);
+        Debug.Assert(IsRecovering || RecoversIn == null);
     }
 
     [JsonIgnore]
@@ -90,15 +95,7 @@ public class Agent
     public bool IsGeneratingIncome => CurrentState == State.GeneratingIncome;
 
     [JsonIgnore]
-    public bool IsRecovering
-    {
-        get
-        {
-            bool isRecovering = CurrentState == State.Recovering;
-            Debug.Assert(!isRecovering || RecoversIn >= 1);
-            return isRecovering;
-        }
-    }
+    public bool IsRecovering => CurrentState == State.Recovering;
 
     [JsonIgnore]
     public bool IsInTransit => CurrentState == State.InTransit;
@@ -209,7 +206,10 @@ public class Agent
         TurnsInRecovery++;
 
         if (RecoversIn == 0)
+        {
+            RecoversIn = null;
             MakeAvailable();
+        }
     }
 
     public void Recall()
@@ -226,6 +226,7 @@ public class Agent
         CurrentState = State.Terminated;
         TurnTerminated = turnTerminated;
         CurrentMission = null;
+        Sacked = sack;
         AssertMissionInvariants();
     }
 
