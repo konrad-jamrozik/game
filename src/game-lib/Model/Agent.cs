@@ -17,11 +17,11 @@ public class Agent
     }
 
     public readonly int Id;
+
+    public readonly int TurnHired;
     public State CurrentState;
     public Mission? CurrentMission;
     public int? RecoversIn;
-
-    public readonly int TurnHired;
     public int? TurnTerminated;
     public bool Sacked;
 
@@ -232,6 +232,13 @@ public class Agent
 
     [JsonIgnore]
     public string LogString => $"AgentID: {Id,4}";
+
+    public int TurnsSurvived(int currentTurn)
+    {
+        int agentEndTurn = TurnTerminated ?? currentTurn;
+        int turnsSurvived = agentEndTurn - TurnHired;
+        return turnsSurvived;
+    }
 
     private void AssertMissionInvariants()
     {

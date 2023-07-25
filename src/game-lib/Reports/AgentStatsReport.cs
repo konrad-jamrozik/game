@@ -29,7 +29,7 @@ public class AgentStatsReport : CsvFileReport
         (string header, Func<Agent, int> orderBy)[] data = 
         {
             ("skill", agent => agent.SurvivalSkill),
-            ("turns survived", agent => TurnsSurvived(agent, lastTurn)),
+            ("turns survived", agent => agent.TurnsSurvived(lastTurn)),
             ("missions survived", agent => agent.MissionsSurvived),
             ("turns in training", agent => agent.TurnsInTraining),
             ("turns generating income", agent => agent.TurnsGeneratingIncome),
@@ -75,7 +75,7 @@ public class AgentStatsReport : CsvFileReport
                 agent.TurnHired,
                 agent.TurnTerminated!,
                 agent.Sacked ? 1 : 0,
-                TurnsSurvived(agent, lastTurn),
+                agent.TurnsSurvived(lastTurn),
                 agent.MissionsSurvived,
                 agent.MissionsSucceeded,
                 agent.MissionsFailed,
@@ -85,14 +85,6 @@ public class AgentStatsReport : CsvFileReport
                 agent.TurnsInOps,
                 agent.TurnsInRecovery
             }).ToArray();
-    }
-
-    // kja2 make this property on Agent
-    private static int TurnsSurvived(Agent agent, int lastTurn)
-    {
-        int agentEndTurn = agent.TurnTerminated ?? lastTurn;
-        int turnsSurvived = agentEndTurn - agent.TurnHired;
-        return turnsSurvived;
     }
 
     private Agents TopAgentsBy(Func<Agent, int> orderBy)
@@ -107,7 +99,7 @@ public class AgentStatsReport : CsvFileReport
 
     private static string AgentLogString(Agent agent, int lastTurn)
     {
-        int turnsSurvived = TurnsSurvived(agent, lastTurn);
+        int turnsSurvived = agent.TurnsSurvived(lastTurn);
         Debug.Assert(turnsSurvived >= 0);
 
         return $"{agent.LogString}" +
