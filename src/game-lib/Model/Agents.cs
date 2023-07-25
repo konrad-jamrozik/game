@@ -1,4 +1,5 @@
 using System.Text.Json.Serialization;
+using Lib.Primitives;
 
 namespace UfoGameLib.Model;
 
@@ -68,6 +69,9 @@ public class Agents : List<Agent>
 
     public void AssertCanBeSacked()
         => Debug.Assert(this.All(agent => agent.CanBeSacked));
+
+    public Agent AgentAtPercentile(int percentile, Func<Agent, int> orderBy)
+        => this.OrderBy(orderBy).TakePercent(percentile).Last();
 
     private void AssertAliveness(IEnumerable<Agent> agents)
     {

@@ -154,4 +154,11 @@ public static class EnumerableExtensions
 
         return (both, left, right);
     }
+
+    public static IEnumerable<TValue> TakePercent<TValue>(this IEnumerable<TValue> coll, int percent)
+    {
+        List<TValue> list = coll.ToList();
+        int countToTake = percent > 0 ? Convert.ToInt32(Math.Ceiling(list.Count * ((float)percent/100))) : 1;
+        return list.Take(countToTake);
+    }
 }
