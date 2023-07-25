@@ -137,7 +137,7 @@ public class BasicAIPlayerIntellect : IPlayer
         }
 
         Agents candidateAgentsThatCanSurvive = candidateAgents
-            .Where(agent => Ruleset.AgentSurvivalChance(agent, site.Difficulty) >= MinimumAcceptableAgentSurvivalChance)
+            .Where(agent => agent.SurvivalChance(site.Difficulty) >= MinimumAcceptableAgentSurvivalChance)
             .ToAgents();
 
         if (!candidateAgentsThatCanSurvive.Any())

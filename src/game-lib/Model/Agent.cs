@@ -76,6 +76,8 @@ public class Agent
     [JsonIgnore]
     public int SurvivalSkill => Ruleset.AgentSurvivalSkill(this);
 
+    public int SurvivalChance(int difficulty) => Ruleset.AgentSurvivalChance(this, difficulty);
+
     [JsonIgnore]
     public int TurnsInOps => TurnsGeneratingIncome + TurnsGatheringIntel;
 

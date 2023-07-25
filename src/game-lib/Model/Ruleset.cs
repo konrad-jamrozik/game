@@ -62,7 +62,6 @@ public static class Ruleset
         return recoversIn;
     }
 
-    // kja make this a prop on the Agent
     // The implementation of this method is a formula describing 
     // the implementation of RollForAgentSurvival.
     public static int AgentSurvivalChance(Agent agent, int difficulty)

@@ -100,6 +100,6 @@ public class TurnStatsReport : CsvFileReport
 
     private static int SurvivalChanceOfAgentAtPercentile(Agents agents, int difficulty, int percentile)
         => agents.Any()
-            ? Ruleset.AgentSurvivalChance(agents.AgentAtPercentile(percentile, agent => agent.SurvivalSkill), difficulty)
+            ? agents.AgentAtPercentile(percentile, agent => agent.SurvivalSkill).SurvivalChance(difficulty)
             : 0;
 }
