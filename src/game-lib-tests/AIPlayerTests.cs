@@ -22,12 +22,12 @@ public class AIPlayerTests
     [Test]
     public void Scratchpad()
     {
-        List<int> foo = new List<int> { 1, 2, 3, 4, 5, 6, 7 };
-        List<int> taken = foo[^7..];
-        for (int i = 0; i < taken.Count; i++)
-        {
-            Console.Out.WriteLine($"i {i}: {taken[i]}");
-        }
+        // List<int> foo = new List<int> { 1, 2, 3, 4, 5, 6, 7 };
+        // List<int> taken = foo[^7..]; // Works in .NET 8 only
+        // for (int i = 0; i < taken.Count; i++)
+        // {
+        //     Console.Out.WriteLine($"i {i}: {taken[i]}");
+        // }
     }
 
     [Test]
