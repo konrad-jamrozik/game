@@ -2,7 +2,6 @@
 
   <PropertyGroup>
     <RootNamespace>UfoGameLib.Tests</RootNamespace>
-    <ImplicitUsings>enable</ImplicitUsings>
     <IsPackable>false</IsPackable>
   </PropertyGroup>
 
