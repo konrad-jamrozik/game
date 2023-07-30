@@ -8,6 +8,13 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(
     opts =>
     {
+        // Not sure if I need these, but they seem like a good idea.
+        // https://github.com/domaindrivendev/Swashbuckle.AspNetCore#inheritance-and-polymorphism
+        opts.UseAllOfForInheritance();
+        opts.UseAllOfToExtendReferenceSchemas();
+        opts.UseOneOfForPolymorphism();
+
+        // Apply various fixups to default OpenAPI schema generation.
         // https://github.com/domaindrivendev/Swashbuckle.AspNetCore#schema-filters
         opts.SchemaFilter<GameStateSchemaFilter>();
     });
