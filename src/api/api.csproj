@@ -1,6 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
+    <RootNamespace>UfoGameLib.Api</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

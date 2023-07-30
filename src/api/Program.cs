@@ -1,10 +1,16 @@
+using UfoGameLib.Api;
 using UfoGameLib.Lib;
 using UfoGameLib.State;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(
+    opts =>
+    {
+        // https://github.com/domaindrivendev/Swashbuckle.AspNetCore#schema-filters
+        opts.SchemaFilter<GameStateSchemaFilter>();
+    });
 
 var app = builder.Build();
 
