@@ -12,11 +12,11 @@ public class Missions : List<Mission>
     public Missions(IEnumerable<Mission>? missions = null)
         => AddRange(missions ?? new List<Mission>());
 
-    public List<Mission> Active => this.Where(mission => mission.IsActive).ToList();
+    public Missions Active => this.Where(mission => mission.IsActive).ToMissions();
 
-    public List<Mission> Successful => this.Where(mission => mission.IsSuccessful).ToList();
+    public Missions Successful => this.Where(mission => mission.IsSuccessful).ToMissions();
 
-    public List<Mission> Failed => this.Where(mission => mission.IsFailed).ToList();
+    public Missions Failed => this.Where(mission => mission.IsFailed).ToMissions();
 
-    public List<Mission> Launched => this.Where(mission => mission.WasLaunched).ToList();
+    public Missions Launched => this.Where(mission => mission.WasLaunched).ToMissions();
 }
