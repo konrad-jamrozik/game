@@ -1,6 +1,7 @@
 using UfoGameLib.Api;
 using UfoGameLib.Lib;
 using UfoGameLib.State;
+using Unchase.Swashbuckle.AspNetCore.Extensions.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,6 +14,11 @@ builder.Services.AddSwaggerGen(
         opts.UseAllOfForInheritance();
         opts.UseAllOfToExtendReferenceSchemas();
         opts.UseOneOfForPolymorphism();
+
+        // Make enums be generated with names instead of ints, per "Fix enums in OpenApi document" in
+        // https://github.com/unchase/Unchase.Swashbuckle.AspNetCore.Extensions#extensions-filters-use
+        // Linked from https://github.com/domaindrivendev/Swashbuckle.AspNetCore#community-packages
+        opts.AddEnumsWithValuesFixFilters();
 
         // Apply various fixups to default OpenAPI schema generation.
         // https://github.com/domaindrivendev/Swashbuckle.AspNetCore#schema-filters
