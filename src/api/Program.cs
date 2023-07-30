@@ -31,15 +31,18 @@ app.MapGet("/initialGameState", () =>
     .WithName("InitialGameState")
     .WithOpenApi();
 
-app.MapGet("/initialGameStateAsObj", () =>
-    {
-        var gameSession = new GameSession(new RandomGen(new Random()));
-        // This should be serialized to JSON per:
-        // https://learn.microsoft.com/en-us/aspnet/core/tutorials/min-web-api?view=aspnetcore-8.0&tabs=visual-studio#return-values
-        // https://learn.microsoft.com/en-us/aspnet/core/fundamentals/minimal-apis/responses?view=aspnetcore-8.0#configure-json-serialization-options-for-an-endpoint
-        return TypedResults.Json(gameSession.CurrentGameState, GameSession.StateJsonSerializerOptions);
-    })
+app.MapGet(
+        "/initialGameStateAsObj",
+        () =>
+        {
+            var gameSession = new GameSession(new RandomGen(new Random()));
+            // This should be serialized to JSON per:
+            // https://learn.microsoft.com/en-us/aspnet/core/tutorials/min-web-api?view=aspnetcore-8.0&tabs=visual-studio#return-values
+            // https://learn.microsoft.com/en-us/aspnet/core/fundamentals/minimal-apis/responses?view=aspnetcore-8.0#configure-json-serialization-options-for-an-endpoint
+            return TypedResults.Json(gameSession.CurrentGameState, GameSession.StateJsonSerializerOptions);
+        })
     .WithName("InitialGameStateAsObj")
-    .WithOpenApi();
+    .WithOpenApi()
+    .Produces<GameState>();
 
 app.Run();
