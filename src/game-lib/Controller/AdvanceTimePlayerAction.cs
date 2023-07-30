@@ -77,7 +77,7 @@ public class AdvanceTimePlayerAction : PlayerAction
 
     private bool EvaluateMission(GameState state, Mission mission)
     {
-        Debug.Assert(mission.CurrentState == Mission.State.Active);
+        Debug.Assert(mission.CurrentState == Mission.MissionState.Active);
 
         Agents agentsOnMission = state.Assets.Agents.OnSpecificMission(mission);
 
@@ -87,8 +87,8 @@ public class AdvanceTimePlayerAction : PlayerAction
         int agentsRequired = mission.Site.RequiredSurvivingAgentsForSuccess;
         bool missionSuccessful = Ruleset.MissionSuccessful(mission, agentsSurvived);
         mission.CurrentState = missionSuccessful
-            ? Mission.State.Successful
-            : Mission.State.Failed;
+            ? Mission.MissionState.Successful
+            : Mission.MissionState.Failed;
 
         UpdateAgentMissionStats(agentsOnMission, missionSuccessful);
         

@@ -111,7 +111,7 @@ class GameStateJsonConverter : JsonConverterSupportingReferences<GameState>
                         id: DeserializeInt(missionObj, nameof(Mission.Id)),
                         site: missionSite!,
                         agentsSent: DeserializeInt(missionObj, nameof(Mission.AgentsSent)),
-                        currentState: DeserializeEnum<Mission.State>(missionObj, nameof(Mission.CurrentState)),
+                        currentState: DeserializeEnum<Mission.MissionState>(missionObj, nameof(Mission.CurrentState)),
                         agentsSurvived: DeserializeNullableInt(missionObj, nameof(Mission.AgentsSurvived)),
                         agentsTerminated: DeserializeNullableInt(missionObj, nameof(Mission.AgentsTerminated)))));
 
@@ -125,7 +125,7 @@ class GameStateJsonConverter : JsonConverterSupportingReferences<GameState>
                     => new Agent(
                         id: DeserializeInt(agentObj,nameof(Agent.Id)),
                         turnHired: DeserializeInt(agentObj, nameof(Agent.TurnHired)),
-                        currentState: DeserializeEnum<Agent.State>(agentObj, nameof(Agent.CurrentState)),
+                        currentState: DeserializeEnum<Agent.AgentState>(agentObj, nameof(Agent.CurrentState)),
                         currentMission: mission,
                         recoversIn: DeserializeNullableInt(agentObj, nameof(Agent.RecoversIn)),
                         turnTerminated: DeserializeNullableInt(agentObj, nameof(Agent.TurnTerminated)),

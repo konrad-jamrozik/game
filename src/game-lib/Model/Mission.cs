@@ -5,7 +5,7 @@ namespace UfoGameLib.Model;
 
 public class Mission : IIdentifiable
 {
-    public enum State
+    public enum MissionState
     {
         Active,
         Successful,
@@ -15,7 +15,7 @@ public class Mission : IIdentifiable
     public readonly int AgentsSent;
 
     public MissionSite Site;
-    public State CurrentState;
+    public MissionState CurrentState;
 
     public Mission(int id, MissionSite site, int turn, int agentsSent) : this(
         id, 
@@ -31,7 +31,7 @@ public class Mission : IIdentifiable
         int id,
         MissionSite site,
         int agentsSent,
-        State currentState = State.Active,
+        MissionState currentState = MissionState.Active,
         int? agentsSurvived = null,
         int? agentsTerminated = null)
     {
@@ -51,13 +51,13 @@ public class Mission : IIdentifiable
     public int? AgentsTerminated { get; private set; }
 
     [JsonIgnore]
-    public bool IsActive => CurrentState == State.Active;
+    public bool IsActive => CurrentState == MissionState.Active;
 
     [JsonIgnore]
-    public bool IsSuccessful => CurrentState == State.Successful;
+    public bool IsSuccessful => CurrentState == MissionState.Successful;
 
     [JsonIgnore]
-    public bool IsFailed => CurrentState == State.Failed;
+    public bool IsFailed => CurrentState == MissionState.Failed;
 
     [JsonIgnore]
     public bool WasLaunched => IsSuccessful || IsFailed;

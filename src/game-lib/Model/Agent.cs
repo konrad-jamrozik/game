@@ -4,7 +4,7 @@ namespace UfoGameLib.Model;
 
 public class Agent
 {
-    public enum State
+    public enum AgentState
     {
         InTransit,
         Available,
@@ -19,7 +19,7 @@ public class Agent
     public readonly int Id;
 
     public readonly int TurnHired;
-    public State CurrentState;
+    public AgentState CurrentState;
     public Mission? CurrentMission;
     public int? RecoversIn;
     public int? TurnTerminated;
@@ -38,7 +38,7 @@ public class Agent
     public Agent(
         int id,
         int turnHired,
-        State currentState = State.InTransit,
+        AgentState currentState = AgentState.InTransit,
         Mission? currentMission = null,
         int? recoversIn = null,
         int? turnTerminated = null,
@@ -82,28 +82,28 @@ public class Agent
     public int TurnsInOps => TurnsGeneratingIncome + TurnsGatheringIntel;
 
     [JsonIgnore]
-    public bool IsAvailable => CurrentState == State.Available;
+    public bool IsAvailable => CurrentState == AgentState.Available;
 
     [JsonIgnore]
-    public bool IsOnMission => CurrentState == State.OnMission;
+    public bool IsOnMission => CurrentState == AgentState.OnMission;
 
     [JsonIgnore]
-    public bool IsTraining => CurrentState == State.Training;
+    public bool IsTraining => CurrentState == AgentState.Training;
 
     [JsonIgnore]
-    public bool IsGatheringIntel => CurrentState == State.GatheringIntel;
+    public bool IsGatheringIntel => CurrentState == AgentState.GatheringIntel;
 
     [JsonIgnore]
-    public bool IsGeneratingIncome => CurrentState == State.GeneratingIncome;
+    public bool IsGeneratingIncome => CurrentState == AgentState.GeneratingIncome;
 
     [JsonIgnore]
-    public bool IsRecovering => CurrentState == State.Recovering;
+    public bool IsRecovering => CurrentState == AgentState.Recovering;
 
     [JsonIgnore]
-    public bool IsInTransit => CurrentState == State.InTransit;
+    public bool IsInTransit => CurrentState == AgentState.InTransit;
 
     [JsonIgnore]
-    public bool IsTerminated => CurrentState == State.Terminated;
+    public bool IsTerminated => CurrentState == AgentState.Terminated;
 
     [JsonIgnore]
     public bool CanBeSentOnMission => IsAvailable || IsTraining;
@@ -142,28 +142,28 @@ public class Agent
     {
         Debug.Assert(CanBeSentOnMission);
         Debug.Assert(!IsTraining);
-        CurrentState = State.Training;
+        CurrentState = AgentState.Training;
     }
 
     public void GatherIntel()
     {
         Debug.Assert(CanBeSentOnMission);
         Debug.Assert(!IsGatheringIntel);
-        CurrentState = State.GatheringIntel;
+        CurrentState = AgentState.GatheringIntel;
     }
 
     public void GenerateIncome()
     {
         Debug.Assert(CanBeSentOnMission);
         Debug.Assert(!IsGeneratingIncome);
-        CurrentState = State.GeneratingIncome;
+        CurrentState = AgentState.GeneratingIncome;
     }
 
     public void SendOnMission(Mission mission)
     {
         Debug.Assert(CanBeSentOnMission);
         Debug.Assert(!IsOnMission);
-        CurrentState = State.OnMission;
+        CurrentState = AgentState.OnMission;
         CurrentMission = mission;
         // Note:
         // We are not increasing MissionsLaunched here
@@ -182,7 +182,7 @@ public class Agent
         Debug.Assert(!IsAvailable);
         if (IsOnMission)
             CurrentMission = null;
-        CurrentState = State.Available;
+        CurrentState = AgentState.Available;
         AssertMissionInvariants();
     }
 
@@ -193,7 +193,7 @@ public class Agent
         if (IsOnMission)
             CurrentMission = null;
 
-        CurrentState = State.Recovering;
+        CurrentState = AgentState.Recovering;
         RecoversIn = recoversIn;
 
         AssertMissionInvariants();
@@ -217,7 +217,7 @@ public class Agent
     public void Recall()
     {
         Debug.Assert(IsRecallable);
-        CurrentState = State.InTransit;
+        CurrentState = AgentState.InTransit;
     }
 
     public void Terminate(int turnTerminated, bool sack = false)
@@ -225,7 +225,7 @@ public class Agent
         Debug.Assert(IsAlive);
         Debug.Assert(sack ? CanBeSacked : IsOnMission);
         Debug.Assert(turnTerminated >= TurnHired);
-        CurrentState = State.Terminated;
+        CurrentState = AgentState.Terminated;
         TurnTerminated = turnTerminated;
         CurrentMission = null;
         Sacked = sack;
