@@ -38,6 +38,20 @@ public class AIPlayerTests
     public void BasicAIPlayerIntellectPlaysGameUntilConclusion()
         => AIPlayerPlaysGameUntilConclusion(AIPlayer.Intellect.Basic, turnLimit: 300);
 
+    [Test]
+    public void ExampleGameSessionForApi()
+    {
+        var config = new Configuration(new SimulatedFileSystem());
+        var log = new Log(config);
+        var randomGen = new RandomGen(new Random());
+        var intellect = AIPlayer.Intellect.Basic;
+        var controller = new GameSessionController(config, log, new GameSession(randomGen));
+        var aiPlayer = new AIPlayer(log, intellect);
+
+        // Act
+        controller.PlayGameSession(turnLimit: 30, aiPlayer);
+    }
+
     // kja2 run this test in a way where no save games or logs are produced except the final log of
     // "game over", for every single simulation run.
     // Also no GameStates should be kept except the current one.
