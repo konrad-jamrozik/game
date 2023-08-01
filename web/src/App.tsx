@@ -2,6 +2,7 @@ import { createSignal } from 'solid-js'
 import solidLogo from './assets/solid.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
+import MyComponent from './MyComponent';
 
 function App() {
   const [count, setCount] = createSignal(0)
@@ -24,6 +25,7 @@ function App() {
         <button onClick={() => setCount((count) => count + 1)}>
           count is {count()}
         </button>
+        <MyComponent />
         <p>
           Edit <code>src/App.tsx</code> and save to test HMR
         </p>
