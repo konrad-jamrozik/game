@@ -25,10 +25,24 @@ builder.Services.AddSwaggerGen(
         opts.SchemaFilter<GameStateSchemaFilter>();
     });
 
+// https://learn.microsoft.com/en-us/aspnet/core/security/cors?view=aspnetcore-7.0
+string corsPolicyName = "TempLocalhostCors";
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: corsPolicyName,
+        policy =>
+        {
+            policy.WithOrigins("http://localhost:5173")
+                .WithMethods("PUT", "DELETE", "GET");
+        });
+});
+
 var app = builder.Build();
 
 app.UseSwagger();
 app.UseSwaggerUI();
+
+app.UseCors(corsPolicyName);
 
 app.MapGet(
         "/helloCoinFlip",
