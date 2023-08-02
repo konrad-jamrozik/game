@@ -63,7 +63,7 @@ public class GameSessionController
 
         GameState state = GameSession.CurrentGameState;
 
-        while (!state.IsGameOver && state.Timeline.CurrentTurn <= turnLimit)
+        while (!GameSessionOver(state, turnLimit))
         {
             _log.Info("");
             _log.Info($"===== Turn {state.Timeline.CurrentTurn}");
@@ -89,6 +89,8 @@ public class GameSessionController
             DiffPreviousAndCurrentGameState();
         }
 
+        int lastTurn = LastTurn(state, turnLimit);
+
         _log.Info("");
         _log.Info(
             $"===== Game over! " +
@@ -105,7 +107,7 @@ public class GameSessionController
                   $"Mission sites expired: {state.MissionSites.Expired.Count}, " +
                   $"Agents: {state.Assets.Agents.Count}, " +
                   $"Terminated agents: {state.TerminatedAgents.Count}, " + 
-                  $"Turn: {state.LastTurn} / {turnLimit}.");
+                  $"Turn: {lastTurn} / {turnLimit}.");
 
         Save();
 
@@ -114,7 +116,9 @@ public class GameSessionController
                 GameSession,
                 _config.TurnReportCsvFile,
                 _config.AgentReportCsvFile,
-                _config.MissionSiteReportCsvFile)
+                _config.MissionSiteReportCsvFile,
+                lastTurn)
+
             .Write();
 
         _log.Flush();
@@ -140,6 +144,25 @@ public class GameSessionController
 
         _log.Info($"Loaded game state from {_config.SaveFile.FullPath}");
         return GameSession.CurrentGameState;
+    }
+
+    private static bool GameSessionOver(GameState state, int turnLimit)
+        => state.IsGameOver || state.Timeline.CurrentTurn > turnLimit;
+
+    /// <summary>
+    /// If game is over the last turn is 'current turn minus one' instead of 'current turn'.
+    /// This is because UfoGameLib.Controller.AdvanceTimePlayerAction.Apply
+    /// advances the turn to a turn beyond the turn in which the game ended. If we would
+    /// use that turn number the reported stats would be incorrect. E.g. when the game
+    /// turn limit was 5, the Timeline.CurrentTurn would be 6, even though in reality
+    /// player never get a chance to even see turn 6.
+    /// We don't prevent the turn advancement even when game is over to keep
+    /// the turn number consistent.
+    /// </summary>
+    private static int LastTurn(GameState state, int turnLimit)
+    {
+        Debug.Assert(GameSessionOver(state, turnLimit));
+        return state.Timeline.CurrentTurn - 1;
     }
 
     private void DiffPreviousAndCurrentGameState()

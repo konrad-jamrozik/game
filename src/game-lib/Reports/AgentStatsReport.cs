@@ -14,22 +14,23 @@ public class AgentStatsReport : CsvFileReport
     private readonly ILog _log;
     private readonly GameState _gameState;
     private readonly File _csvFile;
+    private readonly int _lastTurn;
 
-    public AgentStatsReport(ILog log, GameState gameState, File csvFile)
+    public AgentStatsReport(ILog log, GameState gameState, File csvFile, int lastTurn)
     {
         _log = log;
         _gameState = gameState;
         _csvFile = csvFile;
+        _lastTurn = lastTurn;
     }
 
     public void Write()
     {
-        int lastTurn = _gameState.LastTurn;
 
         (string header, Func<Agent, int> orderBy)[] data = 
         {
             ("skill", agent => agent.SurvivalSkill),
-            ("turns survived", agent => agent.TurnsSurvived(lastTurn)),
+            ("turns survived", agent => agent.TurnsSurvived(_lastTurn)),
             ("missions survived", agent => agent.MissionsSurvived),
             ("turns in training", agent => agent.TurnsInTraining),
             ("turns generating income", agent => agent.TurnsGeneratingIncome),
@@ -42,7 +43,7 @@ public class AgentStatsReport : CsvFileReport
             {
                 _log.Info("");
                 _log.Info($"Top {TopAgents} agents by {row.header}:");
-                LogAgents(TopAgentsBy(row.orderBy), lastTurn);
+                LogAgents(TopAgentsBy(row.orderBy), _lastTurn);
                 _log.Info("");
             });
 
@@ -63,9 +64,8 @@ public class AgentStatsReport : CsvFileReport
          "Ts in training", "Ts genIncome", "Ts gathIntel", "Ts in ops", "Ts inRecovery"
     };
 
-    private static object[][] DataRows(GameState gameState)
+    private object[][] DataRows(GameState gameState)
     {
-        int lastTurn = gameState.LastTurn;
         return gameState.AllAgents.OrderBy(agent => agent.Id).Select(
             agent => new object[]
             {
@@ -74,7 +74,7 @@ public class AgentStatsReport : CsvFileReport
                 agent.TurnHired,
                 agent.TurnTerminated!,
                 agent.Sacked ? 1 : 0,
-                agent.TurnsSurvived(lastTurn),
+                agent.TurnsSurvived(_lastTurn),
                 agent.MissionsSurvived,
                 agent.MissionsSucceeded,
                 agent.MissionsFailed,

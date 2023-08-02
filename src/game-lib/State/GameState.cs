@@ -69,16 +69,4 @@ public class GameState
 
     [JsonIgnore]
     public Agents AllAgents => (Assets.Agents.Concat(TerminatedAgents).ToAgents(terminated: null));
-
-    /// <summary>
-    /// If game is over the last turn is current turn minus one instead of current turn.
-    /// This is because UfoGameLib.Controller.AdvanceTimePlayerAction.Apply
-    /// advances the turn to a turn beyond the turn in which the game ended. If we would
-    /// use that turn number the reported stats would be weird. E.g. when the game
-    /// turn limit was 5, the Timeline.CurrentTurn would be 6, even though in reality
-    /// player never get a chance to even see turn 6.
-    /// We don't prevent the turn advancement even when game is over to keep
-    /// the turn number consistent.
-    /// </summary>
-    public int LastTurn => Timeline.CurrentTurn - (IsGameOver ? 1 : 0);
 }
