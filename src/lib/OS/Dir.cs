@@ -1,13 +1,20 @@
-﻿using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
+﻿using System.Text.RegularExpressions;
 
 namespace Lib.OS;
 
-public record Dir(IFileSystem FileSystem, string Path)
+public record Dir
 {
+    public Dir(IFileSystem FileSystem, string Path)
+    {
+        this.FileSystem = FileSystem;
+        Path = Path.Replace('\\', FileSystem.DirectorySeparatorChar);
+        Path = Path.Replace('/', FileSystem.DirectorySeparatorChar);
+        this.Path = Path;
+    }
+
+    public IFileSystem FileSystem { get; }
+    public string Path { get; }
+
     public bool Exists() => FileSystem.DirectoryExists(Path);
 
     public Dir CreateDirIfNotExists() => !Exists() ? CreateDir() : this;
@@ -43,6 +50,7 @@ public record Dir(IFileSystem FileSystem, string Path)
         => FileSystem.CreateText(JoinPath(fileName));
 
     public Dir? Parent => FileSystem.Parent(Path);
+
 
     public List<File> GetFiles(string filterRegexPattern)
     {

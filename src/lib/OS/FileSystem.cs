@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.IO;
-using System.Text.Json;
-using System.Threading.Tasks;
+﻿using System.Text.Json;
 using Lib.Contracts;
 using Lib.Json;
 
@@ -54,6 +51,10 @@ public class FileSystem : IFileSystem
     public string GetFullPath(string path)
         => System.IO.Path.GetFullPath(path);
 
+    public char DirectorySeparatorChar => System.IO.Path.DirectorySeparatorChar;
+
+    public string EnvironmentNewLine => System.Environment.NewLine;
+
     public bool FileExists(string path) => System.IO.File.Exists(path);
 
     public string CombinePath(string path1, string path2) => System.IO.Path.Combine(path1, path2);
@@ -78,5 +79,4 @@ public class FileSystem : IFileSystem
     public FileTree FileTree(string path) => new FileTree(this, path);
 
     public Dir? Parent(string path) => Parent(this, path);
-
 }

@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.IO;
-using System.Text.Json;
-using System.Threading.Tasks;
+﻿using System.Text.Json;
 
 namespace Lib.OS;
 
@@ -28,4 +25,6 @@ public interface IFileSystem
     FileTree FileTree(string path);
     Dir? Parent(string path);
     string GetFullPath(string path);
+    char DirectorySeparatorChar { get; }
+    string EnvironmentNewLine { get; }
 }

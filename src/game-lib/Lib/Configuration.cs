@@ -21,7 +21,7 @@ public class Configuration
 
     public Configuration(IFileSystem fs)
     {
-        // Given expected starting path:
+        // Given expected starting path on .NET 8, using the Simplified Output Paths [1]
         //   [repo_root]/artifacts/bin/game-lib/debug/.
         //
         // When this relative path is applied:
@@ -30,6 +30,7 @@ public class Configuration
         // Then this is the expected resulting path:
         //   [repo_root]/saves/
         //
+        // [1] https://learn.microsoft.com/en-us/dotnet/core/whats-new/dotnet-8#simplified-output-paths
         var saveFileDir = new Dir(fs, "./../../../../saves");
         SaveFile = new File(saveFileDir, "savegame.json");
         LogFile = new File(saveFileDir, "log.txt");

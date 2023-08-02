@@ -31,14 +31,14 @@ namespace Lib.OS;
 /// </summary>
 public class SimulatedFileSystem : IFileSystem
 {
-    private int _dirIndex;
-
-    public Dir CurrentDir => new(this, JoinPath("S:" + Path.DirectorySeparatorChar, "simulatedCurrentDir"));
-
+    private const string SimulatedPathRoot = "[simFS]:";
     private readonly ISet<string> _existingDirs = new HashSet<string>();
     private readonly ISet<string> _existingFiles = new HashSet<string>();
 
     private readonly Dictionary<string, string> _fileContents = new();
+    private int _dirIndex;
+
+    public Dir CurrentDir => new(this, JoinPath(SimulatedPathRoot + DirectorySeparatorChar, "simulatedCurrentDir"));
 
     public bool DirectoryExists(string path) => _existingDirs.Contains(path);
 
@@ -59,7 +59,9 @@ public class SimulatedFileSystem : IFileSystem
 
     public Task WriteAllLinesAsync(string path, IEnumerable<string> lines)
     {
-        throw new NotImplementedException();
+        _existingFiles.Add(path);
+        _fileContents[path] = string.Join(EnvironmentNewLine, lines);
+        return Task.CompletedTask;
     }
 
     public StreamWriter CreateText(string path)
@@ -82,10 +84,7 @@ public class SimulatedFileSystem : IFileSystem
 
     public bool FileExists(string path) => _existingFiles.Contains(path);
 
-    public string CombinePath(string path1, string path2)
-    {
-        throw new NotImplementedException();
-    }
+    public string CombinePath(string path1, string path2) => Path.Combine(path1, path2);
 
     public string ReadAllText(string path) =>
         !_existingFiles.Contains(path)
@@ -114,7 +113,10 @@ public class SimulatedFileSystem : IFileSystem
     public Dir NextSimulatedDir() => new(this, CurrentDir.JoinPath($"simulatedDir{_dirIndex++}"));
 
     public string GetFullPath(string path)
-    {
-        throw new NotImplementedException();
-    }
+        => Path.Combine(SimulatedPathRoot, path);
+
+
+    public char DirectorySeparatorChar => Path.DirectorySeparatorChar;
+
+    public string EnvironmentNewLine => System.Environment.NewLine;
 }
