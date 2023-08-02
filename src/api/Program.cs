@@ -1,5 +1,8 @@
+using Lib.OS;
 using UfoGameLib.Api;
+using UfoGameLib.Controller;
 using UfoGameLib.Lib;
+using UfoGameLib.Players;
 using UfoGameLib.State;
 using Unchase.Swashbuckle.AspNetCore.Extensions.Extensions;
 
@@ -65,22 +68,19 @@ app.MapGet(
     .WithOpenApi()
     .Produces<GameStatePlayerView>();
 
-// app.MapGet(
-//     "/exampleSession",
-//     () =>
-//     {
-//         // kja to make this work, see: UfoGameLib.Tests.AIPlayerTests.ExampleGameSessionForApi
-//         var config = new Configuration(new SimulatedFileSystem());
-//         var log = new Log(config);
-//         var randomGen = new RandomGen(new Random());
-//         var intellect = AIPlayer.Intellect.Basic;
-//         var controller = new GameSessionController(config, log, new GameSession(randomGen));
-//         var aiPlayer = new AIPlayer(log, intellect);
-//
-//         // Act
-//         controller.PlayGameSession(turnLimit: 30, aiPlayer);
-//
-//         return TypedResults.Json(controller.GameStatePlayerView, GameSession.StateJsonSerializerOptions);
-//     });
+app.MapGet(
+    "/exampleGameSession",
+    () =>
+    {
+        var config = new Configuration(new SimulatedFileSystem());
+        var log = new Log(config);
+        var randomGen = new RandomGen(new Random());
+        var intellect = AIPlayer.Intellect.Basic;
+        var controller = new GameSessionController(config, log, new GameSession(randomGen));
+        var aiPlayer = new AIPlayer(log, intellect);
+        controller.PlayGameSession(turnLimit: 30, aiPlayer);
+
+        return TypedResults.Json(controller.GameStatePlayerView, GameSession.StateJsonSerializerOptions);
+    });
 
 app.Run();
