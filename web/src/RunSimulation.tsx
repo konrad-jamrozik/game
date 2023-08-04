@@ -1,10 +1,8 @@
-import { onCleanup } from 'solid-js';
-import { createSignal } from "solid-js";
+import { Accessor, Setter } from 'solid-js';
 
-function RunSimulation() {
+function RunSimulation(props: { message: Accessor<string>, setMessage: Setter<string> }) {
 
-  const [message, setMessage] = createSignal("");
-  setMessage("pending");
+  props.setMessage("pending");
 
   const handleClick = () => {
     
@@ -13,22 +11,18 @@ function RunSimulation() {
     fetch(apiUrl)
     .then((response) => response.json())
     .then((data) => {
-        setMessage(`Done! Money: ${data.Assets.Money}`);
+        props.setMessage(`Done! Money: ${data.Assets.Money}`);
         console.log(data);
     })
     .catch((error) => {
         console.error('Error fetching data:', error);
     });
-
-    onCleanup(() => {
-    });
-
   };
 
   return (
     <div>
       <Button onClick={() => handleClick()} />
-      <p class="mb-4 text-center">Simulation result: {message()}</p>
+      <p class="mb-4 text-center">Simulation result: {props.message()}</p>
       
     </div>
   );

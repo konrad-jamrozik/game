@@ -4,6 +4,7 @@ import './App.css'
 import RunSimulation from './RunSimulation';
 import { onMount } from "solid-js";
 import { Datepicker, Input, initTE } from "tw-elements";
+import { createSignal } from "solid-js";
 
 function App() {
 
@@ -11,9 +12,18 @@ function App() {
     initTE({ Datepicker, Input });
   });  
 
+  // This probably can be refactored to use:
+  // Resources: 
+  // - https://www.solidjs.com/tutorial/async_resources
+  // - https://docs.solidjs.com/guides/foundations/solid-primitives#createresource
+  // Context: 
+  // - https://www.solidjs.com/tutorial/stores_context
+  const [message, setMessage] = createSignal("");
+  const messageSignal = { message, setMessage };
+
   return (
     <>
-      <RunSimulation />
+      <RunSimulation {...messageSignal} />
     </>
   )
 }
