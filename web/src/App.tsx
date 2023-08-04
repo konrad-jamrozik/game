@@ -18,6 +18,7 @@ function App() {
   // - https://docs.solidjs.com/guides/foundations/solid-primitives#createresource
   // Context: 
   // - https://www.solidjs.com/tutorial/stores_context
+  // - https://docs.solidjs.com/references/api-reference/component-apis/createContext
   const [message, setMessage] = createSignal("");
   const messageSignal = { message, setMessage };
 
