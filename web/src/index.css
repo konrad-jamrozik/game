@@ -40,6 +40,9 @@ h1 {
   line-height: 1.1;
 }
 
+/* 
+Commented out to not conflict with Tailwind elements styling
+
 button {
   border-radius: 8px;
   border: 1px solid transparent;
@@ -57,7 +60,7 @@ button:hover {
 button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
-}
+} */
 
 @media (prefers-color-scheme: light) {
   :root {
