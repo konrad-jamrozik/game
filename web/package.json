@@ -9,7 +9,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "solid-js": "^1.7.8"
+    "solid-js": "^1.7.8",
+    "tw-elements": "^1.0.0-beta3"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.14",
