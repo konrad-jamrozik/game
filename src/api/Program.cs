@@ -69,16 +69,25 @@ app.MapGet(
     .Produces<GameStatePlayerView>();
 
 app.MapGet(
-    "/exampleGameSession",
-    () =>
+    "/simulateGameSession",
+    (int? turnLimit) =>
     {
+        int turnLimitVal = turnLimit ?? 30;
+        int turnLimitLowerBound = 1;
+        int turnLimitUpperBound = 300;
+        if (turnLimitVal < turnLimitLowerBound || turnLimitVal > turnLimitUpperBound)
+            return Results.BadRequest(
+                $"Value of 'turnLimit' is out of accepted range. " +
+                $"It should be between {turnLimitLowerBound} and {turnLimitUpperBound}. " +
+                $"Actual value: {turnLimitVal}");
+
         var config = new Configuration(new SimulatedFileSystem());
         var log = new Log(config);
         var randomGen = new RandomGen(new Random());
         var intellect = AIPlayer.Intellect.Basic;
         var controller = new GameSessionController(config, log, new GameSession(randomGen));
         var aiPlayer = new AIPlayer(log, intellect);
-        controller.PlayGameSession(turnLimit: 30, aiPlayer);
+        controller.PlayGameSession(turnLimit: turnLimitVal, aiPlayer);
 
         return TypedResults.Json(controller.GameStatePlayerView, GameSession.StateJsonSerializerOptions);
     });
