@@ -8,7 +8,11 @@ function RunSimulationComponent(props: {
   props.setMessage("pending")
 
   const handleClick = () => {
-    const apiUrl = "https://api-game-lib.azurewebsites.net/exampleGameSession"
+    const queryString = `?turnLimit=${props.input()}`
+
+    const apiUrl = "https://api-game-lib.azurewebsites.net/simulateGameSession" + queryString
+
+    console.log(`Calling ${apiUrl}`)
 
     fetch(apiUrl)
       .then((response) => response.json())
