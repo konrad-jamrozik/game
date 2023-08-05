@@ -1,10 +1,11 @@
 // import solidLogo from './assets/solid.svg'
 // import viteLogo from '/vite.svg'
 import './App.css'
-import RunSimulation from './RunSimulation';
+import RunSimulationComponent from './RunSimulationComponent';
 import { onMount } from "solid-js";
 import { Datepicker, Input, initTE } from "tw-elements";
 import { createSignal } from "solid-js";
+import NumberInputComponent from './NumberInputComponent';
 
 function App() {
 
@@ -20,11 +21,13 @@ function App() {
   // - https://www.solidjs.com/tutorial/stores_context
   // - https://docs.solidjs.com/references/api-reference/component-apis/createContext
   const [message, setMessage] = createSignal("");
+  const [input, setInput] = createSignal(30);
+  const inputSignal = { input, setInput };
   const messageSignal = { message, setMessage };
-
   return (
     <>
-      <RunSimulation {...messageSignal} />
+      <NumberInputComponent {...{...inputSignal, label:"Turns"}}/>
+      <RunSimulationComponent {...{input, ...messageSignal}} />
     </>
   )
 }
