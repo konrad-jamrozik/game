@@ -1,10 +1,14 @@
-import { Accessor, Setter } from 'solid-js';
+import { Accessor, Setter, batch } from 'solid-js';
+import { Store, SetStoreFunction, reconcile } from 'solid-js/store'
+import { Agent } from './types';
 
 function RunSimulationComponent(props: {
   input: Accessor<number>
   message: Accessor<string>
   setMessage: Setter<string>
   setSimulationRunDone: Setter<boolean>
+  agents: Store<Agent[]>
+  setAgents: SetStoreFunction<Agent[]>
 }) {
   props.setMessage("pending")
 
@@ -18,8 +22,11 @@ function RunSimulationComponent(props: {
     fetch(apiUrl)
       .then((response) => response.json())
       .then((data) => {
-        props.setMessage(`Done! Money: ${data.Assets.Money}`)
-        props.setSimulationRunDone(true)
+        batch(() => {
+          props.setMessage(`Done! Money: ${data.Assets.Money}`)
+          props.setAgents(reconcile(data.Assets.Agents))
+          props.setSimulationRunDone(true)
+        })
         console.log(data)
       })
       .catch((error) => {

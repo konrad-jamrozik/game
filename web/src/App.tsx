@@ -5,8 +5,10 @@ import RunSimulationComponent from './RunSimulationComponent';
 import { onMount } from "solid-js";
 import { Input, initTE } from "tw-elements";
 import { createSignal } from "solid-js";
+import { createStore } from "solid-js/store";
 import NumberInputComponent from './NumberInputComponent';
 import DataTableComponent from './DataTableComponent';
+import { Agent } from './types';
 
 function App() {
 
@@ -24,11 +26,12 @@ function App() {
   const [message, setMessage] = createSignal("");
   const [input, setInput] = createSignal(30);
   const [simulationRunDone, setSimulationRunDone] = createSignal(false);
+  const [agents, setAgents] = createStore<Agent[]>([])
   return (
     <>
       <NumberInputComponent {...{input, setInput, label:"Turns"}}/>
-      <RunSimulationComponent {...{input, message, setMessage, setSimulationRunDone}} />
-      <DataTableComponent simulationRunDone={simulationRunDone} />
+      <RunSimulationComponent {...{input, message, setMessage, setSimulationRunDone, agents, setAgents}} />
+      <DataTableComponent simulationRunDone={simulationRunDone} agents={agents} />
     </>
   )
 }
