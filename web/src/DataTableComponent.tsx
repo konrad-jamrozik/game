@@ -1,9 +1,12 @@
 import { Datatable, initTE } from "tw-elements"
-import { onMount } from "solid-js";
+import { onMount, createEffect } from "solid-js";
+import { Accessor } from 'solid-js';
 
 initTE({ Datatable })
 
-function DataTableComponent() {
+function DataTableComponent(props: {
+  simulationRunDone: Accessor<boolean>
+}) {
   let tableRef: HTMLDivElement | undefined
 
   const advancedData = {
@@ -22,8 +25,25 @@ function DataTableComponent() {
     ],
   };
 
+  const rows2 = [
+    { name: "New guy", position: "System Architect", office: "Edinburgh", age: 61, date: "2011/04/25", salary: "$320,800" },
+  ]
+
   onMount(() => {
-    new Datatable(tableRef, advancedData);
+    const datatable = new Datatable(tableRef, advancedData);
+    createEffect(() => {
+      if (props.simulationRunDone() === false) {
+        return
+      }
+      datatable.update(
+        {
+          rows: rows2.map((user) => ({
+            ...user
+          })),
+        },
+        { loading: false }
+      );
+    })
   })
 
   return (

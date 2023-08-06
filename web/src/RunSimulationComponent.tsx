@@ -4,6 +4,7 @@ function RunSimulationComponent(props: {
   input: Accessor<number>
   message: Accessor<string>
   setMessage: Setter<string>
+  setSimulationRunDone: Setter<boolean>
 }) {
   props.setMessage("pending")
 
@@ -18,6 +19,7 @@ function RunSimulationComponent(props: {
       .then((response) => response.json())
       .then((data) => {
         props.setMessage(`Done! Money: ${data.Assets.Money}`)
+        props.setSimulationRunDone(true)
         console.log(data)
       })
       .catch((error) => {

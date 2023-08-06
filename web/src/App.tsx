@@ -23,13 +23,12 @@ function App() {
   // - https://docs.solidjs.com/references/api-reference/component-apis/createContext
   const [message, setMessage] = createSignal("");
   const [input, setInput] = createSignal(30);
-  const inputSignal = { input, setInput };
-  const messageSignal = { message, setMessage };
+  const [simulationRunDone, setSimulationRunDone] = createSignal(false);
   return (
     <>
-      <NumberInputComponent {...{...inputSignal, label:"Turns"}}/>
-      <RunSimulationComponent {...{input, ...messageSignal}} />
-      <DataTableComponent />
+      <NumberInputComponent {...{input, setInput, label:"Turns"}}/>
+      <RunSimulationComponent {...{input, message, setMessage, setSimulationRunDone}} />
+      <DataTableComponent simulationRunDone={simulationRunDone} />
     </>
   )
 }
