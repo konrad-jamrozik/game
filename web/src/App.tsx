@@ -6,6 +6,7 @@ import { onMount } from "solid-js";
 import { Input, initTE } from "tw-elements";
 import { createSignal } from "solid-js";
 import NumberInputComponent from './NumberInputComponent';
+import DataTableComponent from './DataTableComponent';
 
 function App() {
 
@@ -28,6 +29,7 @@ function App() {
     <>
       <NumberInputComponent {...{...inputSignal, label:"Turns"}}/>
       <RunSimulationComponent {...{input, ...messageSignal}} />
+      <DataTableComponent />
     </>
   )
 }
