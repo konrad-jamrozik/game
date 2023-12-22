@@ -12,10 +12,15 @@
 			"strings": true
 		},
 		"cSpell.words": [
+			"AZUREAPPSERVICE",
+			"blockquote",
+			"blockquotes",
 			"Datatable",
 			"Jamrozik",
+			"PUBLISHPROFILE",
 			"Quickstart",
-			"Solarius"
+			"Solarius",
+			"tailwindcss"
 		]
 	}
 }

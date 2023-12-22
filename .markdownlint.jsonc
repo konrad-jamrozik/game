@@ -26,6 +26,20 @@
     // I like multiple top-level headings.
     "MD025": false,
 
+    // MD028 - Blank line inside blockquote
+    // https://github.com/DavidAnson/markdownlint/blob/main/doc/md028.md
+    //
+    // Sometimes I use multiple consecutive blockquotes for inline notes.
+    // https://github.com/orgs/community/discussions/16925
+    "MD028": false,
+
+    // MD031 - Fenced code blocks should be surrounded by blank lines
+    // https://github.com/DavidAnson/markdownlint/blob/main/doc/md031.md
+    //
+    // Sometimes I use fenced code blocks in lists and entering blank lines
+    // would break the compact list spacing.
+    "MD031": false,
+
     // MD034 - Inline HTML
     // https://github.com/DavidAnson/markdownlint/blob/main/doc/md033.md
     //
