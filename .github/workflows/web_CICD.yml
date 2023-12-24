@@ -1,9 +1,24 @@
-# Originally generated with
+# GitHub Actions worfklow file for deploying contents of "./web" to Azure static web app on each git branch push and more.
+#
+# The intended target Azure static web app is "kojamroz VS Enterprise Sub / game-rg / game-web", with deployment token secrets.AZURE_GAME_WEB_DEPLOYMENT_TOKEN
+# https://portal.azure.com/#@spawarottijamro.onmicrosoft.com/resource/subscriptions/8695c84c-09a4-4b50-994f-a2fa7f36cc92/resourcegroups/game-rg/providers/Microsoft.Web/staticSites/game-web/staticsite
+#
+# This workflow file was originally generated using VS Code SWA extension, with
 # yml 'name' property: "Azure Static Web Apps CI/CD"
 # file name: azure-static-web-apps-zealous-sea-0ffc3931e.yml
 #
-# For details, see docs/web_frontend_setup.md
-name: Web CI/CD
+# Later on I updated it based on
+# - https://docs.github.com/en/actions/deployment/deploying-to-your-cloud-provider/deploying-to-azure/deploying-to-azure-static-web-app
+#
+# For details, see:
+# - docs/web_frontend_setup.md
+# - https://aka.ms/swaworkflowconfig
+name: Azure Static Web App CI/CD
+
+env:
+  APP_LOCATION: "web" # location of the client code
+  # location of client code build output. Recommended by https://vitejs.dev/guide/static-deploy.html#azure-static-web-apps
+  OUTPUT_LOCATION: "dist" 
 
 on:
   push:
@@ -15,37 +30,39 @@ on:
       - main
   workflow_dispatch:
 
+permissions:
+  issues: write
+  contents: read
+  pull-requests: write
+
 jobs:
-  build_and_deploy_job:
+  build_and_deploy:
     if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed')
     runs-on: ubuntu-latest
-    name: Build and Deploy Job
+    name: Build and Deploy
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           submodules: true
       - name: Build And Deploy
-        id: builddeploy
         uses: Azure/static-web-apps-deploy@v1
         with:
-          azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_ZEALOUS_SEA_0FFC3931E }}
-          repo_token: ${{ secrets.GITHUB_TOKEN }} # Used for Github integrations (i.e. PR comments)
+          azure_static_web_apps_api_token: ${{ secrets.AZURE_GAME_WEB_DEPLOYMENT_TOKEN }}
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
           action: "upload"
-          ###### Repository/Build Configurations - These values can be configured to match your app requirements. ######
-          # For more information regarding Static Web App workflow configurations, please visit: https://aka.ms/swaworkflowconfig
-          app_location: "web" # App source code path
-          api_location: "api" # Api source code path - optional
-          output_location: "dist" # Built app content directory - optional
-          ###### End of Repository/Build Configurations ######
+          app_location: ${{ env.APP_LOCATION }}
+          output_location: ${{ env.OUTPUT_LOCATION }}
+          # No Azure functions. See https://aka.ms/swaworkflowconfig
+          skip_api_build: true
 
-  close_pull_request_job:
+  close_pull_request:
     if: github.event_name == 'pull_request' && github.event.action == 'closed'
     runs-on: ubuntu-latest
-    name: Close Pull Request Job
+    name: Close Pull Request
     steps:
       - name: Close Pull Request
-        id: closepullrequest
         uses: Azure/static-web-apps-deploy@v1
         with:
-          azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_ZEALOUS_SEA_0FFC3931E }}
+          azure_static_web_apps_api_token: ${{ secrets.AZURE_GAME_WEB_DEPLOYMENT_TOKEN }}
           action: "close"
+          app_location: ${{ env.APP_LOCATION }}
