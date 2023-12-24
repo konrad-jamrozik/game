@@ -47,6 +47,7 @@ install latest `npm` and `node.js`:
    ```
 
 > [!NOTE]
+> About current versions:
 >
 > - `npm` releases are at https://github.com/npm/cli/releases
 >   - The doc mentions the latest version at https://docs.npmjs.com/about-npm-versions#the-latest-release-of-npm
@@ -72,7 +73,6 @@ I have originally executed these steps in [commit 2a2d6cf][commit 2a2d6cf: initi
 Note at that time I used `frontend` dir instead of `web`.
 
 > [!NOTE]
->
 > `npm create`, as [explained on StackOverflow][npm create SO], is an alias for [`npm init`].
 
 > [!NOTE]
@@ -104,12 +104,51 @@ You can see the result of it in [commit baf3e5f: configure tailwindcss].
 
 ### Step 4: Configure `GitHub Actions` workflow to deploy to `Azure Static Web Apps` app
 
+> [!WARNING]
+> The contents of `Step 4` section do not reflect current state of affairs. For that, see `Step 4.1`.
+
 Follow [Vite / Deploying a Static Site / Azure Static Web Apps] and use [Build configuration for Azure Static Web Apps]
 as a reference to deploy GitHub Actions workflow file for the [`./web`] CI/CD.
 
 Done in [commit ef8a4a8: add Azure Static Web Apps GH Actions workflow file].
 
 For more, see [How the web fronted GitHub Actions workflow was created](#how-the-web-fronted-github-actions-workflow-was-created).
+
+### Step 4.1: Update the workflow based on GitHub guidance for Azure static web apps
+
+> [!TIP]
+> This section described how to deal with Azure resources not pointing to correct GitHub urls.
+
+Later on I updated the GitHub workflow file name in [commit 847b607: rename GitHub Actions workflow].
+I noticed the Azure static web app resource overview was still pointing to obsolete, no-longer-available,
+GitHub Actions run in `Deployment history` URL as well as obsolete, invalid workflow file in `Edit workflow`.
+I tried to fix this issue by running following Azure CLI commands, per [az staticwebapp doc]:
+
+``` txt
+az login
+az account set --subscription 8695c84c-09a4-4b50-994f-a2fa7f36cc92
+az staticwebapp show -n game-web
+az staticwebapp disconnect --name game-web
+az staticwebapp reconnect --name game-web --source https://github.com/konrad-jamrozik/game --branch main --resource-group game-web
+```
+
+Unfortunately, the `az staticwebapp reconnect` has a bug preventing it from working. See [my comment on issue 536].
+
+Looks like the only valid way to do it is via [`az staticwebapp create`].
+Maybe also source of [static web apps CLI] would provide some pointers.
+
+As a consequence, I tore down the Azure static web app and recreated it anew per the instructions in
+the [GitHub doc on Deploying to Azure Static Web App]. I did this by updating the GitHub Actions workflow file
+accordingly, updating the GitHub secret to its deployment token, and updating the CORS setting in the backend app.
+The relevant code changes can be found in [commit 4311506: update web GitHub Actions workflow].
+
+The new Azure static web app continues to point to invalid URLs. It seems that it somehow automatically
+derives the name of the workflow based on the generated app URL, but this is incorrect. For example,
+the app URL is `https://witty-grass-034c9c41e.4.azurestaticapps.net` and hence it automatically points to workflow file
+named `azure-static-web-apps-witty-grass-034c9c41e.yml`
+but the actual workflow file is [`web_CICD.yml`].
+
+Given this is not that important to productivity or anything else, I decided just to ignore this problem.
 
 ### Step 5: Install `tw-elements`
 
@@ -189,3 +228,11 @@ references
 [npm create SO]: https://stackoverflow.com/questions/57133219/what-is-the-npm-create-command
 [tailwindcss css utility classes blog post]: https://adamwathan.me/css-utility-classes-and-separation-of-concerns/
 [tw-elements SolidJS integration]: https://tw-elements.com/docs/standard/integrations/solid-integration/
+[commit 847b607: rename GitHub Actions workflow]: https://github.com/konrad-jamrozik/game/commit/847b607a2fb69066dfd917a073c52e1326e615e1
+[commit 4311506: update web GitHub Actions workflow]: https://github.com/konrad-jamrozik/game/commit/431150693be3ca3cd32fc7df1805f4d20eda84d8
+[az staticwebapp doc]: https://learn.microsoft.com/en-us/cli/azure/staticwebapp?view=azure-cli-latest
+[GitHub doc on Deploying to Azure Static Web App]: https://docs.github.com/en/actions/deployment/deploying-to-your-cloud-provider/deploying-to-azure/deploying-to-azure-static-web-app
+[my comment on issue 536]: https://github.com/Azure/static-web-apps/issues/536#issuecomment-1868407157
+[`az staticwebapp create`]: https://learn.microsoft.com/en-us/cli/azure/staticwebapp?view=azure-cli-latest#az-staticwebapp-create
+[`web_CICD.yml`]: https://github.com/konrad-jamrozik/game/blob/431150693be3ca3cd32fc7df1805f4d20eda84d8/.github/workflows/web_CICD.yml
+[static web apps CLI]: https://azure.github.io/static-web-apps-cli/
