@@ -140,9 +140,9 @@ The above was done in [commit 7ab4b29: setup tw-elements].
 
 ## How the web fronted GitHub Actions workflow was created
 
-The frontend web deployment configuration is a GitHub actions workflow [`.github/workflows/azure-static-web-apps-zealous-sea-0ffc3931e.yml`].
+The frontend web deployment configuration is a GitHub actions workflow [`.github/workflows/web_CICD.yml`].
 
-That workflow was initially created (see [git history](https://github.com/konrad-jamrozik/game/commits/main/.github/workflows/azure-static-web-apps-zealous-sea-0ffc3931e.yml))
+That workflow was initially created (see [git history](https://github.com/konrad-jamrozik/game/commits/main/.github/workflows/web_CICD.yml))
 by following these instructions:
 
 - [Vite / Deploying a Static Site / Azure Static Web Apps]
@@ -171,7 +171,7 @@ references
 [Using a Node version manager to install Node.js and npm]: https://docs.npmjs.com/downloading-and-installing-node-js-and-npm#using-a-node-version-manager-to-install-nodejs-and-npm
 [Vite / Deploying a Static Site / Azure Static Web Apps]: https://vitejs.dev/guide/static-deploy.html#azure-static-web-apps
 [`./web`]: ../web
-[`.github/workflows/azure-static-web-apps-zealous-sea-0ffc3931e.yml`]: ../.github/workflows/azure-static-web-apps-zealous-sea-0ffc3931e.yml
+[`.github/workflows/web_CICD.yml`]: ../.github/workflows/web_CICD.yml
 [`npm init`]: https://docs.npmjs.com/cli/v10/commands/npm-init
 [`nvm-windows`]: https://github.com/coreybutler/nvm-windows
 [`tailwind.config.js`]: ../web/tailwind.config.js

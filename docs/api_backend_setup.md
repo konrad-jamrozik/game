@@ -7,7 +7,7 @@ using minimal API and coded with C#, per [Tutorial: Create a minimal API with AS
 
 ## How the API backend GitHub actions workflow was created
 
-The backend API deployment configuration is a GitHub actions workflow [`.github/workflows/main_api-game-lib.yml`].
+The backend API deployment configuration is a GitHub actions workflow [`.github/workflows/api_CICD.yml`].
 
 I have initially created it using [api-game-lib Deployment Center] per the [Continuous deployment to Azure App Service]
 article. Once I clicked the relevant button in Azure portal, it has pushed
@@ -43,7 +43,7 @@ references
 [Continuous deployment to Azure App Service]: https://learn.microsoft.com/en-us/azure/app-service/deploy-continuous-deployment?tabs=github
 [GitHub actions secrets]: https://github.com/konrad-jamrozik/game/settings/secrets/actions
 [`./src/api`]: ../src/api
-[`.github/workflows/main_api-game-lib.yml`]: ../.github/workflows/main_api-game-lib.yml
+[`.github/workflows/api_CICD.yml`]: ../.github/workflows/api_CICD.yml
 [api-game-lib Deployment Center]: https://portal.azure.com/#@spawarottijamro.onmicrosoft.com/resource/subscriptions/8695c84c-09a4-4b50-994f-a2fa7f36cc92/resourceGroups/game-web/providers/Microsoft.Web/sites/api-game-lib/vstscd
 [api-game-lib.yml git history]: https://github.com/konrad-jamrozik/game/commits/main/.github/workflows/api-game-lib.yml
 [commit with API GHAW fix]: https://github.com/konrad-jamrozik/game/commit/463e9e74ef2b89cbb2ef1755b0bfb830208722f4
