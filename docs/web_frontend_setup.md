@@ -102,7 +102,7 @@ and other relevant files and push to repo.
 
 You can see the result of it in [commit baf3e5f: configure tailwindcss].
 
-### Step 4: Configure `GitHub Actions` workflow to deploy to `Azure Static Web Apps` app
+### Step 4: Configure `GitHub Actions` workflow to deploy to Azure static web apps app
 
 > [!WARNING]
 > The contents of `Step 4` section do not reflect current state of affairs. For that, see `Step 4.1`.
