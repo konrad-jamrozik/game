@@ -64,7 +64,6 @@ For API backend, I did the following, based on [GitHub doc on Deploying to Azure
    as frontend talks to it. This can be seen in [commit fc109b3: update sources to use `game-api1`].
    - See additional notes below about this step.
 
-
 > [!WARNING]
 > Because I am using .NET 8, the app service plan must be on Windows, not Linux. On Linux the app won't recognize .NET 8.0,
 > as explained by [`early-access.md`]. This doc is linked from the web app creation wizard, by the dropdown
@@ -78,9 +77,10 @@ For API backend, I did the following, based on [GitHub doc on Deploying to Azure
 > it fails with the cryptic error of `SubscriptionIsOverQuotaForSku`. See [here](#app-service-plan-creation-error).
 
 > [!NOTE]
-> Note that in the commit [commit fc109b3: update sources to use `game-api1`], I also bumped the versions of the used GitHub Actions. To determine newest version
-> of each action, I ctrl-clicked their names in VS Code, which took me to their GitHub repo page. I then looked
-> at available branch names to find what is the highest `X` for branch names `vX`, e.g. [`download-artifact/v4`].
+> Note that in the commit [commit fc109b3: update sources to use `game-api1`], I also bumped the versions of the used
+> GitHub Actions. To determine newest version of each action, I ctrl-clicked their names in VS Code, which took me to
+> their GitHub repo page. I then looked at available branch names to find what is the highest `X` for branch names `vX`,
+> e.g. [`download-artifact/v4`].
 
 ## Appendix
 
@@ -89,9 +89,8 @@ For API backend, I did the following, based on [GitHub doc on Deploying to Azure
 Full error message:
 
 > Validation failed for a resource. Check 'Error.Details[0]' for more information. (Code: ValidationForResourceFailed)
-> 
+>
 > This region has quota of 0 instances for your subscription. Try selecting different region or SKU. (Code: > SubscriptionIsOverQuotaForSku)
-
 
 - https://stackoverflow.com/questions/70095562/i-get-a-deployment-error-when-trying-to-publish-a-solution-to-azure
 
@@ -119,3 +118,4 @@ references
 [commit fc109b3: update sources to use `game-api1`]: https://github.com/konrad-jamrozik/game/commit/fc109b3deef22116cc822952902319c3a5175417
 [Deploy to App Service using GitHub Actions / Generate deployment credentials]: https://learn.microsoft.com/en-us/azure/app-service/deploy-github-actions?tabs=applevel#generate-deployment-credentials
 [`download-artifact/v4`]: https://github.com/actions/download-artifact/tree/v4/
+[Tutorial: Create a minimal API with ASP.NET Core]: https://learn.microsoft.com/en-us/aspnet/core/tutorials/min-web-api?view=aspnetcore-8.0
