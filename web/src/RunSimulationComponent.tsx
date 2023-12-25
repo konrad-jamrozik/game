@@ -15,7 +15,7 @@ function RunSimulationComponent(props: {
   const handleClick = () => {
     const queryString = `?turnLimit=${props.input()}`
 
-    const apiUrl = "https://api-game-lib.azurewebsites.net/simulateGameSession" + queryString
+    const apiUrl = "https://game-api1.azurewebsites.net/simulateGameSession" + queryString
 
     console.log(`Calling ${apiUrl}`)
 

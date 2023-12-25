@@ -1,13 +1,18 @@
-# Originally generated with 
+# GitHub Actions worfklow file for deploying contents of "./src" as REST API to Azure web app on each git branch push and more.
+#
+# The intended target Azure static web app is "kojamroz VS Enterprise Sub / game-rg / game-api1", with publish profile secrets.AZURE_GAME_API1_PUBLISH_PROFILE
+# https://portal.azure.com/#@spawarottijamro.onmicrosoft.com/resource/subscriptions/8695c84c-09a4-4b50-994f-a2fa7f36cc92/resourceGroups/game-rg/providers/Microsoft.Web/sites/game-api1/appServices
+#
+# This workflow file was originally generated via Azure web app deployment center
 # yml 'name' property: "Build and deploy ASP.Net Core app to Azure Web App - api-game-lib" 
 # file name: main_api-game-lib.yml
 #
-# For details, see docs/api_backend_setup.md
-# 
-# Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
-# More GitHub Actions for Azure: https://github.com/Azure/actions
-
-name: API CI/CD
+# Later on I updated it based on
+# - https://docs.github.com/en/actions/deployment/deploying-to-your-cloud-provider/deploying-to-azure/deploying-net-to-azure-app-service
+#
+# For details, see:
+# - docs/api_backend_setup.md
+name: API Azure Web App CI/CD
 
 on:
   push:
@@ -18,9 +23,9 @@ on:
 env:
   DOTNET_CORE_VERSION: 8.x
   API_SLN_DIR: .\src\api
-  CONFIGURATION: Release
   PUBLISHED_DIR: .\published
-  AZURE_WEBAPP_NAME: api-game-lib
+  AZURE_WEBAPP_NAME: game-api1
+  CONFIGURATION: Release
   DEPLOYMENT_SLOT_NAME: Production
 
 jobs:
@@ -31,22 +36,21 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Set up .NET Core
-        uses: actions/setup-dotnet@v1
+        uses: actions/setup-dotnet@v4
         with:
           dotnet-version: ${{ env.DOTNET_CORE_VERSION }}
-          include-prerelease: true
 
       - name: Build with dotnet
         run: dotnet build "${{ env.API_SLN_DIR }}" --configuration ${{ env.CONFIGURATION }}
 
       - name: dotnet publish
-        run: dotnet publish "${{ env.API_SLN_DIR }}" --configuration ${{ env.CONFIGURATION }} --no-build --output ${{env.PUBLISHED_DIR}}
+        run: dotnet publish "${{ env.API_SLN_DIR }}" --configuration ${{ env.CONFIGURATION }} --no-build --output ${{ env.PUBLISHED_DIR }}
 
       - name: Upload artifact for deployment job
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: .net-app
-          path: ${{env.PUBLISHED_DIR}}
+          path: ${{ env.PUBLISHED_DIR }}
 
   deploy:
     runs-on: windows-latest
@@ -57,16 +61,16 @@ jobs:
     
     steps:
       - name: Download artifact from build job
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: .net-app
           path: ${{ env.PUBLISHED_DIR }}
       
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
-        uses: azure/webapps-deploy@v2
+        uses: azure/webapps-deploy@v3
         with:
           app-name: ${{ env.AZURE_WEBAPP_NAME }}
           slot-name: ${{ env.DEPLOYMENT_SLOT_NAME }}
           package: ${{ env.PUBLISHED_DIR }}
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_D5F222C936074008827578A5DCB17571 }}
+          publish-profile: ${{ secrets.AZURE_GAME_API1_PUBLISH_PROFILE }}
