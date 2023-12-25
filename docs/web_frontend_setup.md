@@ -116,8 +116,8 @@ For more, see [How the web fronted GitHub Actions workflow was created](#how-the
 
 ### Step 4.1: Update the workflow based on GitHub guidance for Azure static web apps
 
-> [!TIP]
-> This section described how to deal with Azure resources not pointing to correct GitHub urls.
+> [!NOTE]
+> This section describes how to deal with Azure resources not pointing to correct GitHub urls.
 
 Later on I updated the GitHub workflow file name in [commit 847b607: rename GitHub Actions workflow].
 I noticed the Azure static web app resource overview was still pointing to obsolete, no-longer-available,
@@ -138,9 +138,14 @@ Looks like the only valid way to do it is via [`az staticwebapp create`].
 Maybe also source of [static web apps CLI] would provide some pointers.
 
 As a consequence, I tore down the Azure static web app and recreated it anew per the instructions in
-the [GitHub doc on Deploying to Azure Static Web App]. I did this by updating the GitHub Actions workflow file
-accordingly, updating the GitHub secret to its deployment token, and updating the CORS setting in the backend app.
-The relevant code changes can be found in [commit 4311506: update web GitHub Actions workflow].
+the [GitHub doc on Deploying to Azure Static Web App]. I did this by doing the following:
+
+- Manually create the Azure static web app of [`game-web`].
+- Update the GitHub Actions secrets with the [`game-web`] deployment token.
+- Update the GitHub Actions workflow file to use the new token and make other fixes.
+- Update the CORS setting in the backend app to recognize this new Azure static web app url.
+
+The relevant code changes for the steps above can be found in [commit 4311506: update web GitHub Actions workflow].
 
 The new Azure static web app continues to point to invalid URLs. It seems that it somehow automatically
 derives the name of the workflow based on the generated app URL, but this is incorrect. For example,
@@ -236,3 +241,4 @@ references
 [`az staticwebapp create`]: https://learn.microsoft.com/en-us/cli/azure/staticwebapp?view=azure-cli-latest#az-staticwebapp-create
 [`web_CICD.yml`]: https://github.com/konrad-jamrozik/game/blob/431150693be3ca3cd32fc7df1805f4d20eda84d8/.github/workflows/web_CICD.yml
 [static web apps CLI]: https://azure.github.io/static-web-apps-cli/
+[`game-web`]: https://portal.azure.com/#@spawarottijamro.onmicrosoft.com/resource/subscriptions/8695c84c-09a4-4b50-994f-a2fa7f36cc92/resourceGroups/game-rg/providers/Microsoft.Web/staticSites/game-web/staticsite
