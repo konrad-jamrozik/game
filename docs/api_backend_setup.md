@@ -1,3 +1,13 @@
+# Table of contents
+
+- [Table of contents](#table-of-contents)
+- [How the API backend project was set up](#how-the-api-backend-project-was-set-up)
+  - [How the API backend GitHub actions workflow was created](#how-the-api-backend-github-actions-workflow-was-created)
+    - [Original setup in August 2023](#original-setup-in-august-2023)
+    - [Updated setup in December 2023](#updated-setup-in-december-2023)
+- [Appendix](#appendix)
+  - [App service plan creation error](#app-service-plan-creation-error)
+
 # How the API backend project was set up
 
 In this document `.` refers to the repository root.
@@ -82,13 +92,13 @@ For API backend, I did the following, based on [GitHub doc on Deploying to Azure
 > their GitHub repo page. I then looked at available branch names to find what is the highest `X` for branch names `vX`,
 > e.g. [`download-artifact/v4`].
 
-## Appendix
+# Appendix
 
-### App service plan creation error
+## App service plan creation error
 
 Full error message:
 
-> Validation failed for a resource. Check 'Error.Details[0]' for more information. (Code: ValidationForResourceFailed)
+> Validation failed for a resource. Check `Error.Details[0]` for more information. (Code: ValidationForResourceFailed)
 >
 > This region has quota of 0 instances for your subscription. Try selecting different region or SKU. (Code: > SubscriptionIsOverQuotaForSku)
 
@@ -100,22 +110,22 @@ references
 --------------------------------------------------------------------------------
 -->
 
-[Azure App Service CD FAQ]: https://learn.microsoft.com/en-us/azure/app-service/deploy-continuous-deployment?tabs=github#frequently-asked-questions
-[Continuous deployment to Azure App Service]: https://learn.microsoft.com/en-us/azure/app-service/deploy-continuous-deployment?tabs=github
-[GitHub actions secrets]: https://github.com/konrad-jamrozik/game/settings/secrets/actions
 [`./src/api`]: ../src/api
 [`.github/workflows/api_CICD.yml`]: ../.github/workflows/api_CICD.yml
+[`download-artifact/v4`]: https://github.com/actions/download-artifact/tree/v4/
+[`early-access.md`]: https://github.com/Azure/app-service-linux-docs/blob/master/Runtime_Support/early_access.md#early-access-on-linux
+[`game-api1`]: https://portal.azure.com/#@spawarottijamro.onmicrosoft.com/resource/subscriptions/8695c84c-09a4-4b50-994f-a2fa7f36cc92/resourcegroups/game-rg/providers/Microsoft.Web/sites/game-api1/appServices
 [`game-api1` Deployment Center]: https://portal.azure.com/#@spawarottijamro.onmicrosoft.com/resource/subscriptions/8695c84c-09a4-4b50-994f-a2fa7f36cc92/resourcegroups/game-rg/providers/Microsoft.Web/sites/game-api1/vstscd
+[`game-app-service-plan-windows`]: https://portal.azure.com/#@spawarottijamro.onmicrosoft.com/resource/subscriptions/8695c84c-09a4-4b50-994f-a2fa7f36cc92/resourceGroups/game-rg/providers/Microsoft.Web/serverfarms/game-app-service-plan-windows/webHostingPlan
+[admin panel]: https://game-api1.scm.azurewebsites.net/
 [api-game-lib.yml git history]: https://github.com/konrad-jamrozik/game/commits/main/.github/workflows/api-game-lib.yml
-[commit 9f1f514: GitHub Action workflow from Deployment Center]: https://github.com/konrad-jamrozik/game/commit/9f1f5143aab4953ffc821fda2b0f18cb9825dc18
+[Azure App Service CD FAQ]: https://learn.microsoft.com/en-us/azure/app-service/deploy-continuous-deployment?tabs=github#frequently-asked-questions
 [commit 463e9e7: fix GitHub Actions workflow]: https://github.com/konrad-jamrozik/game/commit/463e9e74ef2b89cbb2ef1755b0bfb830208722f4
 [commit 847b607: rename workflows to *CICD.yml]: https://github.com/konrad-jamrozik/game/commit/847b607a2fb69066dfd917a073c52e1326e615e1
-[`game-api1`]: https://portal.azure.com/#@spawarottijamro.onmicrosoft.com/resource/subscriptions/8695c84c-09a4-4b50-994f-a2fa7f36cc92/resourcegroups/game-rg/providers/Microsoft.Web/sites/game-api1/appServices
-[`game-app-service-plan-windows`]: https://portal.azure.com/#@spawarottijamro.onmicrosoft.com/resource/subscriptions/8695c84c-09a4-4b50-994f-a2fa7f36cc92/resourceGroups/game-rg/providers/Microsoft.Web/serverfarms/game-app-service-plan-windows/webHostingPlan
-[`early-access.md`]: https://github.com/Azure/app-service-linux-docs/blob/master/Runtime_Support/early_access.md#early-access-on-linux
-[admin panel]: https://game-api1.scm.azurewebsites.net/
-[GitHub doc on Deploying to Azure App Service]: https://docs.github.com/en/actions/deployment/deploying-to-your-cloud-provider/deploying-to-azure/deploying-net-to-azure-app-service
+[commit 9f1f514: GitHub Action workflow from Deployment Center]: https://github.com/konrad-jamrozik/game/commit/9f1f5143aab4953ffc821fda2b0f18cb9825dc18
 [commit fc109b3: update sources to use `game-api1`]: https://github.com/konrad-jamrozik/game/commit/fc109b3deef22116cc822952902319c3a5175417
+[Continuous deployment to Azure App Service]: https://learn.microsoft.com/en-us/azure/app-service/deploy-continuous-deployment?tabs=github
 [Deploy to App Service using GitHub Actions / Generate deployment credentials]: https://learn.microsoft.com/en-us/azure/app-service/deploy-github-actions?tabs=applevel#generate-deployment-credentials
-[`download-artifact/v4`]: https://github.com/actions/download-artifact/tree/v4/
+[GitHub actions secrets]: https://github.com/konrad-jamrozik/game/settings/secrets/actions
+[GitHub doc on Deploying to Azure App Service]: https://docs.github.com/en/actions/deployment/deploying-to-your-cloud-provider/deploying-to-azure/deploying-net-to-azure-app-service
 [Tutorial: Create a minimal API with ASP.NET Core]: https://learn.microsoft.com/en-us/aspnet/core/tutorials/min-web-api?view=aspnetcore-8.0

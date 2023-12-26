@@ -1,3 +1,27 @@
+# Table of contents
+
+- [Table of contents](#table-of-contents)
+- [Deployment](#deployment)
+- [Deploy the API backend](#deploy-the-api-backend)
+  - [Deploy API to Azure](#deploy-api-to-azure)
+  - [Deploy API to localhost](#deploy-api-to-localhost)
+    - [From Visual Studio](#from-visual-studio)
+    - [From CLI](#from-cli)
+- [Deploy the web app frontend](#deploy-the-web-app-frontend)
+  - [Deploy web app to Azure](#deploy-web-app-to-azure)
+  - [Deploy web app to localhost and use API on localhost](#deploy-web-app-to-localhost-and-use-api-on-localhost)
+  - [Deploy web app to localhost and use API on Azure](#deploy-web-app-to-localhost-and-use-api-on-azure)
+    - [Local dev server](#local-dev-server)
+    - [Local preview](#local-preview)
+    - [Expose local deployment on the internet (host)](#expose-local-deployment-on-the-internet-host)
+  - [Configure CORS](#configure-cors)
+    - [Configure CORS via backend code](#configure-cors-via-backend-code)
+    - [Configure CORS via Azure portal](#configure-cors-via-azure-portal)
+- [Appendix](#appendix)
+  - [API backend deployment reference](#api-backend-deployment-reference)
+  - [Web app fronted deployment reference](#web-app-fronted-deployment-reference)
+  - [CORS reference](#cors-reference)
+
 # Deployment
 
 This document details how to deploy both web frontend and API backend, in various setups.

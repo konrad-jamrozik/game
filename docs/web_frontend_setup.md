@@ -1,3 +1,15 @@
+# Table of contents
+
+- [Table of contents](#table-of-contents)
+- [How the `SolidJS` web frontend project was set up](#how-the-solidjs-web-frontend-project-was-set-up)
+  - [Initial web frontend setup commands executed](#initial-web-frontend-setup-commands-executed)
+    - [Step 1: install `npm` and `node.js` using `nvm-windows`](#step-1-install-npm-and-nodejs-using-nvm-windows)
+    - [Step 3: Install `tailwindcss`](#step-3-install-tailwindcss)
+    - [Step 4: Configure `GitHub Actions` workflow to deploy to Azure static web apps app](#step-4-configure-github-actions-workflow-to-deploy-to-azure-static-web-apps-app)
+    - [Step 4.1: Update the workflow based on GitHub guidance for Azure static web apps](#step-41-update-the-workflow-based-on-github-guidance-for-azure-static-web-apps)
+    - [Step 5: Install `tw-elements`](#step-5-install-tw-elements)
+  - [How the web fronted GitHub Actions workflow was created](#how-the-web-fronted-github-actions-workflow-was-created)
+
 # How the `SolidJS` web frontend project was set up
 
 In this document `.` refers to the repository root.
@@ -36,8 +48,8 @@ install latest `npm` and `node.js`:
 1. Download the `nvm-setup.exe` from the latest `nvm-windows` release from https://github.com/coreybutler/nvm-windows/releases
 2. Install `nvm-setup.exe`
 3. ``` powershell
-   # As of 12/21/2023:
-   nvm current
+   // # As of 12/21/2023
+   nvm current 
    nvm list
    nvm install latest
    nvm use 21.5.0
@@ -206,39 +218,39 @@ references
 --------------------------------------------------------------------------------
 -->
 
-[2022 state-of-js frontend frameworks report]: https://2022.stateofjs.com/en-US/libraries/front-end-frameworks/
-[Build configuration for Azure Static Web Apps]: https://learn.microsoft.com/en-us/azure/static-web-apps/build-configuration?tabs=github-actions
-[Install Tailwind CSS with SolidJS]: https://tailwindcss.com/docs/guides/solidjs
-[Install Tailwind CSS with Vite]: https://tailwindcss.com/docs/guides/vite
-[Scaffolding Your First Vite Project]: https://vitejs.dev/guide/#scaffolding-your-first-vite-project
-[Try Solid]: https://www.solidjs.com/guides/getting-started#try-solid
-[Using a Node version manager to install Node.js and npm]: https://docs.npmjs.com/downloading-and-installing-node-js-and-npm#using-a-node-version-manager-to-install-nodejs-and-npm
-[Vite / Deploying a Static Site / Azure Static Web Apps]: https://vitejs.dev/guide/static-deploy.html#azure-static-web-apps
 [`./web`]: ../web
 [`.github/workflows/web_CICD.yml`]: ../.github/workflows/web_CICD.yml
+[`az staticwebapp create`]: https://learn.microsoft.com/en-us/cli/azure/staticwebapp?view=azure-cli-latest#az-staticwebapp-create
+[`game-web`]: https://portal.azure.com/#@spawarottijamro.onmicrosoft.com/resource/subscriptions/8695c84c-09a4-4b50-994f-a2fa7f36cc92/resourceGroups/game-rg/providers/Microsoft.Web/staticSites/game-web/staticsite
 [`npm init`]: https://docs.npmjs.com/cli/v10/commands/npm-init
 [`nvm-windows`]: https://github.com/coreybutler/nvm-windows
 [`tailwind.config.js`]: ../web/tailwind.config.js
+[`web_CICD.yml`]: https://github.com/konrad-jamrozik/game/blob/431150693be3ca3cd32fc7df1805f4d20eda84d8/.github/workflows/web_CICD.yml
+[2022 state-of-js frontend frameworks report]: https://2022.stateofjs.com/en-US/libraries/front-end-frameworks/
+[az staticwebapp doc]: https://learn.microsoft.com/en-us/cli/azure/staticwebapp?view=azure-cli-latest
+[Build configuration for Azure Static Web Apps]: https://learn.microsoft.com/en-us/azure/static-web-apps/build-configuration?tabs=github-actions
 [commit 2a2d6cf: initial frontend]: https://github.com/konrad-jamrozik/game/commit/2a2d6cf983a64732da48cfb36131b9d4bd05ed51
+[commit 4311506: update web GitHub Actions workflow]: https://github.com/konrad-jamrozik/game/commit/431150693be3ca3cd32fc7df1805f4d20eda84d8
 [commit 7ab4b29: setup tw-elements]: https://github.com/konrad-jamrozik/game/commit/7ab4b292817bb071c4ff943c1168fe65c4c5bdf3
+[commit 847b607: rename GitHub Actions workflow]: https://github.com/konrad-jamrozik/game/commit/847b607a2fb69066dfd917a073c52e1326e615e1
 [commit b429583: add tailwindcss]: https://github.com/konrad-jamrozik/game/commit/b429583cb5f422992bc0321b90c7753d5f22ab6e
 [commit baf3e5f: configure tailwindcss]: https://github.com/konrad-jamrozik/game/commit/baf3e5f7c99869fd81af07ec64b8b967b01b5133
 [commit c7527a9: fix tw-elements button padding in index.css]: https://github.com/konrad-jamrozik/game/commit/c7527a987f61166969324d1054d289d53a1cccfe
 [commit e348667: fix tw-elements dark mode in tailwind.config.js]: https://github.com/konrad-jamrozik/game/commit/e34866742d4ca146249de2403bbbc4b1e5423c7f
 [commit ef8a4a8: add Azure Static Web Apps GH Actions workflow file]: https://github.com/konrad-jamrozik/game/commit/ef8a4a8276bc204371c0ef276f1183b0694919c1
 [create-vite npm]: https://www.npmjs.com/package/create-vite
-[create-vite solid-ts / src / index.css]: https://github.com/vitejs/vite/blob/main/packages/create-vite/template-solid-ts/src/index.css
 [create-vite solid-ts]: https://github.com/vitejs/vite/tree/main/packages/create-vite/template-solid-ts
+[create-vite solid-ts / src / index.css]: https://github.com/vitejs/vite/blob/main/packages/create-vite/template-solid-ts/src/index.css
 [create-vite src]: https://github.com/vitejs/vite/tree/main/packages/create-vite
-[npm create SO]: https://stackoverflow.com/questions/57133219/what-is-the-npm-create-command
-[tailwindcss css utility classes blog post]: https://adamwathan.me/css-utility-classes-and-separation-of-concerns/
-[tw-elements SolidJS integration]: https://tw-elements.com/docs/standard/integrations/solid-integration/
-[commit 847b607: rename GitHub Actions workflow]: https://github.com/konrad-jamrozik/game/commit/847b607a2fb69066dfd917a073c52e1326e615e1
-[commit 4311506: update web GitHub Actions workflow]: https://github.com/konrad-jamrozik/game/commit/431150693be3ca3cd32fc7df1805f4d20eda84d8
-[az staticwebapp doc]: https://learn.microsoft.com/en-us/cli/azure/staticwebapp?view=azure-cli-latest
 [GitHub doc on Deploying to Azure Static Web App]: https://docs.github.com/en/actions/deployment/deploying-to-your-cloud-provider/deploying-to-azure/deploying-to-azure-static-web-app
+[Install Tailwind CSS with SolidJS]: https://tailwindcss.com/docs/guides/solidjs
+[Install Tailwind CSS with Vite]: https://tailwindcss.com/docs/guides/vite
 [my comment on issue 536]: https://github.com/Azure/static-web-apps/issues/536#issuecomment-1868407157
-[`az staticwebapp create`]: https://learn.microsoft.com/en-us/cli/azure/staticwebapp?view=azure-cli-latest#az-staticwebapp-create
-[`web_CICD.yml`]: https://github.com/konrad-jamrozik/game/blob/431150693be3ca3cd32fc7df1805f4d20eda84d8/.github/workflows/web_CICD.yml
+[npm create SO]: https://stackoverflow.com/questions/57133219/what-is-the-npm-create-command
+[Scaffolding Your First Vite Project]: https://vitejs.dev/guide/#scaffolding-your-first-vite-project
 [static web apps CLI]: https://azure.github.io/static-web-apps-cli/
-[`game-web`]: https://portal.azure.com/#@spawarottijamro.onmicrosoft.com/resource/subscriptions/8695c84c-09a4-4b50-994f-a2fa7f36cc92/resourceGroups/game-rg/providers/Microsoft.Web/staticSites/game-web/staticsite
+[tailwindcss css utility classes blog post]: https://adamwathan.me/css-utility-classes-and-separation-of-concerns/
+[Try Solid]: https://www.solidjs.com/guides/getting-started#try-solid
+[tw-elements SolidJS integration]: https://tw-elements.com/docs/standard/integrations/solid-integration/
+[Using a Node version manager to install Node.js and npm]: https://docs.npmjs.com/downloading-and-installing-node-js-and-npm#using-a-node-version-manager-to-install-nodejs-and-npm
+[Vite / Deploying a Static Site / Azure Static Web Apps]: https://vitejs.dev/guide/static-deploy.html#azure-static-web-apps
