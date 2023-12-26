@@ -3,14 +3,12 @@ import { Store, SetStoreFunction, reconcile } from 'solid-js/store'
 import { Agent } from './types';
 
 // Read about this here:
-// https://vitejs.dev/guide/env-and-mode.html
+// https://vitejs.dev/guide/env-and-mode.html#env-variables
 // https://vitejs.dev/guide/env-and-mode.html#modes
 // https://vitejs.dev/guide/env-and-mode.html#node-env-and-modes
-// ChatGPT convo: Load Vite Config by Mode
+// ChatGPT: Load Vite Config by Mode
 // https://chat.openai.com/share/9109f0a2-3f55-47ca-88c8-14d13c6acee5
-const envViteMode: "development" | "production" = import.meta.env.MODE as "development" | "production";
-
-const apiHost = envViteMode === "development" ? "https://localhost:7128" : "https://game-api1.azurewebsites.net"
+const apiHost = import.meta.env.PROD ? "https://game-api1.azurewebsites.net" : "https://localhost:7128"
 
 function RunSimulationComponent(props: {
   input: Accessor<number>
