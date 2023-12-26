@@ -1,16 +1,14 @@
 # Table of contents
 
 - [Table of contents](#table-of-contents)
-- [CORS](#cors)
-  - [Configure CORS](#configure-cors)
-    - [Configure CORS via backend code](#configure-cors-via-backend-code)
-    - [Configure CORS via Azure portal](#configure-cors-via-azure-portal)
+- [Configure CORS](#configure-cors)
+  - [Configure CORS via backend code](#configure-cors-via-backend-code)
+  - [Configure CORS via Azure portal](#configure-cors-via-azure-portal)
+- [Current CORS configuration](#current-cors-configuration)
 - [Appendix](#appendix)
   - [CORS reference](#cors-reference)
 
-# CORS
-
-## Configure CORS
+# Configure CORS
 
 The API backend at [`./src/api`] must have appropriately configured [CORS], so that web app frontend can call it,
 be it from Azure, or localhost deployment.
@@ -19,7 +17,7 @@ be it from Azure, or localhost deployment.
 > If you deploy the API backend on localhost, expose it to public internet, and allow in CORS access from localhost
 > URLs, you will expose your personal computer to malicious attacks from all across the web.
 
-### Configure CORS via backend code
+## Configure CORS via backend code
 
 Per [Enable Cross-Origin Requests (CORS) in ASP.NET Core],
 specifically [Test CORS][Enable Cross-Origin Requests (CORS) in ASP.NET Core / Test CORS],
@@ -27,7 +25,7 @@ and [Add CORS functionality to REST API], you can add CORS policy via code.
 
 For a confirmed example of this code setup working, see [commit c1b096f: add API CORS policy in code].
 
-### Configure CORS via Azure portal
+## Configure CORS via Azure portal
 
 You can configure CORS on Azure portal, e.g. at [`game-api1` CORS page]. See [SO: CORS in Azure app service].
 
@@ -45,6 +43,18 @@ The Azure portal configuration takes precedence over code. From [SO: CORS in Azu
 > [!TIP]
 > Configuring CORS via Azure portal is especially useful for quick one-off tests, e.g. by calling the API from localhost
 > vite preview.
+
+# Current CORS configuration
+
+As of 12/15/2023:
+
+The Azure API backend [`game-api1`] has in [its CORS page][`game-api1` CORS page] configured two values:
+
+- `https://witty-grass-034c9c41e.4.azurestaticapps.net` to allow the web app frontend to call it
+- `http://localhost:4173`, to allow the localhost vite preview to call it.
+
+In addition, the [commit e7c81ea: configure localhost CORS] configures in code the API backend app to allow
+`http://localhost:5173` to call the API when the API is also deployed on localhost.
 
 # Appendix
 
@@ -71,10 +81,18 @@ Example config for [`game-api1` CORS page]:
 
 ![game-api1 CORS page](game_api1_cors_page.png)
 
+<!--
+--------------------------------------------------------------------------------
+references
+--------------------------------------------------------------------------------
+-->
+
 [`./src/api`]: ../src/api
+[`game-api1`]: https://portal.azure.com/#@spawarottijamro.onmicrosoft.com/resource/subscriptions/8695c84c-09a4-4b50-994f-a2fa7f36cc92/resourcegroups/game-rg/providers/Microsoft.Web/sites/game-api1/appServices
 [`game-api1` CORS page]: https://portal.azure.com/#@spawarottijamro.onmicrosoft.com/resource/subscriptions/8695c84c-09a4-4b50-994f-a2fa7f36cc92/resourcegroups/game-rg/providers/Microsoft.Web/sites/game-api1/apiCors
 [Add CORS functionality to REST API]: https://learn.microsoft.com/en-us/azure/app-service/app-service-web-tutorial-rest-api#add-cors-functionality
 [commit c1b096f: add API CORS policy in code]: https://github.com/konrad-jamrozik/game/commit/c1b096f69a96718eff6041ccf616ca9923777eed
+[commit e7c81ea: configure localhost CORS]: https://github.com/konrad-jamrozik/game/commit/e7c81ea32bfed773509eea33bcff6b0c710a2b54
 [CORS]: https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS
 [Enable Cross-Origin Requests (CORS) in ASP.NET Core]: https://learn.microsoft.com/en-us/aspnet/core/security/cors?view=aspnetcore-8.0
 [Enable Cross-Origin Requests (CORS) in ASP.NET Core / Test CORS]: https://learn.microsoft.com/en-us/aspnet/core/security/cors?view=aspnetcore-8.0#test-cors

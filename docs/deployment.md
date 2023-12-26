@@ -66,9 +66,9 @@ dotnet run --project api --launch-profile https
 The SolidJS web frontend sources are at [`./web`].  
 
 > [!IMPORTANT]
-> As the web frontend uses the API backend, you must ensure appropriate API backend is deployed first
-> and its [CORS] is configured properly.
-> See [`cors.md`](./cors.md).
+> As the web frontend uses the API backend, it relies on appropriate API backend being deployed first
+> and its [CORS] being configured properly.
+> See also: [Current CORS configuration in `cors.md`](./cors.md#current-cors-configuration).
 
 The deployment options described in this document have been setup as explained in [`web_frontend_setup.md`].
 
