@@ -10,8 +10,8 @@
 - [Deploy the web app frontend](#deploy-the-web-app-frontend)
   - [Deploy web app to Azure](#deploy-web-app-to-azure)
   - [Deploy web app to localhost](#deploy-web-app-to-localhost)
-    - [Use API on localhost](#use-api-on-localhost)
-    - [Use API on Azure](#use-api-on-azure)
+    - [Use API on localhost (dev server)](#use-api-on-localhost-dev-server)
+    - [Use API on Azure (prod preview)](#use-api-on-azure-prod-preview)
     - [Expose local deployment on the internet (host)](#expose-local-deployment-on-the-internet-host)
 - [Appendix](#appendix)
   - [API backend deployment reference](#api-backend-deployment-reference)
@@ -89,7 +89,23 @@ This is possible because the app source uses `import.meta.env.MODE` to determine
 Sections below elaborate how to set it to appropriate values.
 You can read more about the vite mode in the [Vite doc on Modes].
 
-### Use API on localhost
+### Use API on localhost (dev server)
+
+To run the app locally and make it reach out to API backend also deployed on localhost,
+you can run the app as a local dev server, with hot module replacement (HMR) / hot reload for rapid development.
+
+Run the following from [`./web`]:
+
+``` powershell
+npm run dev
+```
+
+This will execute the [`vite`] command.
+
+This deployment will reach out to the API backend deployed on localhost because
+it runs in `deployment` vite mode, per [Vite doc on Modes].
+
+### Use API on Azure (prod preview)
 
 To run the app locally and make it reach out to API backend deployed on Azure,
 you can run the web app frontend as a preview of how it will look on Azure.
@@ -105,22 +121,6 @@ This will first execute the `tsc && vite build` command and then [`vite preview`
 
 This deployment will reach out to the API backend deployed on Azure because
 it runs in `production` vite mode, per [Vite doc on Modes].
-
-### Use API on Azure
-
-To run the app locally and make it reach out to API backend also deployed on localhost,
-you can run the app as a local dev server, with hot module replacement (HMR) / hot reload for rapid development.
-
-Run the following from [`./web`]:
-
-``` powershell
-npm run dev
-```
-
-This will execute the [`vite`] command.
-
-This deployment will reach out to the API backend deployed on localhost because
-it runs in `deployment` vite mode, per [Vite doc on Modes].
 
 ### Expose local deployment on the internet (host)
 
