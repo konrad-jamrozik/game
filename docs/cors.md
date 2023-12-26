@@ -13,10 +13,6 @@
 The API backend at [`./src/api`] must have appropriately configured [CORS], so that web app frontend can call it,
 be it from Azure, or localhost deployment.
 
-> [!CAUTION]
-> If you deploy the API backend on localhost, expose it to public internet, and allow in CORS access from localhost
-> URLs, you will expose your personal computer to malicious attacks from all across the web.
-
 ## Configure CORS via backend code
 
 Per [Enable Cross-Origin Requests (CORS) in ASP.NET Core],
