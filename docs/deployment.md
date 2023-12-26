@@ -29,6 +29,16 @@ The scenarios described here are:
 - Deploy both the API backend and web app frontend to localhost.
 - Deploy the API backend to Azure and the web app frontend to localhost.
 
+> [!IMPORTANT]
+> You must first deploy the API backend, then web app frontend.
+> Otherwise the web app frontend will fail to call the API when interacted with.
+
+Web app frontend | API backend | Sections
+---------|----------|---------
+Azure | Azure | [#deploy-web-app-to-azure](#deploy-web-app-to-azure), [#deploy-api-to-azure](#deploy-api-to-azure) |
+Local | Azure | [#use-api-on-azure-prod-preview](#use-api-on-azure-prod-preview), [#deploy-api-to-azure](#deploy-api-to-azure) |
+Local | Local | [#use-api-on-localhost-dev-server](#use-api-on-localhost-dev-server), [#deploy-api-to-localhost](#deploy-api-to-localhost) |
+
 # Deploy the API backend
 
 The C# ASP.NET Core REST API backend sources are at [`./src`] with entry point project at [`./src/api`].
@@ -63,12 +73,13 @@ dotnet run --project api --launch-profile https
 
 # Deploy the web app frontend
 
-The SolidJS web frontend sources are at [`./web`].  
+The SolidJS web frontend sources are at [`./web`].
 
 > [!IMPORTANT]
-> As the web frontend uses the API backend, it relies on appropriate API backend being deployed first
-> and its [CORS] being configured properly.
-> See also: [Current CORS configuration in `cors.md`](./cors.md#current-cors-configuration).
+> As the web frontend uses the API backend, it relies on:
+>
+> - Appropriate API backend being deployed first.
+> - Its [CORS] being configured properly. See also: [Current CORS configuration in `cors.md`](./cors.md#current-cors-configuration).
 
 The deployment options described in this document have been setup as explained in [`web_frontend_setup.md`].
 
