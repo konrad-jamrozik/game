@@ -2,6 +2,16 @@ import { Accessor, Setter, batch } from 'solid-js';
 import { Store, SetStoreFunction, reconcile } from 'solid-js/store'
 import { Agent } from './types';
 
+// Read about this here:
+// https://vitejs.dev/guide/env-and-mode.html
+// https://vitejs.dev/guide/env-and-mode.html#modes
+// https://vitejs.dev/guide/env-and-mode.html#node-env-and-modes
+// ChatGPT convo: Load Vite Config by Mode
+// https://chat.openai.com/share/9109f0a2-3f55-47ca-88c8-14d13c6acee5
+const envViteMode: "development" | "production" = import.meta.env.MODE as "development" | "production";
+
+const apiHost = envViteMode === "development" ? "https://localhost:7128" : "https://game-api1.azurewebsites.net"
+
 function RunSimulationComponent(props: {
   input: Accessor<number>
   message: Accessor<string>
@@ -15,9 +25,9 @@ function RunSimulationComponent(props: {
   const handleClick = () => {
     const queryString = `?turnLimit=${props.input()}`
 
-    const apiUrl = "https://game-api1.azurewebsites.net/simulateGameSession" + queryString
+    const apiUrl = apiHost + "/simulateGameSession" + queryString
 
-    console.log(`Calling ${apiUrl}`)
+    console.log(`Calling ${apiUrl}.`)
 
     fetch(apiUrl)
       .then((response) => response.json())

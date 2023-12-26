@@ -63,7 +63,7 @@ You can read more about the manual trigger on the [`workflow_dispatch`] doc.
 
 ``` powershell
 cd ./src
-dotnet run --project api
+dotnet run --project api --launch-profile https
 ```
 
 # Deploy the web app frontend
@@ -160,7 +160,7 @@ The Azure portal configuration takes precedence over code. From [SO: CORS in Azu
 > [this FAQ](https://learn.microsoft.com/en-us/azure/app-service/app-service-web-tutorial-rest-api#how-do-i-set-allowed-origins-to-a-wildcard-subdomain).
 
 > [!TIP]
-> Configuring CORS via Azure portal is especially useful for quick one-off tests, e.g. with localhost.
+> Configuring CORS via Azure portal is especially useful for quick one-off tests, e.g. by calling the API from localhost vite preview.
 
 # Appendix
 
