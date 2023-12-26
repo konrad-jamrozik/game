@@ -43,7 +43,8 @@ The Azure portal configuration takes precedence over code. From [SO: CORS in Azu
 > [this FAQ](https://learn.microsoft.com/en-us/azure/app-service/app-service-web-tutorial-rest-api#how-do-i-set-allowed-origins-to-a-wildcard-subdomain).
 
 > [!TIP]
-> Configuring CORS via Azure portal is especially useful for quick one-off tests, e.g. by calling the API from localhost vite preview.
+> Configuring CORS via Azure portal is especially useful for quick one-off tests, e.g. by calling the API from localhost
+> vite preview.
 
 # Appendix
 

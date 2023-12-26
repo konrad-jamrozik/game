@@ -9,10 +9,9 @@
     - [From CLI](#from-cli)
 - [Deploy the web app frontend](#deploy-the-web-app-frontend)
   - [Deploy web app to Azure](#deploy-web-app-to-azure)
-  - [Deploy web app to localhost and use API on localhost](#deploy-web-app-to-localhost-and-use-api-on-localhost)
-  - [Deploy web app to localhost and use API on Azure](#deploy-web-app-to-localhost-and-use-api-on-azure)
-    - [Local dev server](#local-dev-server)
-    - [Local preview](#local-preview)
+  - [Deploy web app to localhost](#deploy-web-app-to-localhost)
+    - [Use API on localhost](#use-api-on-localhost)
+    - [Use API on Azure](#use-api-on-azure)
     - [Expose local deployment on the internet (host)](#expose-local-deployment-on-the-internet-host)
 - [Appendix](#appendix)
   - [API backend deployment reference](#api-backend-deployment-reference)
@@ -81,31 +80,21 @@ The deployment happens automatically on a push to `main` branch thanks to the Gi
 You can also deploy from your own branch by manually triggering the workflow via the [GH Actions runs] web UI.
 You can read more about the manual trigger on the [`workflow_dispatch`] doc.
 
-## Deploy web app to localhost and use API on localhost
+## Deploy web app to localhost
 
-Not yet implemented. I have notes on that in OneNote `How to do localhost`.
+There are at least two ways of running the web app frontend on localhost, resulting
+in different API backends being accessed by it: either one deployed on Azure, or one on localhost.
 
-## Deploy web app to localhost and use API on Azure
+This is possible because the app source uses `import.meta.env.MODE` to determine the API backend URLs to use.
+Sections below elaborate how to set it to appropriate values.
+You can read more about the vite mode in the [Vite doc on Modes].
 
-There are two ways of doing it: local dev server, and local preview of prod deployment.
+### Use API on localhost
 
-If you are curious about the differences between the local dev server and the local preview, see
-[ChatGPT conversation: `vite` vs `vite preview`].
+To run the app locally and make it reach out to API backend deployed on Azure,
+you can run the web app frontend as a preview of how it will look on Azure.
 
-### Local dev server
-
-To run the app locally as a local dev server, with hot module replacement (HMR) / hot reload for rapid development, run
-the following from [`./web`]:
-
-``` powershell
-npm run dev
-```
-
-This will execute the [`vite`] command.
-
-### Local preview
-
-To run the app locally as a preview of how it will look on Azure, run the following form [`./web`]:
+Run the following from [`./web`]:
 
 ``` powershell
 npm run build
@@ -113,6 +102,25 @@ npm run preview
 ```
 
 This will first execute the `tsc && vite build` command and then [`vite preview`] command.
+
+This deployment will reach out to the API backend deployed on Azure because
+it runs in `production` vite mode, per [Vite doc on Modes].
+
+### Use API on Azure
+
+To run the app locally and make it reach out to API backend also deployed on localhost,
+you can run the app as a local dev server, with hot module replacement (HMR) / hot reload for rapid development.
+
+Run the following from [`./web`]:
+
+``` powershell
+npm run dev
+```
+
+This will execute the [`vite`] command.
+
+This deployment will reach out to the API backend deployed on localhost because
+it runs in `deployment` vite mode, per [Vite doc on Modes].
 
 ### Expose local deployment on the internet (host)
 
@@ -140,6 +148,10 @@ The documentation about web app frontend deployment is based primarily on follow
 - [Vite doc on deploying a static site]
 - [Vite doc on deploying to Azure static web apps]
 - [Vite doc on testing the app locally]
+- [Vite doc on env variables]
+- [Vite doc on Modes]
+- [Vite doc on NODE_ENV and Modes]
+- [ChatGPT: Load Vite Config by Mode]
 
 <!--
 --------------------------------------------------------------------------------
@@ -160,7 +172,7 @@ references
 [`web_CICD.yml`]: ../.github/workflows/web_CICD.yml
 [`web_frontend_setup.md`]: ./web_frontend_setup.md
 [`workflow_dispatch`]: https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#workflow_dispatch
-[ChatGPT conversation: `vite` vs `vite preview`]: https://chat.openai.com/c/8f51472c-e7a2-4d82-b660-36d990135ee9
+[ChatGPT: Load Vite Config by Mode]: https://chat.openai.com/share/9109f0a2-3f55-47ca-88c8-14d13c6acee5
 [CORS]: https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS
 [GH Actions runs]: https://github.com/konrad-jamrozik/game/actions
 [README of the used `create-vite` `solid-ts` template]: https://github.com/vitejs/vite/tree/main/packages/create-vite/template-solid-ts
@@ -168,4 +180,7 @@ references
 [vite -host caveat]: https://github.com/vitejs/vite/discussions/3396#discussioncomment-4581934
 [Vite doc on deploying a static site]: https://vitejs.dev/guide/static-deploy.html
 [Vite doc on deploying to Azure static web apps]: https://vitejs.dev/guide/static-deploy.html#azure-static-web-apps
+[Vite doc on env variables]: https://vitejs.dev/guide/env-and-mode.html#modes
+[Vite doc on Modes]: https://vitejs.dev/guide/env-and-mode.html#modes
+[Vite doc on NODE_ENV and Modes]: https://vitejs.dev/guide/env-and-mode.html#node-env-and-modes
 [Vite doc on testing the app locally]: https://vitejs.dev/guide/static-deploy.html#testing-the-app-locally
