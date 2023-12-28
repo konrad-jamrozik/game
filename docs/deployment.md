@@ -66,6 +66,15 @@ You can read more about the manual trigger on the [`workflow_dispatch`] doc.
 
 ### From CLI
 
+With [hot reload][`dotnet watch` hot reload]:
+
+``` powershell
+cd ./src
+dotnet watch --project api --launch-profile https
+```
+
+Without hot reload:
+
 ``` powershell
 cd ./src
 dotnet run --project api --launch-profile https
@@ -179,6 +188,7 @@ references
 [`api_backend_setup.md`]: ./api_backend_setup.md
 [`api_CICD.yml`]: ../.github/workflows/api_CICD.yml
 [`dotnet run`]: https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-run
+[`dotnet watch` hot reload]: https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-watch#hot-reload
 [`game-api1`]: https://portal.azure.com/#@spawarottijamro.onmicrosoft.com/resource/subscriptions/8695c84c-09a4-4b50-994f-a2fa7f36cc92/resourcegroups/game-rg/providers/Microsoft.Web/sites/game-api1/appServices
 [`game-web`]: https://portal.azure.com/#@spawarottijamro.onmicrosoft.com/resource/subscriptions/8695c84c-09a4-4b50-994f-a2fa7f36cc92/resourceGroups/game-rg/providers/Microsoft.Web/staticSites/game-web/staticsite
 [`vite preview`]: https://vitejs.dev/guide/cli.html#vite-preview
