@@ -1,28 +1,23 @@
-## Usage
+# About web app frontend
 
-```bash
-$ npm install # or pnpm install or yarn install
-```
+This directory contains the SolidJS web app frontend sources.
 
-### Learn more on the [Solid Website](https://solidjs.com) and come chat with us on our [Discord](https://discord.com/invite/solidjs)
+This app provides web UI frontend to the game engine.
 
-## Available Scripts
+To access the game engine the frontend calls the API backend whose code is located in [`../src`].
 
-In the project directory, you can run:
+If you want to learn how this project was initially set up, consult [`../docs/web_frontend_setup.md`].
 
-### `npm run dev`
+## Develop
 
-Runs the app in the development mode.<br>
-Open [http://localhost:5173](http://localhost:5173) to view it in the browser.
+This project is to be developed using VS Code. The workspace file is [`../game.code_workspace`].
 
-### `npm run build`
+## Build & Deploy
 
-Builds the app for production to the `dist` folder.<br>
-It correctly bundles Solid in production mode and optimizes the build for the best performance.
+To build & deploy, whether for local dev with HMR (Hot Module Reload) or to Azure,
+consult [`../docs/deployment.md`].
 
-The build is minified and the filenames include the hashes.<br>
-Your app is ready to be deployed!
-
-## Deployment
-
-Learn more about deploying your application with the [documentations](https://vitejs.dev/guide/static-deploy.html)
+[`../docs/deployment.md`]: ../docs/deployment.md
+[`../docs/web_frontend_setup.md`]: ../docs/web_frontend_setup.md
+[`../game.code_workspace`]: ../game.code_workspace
+[`../src`]: ../src
