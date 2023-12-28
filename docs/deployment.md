@@ -73,7 +73,10 @@ dotnet run --project api --launch-profile https
 
 # Deploy the web app frontend
 
-The SolidJS web frontend sources are at [`./web`].
+The SolidJS web app frontend sources are at [`./web`].
+
+To deploy web app frontend, first you need to install newest node.js and npm and then run `npm install` from [`./web`].
+You can replicate the steps as explained in [`web_frontend_setup.md`].
 
 > [!IMPORTANT]
 > As the web frontend uses the API backend, it relies on:
