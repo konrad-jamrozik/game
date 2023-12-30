@@ -109,7 +109,7 @@ public class GameSessionTests
     ///   That game state is saved, modified (by advancing time) and then the
     ///   game state is loaded.
     /// Then:
-    ///   - Loading the game restored to how it was before it was saved.
+    ///   - Loading the game restores it to how it was before it was saved.
     /// </summary>
     [Test]
     public void LoadingPreviousGameStateOverridesCurrentState()
@@ -119,10 +119,12 @@ public class GameSessionTests
 
         GameStatePlayerView state = controller.GameStatePlayerView;
         int savedTurn = state.CurrentTurn;
+        // kja bug: this should be copy reference. Because when it isn't, then advancing time
+        // mutates the state's current turn, and startingGameState points to the mutated state.
         GameState startingGameState = session.CurrentGameState;
 
         // Act 1/2
-        controller.Save();
+        controller.SaveGameState();
 
         controller.AdvanceTime();
         
@@ -257,7 +259,7 @@ public class GameSessionTests
     private static void VerifyGameSatesByJsonDiff(GameSessionController controller)
     {
         // Act 1/2 and 2/2
-        var lastSavedGameState = controller.Save();
+        var lastSavedGameState = controller.SaveGameState();
         var currentGameState = controller.Load();
 
         // Assert: lastSavedGameState was never serialized to, or deserialized from json

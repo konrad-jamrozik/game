@@ -19,7 +19,7 @@ namespace UfoGameLib.Controller;
 ///
 /// Here are few scenarios of using GameSessionController:
 ///
-/// 1. A human player calls the CLI executable built from ufo-game-cli.
+/// 1. A human player calls the CLI executable built from game-cli.
 /// The implementation of that executable, Program.cs, translates the CLI commands to invocations
 /// of GameSessionController methods. The output of these methods is returned through Program.cs to the human player.
 /// 2. As 1. but the CLI commands are called not by a human, but by an automated process (aka automated player).
@@ -70,7 +70,7 @@ public class GameSessionController
             _log.Info("");
 
             // This persists the game state at player turn beginning.
-            GameSession.SaveState();
+            GameSession.AddCurrentStateToPastStates();
 
             player.PlayGameTurn(GameStatePlayerView, TurnController);
 
@@ -81,7 +81,7 @@ public class GameSessionController
 
             // This persists the game state after the player took their actions in their turn,
             // but before the turn time was advanced.
-            GameSession.SaveState();
+            GameSession.AddCurrentStateToPastStates();
 
             AdvanceTime();
 
@@ -109,7 +109,7 @@ public class GameSessionController
                   $"Terminated agents: {state.TerminatedAgents.Count}, " + 
                   $"Turn: {lastTurn} / {turnLimit}.");
 
-        Save();
+        SaveGameState();
 
         new GameSessionStatsReport(
                 _log,
@@ -128,7 +128,7 @@ public class GameSessionController
         => PlayerActions.Apply(new AdvanceTimePlayerAction(_log, GameSession.RandomGen), GameSession.CurrentGameState);
 
     // kja3 introduce "SerializedJsonFile" abstraction that will retain the serialization options
-    public GameState Save()
+    public GameState SaveGameState()
     {
         _config.SaveFile.WriteAllText(CurrentGameStateSerializedAsJsonString());
         _log.Info($"Saved game state to {_config.SaveFile.FullPath}");
@@ -137,7 +137,7 @@ public class GameSessionController
 
     public GameState Load()
     {
-        GameSession.SaveState();
+        GameSession.AddCurrentStateToPastStates();
 
         GameSession.CurrentGameState =
             _config.SaveFile.FromJsonTo<GameState>(GameSession.StateJsonSerializerOptions);

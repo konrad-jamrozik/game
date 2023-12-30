@@ -28,7 +28,7 @@ public class GameSession
 
     public GameState? PreviousGameState => PastGameStates.Any() ? PastGameStates.Last() : null;
 
-    public void SaveState()
+    public void AddCurrentStateToPastStates()
         => PastGameStates.Add(CurrentGameState.Clone(StateJsonSerializerOptions));
 
     private static JsonSerializerOptions GetJsonSerializerOptions()
