@@ -135,6 +135,16 @@ public class GameSessionTests
         GameState loadedGameState = controller.Load();
 
         Assert.That(loadedGameState, Is.EqualTo(session.CurrentGameState));
+        // kja this will fail because since I updated to NUnit 4.0.0, the objects are considered equal,
+        // because NUnit 4.0.0 compares all public properties. See:
+        // https://github.com/nunit/nunit/pull/4436
+        // https://github.com/nunit/nunit/issues/4394
+        // Above are mentioned in:
+        // https://docs.nunit.org/articles/nunit/release-notes/framework.html#enhancements
+        // linked from:
+        // https://docs.nunit.org/articles/nunit/release-notes/breaking-changes.html#nunit-40
+        // I triggered this bug by this change:
+        // https://github.com/konrad-jamrozik/game/commit/fa17b0985af7adde4f135be3d231555b6e7621ee#diff-718fb94a7176526686c9940ce6d3b5350e548e26a234b86a7cdd4817e68b3b52R10
         Assert.That(loadedGameState, Is.Not.EqualTo(startingGameState));
         Assert.That(state.CurrentTurn, Is.EqualTo(savedTurn), "savedTurn");
         Assert.That(
