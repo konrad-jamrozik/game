@@ -5,7 +5,7 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace UfoGameLib.Api;
 
-// kja try to dedup the dependency of this filter on UfoGameLib.State.GameSession.StateJsonSerializerOptions.
+// kja2-1 try to dedup the dependency of this filter on UfoGameLib.State.GameSession.StateJsonSerializerOptions.
 /// <summary>
 /// This schema filter ensures that OpenAPI schema generated from C# classes is generated properly.
 /// This means following transformations:

@@ -2,24 +2,23 @@ using UfoGameLib.Model;
 
 namespace UfoGameLib.State;
 
-public class GameStatePlayerView
+public class GameStatePlayerView(GameState state)
 {
-    private readonly GameSession _session;
+    private readonly GameState _state = state;
 
-    public GameStatePlayerView(GameSession session)
+    public GameStatePlayerView(GameSession session) : this(session.CurrentGameState)
     {
-        _session = session;
     }
 
-    public int CurrentTurn => _session.CurrentGameState.Timeline.CurrentTurn;
-    public Missions Missions => _session.CurrentGameState.Missions;
-    public MissionSites MissionSites => _session.CurrentGameState.MissionSites;
-    public Assets Assets => _session.CurrentGameState.Assets;
-    public Agents TerminatedAgents => _session.CurrentGameState.TerminatedAgents;
+    public int CurrentTurn => _state.Timeline.CurrentTurn;
+    public Missions Missions => _state.Missions;
+    public MissionSites MissionSites => _state.MissionSites;
+    public Assets Assets => _state.Assets;
+    public Agents TerminatedAgents => _state.TerminatedAgents;
 
     public bool StateReferenceEquals(GameState state)
-        => ReferenceEquals(state, _session.CurrentGameState);
+        => ReferenceEquals(state, _state);
 
     public bool StateReferenceEquals(GameStatePlayerView view)
-        => ReferenceEquals(view._session.CurrentGameState, _session.CurrentGameState);
+        => ReferenceEquals(view._state, _state);
 }
