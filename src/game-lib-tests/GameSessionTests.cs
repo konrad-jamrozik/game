@@ -117,27 +117,39 @@ public class GameSessionTests
         var session = new GameSession(_randomGen);
         var controller = new GameSessionController(_config, _log, session);
 
-        GameStatePlayerView state = controller.GameStatePlayerView;
-        int savedTurn = state.CurrentTurn;
+        GameStatePlayerView stateView = controller.GameStatePlayerView;
+        int savedTurn = stateView.CurrentTurn;
         // kja bug: this should be copy reference. Because when it isn't, then advancing time
         // mutates the state's current turn, and startingGameState points to the mutated state.
         GameState startingGameState = session.CurrentGameState;
 
-        // Act 1/2
+        // kja todo: implement Clone() and test that:
+        // GameState startingGameState = session.CurrentGameState.Clone();
+        // Assert.That(!stateView.StateReferenceEquals(startingGameState));
+        // Assert.That(startingGameState.IsEqualTo(session.CurrentGameState));
+        // See VerifyGameSatesByJsonDiff
+        // See usage of clone in AddCurrentStateToPastStates
+        // See CurrentGameStateSerializedAsJsonString
+
+        // Act 1/2: Save game
         controller.SaveGameState();
 
         controller.AdvanceTime();
+
+        // Assume that startingGameState has not been modified by advancing time.
+        // kja this assert currently fails, but won't be necessary once I do .clone() above
+        // Assert.That(startingGameState.Timeline.CurrentTurn, Is.EqualTo(savedTurn));
         
-        // Here we verify that advancing time has indeed modified the current
-        // game state
-        Assert.That(state.CurrentTurn, Is.EqualTo(controller.GameStatePlayerView.CurrentTurn));
-        Assert.That(state.CurrentTurn, Is.EqualTo(savedTurn + 1), "savedTurn+1");
-        // Assert that advancing time didn't modify refernce to current game state // kja add this to test desc.
+        // Assert that advancing time didn't modify reference to current game state // kja add this to test desc.
         Assert.That(stateView.StateReferenceEquals(controller.GameStatePlayerView));
+        // Assert that advancing time has indeed modified the current game state // kja add this to test desc.
+        Assert.That(stateView.CurrentTurn, Is.EqualTo(savedTurn + 1), "savedTurn+1");
         
-        // Act 2/2
+        // Act 2/2: Load game
         GameState loadedGameState = controller.Load();
 
+        // kja implement IEquatable so this Is.EqualTo works. See TODO below.
+        // See VerifyGameSatesByJsonDiff
         Assert.That(loadedGameState, Is.EqualTo(session.CurrentGameState));
         // kja this will fail because since I updated to NUnit 4.0.0, the objects are considered equal,
         // because NUnit 4.0.0 compares all public properties. See:
@@ -149,8 +161,9 @@ public class GameSessionTests
         // https://docs.nunit.org/articles/nunit/release-notes/breaking-changes.html#nunit-40
         // I triggered this bug by this change:
         // https://github.com/konrad-jamrozik/game/commit/fa17b0985af7adde4f135be3d231555b6e7621ee#diff-718fb94a7176526686c9940ce6d3b5350e548e26a234b86a7cdd4817e68b3b52R10
+        // kja should this be IsSameAs?
         Assert.That(loadedGameState, Is.Not.EqualTo(startingGameState));
-        Assert.That(state.CurrentTurn, Is.EqualTo(savedTurn), "savedTurn");
+        Assert.That(stateView.CurrentTurn, Is.EqualTo(savedTurn), "savedTurn");
         Assert.That(
             startingGameState,
             Is.Not.EqualTo(loadedGameState),

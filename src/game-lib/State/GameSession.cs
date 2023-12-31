@@ -36,7 +36,7 @@ public class GameSession
         // The difference between the returned options and converterOptions
         // is that options has Converters defined, while converterOptions
         // doesn't. If instead we would try to use options in place
-        // of converterOptions, then we will would end up in infinite loop of:
+        // of converterOptions, then we would end up in infinite loop of:
         // options --> have converter --> the converter has options -->
         // these options have converter --> ...
         //
