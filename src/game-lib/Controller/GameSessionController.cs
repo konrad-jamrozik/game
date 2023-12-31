@@ -140,7 +140,7 @@ public class GameSessionController
         GameSession.AddCurrentStateToPastStates();
 
         GameSession.CurrentGameState =
-            _config.SaveFile.FromJsonTo<GameState>(GameSession.StateJsonSerializerOptions);
+            _config.SaveFile.FromJsonTo<GameState>(GameState.StateJsonSerializerOptions);
 
         _log.Info($"Loaded game state from {_config.SaveFile.FullPath}");
         return GameSession.CurrentGameState;
@@ -175,5 +175,5 @@ public class GameSessionController
     }
 
     private string CurrentGameStateSerializedAsJsonString()
-        => GameSession.CurrentGameState.ToIndentedUnsafeJsonString(GameSession.StateJsonSerializerOptions);
+        => GameSession.CurrentGameState.ToIndentedUnsafeJsonString(GameState.StateJsonSerializerOptions);
 }

@@ -59,7 +59,7 @@ app.MapGet(
             // This should be serialized to JSON per:
             // https://learn.microsoft.com/en-us/aspnet/core/tutorials/min-web-api?view=aspnetcore-8.0&tabs=visual-studio#return-values
             // https://learn.microsoft.com/en-us/aspnet/core/fundamentals/minimal-apis/responses?view=aspnetcore-8.0#configure-json-serialization-options-for-an-endpoint
-            return TypedResults.Json(gameSession.CurrentGameState, GameSession.StateJsonSerializerOptions);
+            return TypedResults.Json(gameSession.CurrentGameState, GameState.StateJsonSerializerOptions);
         })
     .WithName("InitialGameState")
     .WithOpenApi()
@@ -70,7 +70,7 @@ app.MapGet(
         () =>
         {
             var gameSession = new GameSession(new RandomGen(new Random()));
-            return TypedResults.Json(new GameStatePlayerView(gameSession), GameSession.StateJsonSerializerOptions);
+            return TypedResults.Json(new GameStatePlayerView(gameSession), GameState.StateJsonSerializerOptions);
         })
     .WithName("InitialGameStatePlayerView")
     .WithOpenApi()
@@ -97,7 +97,7 @@ app.MapGet(
         var aiPlayer = new AIPlayer(log, intellect);
         controller.PlayGameSession(turnLimit: turnLimitVal, aiPlayer);
 
-        return TypedResults.Json(controller.GameStatePlayerView, GameSession.StateJsonSerializerOptions);
+        return TypedResults.Json(controller.GameStatePlayerView, GameState.StateJsonSerializerOptions);
     });
 
 app.Run();

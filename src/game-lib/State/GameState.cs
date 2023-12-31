@@ -1,4 +1,6 @@
+using System.Text.Json;
 using System.Text.Json.Serialization;
+using Lib.Json;
 using UfoGameLib.Model;
 
 namespace UfoGameLib.State;
@@ -6,6 +8,8 @@ namespace UfoGameLib.State;
 public class GameState
 {
     public const int MaxTurnLimit = 1000;
+
+    public static readonly JsonSerializerOptions StateJsonSerializerOptions = GetJsonSerializerOptions();
     public readonly Timeline Timeline;
     public readonly Assets Assets;
     public readonly MissionSites MissionSites;
@@ -45,7 +49,7 @@ public class GameState
             new Missions(),
             terminatedAgents: new Agents(terminated: true));
 
-    public bool IsGameOver => IsGameLost 
+    public bool IsGameOver => IsGameLost
                               || IsGameWon
                               // This condition is here to protect against infinite loops.
                               || Timeline.CurrentTurn > MaxTurnLimit;
@@ -69,4 +73,35 @@ public class GameState
 
     [JsonIgnore]
     public Agents AllAgents => (Assets.Agents.Concat(TerminatedAgents).ToAgents(terminated: null));
+
+    public GameState Clone()
+    {
+        return this.Clone(StateJsonSerializerOptions);
+    }
+
+    private static JsonSerializerOptions GetJsonSerializerOptions()
+    {
+        // The difference between the returned options and converterOptions
+        // is that options has Converters defined, while converterOptions
+        // doesn't. If instead we would try to use options in place
+        // of converterOptions, then we would end up in infinite loop of:
+        // options --> have converter --> the converter has options -->
+        // these options have converter --> ...
+        //
+        // Note that the JsonStringEnumConverter() defined within converterOptions
+        // is a "leaf" Converter in the sense it doesn't need any other of the settings
+        // defined in the options of which it is part of.
+
+        // Define "base" JsonSerializerOptions that do not have Converters defined.
+        var converterOptions = GameStateJsonConverter.JsonSerializerOptions();
+
+        // Define the "top-level" options to be returned, having the same settings
+        // as "converterOptions".
+        var options = new JsonSerializerOptions(converterOptions);
+
+        // Attach Converters to "options" but not "converterOptions"
+        options.Converters.Add(new GameStateJsonConverter());
+
+        return options;
+    }
 }
