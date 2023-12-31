@@ -16,4 +16,10 @@ public class GameStatePlayerView
     public MissionSites MissionSites => _session.CurrentGameState.MissionSites;
     public Assets Assets => _session.CurrentGameState.Assets;
     public Agents TerminatedAgents => _session.CurrentGameState.TerminatedAgents;
+
+    public bool StateReferenceEquals(GameState state)
+        => ReferenceEquals(state, _session.CurrentGameState);
+
+    public bool StateReferenceEquals(GameStatePlayerView view)
+        => ReferenceEquals(view._session.CurrentGameState, _session.CurrentGameState);
 }

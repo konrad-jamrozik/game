@@ -132,6 +132,8 @@ public class GameSessionTests
         // game state
         Assert.That(state.CurrentTurn, Is.EqualTo(controller.GameStatePlayerView.CurrentTurn));
         Assert.That(state.CurrentTurn, Is.EqualTo(savedTurn + 1), "savedTurn+1");
+        // Assert that advancing time didn't modify refernce to current game state // kja add this to test desc.
+        Assert.That(stateView.StateReferenceEquals(controller.GameStatePlayerView));
         
         // Act 2/2
         GameState loadedGameState = controller.Load();
