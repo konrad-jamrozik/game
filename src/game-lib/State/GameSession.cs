@@ -25,6 +25,10 @@ public class GameSession
 
     public GameState? PreviousGameState => PastGameStates.Any() ? PastGameStates.Last() : null;
 
-    public void AddCurrentStateToPastStates()
-        => PastGameStates.Add(CurrentGameState.Clone());
+    public void AppendCurrentStateToPastStates()
+    {
+        // We have to clone the game state as the CurrentGameState may be mutated downstream.
+        // Without the cloning, the past game state would also be mutated as it is the same object.
+        PastGameStates.Add(CurrentGameState.Clone());
+    }
 }

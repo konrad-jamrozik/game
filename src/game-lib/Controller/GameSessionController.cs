@@ -71,7 +71,7 @@ public class GameSessionController
             _log.Info("");
 
             // This persists the game state at player turn beginning.
-            GameSession.AddCurrentStateToPastStates();
+            GameSession.AppendCurrentStateToPastStates();
 
             player.PlayGameTurn(CurrentGameStatePlayerView, TurnController);
 
@@ -82,7 +82,7 @@ public class GameSessionController
 
             // This persists the game state after the player took their actions in their turn,
             // but before the turn time was advanced.
-            GameSession.AddCurrentStateToPastStates();
+            GameSession.AppendCurrentStateToPastStates();
 
             AdvanceTime();
 
@@ -138,8 +138,9 @@ public class GameSessionController
 
     public GameState LoadCurrentGameStateFromFile()
     {
-        GameSession.AddCurrentStateToPastStates();
+        GameSession.AppendCurrentStateToPastStates();
 
+        // kja move the logic to GameState so serialized options don't have to be used here
         GameSession.CurrentGameState =
             _config.SaveFile.ReadJsonInto<GameState>(GameState.StateJsonSerializerOptions);
 
@@ -169,7 +170,7 @@ public class GameSessionController
     private void DiffPreviousAndCurrentGameState()
     {
         Debug.Assert(GameSession.PreviousGameState != null);
-        Debug.Assert(GameSession.PreviousGameState != GameSession.CurrentGameState);
+        Debug.Assert(!GameSession.PreviousGameState.Equals(GameSession.CurrentGameState));
         GameState prev = GameSession.PreviousGameState;
         GameState curr = GameSession.CurrentGameState;
         new GameStateDiff(prev, curr).PrintTo(_log);
