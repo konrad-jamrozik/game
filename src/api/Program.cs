@@ -97,7 +97,7 @@ app.MapGet(
         var aiPlayer = new AIPlayer(log, intellect);
         controller.PlayGameSession(turnLimit: turnLimitVal, aiPlayer);
 
-        return TypedResults.Json(controller.GameStatePlayerView, GameState.StateJsonSerializerOptions);
+        return TypedResults.Json(controller.NewGameStatePlayerView(), GameState.StateJsonSerializerOptions);
     });
 
 app.Run();

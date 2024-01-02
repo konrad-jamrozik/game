@@ -42,7 +42,7 @@ internal static class Program
 
     private static void InvokeLaunchMission(GameSessionController controller, int siteId, int count, string region)
     {
-        MissionSite site = controller.GameStatePlayerView.MissionSites.Single(site => site.Id == siteId);
+        MissionSite site = controller.NewGameStatePlayerView().MissionSites.Single(site => site.Id == siteId);
         controller.TurnController.LaunchMission(site, count);
         Console.WriteLine($"Launched mission with {count} agents in region {region}.");
     }

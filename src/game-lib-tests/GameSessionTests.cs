@@ -79,7 +79,7 @@ public class GameSessionTests
         turnController.HireAgents(count: 3);
         controller.AdvanceTime();
         controller.AdvanceTime();
-        MissionSite site = controller.GameStatePlayerView.MissionSites.First();
+        MissionSite site = controller.NewGameStatePlayerView().MissionSites.First();
         turnController.LaunchMission(site, agentCount: 3);
         controller.AdvanceTime();
 
@@ -119,12 +119,12 @@ public class GameSessionTests
         var session = new GameSession(_randomGen);
         var controller = new GameSessionController(_config, _log, session);
 
-        GameStatePlayerView stateView = controller.GameStatePlayerView;
+        GameStatePlayerView stateView = controller.NewGameStatePlayerView();
         int savedTurn = stateView.CurrentTurn;
         GameState initialGameState = session.CurrentGameState.Clone();
         
         // Act 1: Save game
-        controller.SaveGameState();
+        controller.SaveCurrentGameStateToFile();
 
         // Act 2: Advance time
         controller.AdvanceTime();
@@ -134,16 +134,16 @@ public class GameSessionTests
         Assert.That(initialGameState.Timeline.CurrentTurn, Is.EqualTo(savedTurn));
         
         // Assert that advancing time didn't modify reference to current game state
-        Assert.That(stateView.StateReferenceEquals(controller.GameStatePlayerView));
+        Assert.That(stateView.StateReferenceEquals(controller.NewGameStatePlayerView()));
         // Assert that advancing time has indeed modified the current game state
         Assert.That(stateView.CurrentTurn, Is.EqualTo(savedTurn + 1), "savedTurn+1");
         
         // Act 3: Load game
-        GameState loadedGameState = controller.Load();
+        GameState loadedGameState = controller.LoadCurrentGameStateFromFile();
         Assert.That(loadedGameState, Is.EqualTo(session.CurrentGameState));
 
         // Assert that after loading, the state view references a different state.
-        Assert.That(!stateView.StateReferenceEquals(controller.GameStatePlayerView));
+        Assert.That(!stateView.StateReferenceEquals(controller.NewGameStatePlayerView()));
 
         // kja this fails because loading a game sets CurrentGameState to a new state,
         // while stateView still point to the old state, which now is the last of past states.
@@ -181,7 +181,7 @@ public class GameSessionTests
         controller.AdvanceTime();
         turnController.SackAgent(id: 0);
 
-        GameStatePlayerView state = controller.GameStatePlayerView;
+        GameStatePlayerView state = controller.NewGameStatePlayerView();
         turnController.LaunchMission(
             state.MissionSites.Active.First(),
             agentCount: state.Assets.CurrentTransportCapacity);
@@ -235,7 +235,7 @@ public class GameSessionTests
         var session = new GameSession(_randomGen);
         var controller = new GameSessionController(_config, _log, session);
         var turnController = controller.TurnController;
-        GameStatePlayerView state = controller.GameStatePlayerView;
+        GameStatePlayerView state = controller.NewGameStatePlayerView();
 
         controller.AdvanceTime();
         turnController.HireAgents(10);
@@ -259,8 +259,8 @@ public class GameSessionTests
     private static void VerifyGameSatesByJsonDiff(GameSessionController controller)
     {
         // Act 1/2 and 2/2
-        var lastSavedGameState = controller.SaveGameState();
-        var currentGameState = controller.Load();
+        var lastSavedGameState = controller.SaveCurrentGameStateToFile();
+        var currentGameState = controller.LoadCurrentGameStateFromFile();
 
         // Assert: lastSavedGameState was never serialized to, or deserialized from json
         // Assert: currentGameState was serialized to, and then deserialized from json.

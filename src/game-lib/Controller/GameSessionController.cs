@@ -54,11 +54,12 @@ public class GameSessionController
         TurnController = new GameTurnController(_log, GameSession.RandomGen, GameSession.CurrentGameState);
     }
 
-    public GameStatePlayerView GameStatePlayerView => new GameStatePlayerView(GameSession.CurrentGameState);
+    public GameStatePlayerView NewGameStatePlayerView()
+        => new GameStatePlayerView(GameSession.CurrentGameState);
 
     public void PlayGameSession(int turnLimit, IPlayer player)
     {
-        Debug.Assert(GameStatePlayerView.CurrentTurn == Timeline.InitialTurn);
+        Debug.Assert(NewGameStatePlayerView().CurrentTurn == Timeline.InitialTurn);
         Debug.Assert(turnLimit is >= Timeline.InitialTurn and <= GameState.MaxTurnLimit);
 
         GameState state = GameSession.CurrentGameState;
@@ -72,7 +73,7 @@ public class GameSessionController
             // This persists the game state at player turn beginning.
             GameSession.AddCurrentStateToPastStates();
 
-            player.PlayGameTurn(GameStatePlayerView, TurnController);
+            player.PlayGameTurn(NewGameStatePlayerView(), TurnController);
 
             Debug.Assert(!state.IsGameOver);
 
@@ -109,7 +110,7 @@ public class GameSessionController
                   $"Terminated agents: {state.TerminatedAgents.Count}, " + 
                   $"Turn: {lastTurn} / {turnLimit}.");
 
-        SaveGameState();
+        SaveCurrentGameStateToFile();
 
         new GameSessionStatsReport(
                 _log,
@@ -128,14 +129,14 @@ public class GameSessionController
         => PlayerActions.Apply(new AdvanceTimePlayerAction(_log, GameSession.RandomGen), GameSession.CurrentGameState);
 
     // kja3 introduce "SerializedJsonFile" abstraction that will retain the serialization options
-    public GameState SaveGameState()
+    public GameState SaveCurrentGameStateToFile()
     {
         _config.SaveFile.WriteAllText(CurrentGameStateSerializedAsJsonString());
         _log.Info($"Saved game state to {_config.SaveFile.FullPath}");
         return GameSession.CurrentGameState;
     }
 
-    public GameState Load()
+    public GameState LoadCurrentGameStateFromFile()
     {
         GameSession.AddCurrentStateToPastStates();
 
