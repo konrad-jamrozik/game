@@ -142,7 +142,12 @@ public class GameSessionTests
         GameState loadedGameState = controller.Load();
         Assert.That(loadedGameState, Is.EqualTo(session.CurrentGameState));
 
-        Assert.That(loadedGameState, Is.Not.EqualTo(initialGameState));
+        // Assert that after loading, the state view references a different state.
+        Assert.That(!stateView.StateReferenceEquals(controller.GameStatePlayerView));
+
+        // kja this fails because loading a game sets CurrentGameState to a new state,
+        // while stateView still point to the old state, which now is the last of past states.
+        // That state has been modified by doing AdvanceTime.
         Assert.That(stateView.CurrentTurn, Is.EqualTo(savedTurn), "savedTurn");
         Assert.That(
             initialGameState,

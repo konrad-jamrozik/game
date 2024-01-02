@@ -11,7 +11,7 @@ namespace UfoGameLib.State;
 ///
 /// For details on behavior of GameStatePlayerView, see GameStateTests.
 /// </summary>
-public class GameStatePlayerView(GameState state)
+public class GameStatePlayerView(GameState state) : IEquatable<GameStatePlayerView>
 {
     private readonly GameState _state = state;
 
@@ -26,4 +26,13 @@ public class GameStatePlayerView(GameState state)
 
     public bool StateReferenceEquals(GameStatePlayerView view)
         => ReferenceEquals(view._state, _state);
+
+    public bool Equals(GameStatePlayerView? other)
+        => _state.Equals(other?._state);
+
+    public override bool Equals(object? obj)
+        => Equals(obj as GameStatePlayerView);
+
+    public override int GetHashCode()
+        => _state.GetHashCode();
 }
