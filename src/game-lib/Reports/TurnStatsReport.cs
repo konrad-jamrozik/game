@@ -57,7 +57,7 @@ public class TurnStatsReport : CsvFileReport
                         ? Math.Round(state.MissionSites.TakeLast(5).Average(site => site.Difficulty))
                         : 0;
 
-                    // kja2: add: income from all GeneratingIncome missions, plus money balance per turn (Funding + gen income - upkeep).
+                    // kja2-report-feat: add: income from all GeneratingIncome missions, plus money balance per turn (Funding + gen income - upkeep).
 
                     object[] stateData =
                     {

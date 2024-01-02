@@ -180,7 +180,7 @@ public class AdvanceTimePlayerAction : PlayerAction
         return expiredMissions;
     }
 
-    // kja2 to make simulation more interesting: create easier missions from time to time and
+    // kja2-simul-feat to make simulation more interesting: create easier missions from time to time and
     // make AI player send less experienced soldiers on it.
     private void CreateMissionSites(GameState state)
     {

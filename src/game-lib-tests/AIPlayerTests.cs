@@ -52,7 +52,7 @@ public class AIPlayerTests
         controller.PlayGameSession(turnLimit: 30, aiPlayer);
     }
 
-    // kja2 run this test in a way where no save games or logs are produced except the final log of
+    // kja2-test run this test in a way where no save games or logs are produced except the final log of
     // "game over", for every single simulation run.
     // Also no GameStates should be kept except the current one.
     [Test]

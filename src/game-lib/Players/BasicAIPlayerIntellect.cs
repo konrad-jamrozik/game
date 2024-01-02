@@ -125,7 +125,7 @@ public class BasicAIPlayerIntellect : IPlayer
         Debug.Assert(state.Assets.CurrentTransportCapacity > 0);
 
         Agents candidateAgents = state.Assets.Agents.CanBeSentOnMission
-            // kja2 this leaves only few most elite agents. Should try to give chance to mid-tier agents, 
+            // kja2-ai-feat this leaves only few most elite agents. Should try to give chance to mid-tier agents, 
             // depending on their survival chance.
             .OrderByDescending(agent => agent.SurvivalSkill)
             .ToAgents();
@@ -234,7 +234,7 @@ public class BasicAIPlayerIntellect : IPlayer
             agents.Available.Count,
             Math.Max(agentsCanBeSentOnMissionNextTurnForSure.Count - desiredAgentReserve, 0));
 
-        // kja2 need smarter approach to money management: if low of funds, assign more agents to generate income,
+        // kja2-ai-feat need smarter approach to money management: if low of funds, assign more agents to generate income,
         // possibly by recalling agents. This takes priority even above minimum reserve.
         // Also, in a pinch can sack rookie agents.
 

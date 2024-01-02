@@ -119,7 +119,6 @@ public class GameSessionController
                 _config.AgentReportCsvFile,
                 _config.MissionSiteReportCsvFile,
                 lastTurn)
-
             .Write();
 
         _log.Flush();
