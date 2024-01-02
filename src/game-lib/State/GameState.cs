@@ -5,7 +5,7 @@ using UfoGameLib.Model;
 
 namespace UfoGameLib.State;
 
-public class GameState
+public class GameState : IEquatable<GameState>
 {
     public const int MaxTurnLimit = 1000;
 
@@ -104,4 +104,13 @@ public class GameState
 
         return options;
     }
+
+    public bool Equals(GameState? other)
+        => this.Equals(other, StateJsonSerializerOptions);
+
+    public override bool Equals(object? obj)
+        => Equals(obj as GameState);
+
+    public override int GetHashCode()
+        => this.GetHashCode(StateJsonSerializerOptions);
 }

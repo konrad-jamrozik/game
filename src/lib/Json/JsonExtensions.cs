@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Text.Encodings.Web;
+﻿using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Lib.Primitives;
@@ -18,8 +16,6 @@ namespace Lib.Json;
 // See also: https://github.com/dotnet/docs/issues/24251#issue-892559426
 public static class JsonExtensions
 {
-    private const int MaxDepth = 64;
-
     private static readonly JsonSerializerOptions SerializerOptions = new()
     {
         MaxDepth = MaxDepth,
@@ -43,13 +39,15 @@ public static class JsonExtensions
         Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
     };
 
+    public static readonly JsonSerializerOptions SerializerOptionsIndentedUnsafe =
+        new(SerializerOptionsUnsafe) { WriteIndented = true };
+
+    private const int MaxDepth = 64;
+
     private static readonly JsonSerializerOptions SerializerOptionsUnsafeIgnoreNulls = new(SerializerOptionsUnsafe)
     {
         DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
     };
-
-    public static readonly JsonSerializerOptions SerializerOptionsIndentedUnsafe =
-        new(SerializerOptionsUnsafe) { WriteIndented = true };
 
     public static T FromJsonTo<T>(this string json) 
         => JsonSerializer.Deserialize<T>(json, SerializerOptions)!;
@@ -80,6 +78,19 @@ public static class JsonExtensions
     {
         byte[] bytes = JsonSerializer.SerializeToUtf8Bytes(data, options);
         return JsonSerializer.Deserialize<T>(bytes, options)!;
+    }
+
+    public static bool Equals<T>(this T left, T right, JsonSerializerOptions? options = null)
+    {
+        byte[] leftBytes = JsonSerializer.SerializeToUtf8Bytes(left, options);
+        byte[] rightBytes = JsonSerializer.SerializeToUtf8Bytes(right, options);
+        return leftBytes.SequenceEqual(rightBytes);
+    }
+
+    public static int GetHashCode<T>(this T data, JsonSerializerOptions? options = null)
+    {
+        byte[] bytes = JsonSerializer.SerializeToUtf8Bytes(data, options);
+        return GetHashCode(bytes);
     }
 
     /// <remarks>
@@ -139,5 +150,20 @@ public static class JsonExtensions
         });
         var mergedTarget = FromJsonToUnsafe<JsonElement>(targetObject.ToString());
         return mergedTarget;
+    }
+
+    // Adapted from
+    // https://chat.openai.com/share/3383028d-44d1-45c0-b04d-2852b5466832
+    private static int GetHashCode(byte[] data)
+    {
+        if (data == null) 
+            throw new ArgumentNullException(nameof(data));
+
+        int primeNumber = 31;
+
+        unchecked // Overflow is fine, just wrap
+        {
+            return data.Aggregate(17, (current, @byte) => current * primeNumber + @byte);
+        }
     }
 }

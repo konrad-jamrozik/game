@@ -68,8 +68,6 @@ public class GameStateTests
             clonedState.Timeline.CurrentTurn += 1;
 
             /*
-               // kja this will fail because since I updated to NUnit 4.0.0, the objects are considered equal,
-               // kja should this be IsSameAs?
                This assertion is necessary, in addition to:
                
                  Assert.That(clonedState, Is.EqualTo(initialState));
