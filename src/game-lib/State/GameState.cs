@@ -2,6 +2,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using Lib.Json;
 using UfoGameLib.Model;
+using File = Lib.OS.File;
 
 namespace UfoGameLib.State;
 
@@ -49,6 +50,12 @@ public class GameState : IEquatable<GameState>
             new Missions(),
             terminatedAgents: new Agents(terminated: true));
 
+    public static GameState FromJsonFile(File file)
+        => file.ReadJsonInto<GameState>(StateJsonSerializerOptions);
+
+    public void ToJsonFile(File file)
+        => file.WriteAllText(ToJsonString());
+
     public bool IsGameOver => IsGameLost
                               || IsGameWon
                               // This condition is here to protect against infinite loops.
@@ -79,6 +86,18 @@ public class GameState : IEquatable<GameState>
         return this.Clone(StateJsonSerializerOptions);
     }
 
+    public string ToJsonString()
+        => this.ToIndentedUnsafeJsonString(StateJsonSerializerOptions);
+
+    public bool Equals(GameState? other)
+        => this.Equals(other, StateJsonSerializerOptions);
+
+    public override bool Equals(object? obj)
+        => Equals(obj as GameState);
+
+    public override int GetHashCode()
+        => this.GetHashCode(StateJsonSerializerOptions);
+
     private static JsonSerializerOptions GetJsonSerializerOptions()
     {
         // The difference between the returned options and converterOptions
@@ -104,16 +123,4 @@ public class GameState : IEquatable<GameState>
 
         return options;
     }
-
-    public string ToJsonString()
-        => this.ToIndentedUnsafeJsonString(StateJsonSerializerOptions);
-
-    public bool Equals(GameState? other)
-        => this.Equals(other, StateJsonSerializerOptions);
-
-    public override bool Equals(object? obj)
-        => Equals(obj as GameState);
-
-    public override int GetHashCode()
-        => this.GetHashCode(StateJsonSerializerOptions);
 }
