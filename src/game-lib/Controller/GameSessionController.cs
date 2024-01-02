@@ -165,7 +165,9 @@ public class GameSessionController
     private void DiffPreviousAndCurrentGameState()
     {
         Debug.Assert(GameSession.PreviousGameState != null);
-        Debug.Assert(!GameSession.PreviousGameState.Equals(GameSession.CurrentGameState));
+        // Note we do here !ReferenceEquals, not !Equals, because if the player did absolutely nothing
+        // (see e.g. DoNothingAIPlayer), then these states will be the same.
+        Debug.Assert(!ReferenceEquals(GameSession.PreviousGameState, GameSession.CurrentGameState));
         GameState prev = GameSession.PreviousGameState;
         GameState curr = GameSession.CurrentGameState;
         new GameStateDiff(prev, curr).PrintTo(_log);
