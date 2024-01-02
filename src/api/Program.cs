@@ -70,7 +70,7 @@ app.MapGet(
         () =>
         {
             var gameSession = new GameSession(new RandomGen(new Random()));
-            return TypedResults.Json(new GameStatePlayerView(gameSession.CurrentGameState), GameState.StateJsonSerializerOptions);
+            return TypedResults.Json(new GameStatePlayerView(() => gameSession.CurrentGameState), GameState.StateJsonSerializerOptions);
         })
     .WithName("InitialGameStatePlayerView")
     .WithOpenApi()
