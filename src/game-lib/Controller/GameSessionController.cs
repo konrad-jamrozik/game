@@ -141,7 +141,7 @@ public class GameSessionController
         GameSession.AddCurrentStateToPastStates();
 
         GameSession.CurrentGameState =
-            _config.SaveFile.FromJsonTo<GameState>(GameState.StateJsonSerializerOptions);
+            _config.SaveFile.ReadJsonInto<GameState>(GameState.StateJsonSerializerOptions);
 
         _log.Info($"Loaded game state from {_config.SaveFile.FullPath}");
         return GameSession.CurrentGameState;

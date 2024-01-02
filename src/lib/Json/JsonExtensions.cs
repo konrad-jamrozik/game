@@ -52,8 +52,8 @@ public static class JsonExtensions
     public static T FromJsonTo<T>(this string json) 
         => JsonSerializer.Deserialize<T>(json, SerializerOptions)!;
 
-    public static T FromJsonTo<T>(this File file, JsonSerializerOptions? options = null)
-        => file.FileSystem.FromJsonTo<T>(file, options);
+    public static T ReadJsonInto<T>(this File file, JsonSerializerOptions? options = null)
+        => file.FileSystem.ReadJsonInto<T>(file, options);
 
     public static T FromJsonTo<T>(this byte[] bytes, JsonSerializerOptions? options = null) 
         => JsonSerializer.Deserialize<T>(bytes, options ?? SerializerOptions)!;

@@ -65,16 +65,16 @@ public class FileSystem : IFileSystem
 
     public JsonElement ReadAllJson(string path) => ReadAllBytes(path).FromJsonTo<JsonElement>();
 
-    public T FromJsonTo<T>(string path)
+    public T ReadJsonInto<T>(string path)
     {
         throw new System.NotImplementedException();
     }
 
-    public T FromJsonTo<T>(string path, JsonSerializerOptions? options) 
+    public T ReadJsonInto<T>(string path, JsonSerializerOptions? options) 
         => ReadAllBytes(path).FromJsonTo<T>(options);
 
-    public T FromJsonTo<T>(File file, JsonSerializerOptions? options)
-        => FromJsonTo<T>(file.FullPath, options);
+    public T ReadJsonInto<T>(File file, JsonSerializerOptions? options)
+        => ReadJsonInto<T>(file.FullPath, options);
 
     public FileTree FileTree(string path) => new FileTree(this, path);
 

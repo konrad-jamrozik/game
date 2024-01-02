@@ -93,13 +93,13 @@ public class SimulatedFileSystem : IFileSystem
 
     public JsonElement ReadAllJson(string path) => ReadAllBytes(path).FromJsonTo<JsonElement>();
 
-    public T FromJsonTo<T>(string path) => ReadAllBytes(path).FromJsonTo<T>();
+    public T ReadJsonInto<T>(string path) => ReadAllBytes(path).FromJsonTo<T>();
 
-    public T FromJsonTo<T>(string path, JsonSerializerOptions? options)
+    public T ReadJsonInto<T>(string path, JsonSerializerOptions? options)
         => throw new NotImplementedException();
 
-    public T FromJsonTo<T>(File file, JsonSerializerOptions? options)
-        => FromJsonTo<T>(file.FullPath, options);
+    public T ReadJsonInto<T>(File file, JsonSerializerOptions? options)
+        => ReadJsonInto<T>(file.FullPath, options);
 
     public byte[] ReadAllBytes(string path) => Encoding.UTF8.GetBytes(ReadAllText(path));
 
