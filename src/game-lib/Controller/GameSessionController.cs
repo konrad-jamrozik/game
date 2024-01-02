@@ -128,7 +128,7 @@ public class GameSessionController
     public void AdvanceTime()
         => PlayerActions.Apply(new AdvanceTimePlayerAction(_log, GameSession.RandomGen), GameSession.CurrentGameState);
 
-    // kja3 introduce "SerializedJsonFile" abstraction that will retain the serialization options
+    // kja introduce "SerializedJsonFile" abstraction that will retain the serialization options
     public GameState SaveCurrentGameStateToFile()
     {
         _config.SaveFile.WriteAllText(CurrentGameStateSerializedAsJsonString());
@@ -175,6 +175,7 @@ public class GameSessionController
         new GameStateDiff(prev, curr).PrintTo(_log);
     }
 
+    // kja review and consolidate CurrentGameStateSerializedAsJsonString
     private string CurrentGameStateSerializedAsJsonString()
         => GameSession.CurrentGameState.ToIndentedUnsafeJsonString(GameState.StateJsonSerializerOptions);
 }

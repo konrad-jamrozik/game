@@ -21,9 +21,10 @@ public class GameSessionTests
     }
 
     // kja3 overall work plan:
-    // implement first AIPlayer
     //
-    // reimplement a bit more logic
+    // implement charts in frontend instead of excel. chartjs.org etc.
+    //
+    // reimplement a bit more logic in the AIPlayer
     //   start by adding new capabilities to AIPlayer (as if it tried to do a new thing) and implement going from there.
     //
     // implement IPersistable
@@ -38,12 +39,6 @@ public class GameSessionTests
     // generate CLI interface based on available PlayerActions and contents of GameState
     //
     // generate API Controller methods for REST API generation
-    //
-    // deploy the game server with REST API locally
-    //
-    // deploy the game server with REST API to Azure
-    //
-    // generate swagger UI from the controller methods
     //
     // when available, interface with the swagger UI via LLM, or with CLI by using GH CLI Copilot
     //
@@ -248,6 +243,7 @@ public class GameSessionTests
     }
 
 
+    // kja review and consolidate VerifyGameSatesByJsonDiff
     private static void VerifyGameSatesByJsonDiff(GameSessionController controller)
     {
         // Act 1/2 and 2/2

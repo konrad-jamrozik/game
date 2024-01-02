@@ -50,10 +50,6 @@ public class GameStateTests
 
         Assert.Multiple(() =>
         {
-            // kja implement IEquatable so this Is.EqualTo works as expected.
-            // See VerifyGameStatesByJsonDiff
-            // See usage of clone in AddCurrentStateToPastStates
-            // See CurrentGameStateSerializedAsJsonString
             // Act: exercise game state equality
             Assert.That(clonedState, Is.EqualTo(originalGameState));
             
