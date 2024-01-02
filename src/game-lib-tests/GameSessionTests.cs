@@ -242,8 +242,6 @@ public class GameSessionTests
         VerifyGameSatesByJsonDiff(controller);
     }
 
-
-    // kja review and consolidate VerifyGameSatesByJsonDiff
     private static void VerifyGameSatesByJsonDiff(GameSessionController controller)
     {
         // Act 1/2 and 2/2
@@ -257,10 +255,8 @@ public class GameSessionTests
         // find any bugs where serialization or deserialization incorrectly handled a field.
 
         new JsonDiffAssertion(
-                lastSavedGameState,
-                currentGameState,
-                GameState.StateJsonSerializerOptions)
-            .Assert();
+            lastSavedGameState.JsonDiffWith(currentGameState)
+        ).Assert();
     }
 
     [TearDown]

@@ -98,6 +98,9 @@ public class GameState : IEquatable<GameState>
     public override int GetHashCode()
         => this.GetHashCode(StateJsonSerializerOptions);
 
+    public JsonDiff JsonDiffWith(GameState other)
+        => new JsonDiff(this, other, StateJsonSerializerOptions);
+
     private static JsonSerializerOptions GetJsonSerializerOptions()
     {
         // The difference between the returned options and converterOptions

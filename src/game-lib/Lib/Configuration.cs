@@ -37,6 +37,5 @@ public class Configuration
         TurnReportCsvFile = new File(saveFileDir, "turns_report.csv");
         AgentReportCsvFile = new File(saveFileDir, "agents_report.csv");
         MissionSiteReportCsvFile = new File(saveFileDir, "mission_sites_report.csv");
-        // kja should have method here that returns handle to Lib.OS.File represented by SaveFileName
     }
 }
