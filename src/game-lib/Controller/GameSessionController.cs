@@ -54,8 +54,9 @@ public class GameSessionController
         TurnController = new GameTurnController(_log, GameSession.RandomGen, GameSession.CurrentGameState);
     }
 
+    // kja NewCurrentGameStatePlayerView
     public GameStatePlayerView NewGameStatePlayerView()
-        => new GameStatePlayerView(GameSession.CurrentGameState);
+        => new GameStatePlayerView(() => GameSession.CurrentGameState);
 
     public void PlayGameSession(int turnLimit, IPlayer player)
     {

@@ -123,36 +123,28 @@ public class GameSessionTests
         int savedTurn = stateView.CurrentTurn;
         GameState initialGameState = session.CurrentGameState.Clone();
         
-        // Act 1: Save game
+        // Act 1: Save game, thus saving initialGameState to file
         controller.SaveCurrentGameStateToFile();
 
-        // Act 2: Advance time
+        // Act 2: Advance time, thus modifying the current game state
         controller.AdvanceTime();
 
-        // kja move this into clone-specific test
-        // Assume that initialGameState has not been modified by advancing time.
-        Assert.That(initialGameState.Timeline.CurrentTurn, Is.EqualTo(savedTurn));
-        
-        // Assert that advancing time didn't modify reference to current game state
+        // Assert that advancing time didn't modify reference to the current game state
         Assert.That(stateView.StateReferenceEquals(controller.NewGameStatePlayerView()));
         // Assert that advancing time has indeed modified the current game state
         Assert.That(stateView.CurrentTurn, Is.EqualTo(savedTurn + 1), "savedTurn+1");
         
-        // Act 3: Load game
+        // Act 3: Load game, thus restoring the current game state to initialGameState
         GameState loadedGameState = controller.LoadCurrentGameStateFromFile();
+
+        // Assert that after loading, the state view continues to reference current state.
+        Assert.That(stateView.StateReferenceEquals(controller.NewGameStatePlayerView()));
+
         Assert.That(loadedGameState, Is.EqualTo(session.CurrentGameState));
-
-        // Assert that after loading, the state view references a different state.
-        Assert.That(!stateView.StateReferenceEquals(controller.NewGameStatePlayerView()));
-
-        // kja this fails because loading a game sets CurrentGameState to a new state,
-        // while stateView still point to the old state, which now is the last of past states.
-        // That state has been modified by doing AdvanceTime.
+        Assert.That(loadedGameState, Is.EqualTo(initialGameState));
+        
         Assert.That(stateView.CurrentTurn, Is.EqualTo(savedTurn), "savedTurn");
-        Assert.That(
-            initialGameState,
-            Is.Not.EqualTo(loadedGameState),
-            "starting state should not be equal to final state");
+
     }
 
     /// <summary>

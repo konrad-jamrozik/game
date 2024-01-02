@@ -40,13 +40,13 @@ public class GameStateTests
     public void CloningAndViewAndEqualityBehaveCorrectly()
     {
         var originalGameState = GameState.NewInitialGameState();
-        var originalGameStateView = new GameStatePlayerView(originalGameState);
-        var originalGameStateView2 = new GameStatePlayerView(originalGameState);
+        var originalGameStateView = new GameStatePlayerView(() => originalGameState);
+        var originalGameStateView2 = new GameStatePlayerView(() => originalGameState);
 
         // Act: clone the game state
         var clonedState = originalGameState.Clone();
 
-        var clonedStateView = new GameStatePlayerView(clonedState);
+        var clonedStateView = new GameStatePlayerView(() => clonedState);
 
         Assert.Multiple(() =>
         {

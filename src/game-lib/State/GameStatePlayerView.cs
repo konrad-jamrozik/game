@@ -9,30 +9,32 @@ namespace UfoGameLib.State;
 /// It restricts access to the GameState to only the parts that the player,
 /// implementing IPlayer interface, is allowed to see.
 ///
+/// The GameStatePlayerView accepts as input Func(GameState) instead of just
+/// GameState to make it possible to create GameStatePlayerView that references
+/// *current* game state of given GameSession, no matter the changes to the
+/// game session current game state references.
+/// 
 /// For details on behavior of GameStatePlayerView, see GameStateTests.
 /// </summary>
-public class GameStatePlayerView(GameState state) : IEquatable<GameStatePlayerView>
+public class GameStatePlayerView(Func<GameState> state) : IEquatable<GameStatePlayerView>
 {
-    private readonly GameState _state = state;
+    private readonly Func<GameState> _state = state;
 
-    public int CurrentTurn => _state.Timeline.CurrentTurn;
-    public Missions Missions => _state.Missions;
-    public MissionSites MissionSites => _state.MissionSites;
-    public Assets Assets => _state.Assets;
-    public Agents TerminatedAgents => _state.TerminatedAgents;
-
-    public bool StateReferenceEquals(GameState state)
-        => ReferenceEquals(state, _state);
+    public int CurrentTurn => _state().Timeline.CurrentTurn;
+    public Missions Missions => _state().Missions;
+    public MissionSites MissionSites => _state().MissionSites;
+    public Assets Assets => _state().Assets;
+    public Agents TerminatedAgents => _state().TerminatedAgents;
 
     public bool StateReferenceEquals(GameStatePlayerView view)
-        => ReferenceEquals(view._state, _state);
+        => ReferenceEquals(view._state(), _state());
 
     public bool Equals(GameStatePlayerView? other)
-        => _state.Equals(other?._state);
+        => _state().Equals(other?._state());
 
     public override bool Equals(object? obj)
         => Equals(obj as GameStatePlayerView);
 
     public override int GetHashCode()
-        => _state.GetHashCode();
+        => _state().GetHashCode();
 }
