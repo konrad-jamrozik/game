@@ -11,27 +11,27 @@ public class GameStateTests
 
     /// <summary>
     /// This test proves that:
-    /// - cloning of a game state works as expected
-    /// - equality of game states works as expected
-    /// - equality of player views works as expected
-    /// - equality of states referenced by player views works as expected
+    /// - Cloning of a game state works as expected.
+    /// - Equality of game states works as expected.
+    /// - Equality of player views of game states works as expected.
+    /// - Equality of game states referenced by player views works as expected.
     ///
     /// Specifically:
     /// 
     /// Given:
-    /// - An original game state, which is an arbitrary game state (here: initial game state))
-    /// - A player view of it, and a second player view of it
-    /// - A clone of that game state
-    /// - A player view of the clone of that game state
-    /// - A modified clone of that game state
+    /// - An original game state, which is an arbitrary game state (here: initial game state)).
+    /// - A player view of it, and a second player view of it.
+    /// - A clone of that game state.
+    /// - A player view of the clone of that game state.
+    /// - A modified clone of that game state.
     ///
     /// The following holds:
-    /// - Game state player views retain references to game states they were created with
-    /// - A clone of game state is equal to the original (source of the cloned) game state
+    /// - Game state player views retain references to game states they were created with.
+    /// - A clone of game state is equal to the original (source of the cloned) game state.
     /// - A game state player view referencing a cloned game state is
     ///   equal to a player view of the original game state, because both these
     ///   views reference game states that are equal.
-    /// - A modified clone of a game state is not equal to the original game state
+    /// - A modified clone of a game state is not equal to the original game state.
     /// - A game state player view referencing a modified clone of a game state
     ///   is not equal to a player view of the original game state, because these
     ///   views reference game states that are not equal.
@@ -42,8 +42,10 @@ public class GameStateTests
         var originalGameState = GameState.NewInitialGameState();
         var originalGameStateView = new GameStatePlayerView(originalGameState);
         var originalGameStateView2 = new GameStatePlayerView(originalGameState);
-        // Act: clone game state
+
+        // Act: clone the game state
         var clonedState = originalGameState.Clone();
+
         var clonedStateView = new GameStatePlayerView(clonedState);
 
         Assert.Multiple(() =>
