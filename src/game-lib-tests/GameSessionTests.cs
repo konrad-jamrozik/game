@@ -79,7 +79,7 @@ public class GameSessionTests
         turnController.HireAgents(count: 3);
         controller.AdvanceTime();
         controller.AdvanceTime();
-        MissionSite site = controller.NewGameStatePlayerView().MissionSites.First();
+        MissionSite site = controller.CurrentGameStatePlayerView.MissionSites.First();
         turnController.LaunchMission(site, agentCount: 3);
         controller.AdvanceTime();
 
@@ -119,7 +119,7 @@ public class GameSessionTests
         var session = new GameSession(_randomGen);
         var controller = new GameSessionController(_config, _log, session);
 
-        GameStatePlayerView stateView = controller.NewGameStatePlayerView();
+        GameStatePlayerView stateView = controller.CurrentGameStatePlayerView;
         int savedTurn = stateView.CurrentTurn;
         GameState initialGameState = session.CurrentGameState.Clone();
         
@@ -130,7 +130,7 @@ public class GameSessionTests
         controller.AdvanceTime();
 
         // Assert that advancing time didn't modify reference to the current game state
-        Assert.That(stateView.StateReferenceEquals(controller.NewGameStatePlayerView()));
+        Assert.That(stateView.StateReferenceEquals(controller.CurrentGameStatePlayerView));
         // Assert that advancing time has indeed modified the current game state
         Assert.That(stateView.CurrentTurn, Is.EqualTo(savedTurn + 1), "savedTurn+1");
         
@@ -138,7 +138,7 @@ public class GameSessionTests
         GameState loadedGameState = controller.LoadCurrentGameStateFromFile();
 
         // Assert that after loading, the state view continues to reference current state.
-        Assert.That(stateView.StateReferenceEquals(controller.NewGameStatePlayerView()));
+        Assert.That(stateView.StateReferenceEquals(controller.CurrentGameStatePlayerView));
 
         Assert.That(loadedGameState, Is.EqualTo(session.CurrentGameState));
         Assert.That(loadedGameState, Is.EqualTo(initialGameState));
@@ -173,7 +173,7 @@ public class GameSessionTests
         controller.AdvanceTime();
         turnController.SackAgent(id: 0);
 
-        GameStatePlayerView state = controller.NewGameStatePlayerView();
+        GameStatePlayerView state = controller.CurrentGameStatePlayerView;
         turnController.LaunchMission(
             state.MissionSites.Active.First(),
             agentCount: state.Assets.CurrentTransportCapacity);
@@ -227,7 +227,7 @@ public class GameSessionTests
         var session = new GameSession(_randomGen);
         var controller = new GameSessionController(_config, _log, session);
         var turnController = controller.TurnController;
-        GameStatePlayerView state = controller.NewGameStatePlayerView();
+        GameStatePlayerView state = controller.CurrentGameStatePlayerView;
 
         controller.AdvanceTime();
         turnController.HireAgents(10);

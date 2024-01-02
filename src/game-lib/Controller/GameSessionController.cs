@@ -54,13 +54,12 @@ public class GameSessionController
         TurnController = new GameTurnController(_log, GameSession.RandomGen, GameSession.CurrentGameState);
     }
 
-    // kja NewCurrentGameStatePlayerView
-    public GameStatePlayerView NewGameStatePlayerView()
+    public GameStatePlayerView CurrentGameStatePlayerView 
         => new GameStatePlayerView(() => GameSession.CurrentGameState);
 
     public void PlayGameSession(int turnLimit, IPlayer player)
     {
-        Debug.Assert(NewGameStatePlayerView().CurrentTurn == Timeline.InitialTurn);
+        Debug.Assert(CurrentGameStatePlayerView.CurrentTurn == Timeline.InitialTurn);
         Debug.Assert(turnLimit is >= Timeline.InitialTurn and <= GameState.MaxTurnLimit);
 
         GameState state = GameSession.CurrentGameState;
@@ -74,7 +73,7 @@ public class GameSessionController
             // This persists the game state at player turn beginning.
             GameSession.AddCurrentStateToPastStates();
 
-            player.PlayGameTurn(NewGameStatePlayerView(), TurnController);
+            player.PlayGameTurn(CurrentGameStatePlayerView, TurnController);
 
             Debug.Assert(!state.IsGameOver);
 
