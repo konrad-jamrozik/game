@@ -105,6 +105,9 @@ public class GameState : IEquatable<GameState>
         return options;
     }
 
+    public string ToJsonString()
+        => this.ToIndentedUnsafeJsonString(StateJsonSerializerOptions);
+
     public bool Equals(GameState? other)
         => this.Equals(other, StateJsonSerializerOptions);
 

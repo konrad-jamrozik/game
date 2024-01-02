@@ -131,7 +131,7 @@ public class GameSessionController
     // kja introduce "SerializedJsonFile" abstraction that will retain the serialization options
     public GameState SaveCurrentGameStateToFile()
     {
-        _config.SaveFile.WriteAllText(CurrentGameStateSerializedAsJsonString());
+        _config.SaveFile.WriteAllText(GameSession.CurrentGameState.ToJsonString());
         _log.Info($"Saved game state to {_config.SaveFile.FullPath}");
         return GameSession.CurrentGameState;
     }
@@ -174,8 +174,4 @@ public class GameSessionController
         GameState curr = GameSession.CurrentGameState;
         new GameStateDiff(prev, curr).PrintTo(_log);
     }
-
-    // kja review and consolidate CurrentGameStateSerializedAsJsonString
-    private string CurrentGameStateSerializedAsJsonString()
-        => GameSession.CurrentGameState.ToIndentedUnsafeJsonString(GameState.StateJsonSerializerOptions);
 }
