@@ -13,7 +13,7 @@
 # For details, see:
 # - docs/web_frontend_setup.md
 # - https://aka.ms/swaworkflowconfig
-name: SolidJS Azure Static Web App CI/CD
+name: Web frontend - Azure Static Web App CI/CD
 
 env:
   APP_LOCATION: "web" # location of the client code

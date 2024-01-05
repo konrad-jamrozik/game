@@ -12,7 +12,7 @@
 #
 # For details, see:
 # - docs/api_backend_setup.md
-name: API Azure Web App CI/CD
+name: API backend - Azure Web App CI/CD
 
 on:
   push:
