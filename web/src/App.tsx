@@ -1,48 +1,35 @@
-// import solidLogo from './assets/solid.svg'
-// import viteLogo from '/vite.svg'
+import { useState } from 'react'
+import reactLogo from './assets/react.svg'
+import viteLogo from '/vite.svg'
 import './App.css'
-import RunSimulationComponent from './RunSimulationComponent';
-import { onMount } from "solid-js";
-import { Input, initTE } from "tw-elements";
-import { createSignal } from "solid-js";
-import { createStore } from "solid-js/store";
-import NumberInputComponent from './NumberInputComponent';
-import DataTableComponent from './DataTableComponent';
-import { Agent } from './types';
 
 function App() {
+  const [count, setCount] = useState(0)
 
-  onMount(() => {
-    initTE({ Input });
-  });  
-
-  // This probably can be refactored to use:
-  // Resources: 
-  // - https://www.solidjs.com/tutorial/async_resources
-  // - https://docs.solidjs.com/guides/foundations/solid-primitives#createresource
-  // Context: 
-  // - https://www.solidjs.com/tutorial/stores_context
-  // - https://docs.solidjs.com/references/api-reference/component-apis/createContext
-  const [message, setMessage] = createSignal("");
-  const [input, setInput] = createSignal(30);
-  const [simulationRunDone, setSimulationRunDone] = createSignal(false);
-  const [agents, setAgents] = createStore<Agent[]>([])
   return (
     <>
-      <NumberInputComponent {...{input, setInput, label:"Turns"}}/>
-      <RunSimulationComponent {...{input, message, setMessage, setSimulationRunDone, agents, setAgents}} />
-      <DataTableComponent simulationRunDone={simulationRunDone} agents={agents} />
+      <div>
+        <a href="https://vitejs.dev" target="_blank">
+          <img src={viteLogo} className="logo" alt="Vite logo" />
+        </a>
+        <a href="https://react.dev" target="_blank">
+          <img src={reactLogo} className="logo react" alt="React logo" />
+        </a>
+      </div>
+      <h1>Vite + React</h1>
+      <div className="card">
+        <button onClick={() => setCount((count) => count + 1)}>
+          count is {count}
+        </button>
+        <p>
+          Edit <code>src/App.tsx</code> and save to test HMR
+        </p>
+      </div>
+      <p className="read-the-docs">
+        Click on the Vite and React logos to learn more
+      </p>
     </>
   )
 }
 
 export default App
-
-{/* <div>
-<a href="https://vitejs.dev" target="_blank">
-  <img src={viteLogo} class="logo" alt="Vite logo" />
-</a>
-<a href="https://solidjs.com" target="_blank">
-  <img src={solidLogo} class="logo solid" alt="Solid logo" />
-</a>
-</div> */}

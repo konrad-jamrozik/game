@@ -1,28 +1,30 @@
-# About the web app frontend
+# React + TypeScript + Vite
 
-This directory contains the SolidJS web app frontend sources.
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-This app provides web UI frontend to the game engine.
+Currently, two official plugins are available:
 
-To access the game engine the frontend calls the API backend whose code is located in [`../src`].
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
 
-If you want to learn how this project was initially set up, consult [`../docs/web_frontend_setup.md`].
+## Expanding the ESLint configuration
 
-## Develop
+If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
 
-This project is to be developed using VS Code. The workspace file is [`../game.code_workspace`].
+- Configure the top-level `parserOptions` property like this:
 
-> [!NOTE]
-> The VS Code workspace file also encompassed the sources of the backend to enable you to do global edits and view
-> both frontend and backend together. However, to edit backend code, consult [`../src/README.md`].
+```js
+export default {
+  // other rules...
+  parserOptions: {
+    ecmaVersion: 'latest',
+    sourceType: 'module',
+    project: ['./tsconfig.json', './tsconfig.node.json'],
+    tsconfigRootDir: __dirname,
+  },
+}
+```
 
-## Build & Deploy
-
-To build & deploy, whether for local dev with HMR (Hot Module Reload) or to Azure,
-consult [`../docs/deployment.md`].
-
-[`../docs/deployment.md`]: ../docs/deployment.md
-[`../docs/web_frontend_setup.md`]: ../docs/web_frontend_setup.md
-[`../game.code_workspace`]: ../game.code_workspace
-[`../src/README.md`]: ../src/README.md
-[`../src`]: ../src
+- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
+- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
+- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
