@@ -1,6 +1,10 @@
+// Helpful links:
+// https://typescript-eslint.io/
+// https://typescript-eslint.io/linting/configs/
+// https://duncanleung.com/how-to-setup-eslint-eslintrc-config-difference-eslint-config-plugin/
 module.exports = {
   root: true,
-  env: { browser: true, es2020: true },
+  env: { browser: true, es2022: true },
   extends: [
     'eslint:recommended',
     'plugin:@typescript-eslint/recommended',
