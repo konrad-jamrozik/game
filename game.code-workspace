@@ -1,30 +1,39 @@
 {
-	"folders": [
-		{
-			"path": "."
-		}
-	],
-	"settings": {
-		"files.associations": {
-			"*.css": "tailwindcss"
-		  },
-		  "editor.quickSuggestions": {
-			"strings": true
-		},
-		"cSpell.words": [
-			"AZUREAPPSERVICE",
-			"blockquote",
-			"blockquotes",
-			"CICD",
-			"Datatable",
-			"Jamrozik",
-			"kojamroz",
-			"playthrough",
-			"PUBLISHPROFILE",
-			"Quickstart",
-			"Solarius",
-			"staticwebapp",
-			"tailwindcss"
-		]
-	}
+  "folders": [
+    {
+      "path": "."
+    }
+  ],
+  "settings": {
+    "files.associations": {
+      "*.css": "tailwindcss"
+    },
+    "editor.quickSuggestions": {
+      "strings": true
+    },
+    "cSpell.words": [
+      "AZUREAPPSERVICE",
+      "blockquote",
+      "blockquotes",
+      "CICD",
+      "Datatable",
+      "Jamrozik",
+      "kojamroz",
+      "playthrough",
+      "PUBLISHPROFILE",
+      "Quickstart",
+      "Solarius",
+      "staticwebapp",
+      "tailwindcss"
+    ],
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "[javascript]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "editor.formatOnPaste": false,
+    "editor.formatOnType": false,
+    "editor.formatOnSave": true,
+    "editor.formatOnSaveMode": "file", // required to format on save
+    "files.autoSave": "off"
+  }
 }

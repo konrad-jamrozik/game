@@ -52,9 +52,10 @@ module.exports = {
     react: {
       version: 'detect', // [SO react ver][react legacy config]
     },
-    jest: { // [jest version]
+    jest: {
+      // [jest version]
       version: require('jest/package.json').version,
-    },    
+    },
   },
 }
 // Helpful links:
