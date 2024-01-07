@@ -1,3 +1,5 @@
+// Note: eslint is not running prettier on purpose. Prettier is ran separately.
+// https://typescript-eslint.io/linting/troubleshooting/performance-troubleshooting/#eslint-plugin-prettier
 module.exports = {
   root: true, // [vite template][ts-eslint]
   env: {
@@ -11,14 +13,13 @@ module.exports = {
     // [vite template]
     'eslint:recommended', // [vite template][ts-eslint]
     'plugin:@typescript-eslint/strict-type-checked', // [vite template][vite template README][ts-eslint][ts-eslint typechecking][ts-eslint recommended]
-    `plugin:@typescript-eslint/stylistic-type-checked`, // [vite template][vite template README][ts-eslint][ts-eslint typechecking][ts-eslint recommended]
+    'plugin:@typescript-eslint/stylistic-type-checked', // [vite template][vite template README][ts-eslint][ts-eslint typechecking][ts-eslint recommended]
     'plugin:react/recommended', // [plugin: react]
     'plugin:react/jsx-runtime', // [react new jsx]
     'plugin:react-hooks/recommended', // [vite template][plugin: react-hooks]
     'plugin:jest/recommended',
     'plugin:import/recommended',
     'plugin:import/typescript',
-    'plugin:prettier/recommended', // [prettier install]
   ],
   ignorePatterns: [
     'dist', // [vite template]
@@ -65,6 +66,7 @@ module.exports = {
 // https://typescript-eslint.io/
 // https://typescript-eslint.io/linting/configs/
 // https://www.npmjs.com/search?q=eslint-plugin&ranking=optimal
+// Awesome: https://github.com/dustinspecker/awesome-eslint#plugins
 //
 // Prettier:
 // https://www.npmjs.com/package/eslint-plugin-prettier
