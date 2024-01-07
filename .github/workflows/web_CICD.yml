@@ -18,14 +18,14 @@ name: Web frontend - Azure Static Web App CI/CD
 env:
   APP_LOCATION: "web" # location of the client code
   # location of client code build output. Recommended by https://vitejs.dev/guide/static-deploy.html#azure-static-web-apps
-  OUTPUT_LOCATION: "dist" 
+  OUTPUT_LOCATION: "dist"
 
 on:
   push:
     branches:
       - main
     paths:
-      - 'web/**'
+      - "web/**"
   pull_request:
     types: [opened, synchronize, reopened, closed]
     branches:
@@ -56,6 +56,20 @@ jobs:
           output_location: ${{ env.OUTPUT_LOCATION }}
           # No Azure functions. See https://aka.ms/swaworkflowconfig
           skip_api_build: true
+
+  lint:
+    if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed') || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    name: Lint
+    defaults:
+      run:
+        working-directory: ./web
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run prettier-check-ci
 
   close_pull_request:
     if: github.event_name == 'pull_request' && github.event.action == 'closed'
