@@ -29,8 +29,9 @@ module.exports = {
   plugins: [
     '@typescript-eslint', // [ts-eslint]
     'import',
-    'sonarjs',
     'react-refresh', // [vite template][plugin: react-refresh]
+    'sonarjs',
+    'github',
   ],
   // [eslint rules]
   rules: {
@@ -92,6 +93,27 @@ module.exports = {
       'warn', // [vite template][plugin: react-refresh]
       { allowConstantExport: true }, // [vite template][plugin: react-refresh]
     ],
+    // Rules copy-pasted from:
+    // https://github.com/github/eslint-plugin-github/blob/73c236f83045314104556b2be515865f4b6c38d3/lib/index.js#L9C1-L26C73
+    // Because [eslint-plugin-github] is not nice enough to provide relevant config.
+    'github/array-foreach': 'error',
+    'github/async-currenttarget': 'error',
+    'github/async-preventdefault': 'error',
+    'github/authenticity-token': 'error',
+    'github/get-attribute': 'error',
+    'github/js-class-name': 'error',
+    'github/no-blur': 'error',
+    'github/no-d-none': 'error',
+    'github/no-dataset': 'error',
+    'github/no-implicit-buggy-globals': 'error',
+    'github/no-inner-html': 'error',
+    'github/no-innerText': 'error',
+    'github/no-dynamic-script-tag': 'error',
+    'github/no-then': 'error',
+    'github/no-useless-passive': 'error',
+    'github/prefer-observers': 'error',
+    'github/require-passive-events': 'error',
+    'github/unescaped-html-literal': 'error',
   },
   overrides: [
     {
@@ -150,6 +172,7 @@ module.exports = {
 // [eslint all]: https://eslint.org/docs/latest/use/configure/configuration-files#using-eslintall
 // [eslint parser options]: https://eslint.org/docs/latest/use/configure/language-options#specifying-parser-options
 // [eslint rules]: https://eslint.org/docs/latest/use/configure/rules
+// [eslint-plugin-github]: https://github.com/github/eslint-plugin-github/tree/73c236f83045314104556b2be515865f4b6c38d3
 // [jest version]: https://www.npmjs.com/package/eslint-plugin-jest#jest-version-setting
 // [plugin: react-hooks]: https://www.npmjs.com/package/eslint-plugin-react-hooks
 // [plugin: react-refresh]: https://github.com/ArnaudBarre/eslint-plugin-react-refresh
@@ -161,7 +184,7 @@ module.exports = {
 // [ts import configs]: https://github.com/import-js/eslint-plugin-import/tree/v2.29.1/config
 // [ts import perf.]: https://typescript-eslint.io/linting/troubleshooting/performance-troubleshooting#eslint-plugin-import
 // [ts resolver]: https://github.com/import-js/eslint-import-resolver-typescript
-// [tss-eslint all]: https://typescript-eslint.io/linting/configs/#all
+// [ts-eslint all]: https://typescript-eslint.io/linting/configs/#all
 // [ts-eslint parser package]: https://typescript-eslint.io/packages/parser
 // [ts-eslint recommended]: https://typescript-eslint.io/linting/configs/#recommended-configurations
 // [ts-eslint typechecking]: https://typescript-eslint.io/linting/typed-linting/
