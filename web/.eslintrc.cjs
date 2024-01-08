@@ -18,6 +18,7 @@ module.exports = {
     'plugin:react/jsx-runtime', // [react new jsx]
     'plugin:react-hooks/recommended', // [vite template][plugin: react-hooks]
     'plugin:import/recommended',
+    'plugin:import/react',
     'plugin:import/typescript',
   ],
   ignorePatterns: [
@@ -61,6 +62,16 @@ module.exports = {
     jest: {
       // [jest version]
       version: require('jest/package.json').version,
+    },
+    import: {
+      resolver: {
+        typescript: true,
+        node: true,
+        alwaysTryTypes: true, // always try to resolve types under `<root>@types` directory even it doesn't contain any source code, like `@types/unist`
+      },
+      parsers: {
+        '@typescript-eslint/parser': ['.ts', '.tsx'],
+      },
     },
   },
 }
