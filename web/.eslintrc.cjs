@@ -17,9 +17,9 @@ module.exports = {
     'plugin:react/recommended', // [plugin: react]
     'plugin:react/jsx-runtime', // [react new jsx]
     'plugin:react-hooks/recommended', // [vite template][plugin: react-hooks]
-    'plugin:import/recommended',
-    'plugin:import/react',
-    'plugin:import/typescript',
+    'plugin:import/recommended', // [ts import configs][ts import perf.]
+    'plugin:import/react', // [ts import configs][ts import perf.]
+    'plugin:import/typescript', // [ts import configs][ts import perf.]
   ],
   ignorePatterns: [
     'dist', // [vite template]
@@ -65,11 +65,13 @@ module.exports = {
     },
     import: {
       resolver: {
+        // [ts resolver]
         typescript: true,
         node: true,
         alwaysTryTypes: true, // always try to resolve types under `<root>@types` directory even it doesn't contain any source code, like `@types/unist`
       },
       parsers: {
+        // [ts resolver]
         '@typescript-eslint/parser': ['.ts', '.tsx'],
       },
     },
@@ -91,22 +93,25 @@ module.exports = {
 // https://typescript-eslint.io/linting/troubleshooting/formatting#suggested-usage---prettier
 //
 // References:
-// [customized: node]: the [ts-eslint] suggested to use /* eslint-env node */ but per copilot I can do env/node instead.
+// [SO react ver]: https://stackoverflow.com/a/73014978/986533
 // [customized: es2022]: the vite template had es2020 but I set it to 2022.
+// [customized: node]: the [ts-eslint] suggested to use /* eslint-env node */ but per copilot I can do env/node instead.
 // [eslint parser options]: https://eslint.org/docs/latest/use/configure/language-options#specifying-parser-options
 // [eslint rules]: https://eslint.org/docs/latest/use/configure/rules
 // [jest version]: https://www.npmjs.com/package/eslint-plugin-jest#jest-version-setting
-// [SO react ver]: https://stackoverflow.com/a/73014978/986533
 // [plugin: react-hooks]: https://www.npmjs.com/package/eslint-plugin-react-hooks
 // [plugin: react-refresh]: https://github.com/ArnaudBarre/eslint-plugin-react-refresh
 // [plugin: react]: https://github.com/jsx-eslint/eslint-plugin-react
-// [prettier install]: https://github.com/prettier/eslint-plugin-prettier#configuration-legacy-eslintrc, https://typescript-eslint.io/linting/troubleshooting/formatting#suggested-usage---prettier
 // [prettier exclude]: https://typescript-eslint.io/linting/troubleshooting#i-get-errors-telling-me-eslint-was-configured-to-run--however-that-tsconfig-does-not--none-of-those-tsconfigs-include-this-file
+// [prettier install]: https://github.com/prettier/eslint-plugin-prettier#configuration-legacy-eslintrc, https://typescript-eslint.io/linting/troubleshooting/formatting#suggested-usage---prettier
+// [react legacy config]: https://github.com/jsx-eslint/eslint-plugin-react#configuration-legacy-eslintrc-
+// [react new jsx]: [react legacy config], https://reactjs.org/blog/2020/09/22/introducing-the-new-jsx-transform.html
+// [ts import configs]: https://github.com/import-js/eslint-plugin-import/tree/v2.29.1/config
+// [ts import perf.]: https://typescript-eslint.io/linting/troubleshooting/performance-troubleshooting#eslint-plugin-import
+// [ts resolver]: https://github.com/import-js/eslint-import-resolver-typescript
 // [ts-eslint parser package]: https://typescript-eslint.io/packages/parser
-// [ts-eslint typechecking]: https://typescript-eslint.io/linting/typed-linting/
 // [ts-eslint recommended]: https://typescript-eslint.io/linting/configs/#recommended-configurations
+// [ts-eslint typechecking]: https://typescript-eslint.io/linting/typed-linting/
 // [ts-eslint]: https://typescript-eslint.io/getting-started
 // [vite template README]: https://github.com/vitejs/vite/blob/main/packages/create-vite/template-react-ts/README.md
 // [vite template]: https://github.com/vitejs/vite/blob/main/packages/create-vite/template-react-ts/.eslintrc.cjs
-// [react legacy config]: https://github.com/jsx-eslint/eslint-plugin-react#configuration-legacy-eslintrc-
-// [react new jsx]: [react legacy config], https://reactjs.org/blog/2020/09/22/introducing-the-new-jsx-transform.html
