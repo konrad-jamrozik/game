@@ -43,6 +43,9 @@ module.exports = {
       'warn', // [vite template][plugin: react-refresh]
       { allowConstantExport: true }, // [vite template][plugin: react-refresh]
     ],
+    // https://typescript-eslint.io/rules/no-magic-numbers/
+    // https://eslint.org/docs/latest/rules/no-magic-numbers#options
+    '@typescript-eslint/no-magic-numbers': ['error', { ignore: [0, 1] }],
     'unicorn/filename-case': 'off', // https://github.com/sindresorhus/eslint-plugin-unicorn/blob/main/docs/rules/filename-case.md
     'unicorn/prevent-abbreviations': 'off', // https://github.com/sindresorhus/eslint-plugin-unicorn/blob/main/docs/rules/prevent-abbreviations.md
   },
