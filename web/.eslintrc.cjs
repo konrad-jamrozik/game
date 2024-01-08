@@ -3,14 +3,12 @@
 module.exports = {
   root: true, // [vite template][ts-eslint]
   env: {
-    // [vite template]
     browser: true, // [vite template]
     es2022: true, // [vite template][customized: es2022]
     node: true, // [ts-eslint][customized: node]
     'jest/globals': true,
   },
   extends: [
-    // [vite template]
     'eslint:recommended', // [vite template][ts-eslint]
     'plugin:@typescript-eslint/all', // https://typescript-eslint.io/linting/configs/#all
     // alternative to 'plugin:@typescript-eslint/all':
@@ -31,13 +29,12 @@ module.exports = {
   ],
   parser: '@typescript-eslint/parser', // [vite template][ts-eslint]
   plugins: [
-    // [vite template]
     '@typescript-eslint', // [ts-eslint]
     'react-refresh', // [vite template][plugin: react-refresh]
     'import',
   ],
+  // [eslint rules]
   rules: {
-    // [vite template][eslint rules]
     'react-refresh/only-export-components': [
       // [vite template][plugin: react-refresh]
       'warn', // [vite template][plugin: react-refresh]
@@ -46,6 +43,17 @@ module.exports = {
     // https://typescript-eslint.io/rules/no-magic-numbers/
     // https://eslint.org/docs/latest/rules/no-magic-numbers#options
     '@typescript-eslint/no-magic-numbers': ['error', { ignore: [0, 1] }],
+    // https://typescript-eslint.io/rules/naming-convention
+    '@typescript-eslint/naming-convention': [
+      'error',
+      {
+        selector: 'function',
+        format: [
+          'camelCase', // default value
+          'PascalCase', // allow PascalCase for React components, as they require it
+        ],
+      },
+    ],
     'unicorn/filename-case': 'off', // https://github.com/sindresorhus/eslint-plugin-unicorn/blob/main/docs/rules/filename-case.md
     'unicorn/prevent-abbreviations': 'off', // https://github.com/sindresorhus/eslint-plugin-unicorn/blob/main/docs/rules/prevent-abbreviations.md
   },
@@ -56,8 +64,8 @@ module.exports = {
       extends: ['plugin:jest/all'],
     },
   ],
+  // [vite template README][eslint parser options]
   parserOptions: {
-    // [vite template README][eslint parser options]
     ecmaVersion: 'latest', // [vite template README][eslint parser options][ts-eslint parser package]
     sourceType: 'module', // [vite template README][eslint parser options]
     project: ['./tsconfig.json', './tsconfig.node.json'], // [vite template README]
@@ -68,18 +76,17 @@ module.exports = {
       version: 'detect', // [SO react ver][react legacy config]
     },
     jest: {
-      // [jest version]
-      version: require('jest/package.json').version,
+      version: require('jest/package.json').version, // [jest version]
     },
     import: {
+      // [ts resolver]
       resolver: {
-        // [ts resolver]
         typescript: true,
         node: true,
         alwaysTryTypes: true, // always try to resolve types under `<root>@types` directory even it doesn't contain any source code, like `@types/unist`
       },
+      // [ts resolver]
       parsers: {
-        // [ts resolver]
         '@typescript-eslint/parser': ['.ts', '.tsx'],
       },
     },
