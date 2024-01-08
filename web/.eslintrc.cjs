@@ -54,8 +54,20 @@ module.exports = {
         ],
       },
     ],
-    'unicorn/filename-case': 'off', // https://github.com/sindresorhus/eslint-plugin-unicorn/blob/main/docs/rules/filename-case.md
-    'unicorn/prevent-abbreviations': 'off', // https://github.com/sindresorhus/eslint-plugin-unicorn/blob/main/docs/rules/prevent-abbreviations.md
+    // https://github.com/sindresorhus/eslint-plugin-unicorn/blob/main/docs/rules/filename-case.md
+    'unicorn/filename-case': [
+      'error',
+      {
+        cases: {
+          kebabCase: true, // the default behavior
+          pascalCase: true, // allow PascalCase for React components, as they require it
+        },
+        ignore: ['vite-env.d.ts'], // vite-env.d.ts is a file name provided by Vite by default
+      },
+    ],
+    // https://github.com/sindresorhus/eslint-plugin-unicorn/blob/main/docs/rules/prevent-abbreviations.md
+    // I like abbreviations
+    'unicorn/prevent-abbreviations': 'off',
   },
   overrides: [
     {
