@@ -18,6 +18,7 @@ module.exports = {
     'plugin:import/react', // [ts import configs][ts import perf.]
     'plugin:import/typescript', // [ts import configs][ts import perf.]
     'plugin:unicorn/all', // [unicorn]
+    'plugin:sonarjs/recommended',
   ],
   ignorePatterns: [
     'dist', // [vite template]
@@ -28,6 +29,7 @@ module.exports = {
   plugins: [
     '@typescript-eslint', // [ts-eslint]
     'import',
+    'sonarjs',
     'react-refresh', // [vite template][plugin: react-refresh]
   ],
   // [eslint rules]
