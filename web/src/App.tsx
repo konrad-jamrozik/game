@@ -1,9 +1,12 @@
+import type { ReactElement } from 'react'
 import { useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '../public/vite.svg'
 import './App.css'
 
-function App() {
+// eslint-disable-next-line @typescript-eslint/naming-convention
+function App(): ReactElement {
+  // eslint-disable-next-line @typescript-eslint/no-magic-numbers
   const [count, setCount] = useState(0)
 
   return (
@@ -20,7 +23,7 @@ function App() {
       <div className="card">
         <button
           onClick={() => {
-            setCount((count) => count + 1)
+            setCount((cnt) => cnt++)
           }}
         >
           count is {count}

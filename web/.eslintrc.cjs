@@ -12,8 +12,10 @@ module.exports = {
   extends: [
     // [vite template]
     'eslint:recommended', // [vite template][ts-eslint]
-    'plugin:@typescript-eslint/strict-type-checked', // [vite template][vite template README][ts-eslint][ts-eslint typechecking][ts-eslint recommended]
-    'plugin:@typescript-eslint/stylistic-type-checked', // [vite template][vite template README][ts-eslint][ts-eslint typechecking][ts-eslint recommended]
+    'plugin:@typescript-eslint/all', // https://typescript-eslint.io/linting/configs/#all
+    // alternative to 'plugin:@typescript-eslint/all':
+    // // 'plugin:@typescript-eslint/strict-type-checked', // [vite template][vite template README][ts-eslint][ts-eslint typechecking][ts-eslint recommended]
+    // // 'plugin:@typescript-eslint/stylistic-type-checked', // [vite template][vite template README][ts-eslint][ts-eslint typechecking][ts-eslint recommended]
     'plugin:react/recommended', // [plugin: react]
     'plugin:react/jsx-runtime', // [react new jsx]
     'plugin:react-hooks/recommended', // [vite template][plugin: react-hooks]
