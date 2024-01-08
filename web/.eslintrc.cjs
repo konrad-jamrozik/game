@@ -9,11 +9,8 @@ module.exports = {
     'jest/globals': true,
   },
   extends: [
-    'eslint:all', // [vite template][ts-eslint]
-    'plugin:@typescript-eslint/all', // https://typescript-eslint.io/linting/configs/#all
-    // alternative to 'plugin:@typescript-eslint/all':
-    // // 'plugin:@typescript-eslint/strict-type-checked', // [vite template][vite template README][ts-eslint][ts-eslint typechecking][ts-eslint recommended]
-    // // 'plugin:@typescript-eslint/stylistic-type-checked', // [vite template][vite template README][ts-eslint][ts-eslint typechecking][ts-eslint recommended]
+    'eslint:all', // [eslint all]
+    'plugin:@typescript-eslint/all', // [vite template][vite template README][ts-eslint][ts-eslint typechecking][ts-eslint recommended][ts-eslint all]
     'plugin:react/recommended', // [plugin: react]
     'plugin:react/jsx-runtime', // [react new jsx]
     'plugin:react-hooks/recommended', // [vite template][plugin: react-hooks]
@@ -148,6 +145,7 @@ module.exports = {
 // [SO react ver]: https://stackoverflow.com/a/73014978/986533
 // [customized: es2022]: the vite template had es2020 but I set it to 2022.
 // [customized: node]: the [ts-eslint] suggested to use /* eslint-env node */ but per copilot I can do env/node instead.
+// [eslint all]: https://eslint.org/docs/latest/use/configure/configuration-files#using-eslintall
 // [eslint parser options]: https://eslint.org/docs/latest/use/configure/language-options#specifying-parser-options
 // [eslint rules]: https://eslint.org/docs/latest/use/configure/rules
 // [jest version]: https://www.npmjs.com/package/eslint-plugin-jest#jest-version-setting
@@ -161,6 +159,7 @@ module.exports = {
 // [ts import configs]: https://github.com/import-js/eslint-plugin-import/tree/v2.29.1/config
 // [ts import perf.]: https://typescript-eslint.io/linting/troubleshooting/performance-troubleshooting#eslint-plugin-import
 // [ts resolver]: https://github.com/import-js/eslint-import-resolver-typescript
+// [tss-eslint all]: https://typescript-eslint.io/linting/configs/#all
 // [ts-eslint parser package]: https://typescript-eslint.io/packages/parser
 // [ts-eslint recommended]: https://typescript-eslint.io/linting/configs/#recommended-configurations
 // [ts-eslint typechecking]: https://typescript-eslint.io/linting/typed-linting/
