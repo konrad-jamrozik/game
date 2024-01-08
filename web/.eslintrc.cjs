@@ -30,13 +30,15 @@ module.exports = {
   parser: '@typescript-eslint/parser', // [vite template][ts-eslint]
   plugins: [
     '@typescript-eslint', // [ts-eslint]
-    'react-refresh', // [vite template][plugin: react-refresh]
     'import',
+    'react-refresh', // [vite template][plugin: react-refresh]
   ],
   // [eslint rules]
   rules: {
-    // kja TODO: need to figure out how to make this work
-    'sort-imports': ['off'],
+    // https://eslint.org/docs/latest/rules/sort-imports
+    // Turned off. Using 'import/order' instead. It has better sorting defaults.
+    // Another rejected solution: https://github.com/lydell/eslint-plugin-simple-import-sort
+    'sort-imports': 'off',
     // https://eslint.org/docs/latest/rules/func-style
     'func-style': [
       'error',
@@ -64,7 +66,14 @@ module.exports = {
       },
     ],
     // https://github.com/import-js/eslint-plugin-import/blob/main/docs/rules/order.md
-    'import/order': ['error'],
+    'import/order': [
+      'error',
+      {
+        warnOnUnassignedImports: true,
+        'newlines-between': 'always',
+        alphabetize: { order: 'asc', orderImportKind: 'asc' },
+      },
+    ],
     // https://github.com/sindresorhus/eslint-plugin-unicorn/blob/main/docs/rules/filename-case.md
     'unicorn/filename-case': [
       'error',
