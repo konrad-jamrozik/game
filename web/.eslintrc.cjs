@@ -17,7 +17,6 @@ module.exports = {
     'plugin:react/recommended', // [plugin: react]
     'plugin:react/jsx-runtime', // [react new jsx]
     'plugin:react-hooks/recommended', // [vite template][plugin: react-hooks]
-    'plugin:jest/recommended',
     'plugin:import/recommended',
     'plugin:import/typescript',
   ],
@@ -31,7 +30,6 @@ module.exports = {
     // [vite template]
     '@typescript-eslint', // [ts-eslint]
     'react-refresh', // [vite template][plugin: react-refresh]
-    'jest',
     'import',
   ],
   rules: {
@@ -42,6 +40,13 @@ module.exports = {
       { allowConstantExport: true }, // [vite template][plugin: react-refresh]
     ],
   },
+  overrides: [
+    {
+      files: ['test/**'],
+      plugins: ['jest'],
+      extends: ['plugin:jest/all'],
+    },
+  ],
   parserOptions: {
     // [vite template README][eslint parser options]
     ecmaVersion: 'latest', // [vite template README][eslint parser options][ts-eslint parser package]
