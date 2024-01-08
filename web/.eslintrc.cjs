@@ -20,6 +20,7 @@ module.exports = {
     'plugin:import/recommended', // [ts import configs][ts import perf.]
     'plugin:import/react', // [ts import configs][ts import perf.]
     'plugin:import/typescript', // [ts import configs][ts import perf.]
+    'plugin:unicorn/all', // [unicorn]
   ],
   ignorePatterns: [
     'dist', // [vite template]
@@ -40,6 +41,8 @@ module.exports = {
       'warn', // [vite template][plugin: react-refresh]
       { allowConstantExport: true }, // [vite template][plugin: react-refresh]
     ],
+    'unicorn/filename-case': 'off', // https://github.com/sindresorhus/eslint-plugin-unicorn/blob/main/docs/rules/filename-case.md
+    'unicorn/prevent-abbreviations': 'off', // https://github.com/sindresorhus/eslint-plugin-unicorn/blob/main/docs/rules/prevent-abbreviations.md
   },
   overrides: [
     {
@@ -113,5 +116,6 @@ module.exports = {
 // [ts-eslint recommended]: https://typescript-eslint.io/linting/configs/#recommended-configurations
 // [ts-eslint typechecking]: https://typescript-eslint.io/linting/typed-linting/
 // [ts-eslint]: https://typescript-eslint.io/getting-started
+// [unicorn]: https://github.com/sindresorhus/eslint-plugin-unicorn
 // [vite template README]: https://github.com/vitejs/vite/blob/main/packages/create-vite/template-react-ts/README.md
 // [vite template]: https://github.com/vitejs/vite/blob/main/packages/create-vite/template-react-ts/.eslintrc.cjs
