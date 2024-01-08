@@ -4,7 +4,6 @@ import reactLogo from './assets/react.svg'
 import viteLogo from '../public/vite.svg'
 import './App.css'
 
-// eslint-disable-next-line @typescript-eslint/naming-convention
 function App(): ReactElement {
   const [count, setCount] = useState(0)
 
