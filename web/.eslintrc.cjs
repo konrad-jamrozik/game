@@ -9,7 +9,7 @@ module.exports = {
     'jest/globals': true,
   },
   extends: [
-    'eslint:recommended', // [vite template][ts-eslint]
+    'eslint:all', // [vite template][ts-eslint]
     'plugin:@typescript-eslint/all', // https://typescript-eslint.io/linting/configs/#all
     // alternative to 'plugin:@typescript-eslint/all':
     // // 'plugin:@typescript-eslint/strict-type-checked', // [vite template][vite template README][ts-eslint][ts-eslint typechecking][ts-eslint recommended]
@@ -35,10 +35,12 @@ module.exports = {
   ],
   // [eslint rules]
   rules: {
-    'react-refresh/only-export-components': [
-      // [vite template][plugin: react-refresh]
-      'warn', // [vite template][plugin: react-refresh]
-      { allowConstantExport: true }, // [vite template][plugin: react-refresh]
+    // kja TODO: need to figure out how to make this work
+    'sort-imports': ['off'],
+    // https://eslint.org/docs/latest/rules/func-style
+    'func-style': [
+      'error',
+      'declaration', // I like declaration more than the default 'expression'
     ],
     // https://typescript-eslint.io/rules/no-magic-numbers/
     // https://eslint.org/docs/latest/rules/no-magic-numbers#options
@@ -54,6 +56,15 @@ module.exports = {
         ],
       },
     ],
+    // https://typescript-eslint.io/rules/consistent-type-imports/
+    '@typescript-eslint/consistent-type-imports': [
+      'error',
+      {
+        fixStyle: 'inline-type-imports', // This works better with https://eslint.org/docs/latest/rules/no-duplicate-imports
+      },
+    ],
+    // https://github.com/import-js/eslint-plugin-import/blob/main/docs/rules/order.md
+    'import/order': ['error'],
     // https://github.com/sindresorhus/eslint-plugin-unicorn/blob/main/docs/rules/filename-case.md
     'unicorn/filename-case': [
       'error',
@@ -68,6 +79,11 @@ module.exports = {
     // https://github.com/sindresorhus/eslint-plugin-unicorn/blob/main/docs/rules/prevent-abbreviations.md
     // I like abbreviations
     'unicorn/prevent-abbreviations': 'off',
+    'react-refresh/only-export-components': [
+      // [vite template][plugin: react-refresh]
+      'warn', // [vite template][plugin: react-refresh]
+      { allowConstantExport: true }, // [vite template][plugin: react-refresh]
+    ],
   },
   overrides: [
     {
