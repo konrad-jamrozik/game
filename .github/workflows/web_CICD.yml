@@ -69,7 +69,7 @@ jobs:
       - uses: actions/setup-node@v4
       - run: npm ci
       - run: npm run lint
-      - run: npm run prettier-check-ci
+      - run: npm run prettier
 
   close_pull_request:
     if: github.event_name == 'pull_request' && github.event.action == 'closed'

@@ -8,10 +8,9 @@
     "build": "tsc && vite build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "lint-fix": "eslint . --ext ts,tsx --fix",
-    "prettier-check": "prettier . --check",
-    "prettier-check-ci": "prettier . --check --end-of-line auto",
-    "prettier-check-debug": "prettier . --check --log-level debug",
-    "prettier-write": "prettier . --write",
+    "prettier": "prettier . --check --end-of-line auto",
+    "prettier-debug": "prettier . --check --end-of-line auto --log-level debug",
+    "prettier-write": "prettier . --end-of-line auto --write",
     "preview": "vite preview"
   },
   "dependencies": {
