@@ -1,27 +1,19 @@
+// https://www.typescriptlang.org/tsconfig
 {
+  "extends": [
+    // [vite-react]
+    "@tsconfig/vite-react/tsconfig.json",
+    // [strictest]
+    "@tsconfig/strictest/tsconfig.json"
+  ],
   "compilerOptions": {
     "target": "ES2022",
-    "useDefineForClassFields": true,
-    "lib": ["ES2022", "DOM", "DOM.Iterable"],
-    "module": "ESNext",
-    "skipLibCheck": true, // https://www.typescriptlang.org/tsconfig#skipLibCheck
-
-    /* Bundler mode */
-    "moduleResolution": "bundler",
-    "allowImportingTsExtensions": true,
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-    "noEmit": true,
-    "jsx": "react-jsx",
-
-    /* Linting */
-    "strict": true, // https://www.typescriptlang.org/tsconfig#strict
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true,
-    "noImplicitReturns": true,
-    "noImplicitOverride": true
+    "lib": ["ES2022", "DOM", "DOM.Iterable"]
   },
   "include": ["src"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }
+
+// [vite-react]: https://www.npmjs.com/package/@tsconfig/vite-react from [tsconfig bases]
+// [strictest]: https://www.npmjs.com/package/@tsconfig/strictest from [tsconfig bases]
+// [tsconfig bases]: https://github.com/tsconfig/bases#centralized-recommendations-for-tsconfig-bases from https://www.typescriptlang.org/tsconfig#target
