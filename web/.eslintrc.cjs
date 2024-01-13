@@ -44,6 +44,7 @@ module.exports = {
       'error',
       'declaration', // I like declaration more than the default 'expression'
     ],
+    'no-duplicate-imports': ['error', { includeExports: true }], // https://eslint.org/docs/latest/rules/no-duplicate-imports#options
     // https://typescript-eslint.io/rules/no-magic-numbers/
     // https://eslint.org/docs/latest/rules/no-magic-numbers#options
     '@typescript-eslint/no-magic-numbers': ['error', { ignore: [0, 1] }],
