@@ -19,6 +19,7 @@ module.exports = {
     'plugin:import/typescript', // [ts import configs][ts import perf.]
     'plugin:unicorn/all', // [unicorn]
     'plugin:sonarjs/recommended',
+    'plugin:node/recommended',
   ],
   ignorePatterns: [
     'dist', // [vite template]
@@ -115,6 +116,7 @@ module.exports = {
     'github/prefer-observers': 'error',
     'github/require-passive-events': 'error',
     'github/unescaped-html-literal': 'error',
+    'node/no-callback-literal': 'error',
   },
   overrides: [
     {
