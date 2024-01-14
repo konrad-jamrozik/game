@@ -20,6 +20,7 @@ module.exports = {
     'plugin:unicorn/all', // [unicorn]
     'plugin:sonarjs/recommended',
     'plugin:node/recommended',
+    'plugin:lodash/recommended',
   ],
   ignorePatterns: [
     'dist', // [vite template]
@@ -33,6 +34,7 @@ module.exports = {
     'react-refresh', // [vite template][plugin: react-refresh]
     'sonarjs',
     'github',
+    'lodash',
   ],
   // [eslint rules]
   rules: {
