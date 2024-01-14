@@ -22,6 +22,7 @@ module.exports = {
     'plugin:node/recommended',
     'plugin:lodash/recommended',
     'plugin:lodash-fp/recommended',
+    'plugin:json/recommended-with-comments',
   ],
   ignorePatterns: [
     'dist', // [vite template]
@@ -37,6 +38,7 @@ module.exports = {
     'github',
     'lodash',
     'lodash-fp',
+    'json',
   ],
   // [eslint rules]
   rules: {
