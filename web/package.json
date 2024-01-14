@@ -10,7 +10,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "lint": "eslint . --ext ts,tsx,yml,yaml,json --report-unused-disable-directives --max-warnings 0",
+    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "lint-fix": "eslint . --ext ts,tsx,yml,yaml,json --fix",
     "prettier": "prettier . --check --end-of-line auto",
     "prettier-debug": "prettier . --check --end-of-line auto --log-level debug",

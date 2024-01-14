@@ -22,9 +22,6 @@ module.exports = {
     'plugin:node/recommended',
     'plugin:lodash/recommended',
     'plugin:lodash-fp/recommended',
-    'plugin:json/recommended-with-comments',
-    'plugin:yml/standard',
-    'plugin:yml/prettier',
   ],
   ignorePatterns: [
     'dist', // [vite template]
@@ -40,8 +37,36 @@ module.exports = {
     'github',
     'lodash',
     'lodash-fp',
-    'json',
   ],
+  overrides: [
+    {
+      files: ['test/**'],
+      plugins: ['jest'],
+      extends: ['plugin:jest/all'],
+    },
+    // Linting of yaml and json commented out because I don't know how to prevent it from being parsed
+    // with typescript parser.
+    // {
+    //   files: ['*.yaml', '*.yml'],
+    //   parser: 'yaml-eslint-parser',
+    //   extends: ['plugin:yml/standard', 'plugin:yml/prettier'],
+    //   // Options used with yaml-eslint-parser.
+    //   parserOptions: {
+    //     defaultYAMLVersion: '1.2',
+    //   },
+    // },
+    // {
+    //   files: ['*.json', '*.jsonc'],
+    //   extends: ['plugin:json/recommended-with-comments'],
+    // },
+  ],
+  // [vite template README][eslint parser options]
+  parserOptions: {
+    ecmaVersion: 'latest', // [vite template README][eslint parser options][ts-eslint parser package]
+    sourceType: 'module', // [vite template README][eslint parser options]
+    project: ['./tsconfig.json', './tsconfig.node.json'], // [vite template README]
+    tsconfigRootDir: __dirname, // [vite template README][ts-eslint typechecking]
+  },
   // [eslint rules]
   rules: {
     // https://eslint.org/docs/latest/rules/sort-imports
@@ -125,20 +150,6 @@ module.exports = {
     'github/require-passive-events': 'error',
     'github/unescaped-html-literal': 'error',
     'node/no-callback-literal': 'error',
-  },
-  overrides: [
-    {
-      files: ['test/**'],
-      plugins: ['jest'],
-      extends: ['plugin:jest/all'],
-    },
-  ],
-  // [vite template README][eslint parser options]
-  parserOptions: {
-    ecmaVersion: 'latest', // [vite template README][eslint parser options][ts-eslint parser package]
-    sourceType: 'module', // [vite template README][eslint parser options]
-    project: ['./tsconfig.json', './tsconfig.node.json'], // [vite template README]
-    tsconfigRootDir: __dirname, // [vite template README][ts-eslint typechecking]
   },
   settings: {
     react: {
