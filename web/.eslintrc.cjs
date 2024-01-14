@@ -21,6 +21,7 @@ module.exports = {
     'plugin:sonarjs/recommended',
     'plugin:node/recommended',
     'plugin:lodash/recommended',
+    'plugin:lodash-fp/recommended',
   ],
   ignorePatterns: [
     'dist', // [vite template]
@@ -35,6 +36,7 @@ module.exports = {
     'sonarjs',
     'github',
     'lodash',
+    'lodash-fp',
   ],
   // [eslint rules]
   rules: {
