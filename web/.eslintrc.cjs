@@ -150,6 +150,8 @@ module.exports = {
     'github/require-passive-events': 'error',
     'github/unescaped-html-literal': 'error',
     'node/no-callback-literal': 'error',
+    // Appears to be obsolete
+    'node/no-unsupported-features/es-syntax': 'off',
   },
   settings: {
     react: {
