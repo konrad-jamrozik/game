@@ -23,6 +23,8 @@ module.exports = {
     'plugin:lodash/recommended',
     'plugin:lodash-fp/recommended',
     'plugin:json/recommended-with-comments',
+    'plugin:yml/standard',
+    'plugin:yml/prettier',
   ],
   ignorePatterns: [
     'dist', // [vite template]

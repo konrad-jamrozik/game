@@ -10,8 +10,8 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-    "lint-fix": "eslint . --ext ts,tsx --fix",
+    "lint": "eslint . --ext ts,tsx,yml,yaml,json --report-unused-disable-directives --max-warnings 0",
+    "lint-fix": "eslint . --ext ts,tsx,yml,yaml,json --fix",
     "prettier": "prettier . --check --end-of-line auto",
     "prettier-debug": "prettier . --check --end-of-line auto --log-level debug",
     "prettier-write": "prettier . --end-of-line auto --write",
@@ -46,6 +46,7 @@
     "eslint-plugin-react-refresh": "^0.4.5",
     "eslint-plugin-sonarjs": "^0.23.0",
     "eslint-plugin-unicorn": "^50.0.1",
+    "eslint-plugin-yml": "^1.11.0",
     "jest": "^29.7.0",
     "prettier": "^3.2.1",
     "typescript": "^5.3.3",
