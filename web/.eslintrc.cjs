@@ -19,7 +19,6 @@ module.exports = {
     'plugin:import/typescript', // [ts import configs][ts import perf.]
     'plugin:unicorn/all', // [unicorn]
     'plugin:sonarjs/recommended',
-    'plugin:node/recommended',
     'plugin:lodash/recommended',
     'plugin:lodash-fp/recommended',
   ],
@@ -44,21 +43,6 @@ module.exports = {
       plugins: ['jest'],
       extends: ['plugin:jest/all'],
     },
-    // Linting of yaml and json commented out because I don't know how to prevent it from being parsed
-    // with typescript parser.
-    // {
-    //   files: ['*.yaml', '*.yml'],
-    //   parser: 'yaml-eslint-parser',
-    //   extends: ['plugin:yml/standard', 'plugin:yml/prettier'],
-    //   // Options used with yaml-eslint-parser.
-    //   parserOptions: {
-    //     defaultYAMLVersion: '1.2',
-    //   },
-    // },
-    // {
-    //   files: ['*.json', '*.jsonc'],
-    //   extends: ['plugin:json/recommended-with-comments'],
-    // },
   ],
   // [vite template README][eslint parser options]
   parserOptions: {
@@ -149,9 +133,6 @@ module.exports = {
     'github/prefer-observers': 'error',
     'github/require-passive-events': 'error',
     'github/unescaped-html-literal': 'error',
-    'node/no-callback-literal': 'error',
-    // Appears to be obsolete
-    'node/no-unsupported-features/es-syntax': 'off',
   },
   settings: {
     react: {
@@ -174,6 +155,15 @@ module.exports = {
     },
   },
 }
+//
+// Rejected plugins:
+// - eslint-plugin-node:
+//   disabled due to "Error: Failed to load plugin 'node' declared in 'PersonalConfig': Cannot find module 'eslint-plugin-node'"
+//   https://github.com/mysticatea/eslint-plugin-node/issues/203
+// - eslint-plugin-yml, eslint-plugin-json:
+//   Linting of yaml and json commented out because I don't know how to prevent it from being parsed
+//   with typescript parser.
+//
 // Helpful links:
 // https://duncanleung.com/how-to-setup-eslint-eslintrc-config-difference-eslint-config-plugin/
 // https://eslint.org/
