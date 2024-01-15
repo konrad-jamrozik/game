@@ -62,6 +62,9 @@ module.exports = {
       'error',
       'declaration', // I like declaration more than the default 'expression'
     ],
+    // Don't care about comment capitalization
+    // https://eslint.org/docs/latest/rules/capitalized-comments
+    'capitalized-comments': 'off',
     'no-duplicate-imports': ['error', { includeExports: true }], // https://eslint.org/docs/latest/rules/no-duplicate-imports#options
     // https://typescript-eslint.io/rules/no-magic-numbers/
     // https://eslint.org/docs/latest/rules/no-magic-numbers#options
@@ -107,6 +110,9 @@ module.exports = {
     // https://github.com/sindresorhus/eslint-plugin-unicorn/blob/main/docs/rules/prevent-abbreviations.md
     // I like abbreviations
     'unicorn/prevent-abbreviations': 'off',
+    // https://github.com/sindresorhus/eslint-plugin-unicorn/blob/main/docs/rules/no-empty-file.md
+    // Sometimes I need empty files while figuring out how to make things work
+    'unicorn/no-empty-file': 'off',
     'react-refresh/only-export-components': [
       // [vite template][plugin: react-refresh]
       'warn', // [vite template][plugin: react-refresh]

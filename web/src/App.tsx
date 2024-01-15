@@ -4,12 +4,15 @@ import viteLogo from '../public/vite.svg'
 
 import './App.css'
 import reactLogo from './assets/react.svg'
+import { PrototypeApiCall } from './components/PrototypeApiCall'
 
 export default function App(): ReactElement {
   const [count, setCount] = useState(0)
 
   return (
     <>
+      <PrototypeApiCall />
+      {/* <PrototypeApiOutput /> */}
       <div>
         <a href="https://vitejs.dev" target="_blank" rel="noreferrer">
           <img src={viteLogo} className="logo" alt="Vite logo" />

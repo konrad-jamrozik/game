@@ -5,9 +5,6 @@
     }
   ],
   "settings": {
-    "files.associations": {
-      "*.css": "tailwindcss"
-    },
     "editor.quickSuggestions": {
       "strings": true
     },
@@ -35,6 +32,8 @@
     "editor.formatOnType": false,
     "editor.formatOnSave": true,
     "editor.formatOnSaveMode": "file", // required to format on save
-    "files.autoSave": "off"
+    "files.autoSave": "off",
+    "typescript.suggest.paths": false,
+    "javascript.suggest.paths": false
   }
 }
