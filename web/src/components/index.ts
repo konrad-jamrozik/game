@@ -1,1 +1,1 @@
-export {PrototypeApiCall} from './PrototypeApiCall';
+export { PrototypeApiCall } from './PrototypeApiCall'
