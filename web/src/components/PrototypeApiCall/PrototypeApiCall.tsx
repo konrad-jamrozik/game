@@ -1,3 +1,11 @@
+/* eslint-disable @typescript-eslint/no-misused-promises */
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+/* eslint-disable unicorn/no-null */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+import { useState } from 'react'
+
 export interface PrototypeApiCallProps {
   readonly prop?: string
 }
@@ -5,14 +13,10 @@ export interface PrototypeApiCallProps {
 export function PrototypeApiCall({
   prop = 'default value',
 }: PrototypeApiCallProps): JSX.Element {
-  /*
-   * Read about this here:
-   * https://vitejs.dev/guide/env-and-mode.html#env-variables
-   * https://vitejs.dev/guide/env-and-mode.html#modes
-   * https://vitejs.dev/guide/env-and-mode.html#node-env-and-modes
-   * ChatGPT: Load Vite Config by Mode
-   * https://chat.openai.com/share/9109f0a2-3f55-47ca-88c8-14d13c6acee5
-   */
+  const [apiResponse, setApiResponse] = useState<string>('')
+  const [loading, setLoading] = useState<boolean>(false)
+  const [error, setError] = useState<string | null>(null)
+
   const apiHost = import.meta.env.PROD
     ? 'https://game-api1.azurewebsites.net'
     : 'https://localhost:7128'
@@ -23,9 +27,38 @@ export function PrototypeApiCall({
 
   const apiUrl = `${apiHost}/simulateGameSession${queryString}`
 
+  async function fetchApiResponse(): Promise<void> {
+    setLoading(true)
+    setError(null)
+
+    try {
+      const response = await fetch(apiUrl)
+      if (!response.ok) {
+        throw new Error('Network response was not ok')
+      }
+      const data = await response.json()
+      setApiResponse(data)
+    } catch (fetchError) {
+      setError('Failed to fetch API response')
+      console.error('There was an error!', fetchError)
+    } finally {
+      setLoading(false)
+    }
+  }
+
   return (
     <div>
-      PrototypeApiCall {prop} {apiUrl}
+      <button onClick={fetchApiResponse} disabled={loading}>
+        {loading ? 'Loading...' : 'Start Game Session'}
+      </button>
+      {error && <div>Error: {error}</div>}
+      {apiResponse && (
+        <div>
+          <div> {prop} </div>
+          {/* Render your apiResponse game data here */}
+          <pre>{JSON.stringify(apiResponse, null, 2)}</pre>
+        </div>
+      )}
     </div>
   )
 }

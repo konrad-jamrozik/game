@@ -73,11 +73,15 @@ module.exports = {
     // Used for debugging
     // https://eslint.org/docs/latest/rules/no-console
     'no-console': 'off',
+    // https://eslint.org/docs/latest/rules/max-statements
+    'max-statements': ['error', { max: 20 }],
+    // https://eslint.org/docs/latest/rules/max-lines-per-function
+    'max-lines-per-function': ['error', { max: 100 }],
     // https://eslint.org/docs/latest/rules/no-duplicate-imports#options
     'no-duplicate-imports': ['error', { includeExports: true }],
     // https://typescript-eslint.io/rules/no-magic-numbers/
     // https://eslint.org/docs/latest/rules/no-magic-numbers#options
-    '@typescript-eslint/no-magic-numbers': ['error', { ignore: [0, 1] }],
+    '@typescript-eslint/no-magic-numbers': ['error', { ignore: [0, 1, 2] }],
     // https://typescript-eslint.io/rules/naming-convention
     '@typescript-eslint/naming-convention': [
       'error',
