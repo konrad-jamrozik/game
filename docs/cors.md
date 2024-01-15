@@ -78,9 +78,7 @@ Example config for [`game-api1` CORS page]:
 ![game-api1 CORS page](game_api1_cors_page.png)
 
 <!--
---------------------------------------------------------------------------------
-references
---------------------------------------------------------------------------------
+## references
 -->
 
 [`./src/api`]: ../src/api

@@ -33,11 +33,11 @@ The scenarios described here are:
 > You must first deploy the API backend, then web app frontend.
 > Otherwise the web app frontend will fail to call the API when interacted with.
 
-Web app frontend | API backend | Sections
----------|----------|---------
-Azure | Azure | [#deploy-web-app-to-azure](#deploy-web-app-to-azure), [#deploy-api-to-azure](#deploy-api-to-azure) |
-Local | Azure | [#use-api-on-azure-prod-preview](#use-api-on-azure-prod-preview), [#deploy-api-to-azure](#deploy-api-to-azure) |
-Local | Local | [#use-api-on-localhost-dev-server](#use-api-on-localhost-dev-server), [#deploy-api-to-localhost](#deploy-api-to-localhost) |
+| Web app frontend | API backend | Sections                                                                                                                   |
+| ---------------- | ----------- | -------------------------------------------------------------------------------------------------------------------------- |
+| Azure            | Azure       | [#deploy-web-app-to-azure](#deploy-web-app-to-azure), [#deploy-api-to-azure](#deploy-api-to-azure)                         |
+| Local            | Azure       | [#use-api-on-azure-prod-preview](#use-api-on-azure-prod-preview), [#deploy-api-to-azure](#deploy-api-to-azure)             |
+| Local            | Local       | [#use-api-on-localhost-dev-server](#use-api-on-localhost-dev-server), [#deploy-api-to-localhost](#deploy-api-to-localhost) |
 
 # Deploy the API backend
 
@@ -68,21 +68,21 @@ You can read more about the manual trigger on the [`workflow_dispatch`] doc.
 
 With [hot reload][`dotnet watch` hot reload]:
 
-``` powershell
+```powershell
 cd ./src
 dotnet watch --project api --launch-profile https
 ```
 
 Without hot reload:
 
-``` powershell
+```powershell
 cd ./src
 dotnet run --project api --launch-profile https
 ```
 
 # Deploy the web app frontend
 
-The SolidJS web app frontend sources are at [`./web`].
+The React web app frontend sources are at [`./web`].
 
 To deploy web app frontend, first you need to install newest node.js and npm and then run `npm install` from [`./web`].
 You can replicate the steps as explained in [`web_frontend_setup.md`].
@@ -119,7 +119,7 @@ you can run the app as a local dev server, with hot module replacement (HMR) / h
 
 Run the following from [`./web`]:
 
-``` powershell
+```powershell
 npm run dev
 ```
 
@@ -135,7 +135,7 @@ you can run the web app frontend as a preview of how it will look on Azure.
 
 Run the following from [`./web`]:
 
-``` powershell
+```powershell
 npm run build
 npm run preview
 ```
@@ -167,6 +167,10 @@ The documentation about API backend deployment is based primarily on following a
 
 The documentation about web app frontend deployment is based primarily on following articles:
 
+> [!WARNING]
+> These references refer to the obsolete `SolidJS` frontend, while `React` is the current one.
+> See [`web_frontend_setup.md`] for details.
+
 - [README of the used `create-vite` `solid-ts` template]
 - [Vite doc on deploying a static site]
 - [Vite doc on deploying to Azure static web apps]
@@ -177,9 +181,7 @@ The documentation about web app frontend deployment is based primarily on follow
 - [ChatGPT: Load Vite Config by Mode]
 
 <!--
---------------------------------------------------------------------------------
-references
---------------------------------------------------------------------------------
+## references
 -->
 
 [`./src/api`]: ../src/api

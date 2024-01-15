@@ -39,9 +39,9 @@ Note that previously I had another GitHub actions workflow for deploying the API
 Per [its history][api-game-lib.yml git history], at first I created it by following:
 
 - [Tutorial: Create a minimal API with ASP.NET Core](https://learn.microsoft.com/en-us/aspnet/core/tutorials/min-web-api?view=aspnetcore-8.0&tabs=visual-studio),
-to create the stub API.
+  to create the stub API.
 - [Quickstart: Deploy an ASP.NET web app](https://learn.microsoft.com/en-us/azure/app-service/quickstart-dotnetcore?tabs=net70&pivots=development-environment-vs),
-to deploy the API to Azure.
+  to deploy the API to Azure.
 
 However, it appears to be obsolete. I created it in August 2023, but I was unable to reproduce it in December 2023.
 Overall, the story for creating GitHub actions workflow for ASP.NET Core .NET Web App is messy, as I documented here:
@@ -80,7 +80,7 @@ For API backend, I did the following, based on [GitHub doc on Deploying to Azure
 > for choosing .NET version. When deployed on Linux everything looks good, but the app returns 503. I discovered
 > the logs with root-cause by going to the Azure Portal for [`game-api1`], going to `Development Tools`, clicking
 > `Advanced Tools`, and then `go ->` to open the [admin panel] with logs.
-  
+
 > [!WARNING]
 > Because I wanted to use the cheapest Basic B1 pricing plan, I had to create the app service plan on `West US` instead
 > of `West US 2`, even though `West US 2` is closes to my location. It cannot be created on `West US 2` because
@@ -105,9 +105,7 @@ Full error message:
 - https://stackoverflow.com/questions/70095562/i-get-a-deployment-error-when-trying-to-publish-a-solution-to-azure
 
 <!--
---------------------------------------------------------------------------------
-references
---------------------------------------------------------------------------------
+## references
 -->
 
 [`./src/api`]: ../src/api

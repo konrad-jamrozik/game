@@ -10,8 +10,6 @@
     - [Step 4.1: Update the workflow based on GitHub guidance for Azure static web apps](#step-41-update-the-workflow-based-on-github-guidance-for-azure-static-web-apps)
     - [Step 5: Install `tw-elements`](#step-5-install-tw-elements)
   - [How the web fronted GitHub Actions workflow was created](#how-the-web-fronted-github-actions-workflow-was-created)
-  - [\<!--](#--)
-  - [references](#references)
 
 # How the `React` web frontend project was set up
 
@@ -225,10 +223,8 @@ wizard to configure the deployment, per `Vite / Deploying a Static Site / Azure 
 
 This created the GitHub actions workflow, which looks like the [Build configuration here](https://learn.microsoft.com/en-us/azure/static-web-apps/build-configuration?tabs=github-actions#build-configuration).
 
-## <!--
-
+<!--
 ## references
-
 -->
 
 [`./web`]: ../web

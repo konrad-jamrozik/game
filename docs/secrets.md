@@ -15,9 +15,7 @@
   Originally configured as part of [GitHub doc on Deploying to Azure Static Web App].
 
 <!--
---------------------------------------------------------------------------------
-references
---------------------------------------------------------------------------------
+## references
 -->
 
 [GitHub Actions secrets]: https://github.com/konrad-jamrozik/game/settings/secrets/actions
