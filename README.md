@@ -6,18 +6,12 @@ This repository contains personal code of Konrad Jamrozik, written for his game 
 
 # Sources overview
 
-The game is composed of two components: web SolidJS frontend and C# API backend.
+The game is composed of two components: web React frontend and C# API backend.
 
-- The web SolidJS frontend source is in [web](web) dir.
+- The web React frontend source is in [web](web) dir.
 - The C# API backend is in [src](src) dir.
 
-# Deploy to Azure
-
-TODO
-
-# Deploy to localhost
-
-TODO
+See READMEs in these dirs for details on building, deploying, testing, etc.
 
 # License
 

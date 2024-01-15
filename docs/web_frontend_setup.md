@@ -1,6 +1,7 @@
 # Table of contents
 
 - [Table of contents](#table-of-contents)
+- [How the `React` web frontend project was set up](#how-the-react-web-frontend-project-was-set-up)
 - [How the `SolidJS` web frontend project was set up](#how-the-solidjs-web-frontend-project-was-set-up)
   - [Initial web frontend setup commands executed](#initial-web-frontend-setup-commands-executed)
     - [Step 1: install `npm` and `node.js` using `nvm-windows`](#step-1-install-npm-and-nodejs-using-nvm-windows)
@@ -9,8 +10,20 @@
     - [Step 4.1: Update the workflow based on GitHub guidance for Azure static web apps](#step-41-update-the-workflow-based-on-github-guidance-for-azure-static-web-apps)
     - [Step 5: Install `tw-elements`](#step-5-install-tw-elements)
   - [How the web fronted GitHub Actions workflow was created](#how-the-web-fronted-github-actions-workflow-was-created)
+  - [\<!--](#--)
+  - [references](#references)
+
+# How the `React` web frontend project was set up
+
+The current web frontend is `React`. It was set up in a way similar to `SolidJS` frontend described below.
+
+The migration from `SolidJS` to `React` was primarily done in [commit e95fdeb: migrate from SolidJS to React].
+More broadly, it was done at the beginning of [lib_milestone_8].
 
 # How the `SolidJS` web frontend project was set up
+
+> [!WARNING]
+> The documentation below refers to `SolidJS` which has since been replaced in the codebase by `React`. See [this section](#how-the-react-web-frontend-project-was-set-up).
 
 In this document `.` refers to the repository root.
 
@@ -47,9 +60,9 @@ install latest `npm` and `node.js`:
 
 1. Download the `nvm-setup.exe` from the latest `nvm-windows` release from https://github.com/coreybutler/nvm-windows/releases
 2. Install `nvm-setup.exe`
-3. ``` powershell
+3. ```powershell
    // # As of 12/21/2023
-   nvm current 
+   nvm current
    nvm list
    nvm install latest
    nvm use 21.5.0
@@ -73,7 +86,7 @@ Follow the instructions given in the [Scaffolding Your First Vite Project] artic
 of [create-vite npm] package ([src][create-vite src]). Specifically, run the variant for
 `SolidJS` and `TypeScript` ([src][create-vite solid-ts]):
 
-``` powershell
+```powershell
 npm create vite@latest web -- --template solid-ts
 cd web
 npm install
@@ -84,8 +97,7 @@ npm run dev # To locally verify that things work
 I have originally executed these steps in [commit 2a2d6cf][commit 2a2d6cf: initial frontend].
 Note at that time I used `frontend` dir instead of `web`.
 
-> [!NOTE]
-> `npm create`, as [explained on StackOverflow][npm create SO], is an alias for [`npm init`].
+> [!NOTE] > `npm create`, as [explained on StackOverflow][npm create SO], is an alias for [`npm init`].
 
 > [!NOTE]
 > There are also other sets of templates linked from the `SolidJS` docs which would be an alternative approach:
@@ -101,10 +113,10 @@ Note at that time I used `frontend` dir instead of `web`.
 Follow the article [Install Tailwind CSS with SolidJS]. There is another article with almost identical steps:
 [Install Tailwind CSS with Vite].
 
-``` powershell
+```powershell
 npm install -D tailwindcss postcss autoprefixer
 npx tailwindcss init -p
-# git add, commit and push 
+# git add, commit and push
 ```
 
 You can see the result of the above in [commit b429583: add tailwindcss].
@@ -136,7 +148,7 @@ I noticed the Azure static web app resource overview was still pointing to obsol
 GitHub Actions run in `Deployment history` URL as well as obsolete, invalid workflow file in `Edit workflow`.
 I tried to fix this issue by running following Azure CLI commands, per [az staticwebapp doc]:
 
-``` txt
+```txt
 az login
 az account set --subscription 8695c84c-09a4-4b50-994f-a2fa7f36cc92
 az staticwebapp show -n game-web
@@ -206,16 +218,17 @@ by following these instructions:
 
 Specifically, I used the [Azure Static Web Apps VS Code extension](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-azurestaticwebapps)
 wizard to configure the deployment, per `Vite / Deploying a Static Site / Azure Static Web Apps`:
+
 > Follow the wizard started by the extension to give your app a name, choose a framework preset,
 > and designate the app root (usually /) and built file location /dist. The wizard will run and will
 > create a GitHub action in your repo in a .github folder.
 
 This created the GitHub actions workflow, which looks like the [Build configuration here](https://learn.microsoft.com/en-us/azure/static-web-apps/build-configuration?tabs=github-actions#build-configuration).
 
-<!--
---------------------------------------------------------------------------------
-references
---------------------------------------------------------------------------------
+## <!--
+
+## references
+
 -->
 
 [`./web`]: ../web
@@ -237,6 +250,7 @@ references
 [commit baf3e5f: configure tailwindcss]: https://github.com/konrad-jamrozik/game/commit/baf3e5f7c99869fd81af07ec64b8b967b01b5133
 [commit c7527a9: fix tw-elements button padding in index.css]: https://github.com/konrad-jamrozik/game/commit/c7527a987f61166969324d1054d289d53a1cccfe
 [commit e348667: fix tw-elements dark mode in tailwind.config.js]: https://github.com/konrad-jamrozik/game/commit/e34866742d4ca146249de2403bbbc4b1e5423c7f
+[commit e95fdeb: migrate from SolidJS to React]: https://github.com/konrad-jamrozik/game/commit/e95fdeb0c7f3a2446860473c9f595f7921ec24fc
 [commit ef8a4a8: add Azure Static Web Apps GH Actions workflow file]: https://github.com/konrad-jamrozik/game/commit/ef8a4a8276bc204371c0ef276f1183b0694919c1
 [create-vite npm]: https://www.npmjs.com/package/create-vite
 [create-vite solid-ts]: https://github.com/vitejs/vite/tree/main/packages/create-vite/template-solid-ts
@@ -245,6 +259,7 @@ references
 [GitHub doc on Deploying to Azure Static Web App]: https://docs.github.com/en/actions/deployment/deploying-to-your-cloud-provider/deploying-to-azure/deploying-to-azure-static-web-app
 [Install Tailwind CSS with SolidJS]: https://tailwindcss.com/docs/guides/solidjs
 [Install Tailwind CSS with Vite]: https://tailwindcss.com/docs/guides/vite
+[lib_milestone_8]: https://github.com/konrad-jamrozik/game/compare/lib_milestone_7...lib_milestone_8
 [my comment on issue 536]: https://github.com/Azure/static-web-apps/issues/536#issuecomment-1868407157
 [npm create SO]: https://stackoverflow.com/questions/57133219/what-is-the-npm-create-command
 [Scaffolding Your First Vite Project]: https://vitejs.dev/guide/#scaffolding-your-first-vite-project
