@@ -100,6 +100,13 @@ module.exports = {
         fixStyle: 'inline-type-imports', // This works better with https://eslint.org/docs/latest/rules/no-duplicate-imports
       },
     ],
+    // https://typescript-eslint.io/rules/no-misused-promises
+    '@typescript-eslint/no-misused-promises': [
+      'error',
+      {
+        checksVoidReturn: { attributes: false },
+      },
+    ],
     // https://github.com/import-js/eslint-plugin-import/blob/main/docs/rules/order.md
     'import/order': [
       'error',
