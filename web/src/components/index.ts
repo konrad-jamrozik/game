@@ -1,2 +1,2 @@
 export { PrototypeApiCall } from './PrototypeApiCall'
-export {PrototypeMuiButton} from './PrototypeMuiButton';
+export { PrototypeMuiButton } from './PrototypeMuiButton'

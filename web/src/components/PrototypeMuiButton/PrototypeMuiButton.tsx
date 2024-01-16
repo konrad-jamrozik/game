@@ -9,4 +9,3 @@ export function PrototypeMuiButton({
 }: PrototypeMuiButtonProps): React.ReactElement {
   return <Button variant="outlined">Hello world {prop}</Button>
 }
-

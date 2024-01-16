@@ -1,1 +1,1 @@
-export * from './PrototypeMuiButton';
+export * from './PrototypeMuiButton'
