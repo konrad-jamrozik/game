@@ -10,7 +10,7 @@ export interface PrototypeApiCallProps {
 
 export function PrototypeApiCall({
   prop = 'default value',
-}: PrototypeApiCallProps): JSX.Element {
+}: PrototypeApiCallProps): React.JSX.Element {
   const [apiResponse, setApiResponse] = useState<string>('')
   const [loading, setLoading] = useState<boolean>(false)
   const [error, setError] = useState<string | null>(null)

@@ -1,18 +1,18 @@
-import { type ReactElement, useState } from 'react'
+import { useState } from 'react'
 
 import viteLogo from '../public/vite.svg'
 
 import './App.css'
 import reactLogo from './assets/react.svg'
-import { PrototypeApiCall } from './components/PrototypeApiCall'
+import { PrototypeApiCall, PrototypeMuiButton } from './components'
 
-export default function App(): ReactElement {
+export default function App(): React.JSX.Element {
   const [count, setCount] = useState(0)
 
   return (
     <>
       <PrototypeApiCall />
-      {/* <PrototypeApiOutput /> */}
+      <PrototypeMuiButton />
       <div>
         <a href="https://vitejs.dev" target="_blank" rel="noreferrer">
           <img src={viteLogo} className="logo" alt="Vite logo" />
