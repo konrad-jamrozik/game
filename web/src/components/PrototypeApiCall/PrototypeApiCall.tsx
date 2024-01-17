@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable unicorn/no-null */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { useState } from 'react'

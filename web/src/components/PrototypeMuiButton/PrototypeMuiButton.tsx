@@ -1,6 +1,6 @@
 import Button from '@mui/material/Button'
 
-export interface PrototypeMuiButtonProps {
+export type PrototypeMuiButtonProps = {
   readonly prop?: string
 }
 
@@ -9,3 +9,4 @@ export function PrototypeMuiButton({
 }: PrototypeMuiButtonProps): React.ReactElement {
   return <Button variant="outlined">Hello world {prop}</Button>
 }
+
