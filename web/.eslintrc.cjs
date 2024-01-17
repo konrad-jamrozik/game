@@ -77,8 +77,14 @@ module.exports = {
     'max-statements': ['error', { max: 20 }],
     // https://eslint.org/docs/latest/rules/max-lines-per-function
     'max-lines-per-function': ['error', { max: 100 }],
+    // https://eslint.org/docs/latest/rules/id-length
+    'id-length': ['error', { min: 2, exceptions: ['_'] }],
+    // https://typescript-eslint.io/rules/no-unused-vars/
+    '@typescript-eslint/no-unused-vars': ['error', { varsIgnorePattern: '_' }],
     // https://eslint.org/docs/latest/rules/no-duplicate-imports#options
     'no-duplicate-imports': ['error', { includeExports: true }],
+    // https://eslint.org/docs/latest/rules/sort-keys
+    'sort-keys': 'off',
     // https://typescript-eslint.io/rules/no-magic-numbers/
     // https://eslint.org/docs/latest/rules/no-magic-numbers#options
     '@typescript-eslint/no-magic-numbers': ['error', { ignore: [0, 1, 2] }],
@@ -107,6 +113,8 @@ module.exports = {
         checksVoidReturn: { attributes: false },
       },
     ],
+    // https://typescript-eslint.io/rules/consistent-type-definitions/
+    '@typescript-eslint/consistent-type-definitions': ['error', 'type'],
     // https://github.com/import-js/eslint-plugin-import/blob/main/docs/rules/order.md
     'import/order': [
       'error',

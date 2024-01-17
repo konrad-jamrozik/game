@@ -4,13 +4,15 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { useState } from 'react'
 
-export interface PrototypeApiCallProps {
-  readonly prop?: string
+import type Agent from '../../types/Agent'
+
+export type PrototypeApiCallProps = {
+  readonly agents: readonly Agent[]
 }
 
-export function PrototypeApiCall({
-  prop = 'default value',
-}: PrototypeApiCallProps): React.JSX.Element {
+export function PrototypeApiCall(
+  props: PrototypeApiCallProps,
+): React.JSX.Element {
   const [apiResponse, setApiResponse] = useState<string>('')
   const [loading, setLoading] = useState<boolean>(false)
   const [error, setError] = useState<string | null>(null)
@@ -52,7 +54,7 @@ export function PrototypeApiCall({
       {error && <div>Error: {error}</div>}
       {apiResponse && (
         <div>
-          <div> {prop} </div>
+          <pre> {JSON.stringify(props.agents, null, 2)} </pre>
           {/* Render your apiResponse game data here */}
           <pre>{JSON.stringify(apiResponse, null, 2)}</pre>
         </div>
