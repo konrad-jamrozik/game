@@ -4,7 +4,11 @@ import viteLogo from '../public/vite.svg'
 
 import './App.css'
 import reactLogo from './assets/react.svg'
-import { PrototypeApiCall, PrototypeMuiButton } from './components'
+import {
+  PrototypeApiCall,
+  PrototypeMuiButton,
+  PrototypeMuiTable,
+} from './components'
 import type { Agent } from './types/GameStatePlayerView'
 
 export default function App(): React.JSX.Element {
@@ -17,6 +21,7 @@ export default function App(): React.JSX.Element {
     <>
       <PrototypeApiCall agents={agents} setAgents={setAgents} />
       <PrototypeMuiButton />
+      <PrototypeMuiTable />
       <div>
         <a href="https://vitejs.dev" target="_blank" rel="noreferrer">
           <img src={viteLogo} className="logo" alt="Vite logo" />
