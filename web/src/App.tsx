@@ -5,17 +5,17 @@ import viteLogo from '../public/vite.svg'
 import './App.css'
 import reactLogo from './assets/react.svg'
 import { PrototypeApiCall, PrototypeMuiButton } from './components'
-import type Agent from './types/Agent'
+import type { Agent } from './types/GameStatePlayerView'
 
 export default function App(): React.JSX.Element {
-  const [agents, _] = useState<Agent[]>([
+  const [agents, setAgents] = useState<Agent[]>([
     { Id: 42, CurrentState: 'Happy', TurnHired: 66 },
   ])
   const [count, setCount] = useState(0)
 
   return (
     <>
-      <PrototypeApiCall agents={agents} />
+      <PrototypeApiCall agents={agents} setAgents={setAgents} />
       <PrototypeMuiButton />
       <div>
         <a href="https://vitejs.dev" target="_blank" rel="noreferrer">

@@ -4,16 +4,22 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { useState } from 'react'
 
-import type Agent from '../../types/Agent'
+import type {
+  Agent,
+  GameStatePlayerView,
+} from '../../types/GameStatePlayerView'
 
 export type PrototypeApiCallProps = {
   readonly agents: readonly Agent[]
+  readonly setAgents: React.Dispatch<React.SetStateAction<Agent[]>>
 }
 
 export function PrototypeApiCall(
   props: PrototypeApiCallProps,
 ): React.JSX.Element {
-  const [apiResponse, setApiResponse] = useState<string>('')
+  const [apiResponse, setApiResponse] = useState<GameStatePlayerView | null>(
+    null,
+  )
   const [loading, setLoading] = useState<boolean>(false)
   const [error, setError] = useState<string | null>(null)
 
@@ -36,8 +42,9 @@ export function PrototypeApiCall(
       if (!response.ok) {
         throw new Error('Network response was not ok')
       }
-      const data = await response.json()
+      const data: GameStatePlayerView = await response.json()
       setApiResponse(data)
+      props.setAgents(data.Assets.Agents)
     } catch (fetchError) {
       setError('Failed to fetch API response')
       console.error('There was an error!', fetchError)
@@ -54,8 +61,10 @@ export function PrototypeApiCall(
       {error && <div>Error: {error}</div>}
       {apiResponse && (
         <div>
+          <div>props.agents: </div>
           <pre> {JSON.stringify(props.agents, null, 2)} </pre>
           {/* Render your apiResponse game data here */}
+          <div>apiResponse: </div>
           <pre>{JSON.stringify(apiResponse, null, 2)}</pre>
         </div>
       )}
