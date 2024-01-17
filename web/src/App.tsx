@@ -21,7 +21,7 @@ export default function App(): React.JSX.Element {
     <>
       <PrototypeApiCall agents={agents} setAgents={setAgents} />
       <PrototypeMuiButton />
-      <PrototypeMuiTable />
+      <PrototypeMuiTable agents={agents} />
       <div>
         <a href="https://vitejs.dev" target="_blank" rel="noreferrer">
           <img src={viteLogo} className="logo" alt="Vite logo" />

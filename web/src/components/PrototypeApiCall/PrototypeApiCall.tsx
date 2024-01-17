@@ -27,7 +27,7 @@ export function PrototypeApiCall(
     ? 'https://game-api1.azurewebsites.net'
     : 'https://localhost:7128'
 
-  const turnLimit = 1
+  const turnLimit = 10
 
   const queryString = `?turnLimit=${turnLimit}`
 
@@ -62,10 +62,12 @@ export function PrototypeApiCall(
       {apiResponse && (
         <div>
           <div>props.agents: </div>
-          <pre> {JSON.stringify(props.agents, null, 2)} </pre>
+          <pre> {props.agents.length} </pre>
+          {/* <pre> {JSON.stringify(props.agents, null, 2)} </pre> */}
           {/* Render your apiResponse game data here */}
           <div>apiResponse: </div>
-          <pre>{JSON.stringify(apiResponse, null, 2)}</pre>
+          {/* <pre>{JSON.stringify(apiResponse, null, 2)}</pre> */}
+          <pre> {apiResponse.Assets.Agents.length} </pre>
         </div>
       )}
     </div>
