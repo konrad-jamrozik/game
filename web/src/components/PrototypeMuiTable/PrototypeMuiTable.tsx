@@ -44,4 +44,3 @@ export function PrototypeMuiTable(props: PrototypeMuiTableProps) {
     </TableContainer>
   )
 }
-
