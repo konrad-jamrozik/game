@@ -1,7 +1,7 @@
 type Agent = {
-  readonly id: number
-  readonly currentState: string
-  readonly turnHired: number
+  readonly Id: number
+  readonly CurrentState: string
+  readonly TurnHired: number
 }
 
 export default Agent
