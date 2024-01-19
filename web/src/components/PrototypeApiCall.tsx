@@ -1,6 +1,4 @@
-/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable unicorn/no-null */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { useState } from 'react'
 
 import type { Agent, GameStatePlayerView } from '../types/GameStatePlayerView'
@@ -38,7 +36,8 @@ export function PrototypeApiCall(
       if (!response.ok) {
         throw new Error('Network response was not ok')
       }
-      const data: GameStatePlayerView = await response.json()
+      const data: GameStatePlayerView =
+        (await response.json()) as GameStatePlayerView
       setApiResponse(data)
       props.setAgents(data.Assets.Agents)
     } catch (fetchError) {
@@ -54,7 +53,7 @@ export function PrototypeApiCall(
       <button onClick={fetchApiResponse} disabled={loading}>
         {loading ? 'Loading...' : 'Start Game Session'}
       </button>
-      {error && <div>Error: {error}</div>}
+      {Boolean(error) && <div>Error: {error}</div>}
       {apiResponse && (
         <div>
           <div>props.agents: </div>
