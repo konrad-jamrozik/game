@@ -9,7 +9,7 @@ import TableContainer from '@mui/material/TableContainer'
 import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
 
-import type { Agent } from '../../types/GameStatePlayerView'
+import type { Agent } from '../types/GameStatePlayerView'
 
 export type PrototypeMuiTableProps = {
   readonly agents: readonly Agent[]
@@ -44,3 +44,4 @@ export function PrototypeMuiTable(props: PrototypeMuiTableProps) {
     </TableContainer>
   )
 }
+

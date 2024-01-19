@@ -3,10 +3,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { useState } from 'react'
 
-import type {
-  Agent,
-  GameStatePlayerView,
-} from '../../types/GameStatePlayerView'
+import type { Agent, GameStatePlayerView } from '../types/GameStatePlayerView'
 
 export type PrototypeApiCallProps = {
   readonly agents: readonly Agent[]
