@@ -1,10 +1,6 @@
 import { useState } from 'react'
 
-import {
-  PrototypeApiCall,
-  PrototypeMuiButton,
-  PrototypeMuiTable,
-} from './components'
+import { RunSimulation, SimulationOutputTable } from './components'
 import type { Agent } from './types/GameStatePlayerView'
 
 export default function App(): React.JSX.Element {
@@ -13,9 +9,8 @@ export default function App(): React.JSX.Element {
   ])
   return (
     <>
-      <PrototypeApiCall agents={agents} setAgents={setAgents} />
-      <PrototypeMuiButton />
-      <PrototypeMuiTable agents={agents} />
+      <RunSimulation agents={agents} setAgents={setAgents} />
+      <SimulationOutputTable agents={agents} />
     </>
   )
 }

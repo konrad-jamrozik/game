@@ -1,15 +1,14 @@
+import Button from '@mui/material/Button'
 import { useState } from 'react'
 
 import type { Agent, GameStatePlayerView } from '../types/GameStatePlayerView'
 
-export type PrototypeApiCallProps = {
+export type RunSimulationProps = {
   readonly agents: readonly Agent[]
   readonly setAgents: React.Dispatch<React.SetStateAction<Agent[]>>
 }
 
-export function PrototypeApiCall(
-  props: PrototypeApiCallProps,
-): React.JSX.Element {
+export function RunSimulation(props: RunSimulationProps): React.JSX.Element {
   const [apiResponse, setApiResponse] = useState<GameStatePlayerView>()
   const [loading, setLoading] = useState<boolean>(false)
   const [error, setError] = useState<string>()
@@ -46,17 +45,16 @@ export function PrototypeApiCall(
 
   return (
     <div>
-      <button onClick={fetchApiResponse} disabled={loading}>
+      <Button variant="outlined" onClick={fetchApiResponse} disabled={loading}>
         {loading ? 'Loading...' : 'Start Game Session'}
-      </button>
+      </Button>
       {Boolean(error) && <div>Error: {error}</div>}
       {apiResponse && (
         <div>
-          <div>props.agents: </div>
+          <div>agents count from props: </div>
           <pre> {props.agents.length} </pre>
           {/* <pre> {JSON.stringify(props.agents, null, 2)} </pre> */}
-          {/* Render your apiResponse game data here */}
-          <div>apiResponse: </div>
+          <div>agents count from API: </div>
           {/* <pre>{JSON.stringify(apiResponse, null, 2)}</pre> */}
           <pre> {apiResponse.Assets.Agents.length} </pre>
         </div>

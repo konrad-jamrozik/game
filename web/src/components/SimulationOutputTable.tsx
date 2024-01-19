@@ -9,12 +9,12 @@ import _ from 'lodash'
 
 import type { Agent } from '../types/GameStatePlayerView'
 
-export type PrototypeMuiTableProps = {
+export type SimulationOutputTableProps = {
   readonly agents: readonly Agent[]
 }
 
-export function PrototypeMuiTable(
-  props: PrototypeMuiTableProps,
+export function SimulationOutputTable(
+  props: SimulationOutputTableProps,
 ): React.JSX.Element {
   return (
     <TableContainer component={Paper}>

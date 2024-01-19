@@ -1,3 +1,2 @@
-export { PrototypeApiCall } from './PrototypeApiCall'
-export { PrototypeMuiButton } from './PrototypeMuiButton'
-export { PrototypeMuiTable } from './PrototypeMuiTable'
+export { RunSimulation } from './RunSimulation'
+export { SimulationOutputTable } from './SimulationOutputTable'
