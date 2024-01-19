@@ -8,10 +8,16 @@ import ReactDOM from 'react-dom/client'
 
 import App from './App.tsx'
 
-// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-ReactDOM.createRoot(document.querySelector('#root')!).render(
-  <React.StrictMode>
-    <CssBaseline />
-    <App />
-  </React.StrictMode>,
-)
+const rootElement = document.querySelector('#root')
+if (rootElement) {
+  ReactDOM.createRoot(rootElement).render(
+    <React.StrictMode>
+      <CssBaseline />
+      <App />
+    </React.StrictMode>,
+  )
+} else {
+  console.error(
+    'Could not find #root element! Ensure that index.html has an element with id="root"',
+  )
+}

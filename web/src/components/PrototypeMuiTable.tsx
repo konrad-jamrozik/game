@@ -1,6 +1,4 @@
 /* eslint-disable lodash/prefer-lodash-method */
-/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import Paper from '@mui/material/Paper'
 import Table from '@mui/material/Table'
 import TableBody from '@mui/material/TableBody'
@@ -15,7 +13,9 @@ export type PrototypeMuiTableProps = {
   readonly agents: readonly Agent[]
 }
 
-export function PrototypeMuiTable(props: PrototypeMuiTableProps) {
+export function PrototypeMuiTable(
+  props: PrototypeMuiTableProps,
+): React.JSX.Element {
   return (
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 50 }} aria-label="simple table">
@@ -44,4 +44,3 @@ export function PrototypeMuiTable(props: PrototypeMuiTableProps) {
     </TableContainer>
   )
 }
-

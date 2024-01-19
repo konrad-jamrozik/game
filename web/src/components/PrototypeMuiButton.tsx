@@ -6,6 +6,6 @@ export type PrototypeMuiButtonProps = {
 
 export function PrototypeMuiButton({
   prop = 'default value',
-}: PrototypeMuiButtonProps): React.ReactElement {
+}: PrototypeMuiButtonProps): React.JSX.Element {
   return <Button variant="outlined">Hello world {prop}</Button>
 }

@@ -1,4 +1,3 @@
-/* eslint-disable unicorn/no-null */
 import { useState } from 'react'
 
 import type { Agent, GameStatePlayerView } from '../types/GameStatePlayerView'
@@ -11,11 +10,9 @@ export type PrototypeApiCallProps = {
 export function PrototypeApiCall(
   props: PrototypeApiCallProps,
 ): React.JSX.Element {
-  const [apiResponse, setApiResponse] = useState<GameStatePlayerView | null>(
-    null,
-  )
+  const [apiResponse, setApiResponse] = useState<GameStatePlayerView>()
   const [loading, setLoading] = useState<boolean>(false)
-  const [error, setError] = useState<string | null>(null)
+  const [error, setError] = useState<string>()
 
   const apiHost = import.meta.env.PROD
     ? 'https://game-api1.azurewebsites.net'
@@ -29,15 +26,14 @@ export function PrototypeApiCall(
 
   async function fetchApiResponse(): Promise<void> {
     setLoading(true)
-    setError(null)
+    setError('')
 
     try {
       const response = await fetch(apiUrl)
       if (!response.ok) {
         throw new Error('Network response was not ok')
       }
-      const data: GameStatePlayerView =
-        (await response.json()) as GameStatePlayerView
+      const data = (await response.json()) as GameStatePlayerView
       setApiResponse(data)
       props.setAgents(data.Assets.Agents)
     } catch (fetchError) {
