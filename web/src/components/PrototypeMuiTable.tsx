@@ -1,4 +1,3 @@
-/* eslint-disable lodash/prefer-lodash-method */
 import Paper from '@mui/material/Paper'
 import Table from '@mui/material/Table'
 import TableBody from '@mui/material/TableBody'
@@ -6,6 +5,7 @@ import TableCell from '@mui/material/TableCell'
 import TableContainer from '@mui/material/TableContainer'
 import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
+import _ from 'lodash'
 
 import type { Agent } from '../types/GameStatePlayerView'
 
@@ -27,7 +27,7 @@ export function PrototypeMuiTable(
           </TableRow>
         </TableHead>
         <TableBody>
-          {props.agents.map((agent) => (
+          {_.map(props.agents, (agent: Agent) => (
             <TableRow
               key={agent.Id}
               sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
@@ -44,3 +44,4 @@ export function PrototypeMuiTable(
     </TableContainer>
   )
 }
+

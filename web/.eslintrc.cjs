@@ -20,7 +20,6 @@ module.exports = {
     'plugin:unicorn/all', // [unicorn]
     'plugin:sonarjs/recommended',
     'plugin:lodash/recommended',
-    'plugin:lodash-fp/recommended',
   ],
   ignorePatterns: [
     'dist', // [vite template]
@@ -35,7 +34,6 @@ module.exports = {
     'sonarjs',
     'github',
     'lodash',
-    'lodash-fp',
   ],
   overrides: [
     {
@@ -141,6 +139,8 @@ module.exports = {
     // https://github.com/sindresorhus/eslint-plugin-unicorn/blob/main/docs/rules/no-empty-file.md
     // Sometimes I need empty files while figuring out how to make things work
     'unicorn/no-empty-file': 'off',
+    // https://github.com/wix-incubator/eslint-plugin-lodash/blob/v7.4.0/docs/rules/import-scope.md
+    'lodash/import-scope': ['error', 'full'],
     'react-refresh/only-export-components': [
       // [vite template][plugin: react-refresh]
       'warn', // [vite template][plugin: react-refresh]
