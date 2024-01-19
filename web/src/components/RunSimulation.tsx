@@ -1,4 +1,6 @@
+import { Unstable_NumberInput as NumberInput } from '@mui/base/Unstable_NumberInput'
 import Button from '@mui/material/Button'
+import TextField from '@mui/material/TextField'
 import { useState } from 'react'
 
 import type { Agent, GameStatePlayerView } from '../types/GameStatePlayerView'
@@ -6,6 +8,8 @@ import type { Agent, GameStatePlayerView } from '../types/GameStatePlayerView'
 export type RunSimulationProps = {
   readonly agents: readonly Agent[]
   readonly setAgents: React.Dispatch<React.SetStateAction<Agent[]>>
+  readonly turnLimit: number
+  readonly setTurnLimit: React.Dispatch<React.SetStateAction<number>>
 }
 
 export function RunSimulation(props: RunSimulationProps): React.JSX.Element {
@@ -17,9 +21,7 @@ export function RunSimulation(props: RunSimulationProps): React.JSX.Element {
     ? 'https://game-api1.azurewebsites.net'
     : 'https://localhost:7128'
 
-  const turnLimit = 10
-
-  const queryString = `?turnLimit=${turnLimit}`
+  const queryString = `?turnLimit=${props.turnLimit}`
 
   const apiUrl = `${apiHost}/simulateGameSession${queryString}`
 
@@ -48,6 +50,29 @@ export function RunSimulation(props: RunSimulationProps): React.JSX.Element {
       <Button variant="outlined" onClick={fetchApiResponse} disabled={loading}>
         {loading ? 'Loading...' : 'Start Game Session'}
       </Button>
+      <TextField
+        id="textfield-turnLimit"
+        label="turn limit"
+        type="number"
+        value={props.turnLimit}
+        onChange={(event) => {
+          const target = event.target as HTMLInputElement
+          props.setTurnLimit(target.valueAsNumber)
+        }}
+        InputLabelProps={{
+          shrink: true,
+        }}
+      />
+      <NumberInput
+        placeholder="turn limit"
+        value={props.turnLimit}
+        max={100}
+        min={1}
+        onChange={(event) => {
+          const target = event.target as HTMLInputElement
+          props.setTurnLimit(target.valueAsNumber)
+        }}
+      />
       {Boolean(error) && <div>Error: {error}</div>}
       {apiResponse && (
         <div>

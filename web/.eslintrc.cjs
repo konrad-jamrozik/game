@@ -83,6 +83,28 @@ module.exports = {
     'no-duplicate-imports': ['error', { includeExports: true }],
     // https://eslint.org/docs/latest/rules/sort-keys
     'sort-keys': 'off',
+    // https://eslint.org/docs/latest/rules/line-comment-position
+    'line-comment-position': 'off',
+    // https://eslint.org/docs/latest/rules/no-inline-comments
+    'no-inline-comments': 'off',
+    // https://typescript-eslint.io/rules/prefer-readonly-parameter-types/
+    '@typescript-eslint/prefer-readonly-parameter-types': [
+      'error',
+      {
+        allow: [
+          {
+            from: 'package',
+            name: [
+              'FocusEvent',
+              'KeyboardEvent',
+              'PointerEvent',
+              'ChangeEvent',
+            ],
+            package: 'react',
+          },
+        ],
+      },
+    ],
     // https://typescript-eslint.io/rules/no-magic-numbers/
     // https://eslint.org/docs/latest/rules/no-magic-numbers#options
     '@typescript-eslint/no-magic-numbers': ['error', { ignore: [0, 1, 2] }],
