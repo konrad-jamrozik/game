@@ -1,6 +1,7 @@
 import { Unstable_NumberInput as NumberInput } from '@mui/base/Unstable_NumberInput'
 import Button from '@mui/material/Button'
 import TextField from '@mui/material/TextField'
+import _ from 'lodash'
 import { useState } from 'react'
 
 import type { Agent, GameStatePlayerView } from '../types/GameStatePlayerView'
@@ -55,7 +56,7 @@ export function RunSimulation(props: RunSimulationProps): React.JSX.Element {
         label="turn limit"
         type="number"
         value={props.turnLimit}
-        onChange={(event) => {
+        onChange={(event: React.ChangeEvent) => {
           const target = event.target as HTMLInputElement
           props.setTurnLimit(target.valueAsNumber)
         }}
@@ -68,9 +69,17 @@ export function RunSimulation(props: RunSimulationProps): React.JSX.Element {
         value={props.turnLimit}
         max={100}
         min={1}
-        onChange={(event) => {
-          const target = event.target as HTMLInputElement
-          props.setTurnLimit(target.valueAsNumber)
+        onChange={(
+          event:
+            | React.FocusEvent<HTMLInputElement>
+            | React.KeyboardEvent
+            | React.PointerEvent,
+          val: number | undefined,
+        ) => {
+          console.log(`${event.type} event: the new value is ${val}`)
+          if (!_.isUndefined(val)) {
+            props.setTurnLimit(val)
+          }
         }}
       />
       {Boolean(error) && <div>Error: {error}</div>}
