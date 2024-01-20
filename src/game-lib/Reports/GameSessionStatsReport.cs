@@ -33,8 +33,7 @@ public class GameSessionStatsReport
 
     public void Write()
     {
-        List<GameState> gameStates =
-            _gameSession.PastGameStates.Concat(_gameSession.CurrentGameState.WrapInList()).ToList();
+        List<GameState> gameStates = _gameSession.AllGameStates.ToList();
 
         new TurnStatsReport(_log, gameStates, _turnReportCsvFile).Write();
         new AgentStatsReport(_log, _gameSession.CurrentGameState, _agentReportCsvFile, _lastTurn).Write();

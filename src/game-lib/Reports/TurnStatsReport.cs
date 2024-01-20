@@ -42,9 +42,7 @@ public class TurnStatsReport : CsvFileReport
     private static object[][] DataRows(List<GameState> gameStates)
     {
         object[][] dataRows = gameStates
-            // We are selecting every second state, because these are the states at the end of turn,
-            // after player made their actions *AND* the turn time advanced.
-            .Where((_, i) => (i % 2 == 0))
+            .AtTurnStarts()
             .Select(
                 state =>
                 {

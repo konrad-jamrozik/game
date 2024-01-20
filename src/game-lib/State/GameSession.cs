@@ -1,3 +1,4 @@
+using Lib.Primitives;
 using UfoGameLib.Lib;
 
 namespace UfoGameLib.State;
@@ -22,6 +23,8 @@ public class GameSession
     {
         RandomGen = randomGen;
     }
+
+    public GameState[] AllGameStates => PastGameStates.Concat(CurrentGameState.WrapInList()).ToArray();
 
     public GameState? PreviousGameState => PastGameStates.Any() ? PastGameStates.Last() : null;
 

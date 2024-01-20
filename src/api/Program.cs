@@ -78,7 +78,7 @@ app.MapGet(
 
 app.MapGet(
     "/simulateGameSession",
-    (int? turnLimit) =>
+    (int? turnLimit, bool? includeAllStates) =>
     {
         int turnLimitVal = turnLimit ?? 30;
         int turnLimitLowerBound = 1;
@@ -97,7 +97,10 @@ app.MapGet(
         var aiPlayer = new AIPlayer(log, intellect);
         controller.PlayGameSession(turnLimit: turnLimitVal, aiPlayer);
 
-        return TypedResults.Json(controller.CurrentGameStatePlayerView, GameState.StateJsonSerializerOptions);
+        if (includeAllStates == true)
+            return TypedResults.Json(controller.AllGameStatesPlayerViews(), GameState.StateJsonSerializerOptions);
+        else
+            return TypedResults.Json(controller.CurrentGameStatePlayerView, GameState.StateJsonSerializerOptions);
     });
 
 app.Run();

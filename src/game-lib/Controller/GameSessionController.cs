@@ -57,6 +57,13 @@ public class GameSessionController
     public GameStatePlayerView CurrentGameStatePlayerView 
         => new GameStatePlayerView(() => GameSession.CurrentGameState);
 
+    public GameStatePlayerView[] AllGameStatesPlayerViews()
+        => GameSession
+            .AllGameStates
+            .AtTurnStarts()
+            .Select(gs => new GameStatePlayerView(() => gs))
+            .ToArray();
+
     public void PlayGameSession(int turnLimit, IPlayer player)
     {
         Debug.Assert(CurrentGameStatePlayerView.CurrentTurn == Timeline.InitialTurn);
@@ -70,7 +77,7 @@ public class GameSessionController
             _log.Info($"===== Turn {state.Timeline.CurrentTurn}");
             _log.Info("");
 
-            // This persists the game state at player turn beginning.
+            // This persists the game state at the player turn beginning.
             GameSession.AppendCurrentStateToPastStates();
 
             player.PlayGameTurn(CurrentGameStatePlayerView, TurnController);

@@ -10,9 +10,10 @@ namespace UfoGameLib.State;
 /// implementing IPlayer interface, is allowed to see.
 ///
 /// The GameStatePlayerView accepts as input Func(GameState) instead of just
-/// GameState to make it possible to create GameStatePlayerView that references
-/// *current* game state of given GameSession, no matter the changes to the
-/// game session current game state references.
+/// GameState to make it possible to create GameStatePlayerView logically always
+/// points to the **current** game state of given GameSession, even if the
+/// underlying CurrentGameState reference has changed.
+/// This happens in GameSessionController.LoadCurrentGameStateFromFile.
 /// 
 /// For details on behavior of GameStatePlayerView, see GameStateTests.
 /// </summary>
