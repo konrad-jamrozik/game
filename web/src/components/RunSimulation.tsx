@@ -20,7 +20,7 @@ export function RunSimulation(props: RunSimulationProps): React.JSX.Element {
     ? 'https://game-api1.azurewebsites.net'
     : 'https://localhost:7128'
 
-  const queryString = `?turnLimit=${props.turnLimit}`
+  const queryString = `?includeAllStates=true&turnLimit=${props.turnLimit}`
 
   const apiUrl = `${apiHost}/simulateGameSession${queryString}`
 
@@ -33,9 +33,11 @@ export function RunSimulation(props: RunSimulationProps): React.JSX.Element {
       if (!response.ok) {
         throw new Error('Network response was not ok')
       }
-      const data = (await response.json()) as GameStatePlayerView
-      setApiResponse(data)
-      props.setAgents(data.Assets.Agents)
+      const allStates = (await response.json()) as GameStatePlayerView[]
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      const lastState = allStates.at(-1)!
+      setApiResponse(lastState)
+      props.setAgents(lastState.Assets.Agents)
     } catch (fetchError) {
       setError('Failed to fetch API response')
       console.error('There was an error!', fetchError)

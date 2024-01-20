@@ -109,7 +109,7 @@ module.exports = {
     ],
     // https://typescript-eslint.io/rules/no-magic-numbers/
     // https://eslint.org/docs/latest/rules/no-magic-numbers#options
-    '@typescript-eslint/no-magic-numbers': ['error', { ignore: [0, 1, 2] }],
+    '@typescript-eslint/no-magic-numbers': ['error', { ignore: [-1, 0, 1, 2] }],
     // https://typescript-eslint.io/rules/naming-convention
     '@typescript-eslint/naming-convention': [
       'error',
