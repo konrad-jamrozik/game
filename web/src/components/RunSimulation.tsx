@@ -1,4 +1,3 @@
-import { Unstable_NumberInput as NumberInput } from '@mui/base/Unstable_NumberInput'
 import Button from '@mui/material/Button'
 import TextField from '@mui/material/TextField'
 import _ from 'lodash'
@@ -63,23 +62,10 @@ export function RunSimulation(props: RunSimulationProps): React.JSX.Element {
         InputLabelProps={{
           shrink: true,
         }}
-      />
-      <NumberInput
-        placeholder="turn limit"
-        value={props.turnLimit}
-        max={100}
-        min={1}
-        onChange={(
-          event:
-            | React.FocusEvent<HTMLInputElement>
-            | React.KeyboardEvent
-            | React.PointerEvent,
-          val: number | undefined,
-        ) => {
-          console.log(`${event.type} event: the new value is ${val}`)
-          if (!_.isUndefined(val)) {
-            props.setTurnLimit(val)
-          }
+        inputProps={{
+          min: 1,
+          max: 100,
+          step: 1,
         }}
       />
       {Boolean(error) && <div>Error: {error}</div>}
