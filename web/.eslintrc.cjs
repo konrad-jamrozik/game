@@ -87,6 +87,8 @@ module.exports = {
     'line-comment-position': 'off',
     // https://eslint.org/docs/latest/rules/no-inline-comments
     'no-inline-comments': 'off',
+    // https://eslint.org/docs/latest/rules/multiline-comment-style
+    'multiline-comment-style': 'off',
     // https://typescript-eslint.io/rules/prefer-readonly-parameter-types/
     '@typescript-eslint/prefer-readonly-parameter-types': [
       'error',
