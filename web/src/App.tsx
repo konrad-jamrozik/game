@@ -5,6 +5,7 @@ import Typography from '@mui/material/Typography'
 import { useState } from 'react'
 
 import { RunSimulation, SimulationOutputTable } from './components'
+import { PrototypeChart } from './components/PrototypeChart'
 import type { Agent } from './types/GameStatePlayerView'
 
 function Footer(): React.JSX.Element {
@@ -33,6 +34,7 @@ export default function App(): React.JSX.Element {
               {...{ agents, setAgents, turnLimit, setTurnLimit }}
             />
             <SimulationOutputTable agents={agents} />
+            <PrototypeChart />
           </>
         </Typography>
         <Footer />
