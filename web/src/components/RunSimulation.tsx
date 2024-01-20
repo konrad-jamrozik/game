@@ -1,6 +1,5 @@
 import Button from '@mui/material/Button'
 import TextField from '@mui/material/TextField'
-import _ from 'lodash'
 import { useState } from 'react'
 
 import type { Agent, GameStatePlayerView } from '../types/GameStatePlayerView'

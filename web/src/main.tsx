@@ -1,3 +1,4 @@
+import { ThemeProvider } from '@emotion/react'
 import '@fontsource/roboto/300.css'
 import '@fontsource/roboto/400.css'
 import '@fontsource/roboto/500.css'
@@ -7,13 +8,16 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 
 import App from './App.tsx'
+import theme from './theme.tsx'
 
 const rootElement = document.querySelector('#root')
 if (rootElement) {
   ReactDOM.createRoot(rootElement).render(
     <React.StrictMode>
-      <CssBaseline />
-      <App />
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <App />
+      </ThemeProvider>
     </React.StrictMode>,
   )
 } else {
