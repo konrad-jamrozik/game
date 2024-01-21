@@ -90,29 +90,11 @@ module.exports = {
     // https://eslint.org/docs/latest/rules/multiline-comment-style
     'multiline-comment-style': 'off',
 
+    // Disabled because it triggers too many false positives plus the
+    // VSCode ESLint extension doesn't appear to recognize some of the allowed
+    // options. See comment at the bottom of this file for details.
     // https://typescript-eslint.io/rules/prefer-readonly-parameter-types/
-    '@typescript-eslint/prefer-readonly-parameter-types': [
-      'error',
-      {
-        allow: [
-          {
-            from: 'package',
-            name: [
-              'FocusEvent',
-              'KeyboardEvent',
-              'PointerEvent',
-              'ChangeEvent',
-            ],
-            package: 'react',
-          },
-          {
-            from: 'file',
-            name: 'GameStatePlayerView',
-            path: 'src/types/GameStatePlayerView.ts',
-          },
-        ],
-      },
-    ],
+    '@typescript-eslint/prefer-readonly-parameter-types': 'off',
     // https://typescript-eslint.io/rules/no-magic-numbers/
     // https://eslint.org/docs/latest/rules/no-magic-numbers#options
     '@typescript-eslint/no-magic-numbers': ['error', { ignore: [-1, 0, 1, 2] }],
