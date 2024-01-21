@@ -89,6 +89,7 @@ module.exports = {
     'no-inline-comments': 'off',
     // https://eslint.org/docs/latest/rules/multiline-comment-style
     'multiline-comment-style': 'off',
+
     // https://typescript-eslint.io/rules/prefer-readonly-parameter-types/
     '@typescript-eslint/prefer-readonly-parameter-types': [
       'error',
@@ -103,6 +104,11 @@ module.exports = {
               'ChangeEvent',
             ],
             package: 'react',
+          },
+          {
+            from: 'file',
+            name: 'GameStatePlayerView',
+            path: 'src/types/GameStatePlayerView.ts',
           },
         ],
       },
@@ -137,6 +143,7 @@ module.exports = {
     ],
     // https://typescript-eslint.io/rules/consistent-type-definitions/
     '@typescript-eslint/consistent-type-definitions': ['error', 'type'],
+
     // https://github.com/import-js/eslint-plugin-import/blob/main/docs/rules/order.md
     'import/order': [
       'error',
@@ -146,6 +153,7 @@ module.exports = {
         alphabetize: { order: 'asc', orderImportKind: 'asc' },
       },
     ],
+
     // https://github.com/sindresorhus/eslint-plugin-unicorn/blob/main/docs/rules/filename-case.md
     'unicorn/filename-case': [
       'error',
@@ -163,8 +171,12 @@ module.exports = {
     // https://github.com/sindresorhus/eslint-plugin-unicorn/blob/main/docs/rules/no-empty-file.md
     // Sometimes I need empty files while figuring out how to make things work
     'unicorn/no-empty-file': 'off',
+
     // https://github.com/wix-incubator/eslint-plugin-lodash/blob/v7.4.0/docs/rules/import-scope.md
     'lodash/import-scope': ['error', 'full'],
+    // https://github.com/wix-incubator/eslint-plugin-lodash/blob/v7.4.0/docs/rules/prop-shorthand.md
+    'lodash/prop-shorthand': ['error', 'never'],
+
     'react-refresh/only-export-components': [
       // [vite template][plugin: react-refresh]
       'warn', // [vite template][plugin: react-refresh]
@@ -213,6 +225,11 @@ module.exports = {
     },
   },
 }
+// eslint execution snippets: from current dir:
+//
+//   npx eslint --ext ts,tsx --plugin @typescript-eslint --rule '@typescript-eslint/prefer-readonly-parameter-types: error' ./src/**
+//
+// See also: https://eslint.org/docs/latest/use/command-line-interface
 //
 // Rejected plugins:
 // - eslint-plugin-node:
@@ -236,6 +253,33 @@ module.exports = {
 // https://prettier.io/docs/en/install#eslint-and-other-linters
 // https://typescript-eslint.io/linting/troubleshooting/performance-troubleshooting#eslint-plugin-prettier
 // https://typescript-eslint.io/linting/troubleshooting/formatting#suggested-usage---prettier
+//
+// Rejected config, kept here for
+// // https://typescript-eslint.io/rules/prefer-readonly-parameter-types/
+// '@typescript-eslint/prefer-readonly-parameter-types': [
+//   'error',
+//   {
+//     allow: [
+//       {
+//         from: 'package',
+//         name: [
+//           'FocusEvent',
+//           'KeyboardEvent',
+//           'PointerEvent',
+//           'ChangeEvent',
+//         ],
+//         package: 'react',
+//       },
+//       // This appears to be not recognized by VSCode ESLint extension, even though
+//       // it works for the CLI and CI.
+//       {
+//         from: 'file',
+//         name: 'GameStatePlayerView',
+//         path: 'src/types/GameStatePlayerView.ts',
+//       },
+//     ],
+//   },
+// ],
 //
 // References:
 // [SO react ver]: https://stackoverflow.com/a/73014978/986533

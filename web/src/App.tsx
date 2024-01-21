@@ -6,7 +6,7 @@ import { useState } from 'react'
 
 import { RunSimulation, SimulationOutputTable } from './components'
 import { PrototypeChart } from './components/PrototypeChart'
-import type { Agent } from './types/GameStatePlayerView'
+import type { Agent, GameStatePlayerView } from './types/GameStatePlayerView'
 
 function Footer(): React.JSX.Element {
   return (
@@ -25,16 +25,17 @@ export default function App(): React.JSX.Element {
     { Id: 42, CurrentState: 'Happy', TurnHired: 66 },
   ])
   const [turnLimit, setTurnLimit] = useState<number>(1)
+  const [gameStates, setGameStates] = useState<GameStatePlayerView[]>([])
   return (
     <Container maxWidth="sm">
       <Box sx={{ my: 4 }}>
         <Typography gutterBottom>
           <>
             <RunSimulation
-              {...{ agents, setAgents, turnLimit, setTurnLimit }}
+              {...{ agents, setAgents, turnLimit, setTurnLimit, setGameStates }}
             />
             <SimulationOutputTable agents={agents} />
-            <PrototypeChart />
+            <PrototypeChart gameStates={gameStates} />
           </>
         </Typography>
         <Footer />

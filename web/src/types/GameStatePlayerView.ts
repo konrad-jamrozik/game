@@ -1,8 +1,10 @@
 export type GameStatePlayerView = {
   readonly Assets: Assets
+  readonly CurrentTurn: number
 }
 
 export type Assets = {
+  readonly Money: number
   readonly Agents: Agent[]
 }
 

@@ -9,6 +9,9 @@ export type RunSimulationProps = {
   readonly setAgents: React.Dispatch<React.SetStateAction<Agent[]>>
   readonly turnLimit: number
   readonly setTurnLimit: React.Dispatch<React.SetStateAction<number>>
+  readonly setGameStates: React.Dispatch<
+    React.SetStateAction<GameStatePlayerView[]>
+  >
 }
 
 export function RunSimulation(props: RunSimulationProps): React.JSX.Element {
@@ -33,11 +36,12 @@ export function RunSimulation(props: RunSimulationProps): React.JSX.Element {
       if (!response.ok) {
         throw new Error('Network response was not ok')
       }
-      const allStates = (await response.json()) as GameStatePlayerView[]
+      const allGameStates = (await response.json()) as GameStatePlayerView[]
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      const lastState = allStates.at(-1)!
-      setApiResponse(lastState)
-      props.setAgents(lastState.Assets.Agents)
+      const lastGameState = allGameStates.at(-1)!
+      setApiResponse(lastGameState)
+      props.setAgents(lastGameState.Assets.Agents)
+      props.setGameStates(allGameStates)
     } catch (fetchError) {
       setError('Failed to fetch API response')
       console.error('There was an error!', fetchError)

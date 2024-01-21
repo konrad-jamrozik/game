@@ -1,14 +1,21 @@
-/* eslint-disable @typescript-eslint/no-magic-numbers */
 import { LineChart } from '@mui/x-charts/LineChart'
-export type PrototypeChartProps = object
+import _ from 'lodash'
 
-export function PrototypeChart(): React.JSX.Element {
+import type { GameStatePlayerView } from '../types/GameStatePlayerView'
+
+export type PrototypeChartProps = {
+  readonly gameStates: readonly GameStatePlayerView[]
+}
+
+export function PrototypeChart(props: PrototypeChartProps): React.JSX.Element {
+  const turns: number[] = _.map(props.gameStates, (gs) => gs.CurrentTurn)
+  const money: number[] = _.map(props.gameStates, (gs) => gs.Assets.Money)
   return (
     <LineChart
-      xAxis={[{ data: [1, 2, 3, 5, 8, 10] }]}
+      xAxis={[{ data: turns }]}
       series={[
         {
-          data: [2, 5.5, 2, 8.5, 1.5, 5],
+          data: money,
         },
       ]}
       width={500}
