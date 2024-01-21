@@ -5,6 +5,8 @@ export type GameStatePlayerView = {
 
 export type Assets = {
   readonly Money: number
+  readonly Funding: number
+  readonly Intel: number
   readonly Agents: Agent[]
 }
 
