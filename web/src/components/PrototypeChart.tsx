@@ -31,14 +31,13 @@ export function PrototypeChart(props: PrototypeChartProps): React.JSX.Element {
         {
           min: 0,
           max: yAxisMax,
-          label: 'Money',
           scaleType: 'linear',
-          //labelStyle: { ??? },
         },
       ]}
       series={[
         {
           data: money,
+          label: 'Money',
         },
       ]}
       width={500}
