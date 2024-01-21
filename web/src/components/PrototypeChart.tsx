@@ -24,19 +24,22 @@ export function PrototypeChart(props: PrototypeChartProps): React.JSX.Element {
     upkeepCost: _.size(gs.Assets.Agents) * agentUpkeepCost,
   }))
 
-  const seriesLabels: { [key: string]: string } = {
-    money: 'Money',
-    upkeepCost: 'Upkeep',
-    funding: 'Funding',
-    intel: 'Intel',
+  const seriesConfig: { [key: string]: { label: string; color: string } } = {
+    money: { label: 'Money', color: 'darkgreen' },
+    funding: { label: 'Funding', color: 'lime' },
+    upkeepCost: { label: 'Upkeep', color: 'red' },
+    intel: { label: 'Intel', color: 'dodgerblue' },
   }
 
   const series: MakeOptional<LineSeriesType, 'type'>[] = _.map(
-    _.keys(seriesLabels),
+    _.keys(seriesConfig),
     (key: string) => ({
       dataKey: key,
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      label: seriesLabels[key]!,
+      label: seriesConfig[key]!.label,
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      color: seriesConfig[key]!.color,
+      showMark: false,
     }),
   )
 
