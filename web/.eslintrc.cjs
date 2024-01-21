@@ -125,13 +125,18 @@ module.exports = {
     ],
     // https://typescript-eslint.io/rules/consistent-type-definitions/
     '@typescript-eslint/consistent-type-definitions': ['error', 'type'],
+    // https://typescript-eslint.io/rules/consistent-indexed-object-style/
+    '@typescript-eslint/consistent-indexed-object-style': [
+      'error',
+      'index-signature',
+    ],
 
     // https://github.com/import-js/eslint-plugin-import/blob/main/docs/rules/order.md
     'import/order': [
       'error',
       {
         warnOnUnassignedImports: true,
-        'newlines-between': 'always',
+        'newlines-between': 'never',
         alphabetize: { order: 'asc', orderImportKind: 'asc' },
       },
     ],

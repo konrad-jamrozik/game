@@ -1,7 +1,8 @@
+import type { LineSeriesType } from '@mui/x-charts'
 import { LineChart } from '@mui/x-charts/LineChart'
 import _ from 'lodash'
-
 import type { GameStatePlayerView } from '../types/GameStatePlayerView'
+import type { MakeOptional } from '../types/external'
 
 const defaultXAxisMax = 10
 const defaultYAxisMax = 100
@@ -22,11 +23,18 @@ export function PrototypeChart(props: PrototypeChartProps): React.JSX.Element {
     }),
   )
 
-  // kja todo: use keyToLabel
-  // const keyToLabel: { [key: string]: string } = {
-  //   money: 'Money',
-  //   upkeepCost: 'Upkeep',
-  // }
+  const seriesLabels: { [key: string]: string } = {
+    money: 'Money',
+    upkeepCost: 'Upkeep',
+  }
+
+  const series: MakeOptional<LineSeriesType, 'type'>[] = _.map(
+    _.keys(seriesLabels),
+    (key: string) => ({
+      dataKey: key,
+      label: _.get(seriesLabels, key),
+    }),
+  )
 
   const maxTurn = _.maxBy(dataSet, (item) => item.turn)?.turn
   const maxMoney = _.maxBy(dataSet, (item) => item.money)?.money
@@ -51,10 +59,7 @@ export function PrototypeChart(props: PrototypeChartProps): React.JSX.Element {
           scaleType: 'linear',
         },
       ]}
-      series={[
-        { dataKey: 'money', label: 'Money' },
-        { dataKey: 'upkeepCost', label: 'Upkeep' },
-      ]}
+      series={series}
       dataset={dataSet}
       width={500}
       height={300}

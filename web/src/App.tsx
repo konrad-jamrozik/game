@@ -3,10 +3,11 @@ import Container from '@mui/material/Container'
 import Link from '@mui/material/Link'
 import Typography from '@mui/material/Typography'
 import { useState } from 'react'
-
 import { RunSimulation, SimulationOutputTable } from './components'
 import { PrototypeChart } from './components/PrototypeChart'
 import type { Agent, GameStatePlayerView } from './types/GameStatePlayerView'
+
+const defaultTurnLimit = 10
 
 function Footer(): React.JSX.Element {
   return (
@@ -24,7 +25,7 @@ export default function App(): React.JSX.Element {
   const [agents, setAgents] = useState<Agent[]>([
     { Id: 42, CurrentState: 'Happy', TurnHired: 66 },
   ])
-  const [turnLimit, setTurnLimit] = useState<number>(1)
+  const [turnLimit, setTurnLimit] = useState<number>(defaultTurnLimit)
   const [gameStates, setGameStates] = useState<GameStatePlayerView[]>([])
   return (
     <Container maxWidth="sm">
