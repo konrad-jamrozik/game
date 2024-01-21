@@ -34,8 +34,8 @@ export default function App(): React.JSX.Element {
             <RunSimulation
               {...{ agents, setAgents, turnLimit, setTurnLimit, setGameStates }}
             />
-            <SimulationOutputTable agents={agents} />
             <PrototypeChart gameStates={gameStates} />
+            <SimulationOutputTable agents={agents} />
           </>
         </Typography>
         <Footer />
