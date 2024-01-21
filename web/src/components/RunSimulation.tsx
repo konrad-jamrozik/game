@@ -51,7 +51,7 @@ export function RunSimulation(props: RunSimulationProps): React.JSX.Element {
   }
 
   return (
-    <div>
+    <>
       <Button variant="outlined" onClick={fetchApiResponse} disabled={loading}>
         {loading ? 'Loading...' : 'Start Game Session'}
       </Button>
@@ -84,6 +84,6 @@ export function RunSimulation(props: RunSimulationProps): React.JSX.Element {
           <pre> {apiResponse.Assets.Agents.length} </pre>
         </div>
       )}
-    </div>
+    </>
   )
 }
