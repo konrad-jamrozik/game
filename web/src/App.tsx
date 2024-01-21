@@ -29,7 +29,7 @@ export default function App(): React.JSX.Element {
   return (
     <Container maxWidth="sm">
       <Box sx={{ my: 4 }}>
-        <Typography gutterBottom>
+        <Typography component={'span'} gutterBottom>
           <>
             <RunSimulation
               {...{ agents, setAgents, turnLimit, setTurnLimit, setGameStates }}
