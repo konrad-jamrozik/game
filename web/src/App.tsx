@@ -3,8 +3,9 @@ import Container from '@mui/material/Container'
 import Link from '@mui/material/Link'
 import Typography from '@mui/material/Typography'
 import { useState } from 'react'
-import { RunSimulation, SimulationOutputTable } from './components'
 import { PrototypeChart } from './components/PrototypeChart'
+import { RunSimulation } from './components/RunSimulation'
+import { SimulationOutputTable } from './components/SimulationOutputTable'
 import type { Agent, GameStatePlayerView } from './types/GameStatePlayerView'
 
 const defaultTurnLimit = 10
