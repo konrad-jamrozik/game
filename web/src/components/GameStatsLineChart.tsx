@@ -107,12 +107,11 @@ export function GameStatsLineChart(
   const defaultXAxisMax = 10
   const xAxisMax = maxTurn ?? defaultXAxisMax
 
-  // kja currently hardcoded to agents, but actually I want to take max over all values in the entry
-  const maxAgents = _.maxBy(dataset, (dse: DataSetEntry) => dse['agents'])?.[
-    'agents'
-  ]
-  const defaultYAxisMax = 10
-  const yAxisMax = maxAgents ?? defaultYAxisMax
+  function getMaximum(dse: DataSetEntry): number {
+    return _.defaultTo(_.max(_.values(_.omit(dse, 'turn'))), 0)
+  }
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  const yAxisMax = _.max(_.map(dataset, getMaximum))!
 
   return (
     <LineChart
