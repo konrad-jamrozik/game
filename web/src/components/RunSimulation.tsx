@@ -68,7 +68,7 @@ export function RunSimulation(props: RunSimulationProps): React.JSX.Element {
         }}
         inputProps={{
           min: 1,
-          max: 100,
+          max: 300,
           step: 1,
         }}
       />
