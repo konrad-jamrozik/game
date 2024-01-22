@@ -130,6 +130,8 @@ module.exports = {
       'error',
       'index-signature',
     ],
+    // https://typescript-eslint.io/rules/sort-type-constituents/
+    '@typescript-eslint/sort-type-constituents': 'off',
 
     // https://github.com/import-js/eslint-plugin-import/blob/main/docs/rules/order.md
     'import/order': [
@@ -163,6 +165,8 @@ module.exports = {
     'lodash/import-scope': ['error', 'full'],
     // https://github.com/wix-incubator/eslint-plugin-lodash/blob/v7.4.0/docs/rules/prop-shorthand.md
     'lodash/prop-shorthand': ['error', 'never'],
+    // https://github.com/wix-incubator/eslint-plugin-lodash/blob/v7.4.0/docs/rules/matches-prop-shorthand.md
+    'lodash/matches-prop-shorthand': ['error', 'never'],
 
     'react-refresh/only-export-components': [
       // [vite template][plugin: react-refresh]

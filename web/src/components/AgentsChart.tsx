@@ -3,32 +3,51 @@ import { LineChart } from '@mui/x-charts/LineChart'
 import _ from 'lodash'
 import type { GameStatePlayerView } from '../types/GameStatePlayerView'
 import type { MakeOptional } from '../types/external'
-import { agentUpkeepCost } from '../types/ruleset'
 
-export type PrototypeChartProps = {
+export type AgentsChartProps = {
   readonly gameStates: readonly GameStatePlayerView[]
 }
 
-export function PrototypeChart(props: PrototypeChartProps): React.JSX.Element {
+export function AgentsChart(props: AgentsChartProps): React.JSX.Element {
   const gsData: {
     turn: number
-    money: number
-    upkeepCost: number
-    funding: number
-    intel: number
+    agents: number
+    inTraining: number
+    generatingIncome: number
+    gatheringIntel: number
+    recovering: number
   }[] = _.map(props.gameStates, (gs) => ({
     turn: gs.CurrentTurn,
-    money: gs.Assets.Money,
-    funding: gs.Assets.Funding,
-    intel: gs.Assets.Intel,
-    upkeepCost: _.size(gs.Assets.Agents) * agentUpkeepCost,
+    agents: _.size(gs.Assets.Agents),
+    inTraining: _.size(
+      _.filter(gs.Assets.Agents, (agent) => agent.CurrentState === 'Training'),
+    ),
+    generatingIncome: _.size(
+      _.filter(
+        gs.Assets.Agents,
+        (agent) => agent.CurrentState === 'GeneratingIncome',
+      ),
+    ),
+    gatheringIntel: _.size(
+      _.filter(
+        gs.Assets.Agents,
+        (agent) => agent.CurrentState === 'GatheringIntel',
+      ),
+    ),
+    recovering: _.size(
+      _.filter(
+        gs.Assets.Agents,
+        (agent) => agent.CurrentState === 'Recovering',
+      ),
+    ),
   }))
 
   const seriesConfig: { [key: string]: { label: string; color: string } } = {
-    money: { label: 'Money', color: 'darkgreen' },
-    funding: { label: 'Funding', color: 'gold' },
-    upkeepCost: { label: 'Upkeep', color: 'red' },
-    intel: { label: 'Intel', color: 'dodgerblue' },
+    agents: { label: 'Agents', color: 'darkgreen' },
+    inTraining: { label: 'InTraining', color: 'purple' },
+    generatingIncome: { label: 'GeneratingIncome', color: 'gold' },
+    gatheringIntel: { label: 'GatheringIntel', color: 'dodgerblue' },
+    recovering: { label: 'Recovering', color: 'crimson' },
   }
 
   const series: MakeOptional<LineSeriesType, 'type'>[] = _.map(
@@ -47,9 +66,9 @@ export function PrototypeChart(props: PrototypeChartProps): React.JSX.Element {
   const defaultXAxisMax = 10
   const xAxisMax = maxTurn ?? defaultXAxisMax
 
-  const maxMoney = _.maxBy(gsData, (gs) => gs.money)?.money
-  const defaultYAxisMax = 100
-  const yAxisMax = maxMoney ?? defaultYAxisMax
+  const maxAgents = _.maxBy(gsData, (gs) => gs.agents)?.agents
+  const defaultYAxisMax = 10
+  const yAxisMax = maxAgents ?? defaultYAxisMax
 
   return (
     <LineChart

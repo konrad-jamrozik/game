@@ -12,6 +12,14 @@ export type Assets = {
 
 export type Agent = {
   readonly Id: number
-  readonly CurrentState: string
   readonly TurnHired: number
+  readonly CurrentState:
+    | 'InTransit'
+    | 'Available'
+    | 'OnMission'
+    | 'Training'
+    | 'GatheringIntel'
+    | 'GeneratingIncome'
+    | 'Recovering'
+    | 'Terminated'
 }
