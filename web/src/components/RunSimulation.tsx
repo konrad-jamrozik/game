@@ -16,6 +16,7 @@ export function RunSimulation(props: RunSimulationProps): React.JSX.Element {
   const [apiResponse, setApiResponse] = useState<GameStatePlayerView>()
   const [loading, setLoading] = useState<boolean>(false)
   const [error, setError] = useState<string>()
+  const [lastTurn, setLastTurn] = useState<number>(0)
 
   const apiHost = import.meta.env.PROD
     ? 'https://game-api1.azurewebsites.net'
@@ -37,6 +38,7 @@ export function RunSimulation(props: RunSimulationProps): React.JSX.Element {
       const allGameStates = (await response.json()) as GameStatePlayerView[]
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       const lastGameState = allGameStates.at(-1)!
+      setLastTurn(lastGameState.CurrentTurn)
       setApiResponse(lastGameState)
       props.setAgents(lastGameState.Assets.Agents)
       props.setGameStates(allGameStates)
@@ -77,16 +79,7 @@ export function RunSimulation(props: RunSimulationProps): React.JSX.Element {
           }}
         />
         {Boolean(error) && <div>Error: {error}</div>}
-        {apiResponse && (
-          <div>
-            <div>agents count from props: </div>
-            <pre> {props.agents.length} </pre>
-            {/* <pre> {JSON.stringify(props.agents, null, 2)} </pre> */}
-            <div>agents count from API: </div>
-            {/* <pre>{JSON.stringify(apiResponse, null, 2)}</pre> */}
-            <pre> {apiResponse.Assets.Agents.length} </pre>
-          </div>
-        )}
+        {apiResponse && <div>Simulation ended at turn {lastTurn}</div>}
       </CardContent>
     </Card>
   )
