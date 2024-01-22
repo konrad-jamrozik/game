@@ -38,6 +38,7 @@
     "editor.formatOnSaveMode": "file", // required to format on save
     "files.autoSave": "off",
     "typescript.suggest.paths": false,
-    "javascript.suggest.paths": false
+    "javascript.suggest.paths": false,
+    "prettier.requireConfig": true
   }
 }

@@ -1,10 +1,13 @@
 import { Container, Link, Typography } from '@mui/material'
 import Grid from '@mui/material/Unstable_Grid2'
 import { useState } from 'react'
-import { AgentStatsChart } from './components/AgentStatsChart'
-import { MoneyStatsChart } from './components/MoneyStatsChart'
-import { PrototypeChart } from './components/PrototypeChart'
+import { GameStatsLineChart } from './components/GameStatsLineChart'
 import { RunSimulation } from './components/RunSimulation'
+import {
+  agentStatsDataSeries,
+  intelStatsDataSeries,
+  moneyStatsDataSeries,
+} from './types/GameStateDataSeries'
 import type { Agent, GameStatePlayerView } from './types/GameStatePlayerView'
 
 const defaultTurnLimit = 300
@@ -40,13 +43,22 @@ export default function App(): React.JSX.Element {
             />
           </Grid>
           <Grid xs={6} sx={{ bgcolor: '#002000' }}>
-            <MoneyStatsChart gameStates={gameStates} />
+            <GameStatsLineChart
+              gameStates={gameStates}
+              dataSeries={moneyStatsDataSeries}
+            />
           </Grid>
           <Grid xs={6} sx={{ bgcolor: '#202000' }}>
-            <AgentStatsChart gameStates={gameStates} />
+            <GameStatsLineChart
+              gameStates={gameStates}
+              dataSeries={agentStatsDataSeries}
+            />
           </Grid>
           <Grid xs={6} sx={{ bgcolor: '#202000' }}>
-            <PrototypeChart gameStates={gameStates} />
+            <GameStatsLineChart
+              gameStates={gameStates}
+              dataSeries={intelStatsDataSeries}
+            />
           </Grid>
           <Grid xs={12} sx={{ bgcolor: '#000020' }}>
             <Footer />

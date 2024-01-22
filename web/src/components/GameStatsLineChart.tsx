@@ -3,19 +3,13 @@
 import type { LineSeriesType } from '@mui/x-charts'
 import { LineChart } from '@mui/x-charts/LineChart'
 import _ from 'lodash'
+import type { GameStateDataSeries } from '../types/GameStateDataSeries'
 import type { GameStatePlayerView } from '../types/GameStatePlayerView'
 import type { MakeOptional } from '../types/external'
 
 export type GameStatsLineChartProps = {
   readonly gameStates: readonly GameStatePlayerView[]
   readonly dataSeries: readonly GameStateDataSeries[]
-}
-
-export type GameStateDataSeries = {
-  key: string
-  dataFunc: (gs: GameStatePlayerView) => number
-  label: string
-  color: string
 }
 
 type DataSetEntry = {
@@ -52,8 +46,11 @@ export function GameStatsLineChart(
   function getMaximum(dse: DataSetEntry): number {
     return _.defaultTo(_.max(_.values(_.omit(dse, 'turn'))), 0)
   }
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  const yAxisMax = _.max(_.map(dataset, getMaximum))!
+  const defaultYAxisMax = 10
+  const yAxisMax = _.defaultTo(
+    _.max(_.map(dataset, getMaximum)),
+    defaultYAxisMax,
+  )
 
   return (
     <LineChart

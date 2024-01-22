@@ -5,6 +5,7 @@ const config = {
   semi: false,
   singleQuote: true,
   endOfLine: 'crlf',
+  printWidth: 80,
 }
 
 export default config
