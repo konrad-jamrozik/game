@@ -1,8 +1,8 @@
 import { Container, Link, Typography } from '@mui/material'
 import Grid from '@mui/material/Unstable_Grid2'
 import { useState } from 'react'
+import { AgentStatsChart } from './components/AgentStatsChart'
 import { AgentsChart } from './components/AgentsChart'
-import { GameStatsLineChart } from './components/GameStatsLineChart'
 import { PrototypeChart } from './components/PrototypeChart'
 import { RunSimulation } from './components/RunSimulation'
 import type { Agent, GameStatePlayerView } from './types/GameStatePlayerView'
@@ -40,7 +40,7 @@ export default function App(): React.JSX.Element {
             />
           </Grid>
           <Grid xs={6} sx={{ bgcolor: '#002000' }}>
-            <GameStatsLineChart gameStates={gameStates} />
+            <AgentStatsChart gameStates={gameStates} />
           </Grid>
           <Grid xs={6} sx={{ bgcolor: '#202000' }}>
             <AgentsChart gameStates={gameStates} />
