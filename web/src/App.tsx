@@ -1,10 +1,7 @@
-import Container from '@mui/material/Container'
-import Link from '@mui/material/Link'
-import Typography from '@mui/material/Typography'
+import { Container, Link, Typography } from '@mui/material'
 import { Fragment, useState } from 'react'
 import { PrototypeChart } from './components/PrototypeChart'
 import { RunSimulation } from './components/RunSimulation'
-import { SimulationOutputTable } from './components/SimulationOutputTable'
 import type { Agent, GameStatePlayerView } from './types/GameStatePlayerView'
 
 const defaultTurnLimit = 10
@@ -35,7 +32,7 @@ export default function App(): React.JSX.Element {
             {...{ agents, setAgents, turnLimit, setTurnLimit, setGameStates }}
           />
           <PrototypeChart gameStates={gameStates} />
-          <SimulationOutputTable agents={agents} />
+          {/* <SimulationOutputTable agents={agents} /> */}
         </Fragment>
       </Typography>
       <Footer />

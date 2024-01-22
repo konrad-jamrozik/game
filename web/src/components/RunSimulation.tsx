@@ -1,5 +1,4 @@
-import Button from '@mui/material/Button'
-import TextField from '@mui/material/TextField'
+import { Button, Card, CardContent, TextField } from '@mui/material'
 import { useState } from 'react'
 import type { Agent, GameStatePlayerView } from '../types/GameStatePlayerView'
 
@@ -50,39 +49,45 @@ export function RunSimulation(props: RunSimulationProps): React.JSX.Element {
   }
 
   return (
-    <>
-      <Button variant="outlined" onClick={fetchApiResponse} disabled={loading}>
-        {loading ? 'Loading...' : 'Start Game Session'}
-      </Button>
-      <TextField
-        id="textfield-turnLimit"
-        label="turn limit"
-        type="number"
-        value={props.turnLimit}
-        onChange={(event: React.ChangeEvent) => {
-          const target = event.target as HTMLInputElement
-          props.setTurnLimit(target.valueAsNumber)
-        }}
-        InputLabelProps={{
-          shrink: true,
-        }}
-        inputProps={{
-          min: 1,
-          max: 300,
-          step: 1,
-        }}
-      />
-      {Boolean(error) && <div>Error: {error}</div>}
-      {apiResponse && (
-        <div>
-          <div>agents count from props: </div>
-          <pre> {props.agents.length} </pre>
-          {/* <pre> {JSON.stringify(props.agents, null, 2)} </pre> */}
-          <div>agents count from API: </div>
-          {/* <pre>{JSON.stringify(apiResponse, null, 2)}</pre> */}
-          <pre> {apiResponse.Assets.Agents.length} </pre>
-        </div>
-      )}
-    </>
+    <Card variant="outlined">
+      <CardContent>
+        <Button
+          variant="outlined"
+          onClick={fetchApiResponse}
+          disabled={loading}
+        >
+          {loading ? 'Loading...' : 'Start Game Session'}
+        </Button>
+        <TextField
+          id="textfield-turnLimit"
+          label="turn limit"
+          type="number"
+          value={props.turnLimit}
+          onChange={(event: React.ChangeEvent) => {
+            const target = event.target as HTMLInputElement
+            props.setTurnLimit(target.valueAsNumber)
+          }}
+          InputLabelProps={{
+            shrink: true,
+          }}
+          inputProps={{
+            min: 1,
+            max: 300,
+            step: 1,
+          }}
+        />
+        {Boolean(error) && <div>Error: {error}</div>}
+        {apiResponse && (
+          <div>
+            <div>agents count from props: </div>
+            <pre> {props.agents.length} </pre>
+            {/* <pre> {JSON.stringify(props.agents, null, 2)} </pre> */}
+            <div>agents count from API: </div>
+            {/* <pre>{JSON.stringify(apiResponse, null, 2)}</pre> */}
+            <pre> {apiResponse.Assets.Agents.length} </pre>
+          </div>
+        )}
+      </CardContent>
+    </Card>
   )
 }
