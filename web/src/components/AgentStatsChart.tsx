@@ -5,6 +5,17 @@ import {
   type GameStatsLineChartProps,
 } from './GameStatsLineChart'
 
+export function AgentStatsChart(
+  props: Omit<GameStatsLineChartProps, 'dataSeries'>,
+): React.JSX.Element {
+  return (
+    <GameStatsLineChart
+      gameStates={props.gameStates}
+      dataSeries={agentStatsDataSeries}
+    />
+  )
+}
+
 const agentStatsDataSeries: GameStateDataSeries[] = [
   {
     key: 'agents',
@@ -61,14 +72,3 @@ const agentStatsDataSeries: GameStateDataSeries[] = [
     color: 'crimson',
   },
 ]
-
-export function AgentStatsChart(
-  props: Omit<GameStatsLineChartProps, 'dataSeries'>,
-): React.JSX.Element {
-  return (
-    <GameStatsLineChart
-      gameStates={props.gameStates}
-      dataSeries={agentStatsDataSeries}
-    />
-  )
-}

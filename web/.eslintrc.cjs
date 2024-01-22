@@ -132,6 +132,9 @@ module.exports = {
     ],
     // https://typescript-eslint.io/rules/sort-type-constituents/
     '@typescript-eslint/sort-type-constituents': 'off',
+    // https://eslint.org/docs/latest/rules/no-use-before-define
+    // https://typescript-eslint.io/rules/no-use-before-define/
+    '@typescript-eslint/no-use-before-define': 'off',
 
     // https://github.com/import-js/eslint-plugin-import/blob/main/docs/rules/order.md
     'import/order': [
