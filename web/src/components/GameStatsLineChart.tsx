@@ -17,7 +17,7 @@ export type GameStatsLineChartProps = {
 }
 
 type GameStateDataSeries = {
-  seriesDataKey: string
+  key: string
   dataFunc: (gs: GameStatePlayerView) => number
   label: string
   color: string
@@ -29,13 +29,13 @@ export function GameStatsLineChart(
   // kja todo dataSeries is to be passed in input props
   const dataSeries: GameStateDataSeries[] = [
     {
-      seriesDataKey: 'agents',
+      key: 'agents',
       dataFunc: (gs) => _.size(gs.Assets.Agents),
       label: 'Agents',
       color: 'darkgreen',
     },
     {
-      seriesDataKey: 'inTraining',
+      key: 'inTraining',
       dataFunc: (gs) =>
         _.size(
           _.filter(
@@ -47,7 +47,7 @@ export function GameStatsLineChart(
       color: 'purple',
     },
     {
-      seriesDataKey: 'generatingIncome',
+      key: 'generatingIncome',
       dataFunc: (gs) =>
         _.size(
           _.filter(
@@ -59,7 +59,7 @@ export function GameStatsLineChart(
       color: 'gold',
     },
     {
-      seriesDataKey: 'gatheringIntel',
+      key: 'gatheringIntel',
       dataFunc: (gs) =>
         _.size(
           _.filter(
@@ -71,7 +71,7 @@ export function GameStatsLineChart(
       color: 'dodgerblue',
     },
     {
-      seriesDataKey: 'recovering',
+      key: 'recovering',
       dataFunc: (gs) =>
         _.size(
           _.filter(
@@ -87,7 +87,7 @@ export function GameStatsLineChart(
   const series: MakeOptional<LineSeriesType, 'type'>[] = _.map(
     dataSeries,
     (ds) => ({
-      dataKey: ds.seriesDataKey,
+      dataKey: ds.key,
       label: ds.label,
       color: ds.color,
       showMark: false,
@@ -97,7 +97,7 @@ export function GameStatsLineChart(
   const dataset: any = _.map(props.gameStates, (gs) => {
     const obj: any = {}
     _.forEach(dataSeries, (ds) => {
-      obj[ds.seriesDataKey] = ds.dataFunc(gs)
+      obj[ds.key] = ds.dataFunc(gs)
     })
     obj.turn = gs.CurrentTurn
     return obj
