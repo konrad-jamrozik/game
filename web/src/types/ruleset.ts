@@ -1,1 +1,2 @@
-export const agentUpkeepCost = 5 // codesync UfoGameLib.Model.Ruleset.AgentUpkeepCost
+// codesync UfoGameLib.Model.Ruleset
+export const agentUpkeepCost = 5

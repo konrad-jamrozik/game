@@ -1,3 +1,5 @@
+// codesync: UfoGameLib.State.GameState
+
 export type GameStatePlayerView = {
   readonly Assets: Assets
   readonly CurrentTurn: number
