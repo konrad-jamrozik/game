@@ -1,5 +1,3 @@
-/* eslint-disable github/array-foreach */
-/* eslint-disable unicorn/no-array-for-each */
 import type { LineSeriesType } from '@mui/x-charts'
 import { LineChart } from '@mui/x-charts/LineChart'
 import _ from 'lodash'
@@ -31,11 +29,13 @@ export function GameStatsLineChart(
   )
 
   const dataset: DataSetEntry[] = _.map(props.gameStates, (gs) => {
-    const obj: DataSetEntry = { turn: gs.CurrentTurn }
-    // kja replace this foreach with declarative code (probably will have to use splatting ...)
-    _.forEach(props.dataSeries, (ds) => {
-      obj[ds.key] = ds.dataFunc(gs)
-    })
+    const obj: DataSetEntry = {
+      turn: gs.CurrentTurn,
+      ..._.mapValues(
+        _.keyBy(props.dataSeries, (ds) => ds.key),
+        (ds) => ds.dataFunc(gs),
+      ),
+    }
     return obj
   })
 
