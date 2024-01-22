@@ -103,11 +103,11 @@ export function GameStatsLineChart(
     return obj
   })
 
-  const maxTurn = _.maxBy(dataset, (gs) => gs.turn)?.turn
+  const maxTurn = _.maxBy(dataset, (gs: any) => gs.turn)?.turn
   const defaultXAxisMax = 10
   const xAxisMax = maxTurn ?? defaultXAxisMax
 
-  const maxAgents = _.maxBy(dataset, (gs) => gs.agents)?.agents
+  const maxAgents = _.maxBy(dataset, (gs: any) => gs.agents)?.agents
   const defaultYAxisMax = 10
   const yAxisMax = maxAgents ?? defaultYAxisMax
 
