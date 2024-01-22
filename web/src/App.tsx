@@ -1,8 +1,7 @@
-import Box from '@mui/material/Box'
 import Container from '@mui/material/Container'
 import Link from '@mui/material/Link'
 import Typography from '@mui/material/Typography'
-import { useState } from 'react'
+import { Fragment, useState } from 'react'
 import { PrototypeChart } from './components/PrototypeChart'
 import { RunSimulation } from './components/RunSimulation'
 import { SimulationOutputTable } from './components/SimulationOutputTable'
@@ -29,19 +28,17 @@ export default function App(): React.JSX.Element {
   const [turnLimit, setTurnLimit] = useState<number>(defaultTurnLimit)
   const [gameStates, setGameStates] = useState<GameStatePlayerView[]>([])
   return (
-    <Container maxWidth="sm">
-      <Box sx={{ my: 4 }}>
-        <Typography component={'span'} gutterBottom>
-          <>
-            <RunSimulation
-              {...{ agents, setAgents, turnLimit, setTurnLimit, setGameStates }}
-            />
-            <PrototypeChart gameStates={gameStates} />
-            <SimulationOutputTable agents={agents} />
-          </>
-        </Typography>
-        <Footer />
-      </Box>
+    <Container maxWidth={false} sx={{ bgcolor: '#202020', my: 4 }}>
+      <Typography component={'span'} gutterBottom>
+        <Fragment>
+          <RunSimulation
+            {...{ agents, setAgents, turnLimit, setTurnLimit, setGameStates }}
+          />
+          <PrototypeChart gameStates={gameStates} />
+          <SimulationOutputTable agents={agents} />
+        </Fragment>
+      </Typography>
+      <Footer />
     </Container>
   )
 }
