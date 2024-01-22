@@ -1,10 +1,5 @@
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/no-unsafe-return */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable github/array-foreach */
 /* eslint-disable unicorn/no-array-for-each */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable max-lines-per-function */
 import type { LineSeriesType } from '@mui/x-charts'
 import { LineChart } from '@mui/x-charts/LineChart'
@@ -21,6 +16,11 @@ type GameStateDataSeries = {
   dataFunc: (gs: GameStatePlayerView) => number
   label: string
   color: string
+}
+
+type DataSetEntry = {
+  [key: string]: number
+  turn: number
 }
 
 export function GameStatsLineChart(
@@ -94,20 +94,23 @@ export function GameStatsLineChart(
     }),
   )
 
-  const dataset: any = _.map(props.gameStates, (gs) => {
-    const obj: any = {}
+  const dataset: DataSetEntry[] = _.map(props.gameStates, (gs) => {
+    const obj: DataSetEntry = { turn: gs.CurrentTurn }
+    // kja replace this foreach with declarative code (probably will have to use splatting ...)
     _.forEach(dataSeries, (ds) => {
       obj[ds.key] = ds.dataFunc(gs)
     })
-    obj.turn = gs.CurrentTurn
     return obj
   })
 
-  const maxTurn = _.maxBy(dataset, (gs: any) => gs.turn)?.turn
+  const maxTurn = _.maxBy(dataset, (dse: DataSetEntry) => dse.turn)?.turn
   const defaultXAxisMax = 10
   const xAxisMax = maxTurn ?? defaultXAxisMax
 
-  const maxAgents = _.maxBy(dataset, (gs: any) => gs.agents)?.agents
+  // kja currently hardcoded to agents, but actually I want to take max over all values in the entry
+  const maxAgents = _.maxBy(dataset, (dse: DataSetEntry) => dse['agents'])?.[
+    'agents'
+  ]
   const defaultYAxisMax = 10
   const yAxisMax = maxAgents ?? defaultYAxisMax
 
