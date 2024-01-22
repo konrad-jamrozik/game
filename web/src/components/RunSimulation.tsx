@@ -49,7 +49,7 @@ export function RunSimulation(props: RunSimulationProps): React.JSX.Element {
   }
 
   return (
-    <Card variant="outlined">
+    <Card variant="outlined" sx={{ maxWidth: '300px' }}>
       <CardContent>
         <Button
           variant="outlined"

@@ -53,6 +53,7 @@ export function PrototypeChart(props: PrototypeChartProps): React.JSX.Element {
 
   return (
     <LineChart
+      sx={{ bgcolor: '#161616' }}
       xAxis={[
         {
           dataKey: 'turn',

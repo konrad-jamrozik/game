@@ -1,5 +1,6 @@
 import { Container, Link, Typography } from '@mui/material'
-import { Fragment, useState } from 'react'
+import Grid from '@mui/material/Unstable_Grid2'
+import { useState } from 'react'
 import { PrototypeChart } from './components/PrototypeChart'
 import { RunSimulation } from './components/RunSimulation'
 import type { Agent, GameStatePlayerView } from './types/GameStatePlayerView'
@@ -26,16 +27,22 @@ export default function App(): React.JSX.Element {
   const [gameStates, setGameStates] = useState<GameStatePlayerView[]>([])
   return (
     <Container maxWidth={false} sx={{ bgcolor: '#202020', my: 4 }}>
-      <Typography component={'span'} gutterBottom>
-        <Fragment>
+      <Grid container spacing={2} sx={{ bgcolor: '#333333' }}>
+        {/* <Typography component={'span'} sx={{ bgcolor: '#000020' }} gutterBottom> */}
+        <Grid xs={12} sx={{ bgcolor: '#200000' }}>
           <RunSimulation
             {...{ agents, setAgents, turnLimit, setTurnLimit, setGameStates }}
           />
+        </Grid>
+        <Grid xs={12} sx={{ bgcolor: '#002000' }}>
           <PrototypeChart gameStates={gameStates} />
-          {/* <SimulationOutputTable agents={agents} /> */}
-        </Fragment>
-      </Typography>
-      <Footer />
+        </Grid>
+        {/* <SimulationOutputTable agents={agents} /> */}
+        {/* </Typography> */}
+        <Grid xs={12} sx={{ bgcolor: '#000020' }}>
+          <Footer />
+        </Grid>
+      </Grid>
     </Container>
   )
 }
