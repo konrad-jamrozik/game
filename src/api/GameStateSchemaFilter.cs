@@ -5,6 +5,8 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace UfoGameLib.Api;
 
+// kja generated "Assets" and "Agent" schema is empty for http endpoints but works for https.
+// Both for localhost and Azure.
 /// <summary>
 /// This schema filter ensures that OpenAPI schema generated from C# classes is generated properly.
 /// This means following transformations:
