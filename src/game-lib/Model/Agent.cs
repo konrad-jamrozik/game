@@ -251,7 +251,7 @@ public class Agent
         Debug.Assert(MissionsSurvived >= 0);
         Debug.Assert(MissionsSucceeded >= 0);
         Debug.Assert(MissionsFailed >= 0);
-        // If agent didn't survive their last mission, it's outcome still counts towards their
+        // If agent didn't survive their last mission, its outcome still counts towards their
         // missions succeeded or failed, that's why this comparison allows the difference of 1.
         Debug.Assert(MissionsSucceeded + MissionsFailed >= MissionsSurvived);
         Debug.Assert(MissionsSucceeded + MissionsFailed <= MissionsSurvived + 1);
