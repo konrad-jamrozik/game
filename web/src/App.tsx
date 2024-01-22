@@ -26,23 +26,29 @@ export default function App(): React.JSX.Element {
   const [turnLimit, setTurnLimit] = useState<number>(defaultTurnLimit)
   const [gameStates, setGameStates] = useState<GameStatePlayerView[]>([])
   return (
-    <Container maxWidth={false} sx={{ bgcolor: '#202020', my: 4 }}>
-      <Grid container spacing={2} sx={{ bgcolor: '#333333' }}>
-        {/* <Typography component={'span'} sx={{ bgcolor: '#000020' }} gutterBottom> */}
-        <Grid xs={12} sx={{ bgcolor: '#200000' }}>
-          <RunSimulation
-            {...{ agents, setAgents, turnLimit, setTurnLimit, setGameStates }}
-          />
+    <Typography component={'div'} sx={{ bgcolor: '#000020' }} gutterBottom>
+      <Container maxWidth={false} sx={{ bgcolor: '#202020', my: 4 }}>
+        <Grid container spacing={2} sx={{ bgcolor: '#333333' }}>
+          <Grid
+            xs={12}
+            sx={{ bgcolor: '#200000' }}
+            display="flex"
+            justifyContent="center"
+          >
+            <RunSimulation
+              {...{ agents, setAgents, turnLimit, setTurnLimit, setGameStates }}
+            />
+          </Grid>
+          <Grid xs={6} sx={{ bgcolor: '#002000' }}>
+            <PrototypeChart gameStates={gameStates} />
+          </Grid>
+          {/* <SimulationOutputTable agents={agents} /> */}
+
+          <Grid xs={12} sx={{ bgcolor: '#000020' }}>
+            <Footer />
+          </Grid>
         </Grid>
-        <Grid xs={12} sx={{ bgcolor: '#002000' }}>
-          <PrototypeChart gameStates={gameStates} />
-        </Grid>
-        {/* <SimulationOutputTable agents={agents} /> */}
-        {/* </Typography> */}
-        <Grid xs={12} sx={{ bgcolor: '#000020' }}>
-          <Footer />
-        </Grid>
-      </Grid>
-    </Container>
+      </Container>
+    </Typography>
   )
 }
