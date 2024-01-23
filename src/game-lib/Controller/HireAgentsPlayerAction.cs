@@ -1,3 +1,4 @@
+using System.Data;
 using UfoGameLib.Lib;
 using UfoGameLib.Model;
 using UfoGameLib.State;
@@ -18,7 +19,12 @@ public class HireAgentsPlayerAction : PlayerAction
     public override void Apply(GameState state)
     {
         _log.Info($"Hire agents. Count: {_count}");
+        int totalHireCost = Ruleset.AgentHireCost * _count;
+        Debug.Assert(state.Assets.Money >= totalHireCost);
+        state.Assets.Money -= Ruleset.AgentHireCost;
         for (int i = 0; i < _count; i++)
+        {
             state.Assets.Agents.Add(new Agent(state.NextAgentId, state.Timeline.CurrentTurn));
+        }
     }
 }
