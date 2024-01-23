@@ -2,6 +2,13 @@ import _ from 'lodash'
 import type { GameStatePlayerView } from './GameStatePlayerView'
 import { agentUpkeepCost } from './ruleset'
 
+export type GameStateDataSeries = {
+  key: GameStatsDataSeriesKey
+  dataFunc: (gs: GameStatePlayerView) => number
+  label: string
+  color: string
+}
+
 export type GameStatsDataSeriesKey =
   | 'money'
   | 'funding'
@@ -13,46 +20,37 @@ export type GameStatsDataSeriesKey =
   | 'gatheringIntel'
   | 'recovering'
 
-export type GameStateDataSeries = {
-  key: GameStatsDataSeriesKey
-  dataFunc: (gs: GameStatePlayerView) => number
-  label: string
-  color: string
+type AllStatsDataSeries = {
+  [K in GameStatsDataSeriesKey]: Omit<GameStateDataSeries, 'key'>
 }
 
-export const allStatsDataSeries: GameStateDataSeries[] = [
-  {
-    key: 'money',
+export const allGameStatsDataSeriesByKey: AllStatsDataSeries = {
+  money: {
     dataFunc: (gs) => gs.Assets.Money,
     label: 'Money',
     color: 'darkGreen',
   },
-  {
-    key: 'funding',
+  funding: {
     dataFunc: (gs) => gs.Assets.Funding,
     label: 'Funding',
     color: 'gold',
   },
-  {
-    key: 'upkeep',
+  upkeep: {
     dataFunc: (gs) => _.size(gs.Assets.Agents) * agentUpkeepCost,
     label: 'Upkeep',
     color: 'red',
   },
-  {
-    key: 'intel',
+  intel: {
     dataFunc: (gs) => gs.Assets.Intel,
     label: 'Intel',
     color: 'dodgerBlue',
   },
-  {
-    key: 'agents',
+  agents: {
     dataFunc: (gs) => _.size(gs.Assets.Agents),
     label: 'Agents',
     color: 'darkGreen',
   },
-  {
-    key: 'inTraining',
+  inTraining: {
     dataFunc: (gs) =>
       _.size(
         _.filter(
@@ -63,8 +61,7 @@ export const allStatsDataSeries: GameStateDataSeries[] = [
     label: 'InTraining',
     color: 'purple',
   },
-  {
-    key: 'generatingIncome',
+  generatingIncome: {
     dataFunc: (gs) =>
       _.size(
         _.filter(
@@ -75,8 +72,7 @@ export const allStatsDataSeries: GameStateDataSeries[] = [
     label: 'GeneratingIncome',
     color: 'gold',
   },
-  {
-    key: 'gatheringIntel',
+  gatheringIntel: {
     dataFunc: (gs) =>
       _.size(
         _.filter(
@@ -87,8 +83,7 @@ export const allStatsDataSeries: GameStateDataSeries[] = [
     label: 'GatheringIntel',
     color: 'dodgerBlue',
   },
-  {
-    key: 'recovering',
+  recovering: {
     dataFunc: (gs) =>
       _.size(
         _.filter(
@@ -99,10 +94,17 @@ export const allStatsDataSeries: GameStateDataSeries[] = [
     label: 'Recovering',
     color: 'crimson',
   },
-]
+}
+
+const allGameStatsDataSeries: GameStateDataSeries[] = _.map(
+  allGameStatsDataSeriesByKey,
+  (ds, key) => ({ ...ds, key: key as GameStatsDataSeriesKey }),
+)
 
 function getDataSeries(keys: GameStatsDataSeriesKey[]): GameStateDataSeries[] {
-  return _.filter(allStatsDataSeries, (ds) => _.includes(keys, ds.key))
+  return _.filter(allGameStatsDataSeries, (dsWithKey) =>
+    _.includes(keys, dsWithKey.key),
+  )
 }
 
 export const moneyStatsDataSeries: GameStateDataSeries[] = getDataSeries([
