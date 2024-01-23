@@ -2,14 +2,25 @@ import _ from 'lodash'
 import type { GameStatePlayerView } from './GameStatePlayerView'
 import { agentUpkeepCost } from './ruleset'
 
+export type GameStatsDataSeriesKey =
+  | 'money'
+  | 'funding'
+  | 'upkeep'
+  | 'intel'
+  | 'agents'
+  | 'inTraining'
+  | 'generatingIncome'
+  | 'gatheringIntel'
+  | 'recovering'
+
 export type GameStateDataSeries = {
-  key: string
+  key: GameStatsDataSeriesKey
   dataFunc: (gs: GameStatePlayerView) => number
   label: string
   color: string
 }
 
-export const moneyStatsDataSeries: GameStateDataSeries[] = [
+export const allStatsDataSeries: GameStateDataSeries[] = [
   {
     key: 'money',
     dataFunc: (gs) => gs.Assets.Money,
@@ -28,24 +39,12 @@ export const moneyStatsDataSeries: GameStateDataSeries[] = [
     label: 'Upkeep',
     color: 'red',
   },
-]
-
-export const intelStatsDataSeries: GameStateDataSeries[] = [
-  {
-    key: 'money',
-    dataFunc: (gs) => gs.Assets.Money,
-    label: 'Money',
-    color: 'darkGreen',
-  },
   {
     key: 'intel',
     dataFunc: (gs) => gs.Assets.Intel,
     label: 'Intel',
     color: 'dodgerBlue',
   },
-]
-
-export const agentStatsDataSeries: GameStateDataSeries[] = [
   {
     key: 'agents',
     dataFunc: (gs) => _.size(gs.Assets.Agents),
@@ -101,3 +100,26 @@ export const agentStatsDataSeries: GameStateDataSeries[] = [
     color: 'crimson',
   },
 ]
+
+function getDataSeries(keys: GameStatsDataSeriesKey[]): GameStateDataSeries[] {
+  return _.filter(allStatsDataSeries, (ds) => _.includes(keys, ds.key))
+}
+
+export const moneyStatsDataSeries: GameStateDataSeries[] = getDataSeries([
+  'money',
+  'funding',
+  'upkeep',
+])
+
+export const intelStatsDataSeries: GameStateDataSeries[] = getDataSeries([
+  'money',
+  'intel',
+])
+
+export const agentStatsDataSeries: GameStateDataSeries[] = getDataSeries([
+  'agents',
+  'inTraining',
+  'generatingIncome',
+  'gatheringIntel',
+  'recovering',
+])

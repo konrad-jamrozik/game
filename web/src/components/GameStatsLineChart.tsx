@@ -15,6 +15,8 @@ type DataSetEntry = {
   turn: number
 }
 
+const chartHeight = 500
+
 export function GameStatsLineChart(
   props: GameStatsLineChartProps,
 ): React.JSX.Element {
@@ -73,7 +75,7 @@ export function GameStatsLineChart(
       ]}
       series={series}
       dataset={dataset}
-      height={500}
+      height={chartHeight}
     />
   )
 }
