@@ -6,6 +6,7 @@ import { RunSimulation } from './components/RunSimulation'
 import {
   agentStatsDataSeries,
   intelStatsDataSeries,
+  miscStatsDataSeries,
   moneyStatsDataSeries,
 } from './types/GameStateDataSeries'
 import type { Agent, GameStatePlayerView } from './types/GameStatePlayerView'
@@ -58,6 +59,12 @@ export default function App(): React.JSX.Element {
             <GameStatsLineChart
               gameStates={gameStates}
               dataSeries={intelStatsDataSeries}
+            />
+          </Grid>
+          <Grid xs={6} sx={{ bgcolor: '#002000' }}>
+            <GameStatsLineChart
+              gameStates={gameStates}
+              dataSeries={miscStatsDataSeries}
             />
           </Grid>
           <Grid xs={12} sx={{ bgcolor: '#000020' }}>

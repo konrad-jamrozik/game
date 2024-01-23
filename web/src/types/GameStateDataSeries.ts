@@ -19,10 +19,15 @@ export type GameStatsDataSeriesKey =
   | 'generatingIncome'
   | 'gatheringIntel'
   | 'recovering'
+  | 'terminatedAgents'
+  | 'support'
+  | 'maxTransportCapacity'
 
 type AllStatsDataSeries = {
   [K in GameStatsDataSeriesKey]: Omit<GameStateDataSeries, 'key'>
 }
+
+const supportScale = 0.1
 
 export const allGameStatsDataSeriesByKey: AllStatsDataSeries = {
   money: {
@@ -45,10 +50,25 @@ export const allGameStatsDataSeriesByKey: AllStatsDataSeries = {
     label: 'Intel',
     color: 'dodgerBlue',
   },
+  support: {
+    dataFunc: (gs) => gs.Assets.Support * supportScale,
+    label: 'Support/10',
+    color: 'darkOliveGreen',
+  },
+  maxTransportCapacity: {
+    dataFunc: (gs) => gs.Assets.MaxTransportCapacity,
+    label: 'Trp. Cap',
+    color: 'blue',
+  },
   agents: {
     dataFunc: (gs) => _.size(gs.Assets.Agents),
     label: 'Agents',
     color: 'darkGreen',
+  },
+  terminatedAgents: {
+    dataFunc: (gs) => _.size(gs.TerminatedAgents),
+    label: 'Terminated agents',
+    color: 'darkRed',
   },
   inTraining: {
     dataFunc: (gs) =>
@@ -124,4 +144,10 @@ export const agentStatsDataSeries: GameStateDataSeries[] = getDataSeries([
   'generatingIncome',
   'gatheringIntel',
   'recovering',
+  'maxTransportCapacity',
+])
+
+export const miscStatsDataSeries: GameStateDataSeries[] = getDataSeries([
+  'support',
+  'terminatedAgents',
 ])

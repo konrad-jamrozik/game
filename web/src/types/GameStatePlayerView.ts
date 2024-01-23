@@ -3,6 +3,7 @@
 export type GameStatePlayerView = {
   readonly Assets: Assets
   readonly CurrentTurn: number
+  readonly TerminatedAgents: Agent[]
 }
 
 export type Assets = {
@@ -12,6 +13,18 @@ export type Assets = {
   readonly Support: number
   readonly MaxTransportCapacity: number
   readonly Agents: Agent[]
+}
+
+export type Mission = {
+  readonly Id: number
+  readonly MissionState: 'Active' | 'Successful' | 'Failed'
+}
+
+export type MissionSite = {
+  readonly Id: number
+  readonly Expired: number
+  readonly ExpiresIn: number | undefined
+  readonly TurnDeactivated: number | undefined
 }
 
 export type Agent = {
