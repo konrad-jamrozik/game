@@ -1,6 +1,6 @@
 import _ from 'lodash'
 import type { GameStatePlayerView } from './GameStatePlayerView'
-import { agentUpkeepCost } from './ruleset'
+import { agentUpkeepCost, incomeGeneratedPerAgent } from './ruleset'
 
 export type GameStateDataSeries = {
   key: GameStatsDataSeriesKey
@@ -12,6 +12,7 @@ export type GameStateDataSeries = {
 export type GameStatsDataSeriesKey =
   | 'money'
   | 'funding'
+  | 'incomeGenerated'
   | 'upkeep'
   | 'intel'
   | 'agents'
@@ -39,6 +40,17 @@ export const allGameStatsDataSeriesByKey: AllStatsDataSeries = {
     dataFunc: (gs) => gs.Assets.Funding,
     label: 'Funding',
     color: 'gold',
+  },
+  incomeGenerated: {
+    dataFunc: (gs) =>
+      _.size(
+        _.filter(
+          gs.Assets.Agents,
+          (agent) => agent.CurrentState === 'GeneratingIncome',
+        ),
+      ) * incomeGeneratedPerAgent,
+    label: 'Income generated',
+    color: 'GoldenRod',
   },
   upkeep: {
     dataFunc: (gs) => _.size(gs.Assets.Agents) * agentUpkeepCost,
@@ -130,6 +142,7 @@ function getDataSeries(keys: GameStatsDataSeriesKey[]): GameStateDataSeries[] {
 export const moneyStatsDataSeries: GameStateDataSeries[] = getDataSeries([
   'money',
   'funding',
+  'incomeGenerated',
   'upkeep',
 ])
 
