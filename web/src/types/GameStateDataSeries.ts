@@ -23,6 +23,7 @@ export type GameStatsDataSeriesKey =
   | 'terminatedAgents'
   | 'support'
   | 'maxTransportCapacity'
+  | 'avgDiffLast5MissionSites'
 
 type AllStatsDataSeries = {
   [K in GameStatsDataSeriesKey]: Omit<GameStateDataSeries, 'key'>
@@ -126,6 +127,20 @@ export const allGameStatsDataSeriesByKey: AllStatsDataSeries = {
     label: 'Recovering',
     color: 'crimson',
   },
+  avgDiffLast5MissionSites: {
+    dataFunc: (gs) =>
+      gs.MissionSites.length > 0
+        ? Math.round(
+            _.meanBy(
+              // eslint-disable-next-line @typescript-eslint/no-magic-numbers
+              _.takeRight(gs.MissionSites, 5),
+              (site) => site.Difficulty,
+            ),
+          )
+        : 0,
+    label: 'Avg. diff. last 5 sites',
+    color: 'red',
+  },
 }
 
 const allGameStatsDataSeries: GameStateDataSeries[] = _.map(
@@ -163,4 +178,5 @@ export const agentStatsDataSeries: GameStateDataSeries[] = getDataSeries([
 export const miscStatsDataSeries: GameStateDataSeries[] = getDataSeries([
   'support',
   'terminatedAgents',
+  'avgDiffLast5MissionSites',
 ])
