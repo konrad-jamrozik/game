@@ -42,6 +42,8 @@ export type Agent = {
     | 'GeneratingIncome'
     | 'Recovering'
     | 'Terminated'
+  readonly MissionsSurvived: number
+  readonly TurnsInTraining: number
 }
 
 // Note: if I would like to have a list of GameStatePlayerView type keys

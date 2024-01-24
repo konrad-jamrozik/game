@@ -1,6 +1,11 @@
 import _ from 'lodash'
+import { median, type AtLeastOneNumber } from '../lib/utils'
 import type { GameStatePlayerView } from './GameStatePlayerView'
-import { agentUpkeepCost, incomeGeneratedPerAgent } from './ruleset'
+import {
+  agentSurvivalSkill,
+  agentUpkeepCost,
+  incomeGeneratedPerAgent,
+} from './ruleset'
 
 export type GameStateDataSeries = {
   key: GameStatsDataSeriesKey
@@ -24,6 +29,9 @@ export type GameStatsDataSeriesKey =
   | 'support'
   | 'maxTransportCapacity'
   | 'avgDiffLast5MissionSites'
+  | 'maxAgentSurvSkill'
+  | 'meanAgentSurvSkill'
+  | 'medianAgentSurvSkill'
 
 type AllStatsDataSeries = {
   [K in GameStatsDataSeriesKey]: Omit<GameStateDataSeries, 'key'>
@@ -141,6 +149,35 @@ export const allGameStatsDataSeriesByKey: AllStatsDataSeries = {
     label: 'Avg. diff. last 5 sites',
     color: 'red',
   },
+  maxAgentSurvSkill: {
+    dataFunc: (gs) =>
+      gs.Assets.Agents.length > 0
+        ? agentSurvivalSkill(
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            _.maxBy(gs.Assets.Agents, (agent) => agentSurvivalSkill(agent))!,
+          )
+        : 0,
+    label: 'Max surv. skill',
+    color: 'mediumPurple',
+  },
+  meanAgentSurvSkill: {
+    dataFunc: (gs) =>
+      gs.Assets.Agents.length > 0
+        ? _.meanBy(gs.Assets.Agents, (agent) => agentSurvivalSkill(agent))
+        : 0,
+    label: 'Mean surv. skill',
+    color: '#7347cd',
+  },
+  medianAgentSurvSkill: {
+    dataFunc: (gs) => {
+      const survSkills = _.map(gs.Assets.Agents, (ag) => agentSurvivalSkill(ag))
+      return gs.Assets.Agents.length > 0
+        ? median(survSkills as AtLeastOneNumber)
+        : 0
+    },
+    label: 'Median surv. skill',
+    color: '#501fb2',
+  },
 }
 
 const allGameStatsDataSeries: GameStateDataSeries[] = _.map(
@@ -179,4 +216,7 @@ export const miscStatsDataSeries: GameStateDataSeries[] = getDataSeries([
   'support',
   'terminatedAgents',
   'avgDiffLast5MissionSites',
+  'maxAgentSurvSkill',
+  'meanAgentSurvSkill',
+  'medianAgentSurvSkill',
 ])
