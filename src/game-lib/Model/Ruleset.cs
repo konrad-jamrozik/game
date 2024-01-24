@@ -112,9 +112,12 @@ public static class Ruleset
             int currentTurn,
             RandomGen randomGen)
     {
-        // Note that currently the only way of increasing agents survivability of difficulty
-        // is via training. As such, if difficulty due to turn would grow at least as fast as Agent.TrainingCoefficient,
-        // then at some point missions would become impossible, as all agents would die.
+        // Note that currently the only ways of increasing agents survivability of difficulty is:
+        // - by surviving missions
+        // - via training
+        // As such, if difficulty due to turn would grow at least as fast as Agent.TrainingCoefficient,
+        // then at some point missions would become impossible, as eventually even the most experienced
+        // agents would die, and any new agents would never be able to catch up with mission difficulty.
         int roll = randomGen.Roll0To(30);
         int difficultyFromTurn = currentTurn * AgentTrainingCoefficient / 2;
         return (BaseMissionSiteDifficulty + difficultyFromTurn + roll, difficultyFromTurn, roll);
