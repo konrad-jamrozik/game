@@ -1,12 +1,18 @@
 /* eslint-disable lodash/prefer-lodash-method */
 /* eslint-disable @typescript-eslint/no-magic-numbers */
-import type { Agent } from './GameStatePlayerView'
+import type { Agent, Mission } from './GameStatePlayerView'
 
 // codesync UfoGameLib.Model.Ruleset
 export const agentUpkeepCost = 5
 export const incomeGeneratedPerAgent = agentUpkeepCost * 3
 
 export const agentTrainingCoefficient = 1
+
+export function missionLaunched(mission: Mission): boolean {
+  return (
+    mission.CurrentState === 'Failed' || mission.CurrentState === 'Successful'
+  )
+}
 
 export function agentSurvivalSkill(agent: Agent): number {
   return (

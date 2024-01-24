@@ -19,7 +19,7 @@ export type Assets = {
 
 export type Mission = {
   readonly Id: number
-  readonly MissionState: 'Active' | 'Successful' | 'Failed'
+  readonly CurrentState: 'Active' | 'Successful' | 'Failed'
 }
 
 export type MissionSite = {

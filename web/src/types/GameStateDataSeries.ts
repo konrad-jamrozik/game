@@ -5,6 +5,7 @@ import {
   agentSurvivalSkill,
   agentUpkeepCost,
   incomeGeneratedPerAgent,
+  missionLaunched,
 } from './ruleset'
 
 export type GameStateDataSeries = {
@@ -32,6 +33,10 @@ export type GameStatsDataSeriesKey =
   | 'maxAgentSurvSkill'
   | 'meanAgentSurvSkill'
   | 'medianAgentSurvSkill'
+  | 'missionsLaunched'
+  | 'missionsSuccessful'
+  | 'missionsFailed'
+  | 'missionSitesExpired'
 
 type AllStatsDataSeries = {
   [K in GameStatsDataSeriesKey]: Omit<GameStateDataSeries, 'key'>
@@ -178,6 +183,37 @@ export const allGameStatsDataSeriesByKey: AllStatsDataSeries = {
     label: 'Median surv. skill',
     color: '#501fb2',
   },
+  missionsLaunched: {
+    dataFunc: (gs) =>
+      _.size(_.filter(gs.Missions, (mission) => missionLaunched(mission))),
+    label: 'Missions launched',
+    color: 'dodgerBlue',
+  },
+  missionsSuccessful: {
+    dataFunc: (gs) =>
+      _.size(
+        _.filter(
+          gs.Missions,
+          (mission) => mission.CurrentState === 'Successful',
+        ),
+      ),
+    label: 'Missions successful',
+    color: 'darkGReen',
+  },
+  missionsFailed: {
+    dataFunc: (gs) =>
+      _.size(
+        _.filter(gs.Missions, (mission) => mission.CurrentState === 'Failed'),
+      ),
+    label: 'Missions failed',
+    color: 'red',
+  },
+  missionSitesExpired: {
+    dataFunc: (gs) =>
+      _.size(_.filter(gs.MissionSites, (missionSite) => missionSite.Expired)),
+    label: 'Mission sites expired',
+    color: 'darkRed',
+  },
 }
 
 const allGameStatsDataSeries: GameStateDataSeries[] = _.map(
@@ -219,4 +255,11 @@ export const miscStatsDataSeries: GameStateDataSeries[] = getDataSeries([
   'maxAgentSurvSkill',
   'meanAgentSurvSkill',
   'medianAgentSurvSkill',
+])
+
+export const missionsStatsDataSeries: GameStateDataSeries[] = getDataSeries([
+  'missionsLaunched',
+  'missionsSuccessful',
+  'missionsFailed',
+  'missionSitesExpired',
 ])
