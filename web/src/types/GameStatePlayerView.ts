@@ -46,7 +46,7 @@ export type Agent = {
   readonly TurnsInTraining: number
 }
 
-// Note: if I would like to have a list of GameStatePlayerView type keys
+// kja3: if I would like to have a list of GameStatePlayerView type keys
 // (recursively over all its children, including Assets keys etc.)
 // for compile-time exhaustiveness checking, I could leverage 'keyof' and 'Uncapitalize':
 // https://www.typescriptlang.org/docs/handbook/2/keyof-types.html

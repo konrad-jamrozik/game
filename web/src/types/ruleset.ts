@@ -1,12 +1,15 @@
+// codesync UfoGameLib.Model.Ruleset
 import _ from 'lodash'
 import type { Agent, Mission } from './GameStatePlayerView'
 
-// codesync UfoGameLib.Model.Ruleset
 export const agentUpkeepCost = 5
 export const incomeGeneratedPerAgent = agentUpkeepCost * 3
 
 export const agentTrainingCoefficient = 1
 
+// kja3: instead of replicating this logic from backend here,
+// make backend expose this property in the returned json. Applies to all such
+// properties in ruleset.ts.
 export function missionLaunched(mission: Mission): boolean {
   return (
     mission.CurrentState === 'Failed' || mission.CurrentState === 'Successful'
