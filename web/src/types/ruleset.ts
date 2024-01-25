@@ -1,4 +1,4 @@
-/* eslint-disable lodash/prefer-lodash-method */
+import _ from 'lodash'
 import type { Agent, Mission } from './GameStatePlayerView'
 
 // codesync UfoGameLib.Model.Ruleset
@@ -20,9 +20,11 @@ export function agentSurvivalSkill(agent: Agent): number {
 }
 
 function skillFromMissions(agent: Agent): number {
-  const skillFromFirstMissions = skillFromEachFirstMission
-    .slice(0, agent.MissionsSurvived)
-    .reduce((acc, curr) => acc + curr, 0)
+  const skillFromFirstMissions = _.reduce(
+    skillFromEachFirstMission.slice(0, agent.MissionsSurvived),
+    (acc, curr) => acc + curr,
+    0,
+  )
   const missionsBeyondFirstMissions = Math.max(
     agent.MissionsSurvived - skillFromEachFirstMission.length,
     0,
