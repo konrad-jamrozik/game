@@ -1,13 +1,15 @@
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import _ from 'lodash'
 
-export type AtLeastOneNumber = [number, ...number[]]
+export function median(numbers: number[]): number {
+  if (numbers.length === 0) {
+    console.error('median() got empty array as input!')
+    return 0
+  }
 
-export function median(numbers: AtLeastOneNumber): number {
-  const sortedNumbers = _.sortBy(numbers) as AtLeastOneNumber
-  const middleIndex = Math.floor(sortedNumbers.length / 2)
+  const sorted = _.sortBy(numbers)
+  const middleIndex = Math.floor(sorted.length / 2)
 
-  return sortedNumbers.length % 2 === 0
-    ? (sortedNumbers[middleIndex - 1]! + sortedNumbers[middleIndex]!) / 2
-    : sortedNumbers[middleIndex]!
+  return sorted.length % 2 === 0
+    ? (sorted[middleIndex - 1]! + sorted[middleIndex]!) / 2
+    : sorted[middleIndex]!
 }

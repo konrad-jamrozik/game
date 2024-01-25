@@ -1,5 +1,4 @@
 /* eslint-disable lodash/prefer-lodash-method */
-/* eslint-disable @typescript-eslint/no-magic-numbers */
 import type { Agent, Mission } from './GameStatePlayerView'
 
 // codesync UfoGameLib.Model.Ruleset
@@ -37,5 +36,4 @@ function skillFromMissions(agent: Agent): number {
 const skillFromEachFirstMission = [18, 15, 12, 9, 6]
 
 const skillFromEachMissionBeyondFirstMissions =
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   skillFromEachFirstMission.at(-1)!

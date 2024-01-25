@@ -97,7 +97,7 @@ module.exports = {
     '@typescript-eslint/prefer-readonly-parameter-types': 'off',
     // https://typescript-eslint.io/rules/no-magic-numbers/
     // https://eslint.org/docs/latest/rules/no-magic-numbers#options
-    '@typescript-eslint/no-magic-numbers': ['error', { ignore: [-1, 0, 1, 2] }],
+    '@typescript-eslint/no-magic-numbers': 'off',
     // https://typescript-eslint.io/rules/naming-convention
     '@typescript-eslint/naming-convention': [
       'error',
@@ -135,6 +135,8 @@ module.exports = {
     // https://eslint.org/docs/latest/rules/no-use-before-define
     // https://typescript-eslint.io/rules/no-use-before-define/
     '@typescript-eslint/no-use-before-define': 'off',
+    // https://typescript-eslint.io/rules/no-non-null-assertion/
+    '@typescript-eslint/no-non-null-assertion': 'off',
 
     // https://github.com/import-js/eslint-plugin-import/blob/main/docs/rules/order.md
     'import/order': [

@@ -36,7 +36,6 @@ export function RunSimulation(props: RunSimulationProps): React.JSX.Element {
         throw new Error('Network response was not ok')
       }
       const allGameStates = (await response.json()) as GameStatePlayerView[]
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       const lastGameState = allGameStates.at(-1)!
       setLastTurn(lastGameState.CurrentTurn)
       setApiResponse(lastGameState)

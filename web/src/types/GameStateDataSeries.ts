@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import { median, type AtLeastOneNumber } from '../lib/utils'
+import { median } from '../lib/utils'
 import type { GameStatePlayerView } from './GameStatePlayerView'
 import {
   agentSurvivalSkill,
@@ -145,7 +145,6 @@ export const allGameStatsDataSeriesByKey: AllStatsDataSeries = {
       gs.MissionSites.length > 0
         ? Math.round(
             _.meanBy(
-              // eslint-disable-next-line @typescript-eslint/no-magic-numbers
               _.takeRight(gs.MissionSites, 5),
               (site) => site.Difficulty,
             ),
@@ -158,7 +157,6 @@ export const allGameStatsDataSeriesByKey: AllStatsDataSeries = {
     dataFunc: (gs) =>
       gs.Assets.Agents.length > 0
         ? agentSurvivalSkill(
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             _.maxBy(gs.Assets.Agents, (agent) => agentSurvivalSkill(agent))!,
           )
         : 0,
@@ -176,9 +174,7 @@ export const allGameStatsDataSeriesByKey: AllStatsDataSeries = {
   medianAgentSurvSkill: {
     dataFunc: (gs) => {
       const survSkills = _.map(gs.Assets.Agents, (ag) => agentSurvivalSkill(ag))
-      return gs.Assets.Agents.length > 0
-        ? median(survSkills as AtLeastOneNumber)
-        : 0
+      return gs.Assets.Agents.length > 0 ? median(survSkills) : 0
     },
     label: 'Median surv. skill',
     color: '#501fb2',
