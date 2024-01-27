@@ -1,3 +1,4 @@
+using System.Text.Json;
 using UfoGameLib.State;
 
 namespace UfoGameLib.Tests;
@@ -83,5 +84,25 @@ public class GameStateTests
             Assert.That(clonedState, Is.Not.EqualTo(originalGameState));
             Assert.That(clonedStateView, Is.Not.EqualTo(originalGameStateView));
         });
+    }
+
+    /// <summary>
+    /// This test is here to unit test how ASP.NET Core is going to deserialize GameState
+    /// from the route parameter bindings, like:
+    ///
+    ///   app.MapPost("/exampleRoute" /// (GameState gs) => ... );
+    ///
+    /// Relevant issue to make errors clearer:
+    /// - [System.Text.Json] : More accurate error messages when failing to map fields or parameters #88048
+    ///   https://github.com/dotnet/runtime/issues/88048
+    ///   
+    /// </summary>
+    [Test]
+    public void DeserializeGameStateFromInitialGameStateJsonString()
+    {
+        // kja curr work
+        GameState originalGameState = GameState.NewInitialGameState();
+        string jsonString = originalGameState.ToJsonString();
+        GameState? deserializedGameState = JsonSerializer.Deserialize<GameState>(jsonString);
     }
 }

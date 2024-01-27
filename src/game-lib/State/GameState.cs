@@ -19,6 +19,7 @@ public class GameState : IEquatable<GameState>
 
     public int UpdateCount;
 
+    [JsonConstructor]
     public GameState(
         int updateCount,
         Timeline timeline,

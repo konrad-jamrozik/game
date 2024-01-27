@@ -103,6 +103,13 @@ app.MapGet(
             return TypedResults.Json(controller.CurrentGameStatePlayerView, GameState.StateJsonSerializerOptions);
     });
 
+app.MapPost(
+    "/simulateGameSessionFromState",
+    (GameState gs, int? turnLimit) =>
+    {
+        Console.WriteLine($"turnLimit: {turnLimit}, gs: {gs.ToJsonString()}");
+    }).WithOpenApi();
+
 app.Run();
 return;
 
