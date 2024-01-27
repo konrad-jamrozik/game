@@ -9,14 +9,14 @@ namespace UfoGameLib.State;
 /// <summary>
 /// This converter exists to enable saving the GameState to file system as json
 /// and loading it, while maintaining following properties:
-/// - no object instances are duplicated. Only one full object is serialized,
-/// and all other occurrences are serialized by IDs.
-/// - when deserializing, only ctors are used, so that immutability is maintained,
-/// i.e. there is no need for setters
-/// - when deserializing, ctors get invoked with arguments denoting some precondition
+/// - No object instances are duplicated. Only one full object is serialized,
+/// and all other occurrences are serialized by ID references.
+/// - When deserializing, only ctors are used, so that immutability is maintained,
+/// i.e. there is no need for setters.
+/// - When deserializing, ctors get invoked with arguments denoting some precondition
 /// checks are disabled. These precondition checks check correctness of object
 /// construction during normal program execution, but they may no longer hold
-/// when the object is hydrated from a json save file.
+/// when the object is deserialized from a json save file.
 ///
 /// See also the converter from which this converter inherits, its other
 /// inheritors, and tests for them.
@@ -31,10 +31,10 @@ namespace UfoGameLib.State;
 /// https://learn.microsoft.com/en-us/dotnet/standard/serialization/system-text-json/source-generation-modes?pivots=dotnet-8-0
 /// 
 /// For additional context on what gap this converter fills, see:
-/// https://github.com/dotnet/docs/issues/35020
-/// https://github.com/dotnet/runtime/issues/73302#issuecomment-1204104384
-///
-
+/// - https://github.com/dotnet/docs/issues/35020
+/// - https://github.com/dotnet/runtime/issues/73302#issuecomment-1204104384
+/// - JsonExperimental.Tests.ReferencePreservingDeserializationTests
+/// - JsonExperimental.Tests.ReferencePreservingReferenceHandlerTests
 /// </summary>
 class GameStateJsonConverter : JsonConverterSupportingReferences<GameState>
 {
