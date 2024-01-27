@@ -103,25 +103,30 @@ public class GameState : IEquatable<GameState>
 
     private static JsonSerializerOptions GetJsonSerializerOptions()
     {
-        // The difference between the returned options and converterOptions
-        // is that options has Converters defined, while converterOptions
-        // doesn't. If instead we would try to use options in place
-        // of converterOptions, then we would end up in infinite loop of:
-        // options --> have converter --> the converter has options -->
-        // these options have converter --> ...
+        // We return 'options' that:
+        // 1. use the 'converterOptions' as base options
+        // 2. have GameStateJsonConverter as a converter
+        // 3. the converter also uses 'converterOptions' as base options
         //
-        // Note that the JsonStringEnumConverter() defined within converterOptions
-        // is a "leaf" Converter in the sense it doesn't need any other of the settings
+        // In other words, both 'options' and its converter use the same base options: 'converterOptions'.
+        //   
+        // Note: we couldn't collapse 'options' and 'converterOptions' into one instance, because it would
+        // result in an infinite loop: 'options' would use GameStateJsonConverter, which would use 'options', which
+        // would use GameStateJsonConverter, which would use 'options'...
+        //
+        // Note: that the JsonStringEnumConverter() defined within converterOptions
+        // is a "leaf" converter in the sense it doesn't need any other of the settings
         // defined in the options of which it is part of.
 
-        // Define "base" JsonSerializerOptions that do not have Converters defined.
+        // Define "base" JsonSerializerOptions that:
+        // - do not have converters defined,
+        // - are used by the returned 'options' and its converter, GameStateJsonConverter.
         var converterOptions = GameStateJsonConverter.JsonSerializerOptions();
 
-        // Define the "top-level" options to be returned, having the same settings
-        // as "converterOptions".
+        // Define the "top-level" options to be returned. They use "converterOptions".
         var options = new JsonSerializerOptions(converterOptions);
 
-        // Attach Converters to "options" but not "converterOptions"
+        // Attach GameStateJsonConverter to 'options'. Now both 'options' and its converter use 'converterOptions'.
         options.Converters.Add(new GameStateJsonConverter());
 
         return options;
