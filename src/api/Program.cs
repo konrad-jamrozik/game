@@ -1,5 +1,9 @@
+using System.Diagnostics;
 using Lib.OS;
 using NJsonSchema.Generation;
+using NJsonSchema.NewtonsoftJson.Generation;
+using NSwag.Generation;
+using UfoGameLib.Api;
 using UfoGameLib.Controller;
 using UfoGameLib.Lib;
 using UfoGameLib.Players;
@@ -13,16 +17,15 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddOpenApiDocument(
     (settings) =>
     {
-        var genSettings = new SystemTextJsonSchemaGeneratorSettings();
-        //genSettings.ExcludedTypeNames = ["Agent"];
-        //genSettings.SchemaProcessors.Add(new GameStateNSwagSchemaProcessor());
-        settings.SchemaSettings = genSettings;
-        
+        SystemTextJsonSchemaGeneratorSettings genSettings = (SystemTextJsonSchemaGeneratorSettings)settings
+            .SchemaSettings;
+        genSettings.SerializerOptions.IncludeFields = true;
+
         // https://github.com/RicoSuter/NJsonSchema/wiki/Schema-Processors
         // from https://github.com/RicoSuter/NSwag/wiki/Document-Processors-and-Operation-Processors
         // from https://github.com/RicoSuter/NSwag/wiki/AspNetCore-Middleware#post-process-the-served-openapiswagger-specification-document
         // from https://github.com/RicoSuter/NSwag
-        //settings.SchemaSettings.SchemaProcessors.Add(new GameStateNSwagSchemaProcessor());
+        genSettings.SchemaProcessors.Add(new GameStateNSwagSchemaProcessor());
         // settings.SchemaGeneratorFactory = () => new OpenApiSchemaGenerator(
         //     new OpenApiDocumentGeneratorSettings
         //     {

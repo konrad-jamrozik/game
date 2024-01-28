@@ -50,22 +50,28 @@ public class GameStateNSwagSchemaProcessor : ISchemaProcessor
 
         MemberInfo[] members = type.Type.GetMembers(BindingFlags.Public | BindingFlags.Instance);
 
-        if (type.Name != nameof(GameState))
+        // if (type.Name != nameof(GameState))
+        // {
+        //     Console.Out.WriteLine("Bailing early!");
+        //     return;
+        // }
+
+        foreach (ContextualPropertyInfo ctxProp in type.Properties)
         {
-            Console.Out.WriteLine("Bailing early!");
-            return;
+            Console.Out.WriteLine($"ctxProp: {ctxProp.PropertyType}.{ctxProp.Name}");
         }
 
-        foreach (ContextualPropertyInfo contextualPropertyInfo in type.Properties)
+        foreach (ContextualFieldInfo ctxField in type.Fields)
         {
-            Console.Out.WriteLine($"ctxPropInfo: {contextualPropertyInfo.Name}");
+            Console.Out.WriteLine($"ctxField: {ctxField.FieldType}.{ctxField.Name}");
         }
+
         foreach (MemberInfo member in members)
         {
             if (member is PropertyInfo propertyInfo)
-                Console.Out.WriteLine($"Processing Prop {type}.{member.Name}");
+                Console.Out.WriteLine($"Member Prop {member.DeclaringType}.{member.Name}");
             if (member is FieldInfo fieldInfo)
-                Console.Out.WriteLine($"Processing Field {type}.{member.Name}");
+                Console.Out.WriteLine($"Member Field {member.DeclaringType}.{member.Name}");
         }
 
         //
