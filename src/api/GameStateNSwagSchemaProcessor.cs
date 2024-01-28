@@ -91,7 +91,7 @@ public class GameStateNSwagSchemaProcessor : ISchemaProcessor
             };
             schema = JsonSchema.FromJsonAsync(node.ToJsonString()).GetAwaiter().GetResult();
             Console.Out.WriteLine("Modified assets schema: " + schema.ToJson());
-            context.Resolver.AddSchema(typeof(Assets), false, schema);
+            //context.Resolver.AddSchema(typeof(Assets), false, schema);
 
         }
 

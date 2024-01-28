@@ -1,11 +1,14 @@
 using System.Diagnostics;
 using Lib.OS;
+using NJsonSchema;
 using NJsonSchema.Generation;
+using NJsonSchema.Generation.TypeMappers;
 using NJsonSchema.NewtonsoftJson.Generation;
 using NSwag.Generation;
 using UfoGameLib.Api;
 using UfoGameLib.Controller;
 using UfoGameLib.Lib;
+using UfoGameLib.Model;
 using UfoGameLib.Players;
 using UfoGameLib.State;
 // using Unchase.Swashbuckle.AspNetCore.Extensions.Extensions;
@@ -26,6 +29,27 @@ builder.Services.AddOpenApiDocument(
         // from https://github.com/RicoSuter/NSwag/wiki/AspNetCore-Middleware#post-process-the-served-openapiswagger-specification-document
         // from https://github.com/RicoSuter/NSwag
         genSettings.SchemaProcessors.Add(new GameStateNSwagSchemaProcessor());
+
+        genSettings.TypeMappers = [
+            new ObjectTypeMapper(typeof(Agent), new JsonSchema
+            {
+                Type = JsonObjectType.Object,
+                Properties =
+                {
+                    ["Blah"] = new JsonSchemaProperty
+                    {
+                        Type = JsonObjectType.String,
+                        Description = "Blah blah blah"
+                    }
+                }
+            })
+        ];
+
+        // settings.SchemaGeneratorFactory = () => new MyGen(
+        //     new OpenApiDocumentGeneratorSettings
+        //     {
+        //         SchemaSettings = genSettings
+        //     });
 
         // settings.SchemaGeneratorFactory = () => new OpenApiSchemaGenerator(
         //     new OpenApiDocumentGeneratorSettings
