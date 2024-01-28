@@ -1,4 +1,5 @@
 using System.Text.Json;
+using Lib.Tests.Json;
 using UfoGameLib.State;
 
 namespace UfoGameLib.Tests;
@@ -97,37 +98,20 @@ public class GameStateTests
     ///   [System.Text.Json] : More accurate error messages when failing to map fields or parameters #88048
     ///   https://github.com/dotnet/runtime/issues/88048
     /// - https://learn.microsoft.com/en-us/dotnet/standard/serialization/system-text-json/deserialization
-    /// - https://learn.microsoft.com/en-us/dotnet/standard/serialization/system-text-json/configure-options?pivots=dotnet-7-0#web-defaults-for-jsonserializeroptions
-    /// 
-    ///   
+    /// - https://learn.microsoft.com/en-us/dotnet/standard/serialization/system-text-json/configure-options#web-defaults-for-jsonserializeroptions
+    /// - https://learn.microsoft.com/en-us/dotnet/standard/serialization/system-text-json/immutability
     /// </summary>
     [Test]
     public void DeserializeGameStateFromInitialGameStateJsonString()
     {
-        // kja curr work
-        GameState originalGameState = GameState.NewInitialGameState();
-        string jsonString = originalGameState.ToJsonString();
-        //GameState? deserializedGameState = JsonSerializer.Deserialize<GameState>(jsonString);
-        string jsonString2 = "{ \"updateCount\": 4 }";
+        GameState initialGameState = GameState.NewInitialGameState();
+        string initialJsonString = initialGameState.ToJsonString();
 
-        var options = new JsonSerializerOptions
-        {
-            PropertyNameCaseInsensitive = true
-        };
+        // Act
+        GameState deserializedGameState = JsonSerializer.Deserialize<GameState>(initialJsonString, GameState.StateJsonSerializerOptions)!;
+        
+        string deserializedJsonString = deserializedGameState.ToJsonString();
 
-        FixtureClassForSerialization deserializedGameState =
-            JsonSerializer.Deserialize<FixtureClassForSerialization>(jsonString2, options)!;
-        Console.Out.WriteLine(deserializedGameState.UpdateCount);
-    }
-}
-
-public class FixtureClassForSerialization
-{
-    public int UpdateCount { get; }
-
-    public FixtureClassForSerialization(
-        int updateCount)
-    {
-        this.UpdateCount = updateCount * 2;
+        new JsonDiffAssertion(baseline: initialJsonString, target: deserializedJsonString).Assert();
     }
 }

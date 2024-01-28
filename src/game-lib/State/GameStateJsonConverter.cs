@@ -70,7 +70,14 @@ class GameStateJsonConverter : JsonConverterSupportingReferences<GameState>
             // Reference:
             // https://learn.microsoft.com/en-us/dotnet/standard/serialization/system-text-json/customize-properties?pivots=dotnet-7-0#enums-as-strings
             // https://stackoverflow.com/a/58234964/986533
-            Converters = { new JsonStringEnumConverter() }
+            Converters = { new JsonStringEnumConverter() },
+
+            // Required for the ASP.NET Core API to be able to use the default deserializer to deserialize
+            // an instance of GameState. It matches the behavior of JsonSerializerDefaults.Web
+            // See:
+            // - https://learn.microsoft.com/en-us/dotnet/standard/serialization/system-text-json/configure-options#web-defaults-for-jsonserializeroptions
+            // - https://learn.microsoft.com/en-us/dotnet/standard/serialization/system-text-json/deserialization
+            PropertyNameCaseInsensitive = true
         };
 
     public override void Write(Utf8JsonWriter writer, GameState value, JsonSerializerOptions options)
