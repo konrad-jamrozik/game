@@ -3,6 +3,7 @@ using NJsonSchema;
 using NJsonSchema.Generation;
 using System.Reflection;
 using System.Text.Json.Serialization;
+using Lib.Json;
 
 // using Swashbuckle.AspNetCore.SwaggerGen;
 using UfoGameLib.State;
@@ -40,6 +41,10 @@ public class GameStateNSwagSchemaProcessor : ISchemaProcessor
 
         Console.Out.WriteLine($"===== Processing {type.Name}");
 
+        if (type.Name == nameof(GameState))
+        {
+            Console.Out.WriteLine($"gen settings: {context.Generator.Settings.ToIndentedUnsafeJsonString()}");
+        }
 
         JsonSchema schema = context.Schema;
 
@@ -47,6 +52,11 @@ public class GameStateNSwagSchemaProcessor : ISchemaProcessor
             schema.Example =
                 "You can obtain example GameState JSON by calling appropriate " +
                 "API route that returns initial GameState.";
+
+        foreach ((string? key, JsonSchemaProperty? value) in schema.Properties)
+        {
+            Console.Out.WriteLine($"Schema prop: {key}: {value.Name}");
+        }
 
         MemberInfo[] members = type.Type.GetMembers(BindingFlags.Public | BindingFlags.Instance);
 
@@ -56,23 +66,23 @@ public class GameStateNSwagSchemaProcessor : ISchemaProcessor
         //     return;
         // }
 
-        foreach (ContextualPropertyInfo ctxProp in type.Properties)
-        {
-            Console.Out.WriteLine($"ctxProp: {ctxProp.PropertyType}.{ctxProp.Name}");
-        }
-
-        foreach (ContextualFieldInfo ctxField in type.Fields)
-        {
-            Console.Out.WriteLine($"ctxField: {ctxField.FieldType}.{ctxField.Name}");
-        }
-
-        foreach (MemberInfo member in members)
-        {
-            if (member is PropertyInfo propertyInfo)
-                Console.Out.WriteLine($"Member Prop {member.DeclaringType}.{member.Name}");
-            if (member is FieldInfo fieldInfo)
-                Console.Out.WriteLine($"Member Field {member.DeclaringType}.{member.Name}");
-        }
+        // foreach (ContextualPropertyInfo ctxProp in type.Properties)
+        // {
+        //     Console.Out.WriteLine($"ctxProp: {ctxProp.PropertyType}.{ctxProp.Name}");
+        // }
+        //
+        // foreach (ContextualFieldInfo ctxField in type.Fields)
+        // {
+        //     Console.Out.WriteLine($"ctxField: {ctxField.FieldType}.{ctxField.Name}");
+        // }
+        //
+        // foreach (MemberInfo member in members)
+        // {
+        //     if (member is PropertyInfo propertyInfo)
+        //         Console.Out.WriteLine($"Member Prop {member.DeclaringType}.{member.Name}");
+        //     if (member is FieldInfo fieldInfo)
+        //         Console.Out.WriteLine($"Member Field {member.DeclaringType}.{member.Name}");
+        // }
 
         //
         // foreach (MemberInfo member in members)

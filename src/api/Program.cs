@@ -26,10 +26,11 @@ builder.Services.AddOpenApiDocument(
         // from https://github.com/RicoSuter/NSwag/wiki/AspNetCore-Middleware#post-process-the-served-openapiswagger-specification-document
         // from https://github.com/RicoSuter/NSwag
         genSettings.SchemaProcessors.Add(new GameStateNSwagSchemaProcessor());
+
         // settings.SchemaGeneratorFactory = () => new OpenApiSchemaGenerator(
         //     new OpenApiDocumentGeneratorSettings
         //     {
-        //         SchemaSettings = genSettings
+        //         SchemaSettings = genSettings,
         //     });
     });
 
