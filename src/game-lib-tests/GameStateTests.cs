@@ -97,6 +97,7 @@ public class GameStateTests
     /// - Relevant issue to make errors clearer:
     ///   [System.Text.Json] : More accurate error messages when failing to map fields or parameters #88048
     ///   https://github.com/dotnet/runtime/issues/88048
+    /// - https://learn.microsoft.com/en-us/aspnet/core/fundamentals/minimal-apis/parameter-binding#configure-json-deserialization-options-globally
     /// - https://learn.microsoft.com/en-us/dotnet/standard/serialization/system-text-json/deserialization
     /// - https://learn.microsoft.com/en-us/dotnet/standard/serialization/system-text-json/configure-options#web-defaults-for-jsonserializeroptions
     /// - https://learn.microsoft.com/en-us/dotnet/standard/serialization/system-text-json/immutability
