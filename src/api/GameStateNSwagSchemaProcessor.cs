@@ -36,7 +36,7 @@ public class GameStateNSwagSchemaProcessor : ISchemaProcessor
     {
         ContextualType type = context.ContextualType;
 
-        if (!_processedTypes.Add(type)) 
+        if (!_processedTypes.Add(type))
             return;
 
         Console.Out.WriteLine($"===== Processing {type.Name}");
@@ -58,7 +58,21 @@ public class GameStateNSwagSchemaProcessor : ISchemaProcessor
             Console.Out.WriteLine($"Schema prop: {key}: {value.Name}");
         }
 
+
         MemberInfo[] members = type.Type.GetMembers(BindingFlags.Public | BindingFlags.Instance);
+
+
+        if (type.Name == nameof(GameState))
+        {
+            List<FieldInfo> fieldInfos = members.Where(member => member is FieldInfo fi).Cast<FieldInfo>().ToList();
+
+            FieldInfo fieldInfo = fieldInfos.Single(fi => fi.Name.Contains("Assets"));
+
+            Console.Out.WriteLine($"Field Info: {fieldInfo.MemberType} {fieldInfo.FieldType} {fieldInfo.Name}");
+
+            context.Generator.Generate(fieldInfo.FieldType, context.Resolver);
+            schema.Properties[fieldInfo.Name] = context.Resolver.GetSchema(fieldInfo.FieldType, false);
+        }
 
         // if (type.Name != nameof(GameState))
         // {
@@ -125,9 +139,10 @@ public class GameStateNSwagSchemaProcessor : ISchemaProcessor
         //
         // StripListInheritorsOfExtraProps(schema, type);
     }
+
     private static bool IsJsonIgnore(MemberInfo member)
         => member.GetCustomAttribute<JsonIgnoreAttribute>() != null;
-    
+
     private static void RemoveLowerCasedKey(JsonSchema schema, MemberInfo memberInfo)
     {
         string nameWithLower = ToLowerFirstChar(memberInfo.Name);
@@ -137,15 +152,15 @@ public class GameStateNSwagSchemaProcessor : ISchemaProcessor
             schema.Properties.Remove(nameWithLower);
         }
     }
-    
+
     private static string ToLowerFirstChar(string input)
     {
         if (string.IsNullOrEmpty(input))
             return input;
-    
+
         return char.ToLower(input[0]) + input[1..];
     }
-    
+
     private static void StripListInheritorsOfExtraProps(JsonSchema schema, Type type)
     {
         if (IsSubclassOfGenericType(type, genericType: typeof(List<>)))
@@ -154,6 +169,7 @@ public class GameStateNSwagSchemaProcessor : ISchemaProcessor
             schema.Properties.Clear();
         }
     }
+
     private static bool IsSubclassOfGenericType(Type? typeToCheck, Type genericType)
     {
         // Check if the typeToCheck is a class and not an interface or abstract class.
@@ -165,11 +181,11 @@ public class GameStateNSwagSchemaProcessor : ISchemaProcessor
                 {
                     return true;
                 }
-    
+
                 typeToCheck = typeToCheck.BaseType;
             }
         }
-    
+
         return false;
     }
 }
