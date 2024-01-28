@@ -1,31 +1,20 @@
 using Lib.OS;
+using NSwag.Generation;
 using UfoGameLib.Api;
 using UfoGameLib.Controller;
 using UfoGameLib.Lib;
 using UfoGameLib.Players;
 using UfoGameLib.State;
-using Unchase.Swashbuckle.AspNetCore.Extensions.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(
-    opts =>
+
+builder.Services.AddOpenApiDocument(
+    settings =>
     {
-        // Not sure if I need these, but they seem like a good idea.
-        // https://github.com/domaindrivendev/Swashbuckle.AspNetCore#inheritance-and-polymorphism
-        opts.UseAllOfForInheritance();
-        opts.UseAllOfToExtendReferenceSchemas();
-        opts.UseOneOfForPolymorphism();
-
-        // Make enums be generated with names instead of ints, per "Fix enums in OpenApi document" in
-        // https://github.com/unchase/Unchase.Swashbuckle.AspNetCore.Extensions#extensions-filters-use
-        // Linked from https://github.com/domaindrivendev/Swashbuckle.AspNetCore#community-packages
-        opts.AddEnumsWithValuesFixFilters();
-
-        // Apply various fixups to default OpenAPI schema generation.
-        // https://github.com/domaindrivendev/Swashbuckle.AspNetCore#schema-filters
-        opts.SchemaFilter<GameStateSchemaFilter>();
+        settings.Title = "UFO Game API";
+        settings.SchemaGeneratorFactory = () => new EmptySchemaGenerator(new OpenApiDocumentGeneratorSettings());
     });
 
 // https://learn.microsoft.com/en-us/aspnet/core/fundamentals/environments?view=aspnetcore-8.0
@@ -38,8 +27,8 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
     app.UseCors(localhostCorsPolicyName!);
 
-app.UseSwagger();
-app.UseSwaggerUI();
+app.UseOpenApi();
+app.UseSwaggerUi();
 
 app.MapGet(
         "/helloCoinFlip",
@@ -122,7 +111,6 @@ app.MapPost(
             }
         })
     .WithOpenApi()
-    .WithTags("GameSession")
     .Accepts<GameState>("application/json");
 
 app.Run();
@@ -150,3 +138,5 @@ string UseCorsForLocalhost(WebApplicationBuilder builder)
         });
     return corsPolicyName;
 }
+
+
