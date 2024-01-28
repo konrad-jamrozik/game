@@ -2,12 +2,15 @@ using Namotion.Reflection;
 using NJsonSchema;
 using NJsonSchema.Generation;
 using System.Reflection;
+using System.Text.Json;
+using System.Text.Json.Nodes;
 using Lib.Json;
 using Newtonsoft.Json;
 using UfoGameLib.Model;
 
 // using Swashbuckle.AspNetCore.SwaggerGen;
 using UfoGameLib.State;
+using YamlDotNet.Serialization.NodeDeserializers;
 using JsonIgnoreAttribute = System.Text.Json.Serialization.JsonIgnoreAttribute;
 using JsonSerializer = System.Text.Json.JsonSerializer;
 
@@ -63,60 +66,88 @@ public class GameStateNSwagSchemaProcessor : ISchemaProcessor
 
         MemberInfo[] members = type.Type.GetMembers(BindingFlags.Public | BindingFlags.Instance);
 
-
         if (type.Name == nameof(Assets))
         {
-            List<FieldInfo> fieldInfos = members.Where(member => member is FieldInfo fi).Cast<FieldInfo>().ToList();
-
-            FieldInfo fieldInfo = fieldInfos.Single(fi => fi.Name.Contains("Money"));
-
-            Console.Out.WriteLine($"Field Info: {fieldInfo.FieldType} {fieldInfo.Name}");
-
-            Console.Out.WriteLine("Generating: " + fieldInfo.FieldType);
-            JsonSchema generatedSchema = context.Generator.Generate(fieldInfo.FieldType, context.Resolver);
-            Console.Out.WriteLine("generatedSchema: " + generatedSchema.ToJson());
-
-
-            // https://github.com/RicoSuter/NJsonSchema/issues/1326#issuecomment-784937686
-            Console.Out.WriteLine("Adding schema: " + fieldInfo.FieldType);
-            context.Resolver.AddSchema(fieldInfo.FieldType, false, generatedSchema);
-            foreach (JsonSchema resolverSchema in context.Resolver.Schemas)
+            // https://github.com/RicoSuter/NJsonSchema#njsonschema-usage
+            string json = schema.ToJson();
+            Console.Out.WriteLine("Original assets schema: " + schema.ToJson());
+            Console.Out.WriteLine("Parsing node from json");
+            JsonNode node = JsonNode.Parse(json)!;
+            JsonSchemaProperty prop = new JsonSchemaProperty
             {
-                Console.Out.WriteLine("Schema in resolver: " + resolverSchema.ToJson(Formatting.Indented));
-            }
-            //JsonSchema jsonSchema = context.Resolver.GetSchema(fieldInfo.FieldType, false);
-            
-            Console.Out.WriteLine("Converting to prop: " + fieldInfo.Name);
-            var prop = JsonSerializer.Deserialize<JsonSchemaProperty>(generatedSchema.ToJson())!;
-            schema.Properties[fieldInfo.Name] = prop;
+                Type = JsonObjectType.Integer,
+                Description = "Money",
+                Example = 1000
+            };
 
-            Console.Out.WriteLine("Assets schema: " + schema.ToJson());
+            node["properties"] = new JsonObject
+            {
+                ["Money"] = new JsonObject
+                {
+                    ["type"] = "integer",
+                    ["description"] = "Money",
+                    ["example"] = 1000
+                }
+            };
+            schema = JsonSchema.FromJsonAsync(node.ToJsonString()).GetAwaiter().GetResult();
+            Console.Out.WriteLine("Modified assets schema: " + schema.ToJson());
+            context.Resolver.AddSchema(typeof(Assets), false, schema);
+
         }
 
-        if (type.Name == nameof(GameState))
-        {
-            List<FieldInfo> fieldInfos = members.Where(member => member is FieldInfo fi).Cast<FieldInfo>().ToList();
-
-            FieldInfo fieldInfo = fieldInfos.Single(fi => fi.Name.Contains("Assets"));
-
-            Console.Out.WriteLine($"Field Info: {fieldInfo.FieldType} {fieldInfo.Name}");
-
-
-            context.Generator.Generate(fieldInfo.FieldType, context.Resolver);
-            
-            // https://github.com/RicoSuter/NJsonSchema/issues/1326#issuecomment-784937686
-            JsonSchema jsonSchema = context.Resolver.GetSchema(fieldInfo.FieldType, false);
-            var prop = JsonSerializer.Deserialize<JsonSchemaProperty>(jsonSchema.ToJson())!;
-            schema.Properties[fieldInfo.Name] = prop;
-
-            // WORKS
-            // JsonSchema agentJsonSchema = JsonSchema.FromType<Agent>();
-            // string jsonStr = agentJsonSchema.ToJson();
-            // var prop = JsonSerializer.Deserialize<JsonSchemaProperty>(jsonStr)!;
-            // schema.Properties["TestAgent"] = prop;
-
-            Console.Out.WriteLine("GameState schema: " + schema.ToJson());
-        }
+        // if (type.Name == nameof(Assets))
+        // {
+        //     List<FieldInfo> fieldInfos = members.Where(member => member is FieldInfo fi).Cast<FieldInfo>().ToList();
+        //
+        //     FieldInfo fieldInfo = fieldInfos.Single(fi => fi.Name.Contains("Money"));
+        //
+        //     Console.Out.WriteLine($"Field Info: {fieldInfo.FieldType} {fieldInfo.Name}");
+        //
+        //     Console.Out.WriteLine("Generating: " + fieldInfo.FieldType);
+        //     JsonSchema generatedSchema = context.Generator.Generate(fieldInfo.FieldType, context.Resolver);
+        //     Console.Out.WriteLine("generatedSchema: " + generatedSchema.ToJson());
+        //
+        //
+        //     // https://github.com/RicoSuter/NJsonSchema/issues/1326#issuecomment-784937686
+        //     Console.Out.WriteLine("Adding schema: " + fieldInfo.FieldType);
+        //     context.Resolver.AddSchema(fieldInfo.FieldType, false, generatedSchema);
+        //     foreach (JsonSchema resolverSchema in context.Resolver.Schemas)
+        //     {
+        //         Console.Out.WriteLine("Schema in resolver: " + resolverSchema.ToJson(Formatting.Indented));
+        //     }
+        //     //JsonSchema jsonSchema = context.Resolver.GetSchema(fieldInfo.FieldType, false);
+        //     
+        //     Console.Out.WriteLine("Converting to prop: " + fieldInfo.Name);
+        //     var prop = JsonSerializer.Deserialize<JsonSchemaProperty>(generatedSchema.ToJson())!;
+        //     schema.Properties[fieldInfo.Name] = prop;
+        //
+        //     Console.Out.WriteLine("Assets schema: " + schema.ToJson());
+        // }
+        //
+        // if (type.Name == nameof(GameState))
+        // {
+        //     List<FieldInfo> fieldInfos = members.Where(member => member is FieldInfo fi).Cast<FieldInfo>().ToList();
+        //
+        //     FieldInfo fieldInfo = fieldInfos.Single(fi => fi.Name.Contains("Assets"));
+        //
+        //     Console.Out.WriteLine($"Field Info: {fieldInfo.FieldType} {fieldInfo.Name}");
+        //
+        //
+        //     context.Generator.Generate(fieldInfo.FieldType, context.Resolver);
+        //     
+        //     // https://github.com/RicoSuter/NJsonSchema/issues/1326#issuecomment-784937686
+        //     JsonSchema jsonSchema = context.Resolver.GetSchema(fieldInfo.FieldType, false);
+        //     var prop = JsonSerializer.Deserialize<JsonSchemaProperty>(jsonSchema.ToJson())!;
+        //     schema.Properties[fieldInfo.Name] = prop;
+        //
+        //     // WORKS
+        //     // JsonSchema agentJsonSchema = JsonSchema.FromType<Agent>();
+        //     // string jsonStr = agentJsonSchema.ToJson();
+        //     // var prop = JsonSerializer.Deserialize<JsonSchemaProperty>(jsonStr)!;
+        //     // schema.Properties["TestAgent"] = prop;
+        //
+        //     Console.Out.WriteLine("GameState schema: " + schema.ToJson());
+        // }
 
         // if (type.Name != nameof(GameState))
         // {
