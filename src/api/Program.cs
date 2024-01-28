@@ -28,20 +28,29 @@ builder.Services.AddOpenApiDocument(
         // from https://github.com/RicoSuter/NSwag/wiki/Document-Processors-and-Operation-Processors
         // from https://github.com/RicoSuter/NSwag/wiki/AspNetCore-Middleware#post-process-the-served-openapiswagger-specification-document
         // from https://github.com/RicoSuter/NSwag
-        genSettings.SchemaProcessors.Add(new GameStateNSwagSchemaProcessor());
+        //genSettings.SchemaProcessors.Add(new GameStateNSwagSchemaProcessor());
 
+        //genSettings.ExcludedTypeNames = ["UfoGameLib.Model.Agents"];
+        var agentJsonSchema = new JsonSchema
+        {
+            Type = JsonObjectType.Object,
+            Properties =
+            {
+                ["Blah"] = new JsonSchemaProperty
+                {
+                    Type = JsonObjectType.String,
+                    Description = "Blah blah blah"
+                }
+            }
+        };
         genSettings.TypeMappers = [
-            new ObjectTypeMapper(typeof(Agent), new JsonSchema
+            new ObjectTypeMapper(typeof(GameState), new JsonSchema { Type = JsonObjectType.Object}),
+            new ObjectTypeMapper(typeof(Agent), agentJsonSchema),
+            new ObjectTypeMapper(typeof(Agents), new JsonSchema
             {
                 Type = JsonObjectType.Object,
-                Properties =
-                {
-                    ["Blah"] = new JsonSchemaProperty
-                    {
-                        Type = JsonObjectType.String,
-                        Description = "Blah blah blah"
-                    }
-                }
+                Definitions = { ["Agent"] = agentJsonSchema },
+                Reference = agentJsonSchema
             })
         ];
 
