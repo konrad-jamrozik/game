@@ -1,7 +1,9 @@
 using System.Reflection;
 using System.Text.Json.Serialization;
+using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
+using UfoGameLib.State;
 
 namespace UfoGameLib.Api;
 
@@ -28,12 +30,19 @@ public class GameStateSchemaFilter : ISchemaFilter
 
     public void Apply(OpenApiSchema schema, SchemaFilterContext context)
     {
-        if (!_processedTypes.Add(context.Type)) 
-            return;
-
         Type type = context.Type;
 
+        // Skip processing if context.Type is already in _processedTypes
+        if (!_processedTypes.Add(type)) 
+            return;
+
         // Console.Out.WriteLine($"===== Processing {type.FullName}");
+
+        if (type == typeof(GameState))
+            schema.Example = new OpenApiString(
+                "This request body expects a GameState serialized as a JSON string. " +
+                "You can obtain example GameState JSON string you can use here " +
+                "by calling appropriate API route that returns initial GameState.");
 
         schema.Properties ??= new Dictionary<string, OpenApiSchema>();
 
