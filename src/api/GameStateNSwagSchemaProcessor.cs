@@ -1,9 +1,9 @@
+using Namotion.Reflection;
+using NJsonSchema;
+using NJsonSchema.Generation;
 using System.Reflection;
 using System.Text.Json.Serialization;
-using Microsoft.OpenApi.Any;
-using Microsoft.OpenApi.Models;
-using Namotion.Reflection;
-using NJsonSchema.Generation;
+
 // using Swashbuckle.AspNetCore.SwaggerGen;
 using UfoGameLib.State;
 
@@ -34,113 +34,126 @@ public class GameStateNSwagSchemaProcessor : ISchemaProcessor
     public void Process(SchemaProcessorContext context)
     {
         ContextualType type = context.ContextualType;
+
+        if (!_processedTypes.Add(type)) 
+            return;
+
         Console.Out.WriteLine($"===== Processing {type.Name}");
+
+
+        JsonSchema schema = context.Schema;
+
+        if (type.Name == nameof(GameState))
+            schema.Example =
+                "You can obtain example GameState JSON by calling appropriate " +
+                "API route that returns initial GameState.";
+
+        MemberInfo[] members = type.Type.GetMembers(BindingFlags.Public | BindingFlags.Instance);
+
+        if (type.Name != nameof(GameState))
+        {
+            Console.Out.WriteLine("Bailing early!");
+            return;
+        }
+
+        foreach (ContextualPropertyInfo contextualPropertyInfo in type.Properties)
+        {
+            Console.Out.WriteLine($"ctxPropInfo: {contextualPropertyInfo.Name}");
+        }
+        foreach (MemberInfo member in members)
+        {
+            if (member is PropertyInfo propertyInfo)
+                Console.Out.WriteLine($"Processing Prop {type}.{member.Name}");
+            if (member is FieldInfo fieldInfo)
+                Console.Out.WriteLine($"Processing Field {type}.{member.Name}");
+        }
+
+        //
+        // foreach (MemberInfo member in members)
+        // {
+        //     // Skip members with [JsonIgnore] attribute
+        //     if (IsJsonIgnore(member))
+        //         continue;
+        //
+        //     // Include public properties and public fields.
+        //     if (member is PropertyInfo propertyInfo)
+        //     {
+        //         //JsonSchema jsonSchema = context.Generator.Generate(propertyInfo.PropertyType);
+        //         Console.Out.WriteLine($"Processing Prop {type}.{member.Name}");
+        //         //schema.Properties[propertyInfo.Name] = (JsonSchemaProperty)jsonSchema;
+        //         // schema.Properties[propertyInfo.Name] = context.Generator.Generate(
+        //         //     propertyInfo.PropertyType,
+        //         //     context.SchemaRepository);
+        //
+        //         RemoveLowerCasedKey(schema, propertyInfo);
+        //     }
+        //     else if (member is FieldInfo fieldInfo)
+        //     {
+        //         // Console.Out.WriteLine($"Processing Field {type}.{member.Name}");
+        //         // schema.Properties[fieldInfo.Name] = context.SchemaGenerator.GenerateSchema(
+        //         //     fieldInfo.FieldType,
+        //         //     context.SchemaRepository);
+        //
+        //         RemoveLowerCasedKey(schema, fieldInfo);
+        //     }
+        //     else
+        //     {
+        //         // Do not include other member kinds.
+        //         if (schema.Properties.ContainsKey(member.Name))
+        //         {
+        //             // Console.Out.WriteLine($"Removed other {type}.{member.Name}");
+        //             schema.Properties.Remove(member.Name);
+        //         }
+        //     }
+        // }
+        //
+        // StripListInheritorsOfExtraProps(schema, type);
     }
-    // public void Apply(OpenApiSchema schema, SchemaFilterContext context)
-    // {
-    //     Type type = context.Type;
-    //
-    //     // Skip processing if context.Type is already in _processedTypes
-    //     if (!_processedTypes.Add(type)) 
-    //         return;
-    //
-    //     // Console.Out.WriteLine($"===== Processing {type.FullName}");
-    //
-    //     if (type == typeof(GameState))
-    //         schema.Example = new OpenApiString(
-    //             "This request body expects a GameState serialized as a JSON string. " +
-    //             "You can obtain example GameState JSON string you can use here " +
-    //             "by calling appropriate API route that returns initial GameState.");
-    //
-    //     schema.Properties ??= new Dictionary<string, OpenApiSchema>();
-    //
-    //     MemberInfo[] members = type.GetMembers(BindingFlags.Public | BindingFlags.Instance);
-    //
-    //     foreach (MemberInfo member in members)
-    //     {
-    //         // Skip members with [JsonIgnore] attribute
-    //         if (IsJsonIgnore(member))
-    //             continue;
-    //
-    //         // Include public properties and public fields.
-    //         if (member is PropertyInfo propertyInfo)
-    //         {
-    //             // Console.Out.WriteLine($"Processing Prop {type}.{member.Name}");
-    //             schema.Properties[propertyInfo.Name] = context.SchemaGenerator.GenerateSchema(
-    //                 propertyInfo.PropertyType,
-    //                 context.SchemaRepository);
-    //
-    //             RemoveLowerCasedKey(schema, propertyInfo);
-    //         }
-    //         else if (member is FieldInfo fieldInfo)
-    //         {
-    //             // Console.Out.WriteLine($"Processing Field {type}.{member.Name}");
-    //             schema.Properties[fieldInfo.Name] = context.SchemaGenerator.GenerateSchema(
-    //                 fieldInfo.FieldType,
-    //                 context.SchemaRepository);
-    //
-    //             RemoveLowerCasedKey(schema, fieldInfo);
-    //         }
-    //         else
-    //         {
-    //             // Do not include other member kinds.
-    //             if (schema.Properties.ContainsKey(member.Name))
-    //             {
-    //                 // Console.Out.WriteLine($"Removed other {type}.{member.Name}");
-    //                 schema.Properties.Remove(member.Name);
-    //             }
-    //         }
-    //     }
-    //
-    //     StripListInheritorsOfExtraProps(schema, type);
-    // }
-    //
-    // private static bool IsJsonIgnore(MemberInfo member)
-    //     => member.GetCustomAttribute<JsonIgnoreAttribute>() != null;
-    //
-    // private static void RemoveLowerCasedKey(OpenApiSchema schema, MemberInfo memberInfo)
-    // {
-    //     string nameWithLower = ToLowerFirstChar(memberInfo.Name);
-    //     if (schema.Properties.ContainsKey(nameWithLower))
-    //     {
-    //         // Console.Out.WriteLine($"Removed lower {memberInfo.DeclaringType}.{memberInfo.Name}");
-    //         schema.Properties.Remove(nameWithLower);
-    //     }
-    // }
-    //
-    // private static string ToLowerFirstChar(string input)
-    // {
-    //     if (string.IsNullOrEmpty(input))
-    //         return input;
-    //
-    //     return char.ToLower(input[0]) + input[1..];
-    // }
-    //
-    // private static void StripListInheritorsOfExtraProps(OpenApiSchema schema, Type type)
-    // {
-    //     if (IsSubclassOfGenericType(type, genericType: typeof(List<>)))
-    //     {
-    //         // Console.WriteLine($"Stripping {type.FullName} of extra properties.");
-    //         schema.Properties.Clear();
-    //     }
-    // }
-    //
-    // private static bool IsSubclassOfGenericType(Type? typeToCheck, Type genericType)
-    // {
-    //     // Check if the typeToCheck is a class and not an interface or abstract class.
-    //     if (typeToCheck is { IsClass: true, IsGenericTypeDefinition: false })
-    //     {
-    //         while (typeToCheck != null)
-    //         {
-    //             if (typeToCheck.IsGenericType && typeToCheck.GetGenericTypeDefinition() == genericType)
-    //             {
-    //                 return true;
-    //             }
-    //
-    //             typeToCheck = typeToCheck.BaseType;
-    //         }
-    //     }
-    //
-    //     return false;
-    // }
+    private static bool IsJsonIgnore(MemberInfo member)
+        => member.GetCustomAttribute<JsonIgnoreAttribute>() != null;
+    
+    private static void RemoveLowerCasedKey(JsonSchema schema, MemberInfo memberInfo)
+    {
+        string nameWithLower = ToLowerFirstChar(memberInfo.Name);
+        if (schema.Properties.ContainsKey(nameWithLower))
+        {
+            // Console.Out.WriteLine($"Removed lower {memberInfo.DeclaringType}.{memberInfo.Name}");
+            schema.Properties.Remove(nameWithLower);
+        }
+    }
+    
+    private static string ToLowerFirstChar(string input)
+    {
+        if (string.IsNullOrEmpty(input))
+            return input;
+    
+        return char.ToLower(input[0]) + input[1..];
+    }
+    
+    private static void StripListInheritorsOfExtraProps(JsonSchema schema, Type type)
+    {
+        if (IsSubclassOfGenericType(type, genericType: typeof(List<>)))
+        {
+            // Console.WriteLine($"Stripping {type.FullName} of extra properties.");
+            schema.Properties.Clear();
+        }
+    }
+    private static bool IsSubclassOfGenericType(Type? typeToCheck, Type genericType)
+    {
+        // Check if the typeToCheck is a class and not an interface or abstract class.
+        if (typeToCheck is { IsClass: true, IsGenericTypeDefinition: false })
+        {
+            while (typeToCheck != null)
+            {
+                if (typeToCheck.IsGenericType && typeToCheck.GetGenericTypeDefinition() == genericType)
+                {
+                    return true;
+                }
+    
+                typeToCheck = typeToCheck.BaseType;
+            }
+        }
+    
+        return false;
+    }
 }

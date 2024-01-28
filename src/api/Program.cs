@@ -1,5 +1,5 @@
 using Lib.OS;
-using UfoGameLib.Api;
+using NJsonSchema.Generation;
 using UfoGameLib.Controller;
 using UfoGameLib.Lib;
 using UfoGameLib.Players;
@@ -9,13 +9,27 @@ using UfoGameLib.State;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddEndpointsApiExplorer();
-// https://github.com/RicoSuter/NSwag/wiki/AspNetCore-Middleware
-// from https://github.com/RicoSuter/NSwag
+
 builder.Services.AddOpenApiDocument(
     (settings) =>
     {
-        settings.SchemaSettings.SchemaProcessors.Add(new GameStateNSwagSchemaProcessor());
+        var genSettings = new SystemTextJsonSchemaGeneratorSettings();
+        //genSettings.ExcludedTypeNames = ["Agent"];
+        //genSettings.SchemaProcessors.Add(new GameStateNSwagSchemaProcessor());
+        settings.SchemaSettings = genSettings;
+        
+        // https://github.com/RicoSuter/NJsonSchema/wiki/Schema-Processors
+        // from https://github.com/RicoSuter/NSwag/wiki/Document-Processors-and-Operation-Processors
+        // from https://github.com/RicoSuter/NSwag/wiki/AspNetCore-Middleware#post-process-the-served-openapiswagger-specification-document
+        // from https://github.com/RicoSuter/NSwag
+        //settings.SchemaSettings.SchemaProcessors.Add(new GameStateNSwagSchemaProcessor());
+        // settings.SchemaGeneratorFactory = () => new OpenApiSchemaGenerator(
+        //     new OpenApiDocumentGeneratorSettings
+        //     {
+        //         SchemaSettings = genSettings
+        //     });
     });
+
 // builder.Services.AddSwaggerGen(
 //     opts =>
 //     {
@@ -160,3 +174,5 @@ string UseCorsForLocalhost(WebApplicationBuilder builder)
         });
     return corsPolicyName;
 }
+
+
