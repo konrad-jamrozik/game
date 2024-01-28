@@ -14,6 +14,11 @@ public class JsonIncludeReproTests
     /// This test shows that [JsonIgnore] overrides
     /// JsonSerializedOptions.IgnoreReadOnlyProperties = false
     /// by ensuring the ignored property BarProp is not serialized.
+    ///
+    /// For reported issue, see:
+    /// https://github.com/dotnet/runtime/issues/88716
+    /// For gist, see:
+    /// https://gist.github.com/konrad-jamrozik/721a9c7624560fae0d1582353ef0708e
     /// </summary>
     [Test]
     public void JsonIgnoreOverridesOptionsButJsonIncludeDoesNot()

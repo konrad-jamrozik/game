@@ -92,9 +92,13 @@ public class GameStateTests
     ///
     ///   app.MapPost("/exampleRoute" /// (GameState gs) => ... );
     ///
-    /// Relevant issue to make errors clearer:
-    /// - [System.Text.Json] : More accurate error messages when failing to map fields or parameters #88048
+    /// See also:
+    /// - Relevant issue to make errors clearer:
+    ///   [System.Text.Json] : More accurate error messages when failing to map fields or parameters #88048
     ///   https://github.com/dotnet/runtime/issues/88048
+    /// - https://learn.microsoft.com/en-us/dotnet/standard/serialization/system-text-json/deserialization
+    /// - https://learn.microsoft.com/en-us/dotnet/standard/serialization/system-text-json/configure-options?pivots=dotnet-7-0#web-defaults-for-jsonserializeroptions
+    /// 
     ///   
     /// </summary>
     [Test]
@@ -103,6 +107,27 @@ public class GameStateTests
         // kja curr work
         GameState originalGameState = GameState.NewInitialGameState();
         string jsonString = originalGameState.ToJsonString();
-        GameState? deserializedGameState = JsonSerializer.Deserialize<GameState>(jsonString);
+        //GameState? deserializedGameState = JsonSerializer.Deserialize<GameState>(jsonString);
+        string jsonString2 = "{ \"updateCount\": 4 }";
+
+        var options = new JsonSerializerOptions
+        {
+            PropertyNameCaseInsensitive = true
+        };
+
+        FixtureClassForSerialization deserializedGameState =
+            JsonSerializer.Deserialize<FixtureClassForSerialization>(jsonString2, options)!;
+        Console.Out.WriteLine(deserializedGameState.UpdateCount);
+    }
+}
+
+public class FixtureClassForSerialization
+{
+    public int UpdateCount { get; }
+
+    public FixtureClassForSerialization(
+        int updateCount)
+    {
+        this.UpdateCount = updateCount * 2;
     }
 }
