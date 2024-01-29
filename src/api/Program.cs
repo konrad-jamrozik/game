@@ -1,4 +1,5 @@
 using Lib.OS;
+using Microsoft.AspNetCore.Http.HttpResults;
 using NSwag.Generation;
 using UfoGameLib.Api;
 using UfoGameLib.Controller;
@@ -65,18 +66,23 @@ app.MapGet(
     .WithOpenApi()
     .Produces<GameStatePlayerView>();
 
+// Multiple response types doc:
+// https://learn.microsoft.com/en-us/aspnet/core/fundamentals/minimal-apis/openapi?view=aspnetcore-8.0#multiple-response-types
 app.MapGet(
     "/simulateGameSession",
+    Results<JsonHttpResult<GameStatePlayerView[]>, JsonHttpResult<GameStatePlayerView>, BadRequest<string>>
     (int? turnLimit, bool? includeAllStates) =>
     {
         int turnLimitVal = turnLimit ?? 30;
         int turnLimitLowerBound = 1;
         int turnLimitUpperBound = 300;
         if (turnLimitVal < turnLimitLowerBound || turnLimitVal > turnLimitUpperBound)
-            return Results.BadRequest(
+        {
+            return TypedResults.BadRequest(
                 $"Value of 'turnLimit' is out of accepted range. " +
                 $"It should be between {turnLimitLowerBound} and {turnLimitUpperBound}. " +
                 $"Actual value: {turnLimitVal}");
+        }
 
         var config = new Configuration(new SimulatedFileSystem());
         var log = new Log(config);
