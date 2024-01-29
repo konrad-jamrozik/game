@@ -1,57 +1,21 @@
-using System.Diagnostics;
 using Lib.OS;
-using NJsonSchema;
-using NJsonSchema.Generation;
-using NJsonSchema.Generation.TypeMappers;
-using NJsonSchema.NewtonsoftJson.Generation;
 using NSwag.Generation;
 using UfoGameLib.Api;
 using UfoGameLib.Controller;
 using UfoGameLib.Lib;
-using UfoGameLib.Model;
 using UfoGameLib.Players;
 using UfoGameLib.State;
-// using Unchase.Swashbuckle.AspNetCore.Extensions.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddOpenApiDocument(
-    (settings) =>
+    settings =>
     {
-        var genSettings = (SystemTextJsonSchemaGeneratorSettings)settings.SchemaSettings;
-
-        // https://github.com/RicoSuter/NJsonSchema/wiki/Schema-Processors
-        // from https://github.com/RicoSuter/NSwag/wiki/Document-Processors-and-Operation-Processors
-        // from https://github.com/RicoSuter/NSwag/wiki/AspNetCore-Middleware#post-process-the-served-openapiswagger-specification-document
-        // from https://github.com/RicoSuter/NSwag
-
-        settings.SchemaGeneratorFactory = () => new MyGen(
-            new OpenApiDocumentGeneratorSettings
-            {
-                SchemaSettings = genSettings
-            });
+        settings.Title = "UFO Game API";
+        settings.SchemaGeneratorFactory = () => new EmptySchemaGenerator(new OpenApiDocumentGeneratorSettings());
     });
-
-// builder.Services.AddSwaggerGen(
-//     opts =>
-//     {
-//         // Not sure if I need these, but they seem like a good idea.
-//         // https://github.com/domaindrivendev/Swashbuckle.AspNetCore#inheritance-and-polymorphism
-//         opts.UseAllOfForInheritance();
-//         opts.UseAllOfToExtendReferenceSchemas();
-//         opts.UseOneOfForPolymorphism();
-//
-//         // Make enums be generated with names instead of ints, per "Fix enums in OpenApi document" in
-//         // https://github.com/unchase/Unchase.Swashbuckle.AspNetCore.Extensions#extensions-filters-use
-//         // Linked from https://github.com/domaindrivendev/Swashbuckle.AspNetCore#community-packages
-//         opts.AddEnumsWithValuesFixFilters();
-//
-//         // Apply various fixups to default OpenAPI schema generation.
-//         // https://github.com/domaindrivendev/Swashbuckle.AspNetCore#schema-filters
-//         opts.SchemaFilter<GameStateSchemaFilter>();
-//     });
 
 // https://learn.microsoft.com/en-us/aspnet/core/fundamentals/environments?view=aspnetcore-8.0
 string? localhostCorsPolicyName = null;
@@ -65,9 +29,6 @@ if (app.Environment.IsDevelopment())
 
 app.UseOpenApi();
 app.UseSwaggerUi();
-
-// app.UseSwagger();
-// app.UseSwaggerUI();
 
 app.MapGet(
         "/helloCoinFlip",
@@ -150,7 +111,6 @@ app.MapPost(
             }
         })
     .WithOpenApi()
-    .WithTags("GameSession")
     .Accepts<GameState>("application/json");
 
 app.Run();
