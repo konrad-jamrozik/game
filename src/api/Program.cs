@@ -94,14 +94,17 @@ app.MapGet(
 
 app.MapPost(
         "/simulateGameSessionFromState",
-        async (HttpContext context) =>
+        async (HttpRequest req, HttpResponse resp, int? turnLimit) =>
         {
-            if (context.Request.HasJsonContentType())
+            if (req.HasJsonContentType())
             {
                 // Deserialization handling as explained by:
                 // https://learn.microsoft.com/en-us/aspnet/core/fundamentals/minimal-apis/parameter-binding?view=aspnetcore-8.0#configure-json-deserialization-options-for-an-endpoint
-                var gs = await context.Request.ReadFromJsonAsync<GameState>(GameState.StateJsonSerializerOptions);
+                var gs = await req.ReadFromJsonAsync<GameState>(GameState.StateJsonSerializerOptions);
                 Console.WriteLine($"gs: {gs?.ToJsonString()}");
+
+                int turnLimitVal = turnLimit ?? 30;
+                Console.WriteLine($"turnLimitVal: {turnLimitVal}");
 
                 return TypedResults.Json(gs, GameState.StateJsonSerializerOptions);
             }
@@ -111,7 +114,7 @@ app.MapPost(
             }
         })
     .WithOpenApi()
-    .Accepts<GameState>("application/json");
+    .Accepts<GameState>("application/json");    
 
 app.Run();
 return;
