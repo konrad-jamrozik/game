@@ -12,45 +12,38 @@ public class WebApplicationRoutes
     public void Register(WebApplication app)
     {
         app.MapGet(
-                "/helloCoinFlip",
-                () =>
-                {
-                    var randomGen = new RandomGen(new Random());
-                    return $"Hello World! Coin flip: {randomGen.FlipCoin()}";
-                })
-            .WithName("HelloCoinFlip")
-            .WithOpenApi();
-
+            "/helloCoinFlip",
+            () =>
+            {
+                var randomGen = new RandomGen(new Random());
+                return TypedResults.Ok($"Hello World! Coin flip: {randomGen.FlipCoin()}");
+            });
 
         app.MapGet(
-                "/initialGameState",
-                () =>
-                {
-                    var gameSession = new GameSession(new RandomGen(new Random()));
-                    // This should be serialized to JSON per:
-                    // https://learn.microsoft.com/en-us/aspnet/core/tutorials/min-web-api?view=aspnetcore-8.0&tabs=visual-studio#return-values
-                    // https://learn.microsoft.com/en-us/aspnet/core/fundamentals/minimal-apis/responses?view=aspnetcore-8.0#configure-json-serialization-options-for-an-endpoint
-                    return TypedResults.Json(gameSession.CurrentGameState, GameState.StateJsonSerializerOptions);
-                })
-            .WithName("InitialGameState")
-            .WithOpenApi()
+            "/initialGameState",
+            () =>
+            {
+                var gameSession = new GameSession(new RandomGen(new Random()));
+                // This should be serialized to JSON per:
+                // https://learn.microsoft.com/en-us/aspnet/core/tutorials/min-web-api?view=aspnetcore-8.0&tabs=visual-studio#return-values
+                // https://learn.microsoft.com/en-us/aspnet/core/fundamentals/minimal-apis/responses?view=aspnetcore-8.0#configure-json-serialization-options-for-an-endpoint
+                return TypedResults.Json(gameSession.CurrentGameState, GameState.StateJsonSerializerOptions);
+            })
             .Produces<GameState>();
 
         app.MapGet(
-                "/initialGameStatePlayerView",
-                () =>
-                {
-                    var gameSession = new GameSession(new RandomGen(new Random()));
-                    return TypedResults.Json(
-                        new GameStatePlayerView(() => gameSession.CurrentGameState),
-                        GameState.StateJsonSerializerOptions);
-                })
-            .WithName("InitialGameStatePlayerView")
-            .WithOpenApi()
+            "/initialGameStatePlayerView",
+            () =>
+            {
+                var gameSession = new GameSession(new RandomGen(new Random()));
+                return TypedResults.Json(
+                    new GameStatePlayerView(() => gameSession.CurrentGameState),
+                    GameState.StateJsonSerializerOptions);
+            })
             .Produces<GameStatePlayerView>();
 
-// Multiple response types doc:
-// https://learn.microsoft.com/en-us/aspnet/core/fundamentals/minimal-apis/openapi?view=aspnetcore-8.0#multiple-response-types
+        // Multiple response types doc:
+        // https://learn.microsoft.com/en-us/aspnet/core/fundamentals/minimal-apis/openapi?view=aspnetcore-8.0#multiple-response-types
         app.MapGet(
             "/simulateGameSession",
             Results<JsonHttpResult<GameStatePlayerView[]>, JsonHttpResult<GameStatePlayerView>, BadRequest<string>> (
@@ -107,7 +100,6 @@ public class WebApplicationRoutes
                         return Results.BadRequest();
                     }
                 })
-            .WithOpenApi()
             .Accepts<GameState>("application/json");
     }
 }
