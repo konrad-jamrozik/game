@@ -16,30 +16,17 @@ public class WebApplicationRoutes
             () =>
             {
                 var randomGen = new RandomGen(new Random());
-                return TypedResults.Ok($"Hello World! Coin flip: {randomGen.FlipCoin()}");
+                return $"Hello World! Coin flip: {randomGen.FlipCoin()}";
             });
 
         app.MapGet(
-            "/initialGameState",
-            () =>
-            {
-                var gameSession = new GameSession(new RandomGen(new Random()));
-                // This should be serialized to JSON per:
-                // https://learn.microsoft.com/en-us/aspnet/core/tutorials/min-web-api?view=aspnetcore-8.0&tabs=visual-studio#return-values
-                // https://learn.microsoft.com/en-us/aspnet/core/fundamentals/minimal-apis/responses?view=aspnetcore-8.0#configure-json-serialization-options-for-an-endpoint
-                return TypedResults.Json(gameSession.CurrentGameState, GameState.StateJsonSerializerOptions);
-            })
+                "/initialGameState",
+                () => GetCurrentStateResponse(NewGameSession()))
             .Produces<GameState>();
 
         app.MapGet(
-            "/initialGameStatePlayerView",
-            () =>
-            {
-                var gameSession = new GameSession(new RandomGen(new Random()));
-                return TypedResults.Json(
-                    new GameStatePlayerView(() => gameSession.CurrentGameState),
-                    GameState.StateJsonSerializerOptions);
-            })
+                "/initialGameStatePlayerView",
+                () => GetCurrentStatePlayerViewResponse(NewGameSession()))
             .Produces<GameStatePlayerView>();
 
         // Multiple response types doc:
@@ -102,4 +89,32 @@ public class WebApplicationRoutes
                 })
             .Accepts<GameState>("application/json");
     }
+
+    private static GameSession NewGameSession()
+    {
+        var gameSession = new GameSession(new RandomGen(new Random()));
+        return gameSession;
+    }
+
+    private static JsonHttpResult<GameStatePlayerView> GetCurrentStatePlayerViewResponse(
+        GameSession gameSession)
+    {
+        var gameStatePlayerView = new GameStatePlayerView(() => gameSession.CurrentGameState);
+        return ToJsonHttpResult(gameStatePlayerView);
+    }
+
+    private static JsonHttpResult<GameState> GetCurrentStateResponse(GameSession gameSession)
+    {
+        // This will be serialized to JSON per:
+        // https://learn.microsoft.com/en-us/aspnet/core/tutorials/min-web-api?view=aspnetcore-8.0&tabs=visual-studio#return-values
+        // https://learn.microsoft.com/en-us/aspnet/core/fundamentals/minimal-apis/responses?view=aspnetcore-8.0#configure-json-serialization-options-for-an-endpoint
+        GameState gs = gameSession.CurrentGameState;
+        return ToJsonHttpResult(gs);
+    }
+
+    private static JsonHttpResult<GameState> ToJsonHttpResult(GameState gs)
+        => TypedResults.Json(gs, GameState.StateJsonSerializerOptions);
+
+    private static JsonHttpResult<GameStatePlayerView> ToJsonHttpResult(GameStatePlayerView gs)
+        => TypedResults.Json(gs, GameState.StateJsonSerializerOptions);
 }
