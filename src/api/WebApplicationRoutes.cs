@@ -34,26 +34,16 @@ public class WebApplicationRoutes
 
         app.MapPost(
                 "/simulateGameSessionFromState",
-                async (HttpRequest req, HttpResponse resp, int? turnLimit) =>
+                async Task<Results<JsonHttpResult<GameState>, BadRequest<string>>>
+                (HttpRequest req, int? turnLimit) =>
                 {
-                    if (req.HasJsonContentType())
-                    {
-                        // Deserialization handling as explained by:
-                        // https://learn.microsoft.com/en-us/aspnet/core/fundamentals/minimal-apis/parameter-binding?view=aspnetcore-8.0#configure-json-deserialization-options-for-an-endpoint
-                        var gs = await req.ReadFromJsonAsync<GameState>(GameState.StateJsonSerializerOptions);
-                        Console.WriteLine($"gs: {gs?.ToJsonString()}");
-
-                        int turnLimitVal = turnLimit ?? 30;
-                        Console.WriteLine($"turnLimitVal: {turnLimitVal}");
-
-                        return TypedResults.Json(gs, GameState.StateJsonSerializerOptions);
-                    }
-                    else
-                    {
-                        return Results.BadRequest();
-                    }
+                    (GameState? gs, string? error) = await ParseGameState(req);
+                    if (error != null) 
+                        return TypedResults.BadRequest(error);
+                    return ToJsonHttpResult(gs!);
                 })
             .Accepts<GameState>("application/json")
+            .Produces<GameState>()
             .WithTags("API");
     }
 
@@ -99,6 +89,26 @@ public class WebApplicationRoutes
             error = null;
 
         return (parsedTurnLimit, error);
+    }
+
+    private static async Task<(GameState? gameState, string? error)> ParseGameState(HttpRequest req)
+    {
+        string? error;
+        GameState? parsedGameState;
+        if (req.HasJsonContentType())
+        {
+            // Deserialization method invocation and configuration as explained by:
+            // https://learn.microsoft.com/en-us/aspnet/core/fundamentals/minimal-apis/parameter-binding?view=aspnetcore-8.0#configure-json-deserialization-options-for-an-endpoint
+            parsedGameState = (await req.ReadFromJsonAsync<GameState>(GameState.StateJsonSerializerOptions))!;
+            error = null;
+        }
+        else
+        {
+            parsedGameState = null;
+            error = "Expected GameState to be passed in the request body";
+        }
+
+        return (parsedGameState, error);
     }
 
     private static GameSession NewGameSession()
