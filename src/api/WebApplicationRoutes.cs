@@ -17,22 +17,20 @@ public class WebApplicationRoutes
             {
                 var randomGen = new RandomGen(new Random());
                 return $"Hello World! Coin flip: {randomGen.FlipCoin()}";
-            });
+            })
+            .WithTags("API");
 
-        app.MapGet(
-                "/initialGameState",
-                () => GetCurrentStateResponse(NewGameSession()))
-            .Produces<GameState>();
+        app.MapGet("/initialGameState", () => GetCurrentStateResponse(NewGameSession()))
+            .Produces<GameState>()
+            .WithTags("API");
 
-        app.MapGet(
-                "/initialGameStatePlayerView",
-                () => GetCurrentStatePlayerViewResponse(NewGameSession()))
-            .Produces<GameStatePlayerView>();
+        app.MapGet("/initialGameStatePlayerView", () => GetCurrentStatePlayerViewResponse(NewGameSession()))
+            .Produces<GameStatePlayerView>()
+            .WithTags("API");
 
-        app.MapGet(
-                "/simulateGameSession",
-                SimulateGameSession)
-            .Produces<GameStatePlayerView>();
+        app.MapGet("/simulateGameSession", SimulateGameSession)
+            .Produces<GameStatePlayerView>()
+            .WithTags("API");
 
         app.MapPost(
                 "/simulateGameSessionFromState",
@@ -55,7 +53,8 @@ public class WebApplicationRoutes
                         return Results.BadRequest();
                     }
                 })
-            .Accepts<GameState>("application/json");
+            .Accepts<GameState>("application/json")
+            .WithTags("API");
     }
 
     // Multiple response types doc:

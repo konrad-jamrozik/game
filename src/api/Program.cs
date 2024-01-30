@@ -18,6 +18,7 @@ builder.Services.AddOpenApiDocument(
     settings =>
     {
         settings.Title = "UFO Game API";
+
         // Using my own EmptySchemaGenerator as it is too hard to adjust generation of OpenAPI schemas in NSwag.
         //
         // To see how it was achieved in Swashbuckle, see:
