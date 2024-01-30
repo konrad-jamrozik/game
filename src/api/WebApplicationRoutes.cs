@@ -29,11 +29,9 @@ public class WebApplicationRoutes
                 () => GetCurrentStatePlayerViewResponse(NewGameSession()))
             .Produces<GameStatePlayerView>();
 
-        // Multiple response types doc:
-        // https://learn.microsoft.com/en-us/aspnet/core/fundamentals/minimal-apis/openapi?view=aspnetcore-8.0#multiple-response-types
         app.MapGet(
-            "/simulateGameSession", 
-            SimulateGameSession)
+                "/simulateGameSession",
+                SimulateGameSession)
             .Produces<GameStatePlayerView>();
 
         app.MapPost(
@@ -60,50 +58,48 @@ public class WebApplicationRoutes
             .Accepts<GameState>("application/json");
     }
 
+    // Multiple response types doc:
+    // https://learn.microsoft.com/en-us/aspnet/core/fundamentals/minimal-apis/openapi?view=aspnetcore-8.0#multiple-response-types
     private static
         Results<JsonHttpResult<GameStatePlayerView[]>, JsonHttpResult<GameStatePlayerView>, BadRequest<string>>
         SimulateGameSession(int? turnLimit, bool? includeAllStates)
     {
-        (int turnLimitVal, string? error) = ParseTurnLimit(turnLimit);
+        (int parsedTurnLimit, string? error) = ParseTurnLimit(turnLimit);
         if (error != null)
             return TypedResults.BadRequest(error);
 
         var config = new Configuration(new SimulatedFileSystem());
         var log = new Log(config);
-        var randomGen = new RandomGen(new Random());
-        var intellect = AIPlayer.Intellect.Basic;
-        var controller = new GameSessionController(config, log, new GameSession(randomGen));
-        var aiPlayer = new AIPlayer(log, intellect);
-        controller.PlayGameSession(turnLimit: turnLimitVal, aiPlayer);
+        var gameSession = NewGameSession();
+        var controller = new GameSessionController(config, log, gameSession);
+        var aiPlayer = new AIPlayer(log, AIPlayer.Intellect.Basic);
+
+        controller.PlayGameSession(turnLimit: parsedTurnLimit, aiPlayer);
 
         if (includeAllStates == true)
-            return TypedResults.Json(
-                controller.AllGameStatesPlayerViews(),
-                GameState.StateJsonSerializerOptions);
+            return ToJsonHttpResult(controller.AllGameStatesPlayerViews());
         else
-            return TypedResults.Json(
-                controller.CurrentGameStatePlayerView,
-                GameState.StateJsonSerializerOptions);
+            return ToJsonHttpResult(controller.CurrentGameStatePlayerView);
     }
 
     private static (int turnLimitVal, string? error) ParseTurnLimit(int? turnLimit)
     {
-        int retTurnLimit = turnLimit ?? 30;
+        int parsedTurnLimit = turnLimit ?? 30;
         int turnLimitLowerBound = 1;
         int turnLimitUpperBound = 300;
         string? error;
 
-        if (retTurnLimit < turnLimitLowerBound || retTurnLimit > turnLimitUpperBound)
+        if (parsedTurnLimit < turnLimitLowerBound || parsedTurnLimit > turnLimitUpperBound)
         {
-            retTurnLimit = -1;
+            parsedTurnLimit = -1;
             error = $"Value of 'turnLimit' is out of accepted range. " +
                     $"It should be between {turnLimitLowerBound} and {turnLimitUpperBound}. " +
-                    $"Actual value: {retTurnLimit}";
+                    $"Actual value: {parsedTurnLimit}";
         }
         else
             error = null;
 
-        return (retTurnLimit, error);
+        return (parsedTurnLimit, error);
     }
 
     private static GameSession NewGameSession()
@@ -112,8 +108,7 @@ public class WebApplicationRoutes
         return gameSession;
     }
 
-    private static JsonHttpResult<GameStatePlayerView> GetCurrentStatePlayerViewResponse(
-        GameSession gameSession)
+    private static JsonHttpResult<GameStatePlayerView> GetCurrentStatePlayerViewResponse(GameSession gameSession)
     {
         var gameStatePlayerView = new GameStatePlayerView(() => gameSession.CurrentGameState);
         return ToJsonHttpResult(gameStatePlayerView);
@@ -131,6 +126,12 @@ public class WebApplicationRoutes
     private static JsonHttpResult<GameState> ToJsonHttpResult(GameState gs)
         => TypedResults.Json(gs, GameState.StateJsonSerializerOptions);
 
+    private static JsonHttpResult<GameState[]> ToJsonHttpResult(GameState[] gss)
+        => TypedResults.Json(gss, GameState.StateJsonSerializerOptions);
+
     private static JsonHttpResult<GameStatePlayerView> ToJsonHttpResult(GameStatePlayerView gs)
         => TypedResults.Json(gs, GameState.StateJsonSerializerOptions);
+
+    private static JsonHttpResult<GameStatePlayerView[]> ToJsonHttpResult(GameStatePlayerView[] gss)
+        => TypedResults.Json(gss, GameState.StateJsonSerializerOptions);
 }
