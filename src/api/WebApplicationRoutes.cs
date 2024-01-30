@@ -32,39 +32,9 @@ public class WebApplicationRoutes
         // Multiple response types doc:
         // https://learn.microsoft.com/en-us/aspnet/core/fundamentals/minimal-apis/openapi?view=aspnetcore-8.0#multiple-response-types
         app.MapGet(
-            "/simulateGameSession",
-            Results<JsonHttpResult<GameStatePlayerView[]>, JsonHttpResult<GameStatePlayerView>, BadRequest<string>> (
-                int? turnLimit,
-                bool? includeAllStates) =>
-            {
-                int turnLimitVal = turnLimit ?? 30;
-                int turnLimitLowerBound = 1;
-                int turnLimitUpperBound = 300;
-                if (turnLimitVal < turnLimitLowerBound || turnLimitVal > turnLimitUpperBound)
-                {
-                    return TypedResults.BadRequest(
-                        $"Value of 'turnLimit' is out of accepted range. " +
-                        $"It should be between {turnLimitLowerBound} and {turnLimitUpperBound}. " +
-                        $"Actual value: {turnLimitVal}");
-                }
-
-                var config = new Configuration(new SimulatedFileSystem());
-                var log = new Log(config);
-                var randomGen = new RandomGen(new Random());
-                var intellect = AIPlayer.Intellect.Basic;
-                var controller = new GameSessionController(config, log, new GameSession(randomGen));
-                var aiPlayer = new AIPlayer(log, intellect);
-                controller.PlayGameSession(turnLimit: turnLimitVal, aiPlayer);
-
-                if (includeAllStates == true)
-                    return TypedResults.Json(
-                        controller.AllGameStatesPlayerViews(),
-                        GameState.StateJsonSerializerOptions);
-                else
-                    return TypedResults.Json(
-                        controller.CurrentGameStatePlayerView,
-                        GameState.StateJsonSerializerOptions);
-            });
+            "/simulateGameSession", 
+            SimulateGameSession)
+            .Produces<GameStatePlayerView>();
 
         app.MapPost(
                 "/simulateGameSessionFromState",
@@ -88,6 +58,52 @@ public class WebApplicationRoutes
                     }
                 })
             .Accepts<GameState>("application/json");
+    }
+
+    private static
+        Results<JsonHttpResult<GameStatePlayerView[]>, JsonHttpResult<GameStatePlayerView>, BadRequest<string>>
+        SimulateGameSession(int? turnLimit, bool? includeAllStates)
+    {
+        (int turnLimitVal, string? error) = ParseTurnLimit(turnLimit);
+        if (error != null)
+            return TypedResults.BadRequest(error);
+
+        var config = new Configuration(new SimulatedFileSystem());
+        var log = new Log(config);
+        var randomGen = new RandomGen(new Random());
+        var intellect = AIPlayer.Intellect.Basic;
+        var controller = new GameSessionController(config, log, new GameSession(randomGen));
+        var aiPlayer = new AIPlayer(log, intellect);
+        controller.PlayGameSession(turnLimit: turnLimitVal, aiPlayer);
+
+        if (includeAllStates == true)
+            return TypedResults.Json(
+                controller.AllGameStatesPlayerViews(),
+                GameState.StateJsonSerializerOptions);
+        else
+            return TypedResults.Json(
+                controller.CurrentGameStatePlayerView,
+                GameState.StateJsonSerializerOptions);
+    }
+
+    private static (int turnLimitVal, string? error) ParseTurnLimit(int? turnLimit)
+    {
+        int retTurnLimit = turnLimit ?? 30;
+        int turnLimitLowerBound = 1;
+        int turnLimitUpperBound = 300;
+        string? error;
+
+        if (retTurnLimit < turnLimitLowerBound || retTurnLimit > turnLimitUpperBound)
+        {
+            retTurnLimit = -1;
+            error = $"Value of 'turnLimit' is out of accepted range. " +
+                    $"It should be between {turnLimitLowerBound} and {turnLimitUpperBound}. " +
+                    $"Actual value: {retTurnLimit}";
+        }
+        else
+            error = null;
+
+        return (retTurnLimit, error);
     }
 
     private static GameSession NewGameSession()
