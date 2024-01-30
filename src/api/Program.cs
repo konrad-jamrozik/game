@@ -87,8 +87,9 @@ string UseCorsForLocalhost(WebApplicationBuilder builder)
                 name: corsPolicyName,
                 policy =>
                 {
-                    policy.WithOrigins(webNpmRunDevServerUrl)
-                        .WithMethods("PUT", "DELETE", "GET");
+                    policy
+                        .WithOrigins(webNpmRunDevServerUrl)
+                        .WithMethods("PUT", "DELETE", "GET", "POST");
                 });
         });
     return corsPolicyName;
