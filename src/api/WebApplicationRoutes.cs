@@ -7,6 +7,11 @@ using UfoGameLib.State;
 
 namespace UfoGameLib.Api;
 
+using SimulationResponse = Results<
+    JsonHttpResult<GameStatePlayerView[]>,
+    JsonHttpResult<GameStatePlayerView>,
+    BadRequest<string>>;
+
 public class WebApplicationRoutes
 {
     public void Register(WebApplication app)
@@ -38,11 +43,7 @@ public class WebApplicationRoutes
         return $"Hello World! Coin flip: {randomGen.FlipCoin()}";
     }
 
-    private static async
-        Task<Results<
-            JsonHttpResult<GameStatePlayerView[]>,
-            JsonHttpResult<GameStatePlayerView>,
-            BadRequest<string>>>
+    private static async Task<SimulationResponse>
         SimulateGameSessionFromState(HttpRequest req, int? turnLimit)
     {
         (GameState? gs, string? error) = await ParseGameState(req);
@@ -52,21 +53,13 @@ public class WebApplicationRoutes
         return SimulateGameSessionInternal(turnLimit, false, gs);
     }
 
-    private static
-        Results<
-            JsonHttpResult<GameStatePlayerView[]>,
-            JsonHttpResult<GameStatePlayerView>,
-            BadRequest<string>>
+    private static SimulationResponse
         SimulateGameSession(int? turnLimit, bool? includeAllStates)
     {
         return SimulateGameSessionInternal(turnLimit, includeAllStates, null);
     }
 
-    private static
-        Results<
-            JsonHttpResult<GameStatePlayerView[]>,
-            JsonHttpResult<GameStatePlayerView>,
-            BadRequest<string>>
+    private static SimulationResponse
         SimulateGameSessionInternal(int? turnLimit, bool? includeAllStates, GameState? initialGameState)
     {
         (int parsedTurnLimit, string? error) = ParseTurnLimit(turnLimit);
@@ -87,7 +80,6 @@ public class WebApplicationRoutes
             return ToJsonHttpResult(controller.CurrentGameStatePlayerView);
     }
 
-
     private static (int turnLimitVal, string? error) ParseTurnLimit(int? turnLimit)
     {
         int parsedTurnLimit = turnLimit ?? 30;
@@ -107,7 +99,6 @@ public class WebApplicationRoutes
 
         return (parsedTurnLimit, error);
     }
-
     private static async Task<(GameState? gameState, string? error)> ParseGameState(HttpRequest req)
     {
         string? error;
