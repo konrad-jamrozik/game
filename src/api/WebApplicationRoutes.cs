@@ -11,13 +11,7 @@ public class WebApplicationRoutes
 {
     public void Register(WebApplication app)
     {
-        app.MapGet(
-                "/helloCoinFlip",
-                () =>
-                {
-                    var randomGen = new RandomGen(new Random());
-                    return $"Hello World! Coin flip: {randomGen.FlipCoin()}";
-                })
+        app.MapGet("/helloCoinFlip", HelloCoinFlip)
             .WithTags("API");
 
         app.MapGet("/initialGameState", () => GetCurrentStateResponse(NewGameSession()))
@@ -36,6 +30,12 @@ public class WebApplicationRoutes
             .Accepts<GameState>("application/json")
             .Produces<GameState>()
             .WithTags("API");
+    }
+
+    private static string HelloCoinFlip()
+    {
+        var randomGen = new RandomGen(new Random());
+        return $"Hello World! Coin flip: {randomGen.FlipCoin()}";
     }
 
     private static async
