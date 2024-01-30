@@ -17,11 +17,12 @@ public class GameSession
     public readonly RandomGen RandomGen;
 
     public readonly List<GameState> PastGameStates = new List<GameState>();
-    public GameState CurrentGameState = GameState.NewInitialGameState();
+    public GameState CurrentGameState;
 
-    public GameSession(RandomGen randomGen)
+    public GameSession(RandomGen randomGen, GameState? currentGameState = null)
     {
         RandomGen = randomGen;
+        CurrentGameState = currentGameState ?? GameState.NewInitialGameState();
     }
 
     public GameState[] AllGameStates => PastGameStates.Concat(CurrentGameState.WrapInList()).ToArray();

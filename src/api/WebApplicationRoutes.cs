@@ -7,6 +7,8 @@ using UfoGameLib.State;
 
 namespace UfoGameLib.Api;
 
+// kja this must return GameState, not GameStatePlayerView, as otherwise we won't have data to continue
+// playing from given state.
 using SimulationResponse = Results<
     JsonHttpResult<GameStatePlayerView[]>,
     JsonHttpResult<GameStatePlayerView>,
@@ -59,7 +61,6 @@ public class WebApplicationRoutes
         return SimulateGameSessionInternal(turnLimit, includeAllStates, null);
     }
 
-    // kja if initialGameState is provided, use it
     private static SimulationResponse
         SimulateGameSessionInternal(int? turnLimit, bool? includeAllStates, GameState? initialGameState)
     {
@@ -69,9 +70,16 @@ public class WebApplicationRoutes
 
         var config = new Configuration(new SimulatedFileSystem());
         var log = new Log(config);
-        var gameSession = NewGameSession();
+        var gameSession = NewGameSession(initialGameState);
         var controller = new GameSessionController(config, log, gameSession);
         var aiPlayer = new AIPlayer(log, AIPlayer.Intellect.Basic);
+
+        // kja currently 'turnLimit' has two meanings leading to confusion:
+        // - As passed to this method: for how many turns to play
+        // - As interpreted by controller.PlayGameSession below:
+        //   the turn number at which to stop playing.
+        if (initialGameState != null)
+            parsedTurnLimit += initialGameState.Timeline.CurrentTurn - 1;
 
         controller.PlayGameSession(turnLimit: parsedTurnLimit, aiPlayer);
 
@@ -120,9 +128,9 @@ public class WebApplicationRoutes
         return (parsedGameState, error);
     }
 
-    private static GameSession NewGameSession()
+    private static GameSession NewGameSession(GameState? initialGameState = null)
     {
-        var gameSession = new GameSession(new RandomGen(new Random()));
+        var gameSession = new GameSession(new RandomGen(new Random()), initialGameState);
         return gameSession;
     }
 

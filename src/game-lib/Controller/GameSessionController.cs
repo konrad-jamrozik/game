@@ -66,8 +66,12 @@ public class GameSessionController
 
     public void PlayGameSession(int turnLimit, IPlayer player)
     {
-        Debug.Assert(CurrentGameStatePlayerView.CurrentTurn == Timeline.InitialTurn);
-        Debug.Assert(turnLimit is >= Timeline.InitialTurn and <= GameState.MaxTurnLimit);
+        // Assert:
+        // IF the GameSession was ctored with null initialGameState,
+        // THEN CurrentGameStatePlayerView.CurrentTurn == Timeline.InitialTurn
+        Debug.Assert(CurrentGameStatePlayerView.CurrentTurn >= Timeline.InitialTurn);
+        Debug.Assert(turnLimit <= GameState.MaxTurnLimit);
+        Debug.Assert(turnLimit >= CurrentGameStatePlayerView.CurrentTurn);
 
         GameState state = GameSession.CurrentGameState;
 
