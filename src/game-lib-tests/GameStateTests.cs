@@ -23,12 +23,11 @@ public class GameStateTests
     /// Given:
     /// - An original game state, which is an arbitrary game state (here: initial game state)).
     /// - A player view of it, and a second player view of it.
-    /// - A clone of that game state.
-    /// - A player view of the clone of that game state.
-    /// - A modified clone of that game state.
+    /// - A clone of the original game state.
+    /// - A player view of the clone of the original game state.
+    /// - A modified clone of the original game state.
     ///
     /// The following holds:
-    /// - Game state player views retain references to game states they were created with.
     /// - A clone of game state is equal to the original (source of the cloned) game state.
     /// - A game state player view referencing a cloned game state is
     ///   equal to a player view of the original game state, because both these
@@ -41,38 +40,47 @@ public class GameStateTests
     [Test]
     public void CloningAndViewAndEqualityBehaveCorrectly()
     {
-        var originalGameState = GameState.NewInitialGameState();
+        GameState originalGameState = GameState.NewInitialGameState();
         var originalGameStateView = new GameStatePlayerView(() => originalGameState);
         var originalGameStateView2 = new GameStatePlayerView(() => originalGameState);
 
         // Act: clone the game state
-        var clonedState = originalGameState.Clone();
+        GameState clonedState = originalGameState.Clone();
 
         var clonedStateView = new GameStatePlayerView(() => clonedState);
 
         Assert.Multiple(() =>
         {
             // Act: exercise game state equality
+            // Assert: a state is equal to its clone
             Assert.That(clonedState, Is.EqualTo(originalGameState));
             
             // Act: exercise game state view equality
+            // Assert: a view of a cloned state is equal to the view of the original state
             Assert.That(clonedStateView, Is.EqualTo(originalGameStateView));
 
             // Act: exercise game state view game state reference equality
-            Assert.That(originalGameStateView2.StateReferenceEquals(originalGameStateView));
+            // Assert: two views of the same state reference the same state
+            Assert.That(originalGameStateView.StateReferenceEquals(originalGameStateView2));
+            // Assert: a view of a cloned state does not reference the original state
             Assert.That(!originalGameStateView.StateReferenceEquals(clonedStateView));
+            Assert.That(clonedStateView.StateReferenceEquals(clonedStateView));
 
             // Arrange: modify the cloned game state
             clonedState.Timeline.CurrentTurn += 1;
 
             /*
+               Assert: clonedState is not equal to originalGameState.
+
                This assertion is necessary, in addition to:
                
-                 Assert.That(clonedState, Is.EqualTo(initialState));
+                 Assert.That(clonedState, Is.EqualTo(originalGameState));
                
-               Without properly implemented equality the "Is.EqualTo" assert would pass,
+               This is because without properly implemented equality the "Is.EqualTo" assert would pass,
                even though the objects are not equal.
-               This is because NUnit 4.0.0 compares all public properties. See:
+               This is because NUnit 4.0.0 compares all public properties, and two states may be different even
+               though their public properties are equal.
+               For details on NUnit change, see:
                https://github.com/nunit/nunit/pull/4436
                https://github.com/nunit/nunit/issues/4394
                Above are mentioned in:
