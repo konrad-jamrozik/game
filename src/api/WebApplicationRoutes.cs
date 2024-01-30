@@ -44,13 +44,13 @@ public class WebApplicationRoutes
     }
 
     private static async Task<SimulationResponse>
-        SimulateGameSessionFromState(HttpRequest req, int? turnLimit)
+        SimulateGameSessionFromState(HttpRequest req, int? turnLimit, bool? includeAllStates)
     {
         (GameState? gs, string? error) = await ParseGameState(req);
         if (error != null)
             return TypedResults.BadRequest(error);
 
-        return SimulateGameSessionInternal(turnLimit, false, gs);
+        return SimulateGameSessionInternal(turnLimit, includeAllStates, gs!);
     }
 
     private static SimulationResponse
@@ -59,6 +59,7 @@ public class WebApplicationRoutes
         return SimulateGameSessionInternal(turnLimit, includeAllStates, null);
     }
 
+    // kja if initialGameState is provided, use it
     private static SimulationResponse
         SimulateGameSessionInternal(int? turnLimit, bool? includeAllStates, GameState? initialGameState)
     {
