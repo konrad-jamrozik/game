@@ -12,12 +12,12 @@ public class WebApplicationRoutes
     public void Register(WebApplication app)
     {
         app.MapGet(
-            "/helloCoinFlip",
-            () =>
-            {
-                var randomGen = new RandomGen(new Random());
-                return $"Hello World! Coin flip: {randomGen.FlipCoin()}";
-            })
+                "/helloCoinFlip",
+                () =>
+                {
+                    var randomGen = new RandomGen(new Random());
+                    return $"Hello World! Coin flip: {randomGen.FlipCoin()}";
+                })
             .WithTags("API");
 
         app.MapGet("/initialGameState", () => GetCurrentStateResponse(NewGameSession()))
@@ -32,26 +32,42 @@ public class WebApplicationRoutes
             .Produces<GameStatePlayerView>()
             .WithTags("API");
 
-        app.MapPost(
-                "/simulateGameSessionFromState",
-                async Task<Results<JsonHttpResult<GameState>, BadRequest<string>>>
-                (HttpRequest req, int? turnLimit) =>
-                {
-                    (GameState? gs, string? error) = await ParseGameState(req);
-                    if (error != null) 
-                        return TypedResults.BadRequest(error);
-                    return ToJsonHttpResult(gs!);
-                })
+        app.MapPost("/simulateGameSessionFromState", SimulateGameSessionFromState)
             .Accepts<GameState>("application/json")
             .Produces<GameState>()
             .WithTags("API");
     }
 
-    // Multiple response types doc:
-    // https://learn.microsoft.com/en-us/aspnet/core/fundamentals/minimal-apis/openapi?view=aspnetcore-8.0#multiple-response-types
+    private static async
+        Task<Results<
+            JsonHttpResult<GameStatePlayerView[]>,
+            JsonHttpResult<GameStatePlayerView>,
+            BadRequest<string>>>
+        SimulateGameSessionFromState(HttpRequest req, int? turnLimit)
+    {
+        (GameState? gs, string? error) = await ParseGameState(req);
+        if (error != null)
+            return TypedResults.BadRequest(error);
+
+        return SimulateGameSessionInternal(turnLimit, false, gs);
+    }
+
     private static
-        Results<JsonHttpResult<GameStatePlayerView[]>, JsonHttpResult<GameStatePlayerView>, BadRequest<string>>
+        Results<
+            JsonHttpResult<GameStatePlayerView[]>,
+            JsonHttpResult<GameStatePlayerView>,
+            BadRequest<string>>
         SimulateGameSession(int? turnLimit, bool? includeAllStates)
+    {
+        return SimulateGameSessionInternal(turnLimit, includeAllStates, null);
+    }
+
+    private static
+        Results<
+            JsonHttpResult<GameStatePlayerView[]>,
+            JsonHttpResult<GameStatePlayerView>,
+            BadRequest<string>>
+        SimulateGameSessionInternal(int? turnLimit, bool? includeAllStates, GameState? initialGameState)
     {
         (int parsedTurnLimit, string? error) = ParseTurnLimit(turnLimit);
         if (error != null)
@@ -70,6 +86,7 @@ public class WebApplicationRoutes
         else
             return ToJsonHttpResult(controller.CurrentGameStatePlayerView);
     }
+
 
     private static (int turnLimitVal, string? error) ParseTurnLimit(int? turnLimit)
     {
@@ -144,3 +161,15 @@ public class WebApplicationRoutes
     private static JsonHttpResult<GameStatePlayerView[]> ToJsonHttpResult(GameStatePlayerView[] gss)
         => TypedResults.Json(gss, GameState.StateJsonSerializerOptions);
 }
+
+// Relevant docs:
+//
+// TypedResults
+// https://learn.microsoft.com/en-us/aspnet/core/fundamentals/minimal-apis?view=aspnetcore-8.0#return-typedresults
+// https://learn.microsoft.com/en-us/aspnet/core/fundamentals/minimal-apis/openapi?view=aspnetcore-8.0#describe-response-types
+//
+// Multiple response types (Results<>) doc:
+// https://learn.microsoft.com/en-us/aspnet/core/fundamentals/minimal-apis/openapi?view=aspnetcore-8.0#multiple-response-types
+//
+// [System.Text.Json] : More accurate error messages when failing to map fields or parameters #88048
+// https://github.com/dotnet/runtime/issues/88048
