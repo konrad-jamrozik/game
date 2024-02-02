@@ -1,8 +1,8 @@
 import type { LineSeriesType } from '@mui/x-charts'
 import { LineChart } from '@mui/x-charts/LineChart'
 import _ from 'lodash'
-import type { GameStateDataSeries } from '../types/GameStateDataSeries'
 import type { GameState } from '../types/GameState'
+import type { GameStateDataSeries } from '../types/GameStateDataSeries'
 import type { MakeOptional } from '../types/external'
 
 export type GameStatsLineChartProps = {

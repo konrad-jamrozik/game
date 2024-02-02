@@ -16,7 +16,7 @@ export function RunSimulation(props: RunSimulationProps): React.JSX.Element {
   const [apiResponse, setApiResponse] = useState<GameState>()
   const [loading, setLoading] = useState<boolean>(false)
   const [error, setError] = useState<string>()
-  const [lastTurn, setLastTurn] = useState<number>(0)
+  const [msg, setMsg] = useState<string>()
 
   const apiHost = import.meta.env.PROD
     ? 'https://game-api1.azurewebsites.net'
@@ -37,7 +37,8 @@ export function RunSimulation(props: RunSimulationProps): React.JSX.Element {
       }
       const allGameStates = (await response.json()) as GameState[]
       const lastGameState = allGameStates.at(-1)!
-      setLastTurn(lastGameState.Timeline.CurrentTurn)
+      const gameResult = lastGameState.IsGameWon ? 'won' : (lastGameState.IsGameLost ? 'lost' : 'undecided')
+      setMsg(`Simulation ended at turn ${lastGameState.Timeline.CurrentTurn}. Result: ${gameResult}`)
       setApiResponse(lastGameState)
       props.setAgents(lastGameState.Assets.Agents)
       props.setGameStates(allGameStates)
@@ -50,7 +51,7 @@ export function RunSimulation(props: RunSimulationProps): React.JSX.Element {
   }
 
   return (
-    <Card variant="outlined" sx={{ maxWidth: '300px' }}>
+    <Card variant="outlined" sx={{ maxWidth: '400px' }}>
       <CardContent>
         <Button
           variant="outlined"
@@ -78,7 +79,7 @@ export function RunSimulation(props: RunSimulationProps): React.JSX.Element {
           }}
         />
         {Boolean(error) && <div>Error: {error}</div>}
-        {apiResponse && <div>Simulation ended at turn {lastTurn}</div>}
+        {apiResponse && <div>{msg}</div>}
       </CardContent>
     </Card>
   )
