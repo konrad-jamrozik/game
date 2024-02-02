@@ -67,6 +67,14 @@ export function RunSimulation(props: RunSimulationProps): React.JSX.Element {
     }
   }
 
+  // kja better model:
+  // input:
+  // - "simulate from" turn
+  // - "simulate to" turn
+  // output: simulates or re-simulates between these turns
+  // if current simulation is lesser than "simulate from", the simulation tries to reach that turn from 0.
+  // the simulation may end before that (win or loss). Then so be it.
+  // and also just add "reset" button to reset the simulation to turn 0.
   return (
     <Card variant="outlined" sx={{ maxWidth: '400px' }}>
       <CardContent>
