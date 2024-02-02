@@ -12,7 +12,7 @@ import {
   moneyStatsDataSeries,
 } from './types/GameStateDataSeries'
 
-const defaultTurnLimit = 300
+const defaultTargetTurn = 300
 
 function Footer(): React.JSX.Element {
   return (
@@ -28,7 +28,7 @@ function Footer(): React.JSX.Element {
 
 export default function App(): React.JSX.Element {
   const [agents, setAgents] = useState<Agent[]>([])
-  const [turnLimit, setTurnLimit] = useState<number>(defaultTurnLimit)
+  const [targetTurn, setTargetTurn] = useState<number>(defaultTargetTurn)
   const [gameStates, setGameStates] = useState<GameState[]>([])
   return (
     <Typography component={'span'} sx={{ bgcolor: '#000020' }} gutterBottom>
@@ -41,7 +41,7 @@ export default function App(): React.JSX.Element {
             justifyContent="center"
           >
             <RunSimulation
-              {...{ agents, setAgents, turnLimit, setTurnLimit, setGameStates }}
+              {...{ agents, setAgents, targetTurn, setTargetTurn, gameStates, setGameStates }}
             />
           </Grid>
           <Grid xs={6} sx={{ bgcolor: '#002000' }}>
