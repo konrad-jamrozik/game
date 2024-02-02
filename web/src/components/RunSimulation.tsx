@@ -33,6 +33,7 @@ export function RunSimulation(props: RunSimulationProps): React.JSX.Element {
       : JSON.stringify(getCurrentState(props.gameStates))
 
     try {
+      console.log(`apiUrl: ${apiUrl}`)
       const response = startNewSimulation
         ? await fetch(apiUrl)
         : await fetch(apiUrl, {
@@ -69,7 +70,11 @@ export function RunSimulation(props: RunSimulationProps): React.JSX.Element {
         <Button
           variant="outlined"
           onClick={async () => simulate(false)}
-          disabled={loading}
+          disabled={
+            loading ||
+            _.isEmpty(props.gameStates) ||
+            props.targetTurn <= getCurrentTurn(props.gameStates)
+          }
         >
           {loading ? 'Loading...' : `Simulate to turn ${props.targetTurn}`}
         </Button>
