@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http.HttpResults;
 using UfoGameLib.Controller;
 using UfoGameLib.Lib;
+using UfoGameLib.Model;
 using UfoGameLib.Players;
 using UfoGameLib.State;
 
@@ -62,7 +63,7 @@ public class WebApplicationRoutes
     private static SimulationResponse
         SimulateGameSessionInternal(int? turnLimit, bool? includeAllStates, GameState? initialGameState)
     {
-        (int parsedTurnLimit, string? error) = ParseTurnLimit(turnLimit);
+        (int parsedTurnLimit, string? error) = ParseTurnLimit(turnLimit, initialGameState);
         if (error != null)
             return TypedResults.BadRequest(error);
 
@@ -80,10 +81,11 @@ public class WebApplicationRoutes
             return ToJsonHttpResult(gameSession.CurrentGameState);
     }
 
-    private static (int turnLimitVal, string? error) ParseTurnLimit(int? turnLimit)
+    private static (int turnLimitVal, string? error) ParseTurnLimit(int? turnLimit, GameState? initialGameState)
     {
         int parsedTurnLimit = turnLimit ?? 30;
-        int turnLimitLowerBound = 1;
+        int turnLimitLowerBound =
+            (initialGameState?.Timeline.CurrentTurn ?? Timeline.InitialTurn) + 1;
         int turnLimitUpperBound = 300;
         string? error;
 
