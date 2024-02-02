@@ -90,6 +90,24 @@ string UseCorsForLocalhost(WebApplicationBuilder builder)
                 {
                     policy
                         .WithOrigins(webNpmRunDevServerUrl)
+                        // This ".WithHeaders("Content-Type")"
+                        // addresses following issue when making a POST request from frontend that looks like this:
+                        //
+                        //   fetch(apiUrl, {
+                        //     method: 'POST',
+                        //     body: jsonBody,
+                        //     headers: {
+                        //       'Content-Type': 'application/json',
+                        //     },
+                        //   })
+                        // 
+                        //   Access to fetch at 'https://localhost:7128/simulateGameSessionFromState?includeAllStates=true&turnLimit=6'
+                        //   from origin 'http://localhost:5173' has been blocked by CORS policy:
+                        //   Request header field content-type is not allowed by Access-Control-Allow-Headers in preflight response.
+                        //
+                        // See also:
+                        // https://stackoverflow.com/questions/32500073/request-header-field-access-control-allow-headers-is-not-allowed-by-itself-in-pr
+                        .WithHeaders("Content-Type")
                         .WithMethods("PUT", "DELETE", "GET", "POST");
                 });
         });
