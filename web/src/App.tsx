@@ -3,7 +3,7 @@ import Grid from '@mui/material/Unstable_Grid2'
 import { useState } from 'react'
 import { GameStatsLineChart } from './components/GameStatsLineChart'
 import { RunSimulation } from './components/RunSimulation'
-import type { Agent, GameState } from './types/GameState'
+import type { GameState } from './types/GameState'
 import {
   agentStatsDataSeries,
   intelStatsDataSeries,
