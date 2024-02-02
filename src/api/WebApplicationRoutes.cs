@@ -7,11 +7,9 @@ using UfoGameLib.State;
 
 namespace UfoGameLib.Api;
 
-// kja this must return GameState, not GameStatePlayerView, as otherwise we won't have data to continue
-// playing from given state.
 using SimulationResponse = Results<
-    JsonHttpResult<GameStatePlayerView[]>,
-    JsonHttpResult<GameStatePlayerView>,
+    JsonHttpResult<GameState[]>,
+    JsonHttpResult<GameState>,
     BadRequest<string>>;
 
 public class WebApplicationRoutes
@@ -84,9 +82,9 @@ public class WebApplicationRoutes
         controller.PlayGameSession(turnLimit: parsedTurnLimit, aiPlayer);
 
         if (includeAllStates == true)
-            return ToJsonHttpResult(controller.AllGameStatesPlayerViews());
+            return ToJsonHttpResult(gameSession.AllGameStatesAtTurnStarts());
         else
-            return ToJsonHttpResult(controller.CurrentGameStatePlayerView);
+            return ToJsonHttpResult(gameSession.CurrentGameState);
     }
 
     private static (int turnLimitVal, string? error) ParseTurnLimit(int? turnLimit)

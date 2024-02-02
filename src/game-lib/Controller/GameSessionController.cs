@@ -59,8 +59,7 @@ public class GameSessionController
 
     public GameStatePlayerView[] AllGameStatesPlayerViews()
         => GameSession
-            .AllGameStates
-            .AtTurnStarts()
+            .AllGameStatesAtTurnStarts()
             .Select(gs => new GameStatePlayerView(() => gs))
             .ToArray();
 

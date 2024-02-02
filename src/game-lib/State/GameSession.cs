@@ -27,6 +27,11 @@ public class GameSession
 
     public GameState[] AllGameStates => PastGameStates.Concat(CurrentGameState.WrapInList()).ToArray();
 
+    public GameState[] AllGameStatesAtTurnStarts()
+        => AllGameStates
+            .AtTurnStarts()
+            .ToArray();
+
     public GameState? PreviousGameState => PastGameStates.Any() ? PastGameStates.Last() : null;
 
     public void AppendCurrentStateToPastStates()
