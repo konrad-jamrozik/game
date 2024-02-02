@@ -48,7 +48,11 @@ export function RunSimulation(props: RunSimulationProps): React.JSX.Element {
         throw new Error(errorContents)
       }
       const allGameStates = (await response.json()) as GameState[]
-      props.setGameStates(allGameStates)
+      if (startNewSimulation) {
+        props.setGameStates(allGameStates)
+      } else {
+        props.setGameStates([...props.gameStates, ...allGameStates])
+      }
     } catch (fetchError: unknown) {
       setError((fetchError as Error).message)
       console.error(fetchError)
