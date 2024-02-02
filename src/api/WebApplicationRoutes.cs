@@ -91,10 +91,10 @@ public class WebApplicationRoutes
 
         if (parsedTurnLimit < turnLimitLowerBound || parsedTurnLimit > turnLimitUpperBound)
         {
-            parsedTurnLimit = -1;
             error = $"Value of 'turnLimit' is out of accepted range. " +
                     $"It should be between {turnLimitLowerBound} and {turnLimitUpperBound}. " +
                     $"Actual value: {parsedTurnLimit}";
+            parsedTurnLimit = -1;
         }
         else
             error = null;

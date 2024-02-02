@@ -43,13 +43,14 @@ export function RunSimulation(props: RunSimulationProps): React.JSX.Element {
             },
           })
       if (!response.ok) {
-        throw new Error('GameStates API response was not ok')
+        const errorContents = await response.text()
+        throw new Error(errorContents)
       }
       const allGameStates = (await response.json()) as GameState[]
       props.setGameStates(allGameStates)
-    } catch (fetchError) {
-      setError('Failed to get game states from API')
-      console.error('There was an error!', fetchError)
+    } catch (fetchError: unknown) {
+      setError((fetchError as Error).message)
+      console.error(fetchError)
     } finally {
       setLoading(false)
     }
