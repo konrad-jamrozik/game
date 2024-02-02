@@ -76,6 +76,7 @@ public class WebApplicationRoutes
         // - As passed to this method: for how many turns to play
         // - As interpreted by controller.PlayGameSession below:
         //   the turn number at which to stop playing.
+        // Ideas for clearer names: 'turnsToPlay' or 'maxGameTurn'.
         if (initialGameState != null)
             parsedTurnLimit += initialGameState.Timeline.CurrentTurn - 1;
 

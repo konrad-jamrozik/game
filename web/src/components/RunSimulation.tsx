@@ -1,8 +1,12 @@
 import { Button, Card, CardContent, TextField } from '@mui/material'
 import _ from 'lodash'
 import { useState } from 'react'
-import { getCurrentTurn, getGameResult } from '../lib/GameStateUtils'
-import type { GameState } from '../types/GameState'
+import {
+  getCurrentState,
+  getCurrentTurn,
+  getGameResult,
+} from '../lib/GameStateUtils'
+import { initialTurn, type GameState } from '../types/GameState'
 
 export type RunSimulationProps = {
   readonly targetTurn: number
@@ -15,31 +19,36 @@ export function RunSimulation(props: RunSimulationProps): React.JSX.Element {
   const [loading, setLoading] = useState<boolean>(false)
   const [error, setError] = useState<string>()
 
-  const apiHost = import.meta.env.PROD
-    ? 'https://game-api1.azurewebsites.net'
-    : 'https://localhost:7128'
-
-  const queryString = `?includeAllStates=true&turnLimit=${props.targetTurn}`
-
-  const apiUrl = `${apiHost}/simulateGameSession${queryString}`
-
   function getMsg(): string {
     return `Simulation ran until turn ${getCurrentTurn(props.gameStates)}. Result: ${getGameResult(props.gameStates)}`
   }
 
-  async function simulate(): Promise<void> {
+  async function simulate(startNewSimulation: boolean): Promise<void> {
     setLoading(true)
     setError('')
 
+    const apiUrl = getApiUrl(props, startNewSimulation)
+    const jsonBody: string = startNewSimulation
+      ? ''
+      : JSON.stringify(getCurrentState(props.gameStates))
+
     try {
-      const response = await fetch(apiUrl)
+      const response = startNewSimulation
+        ? await fetch(apiUrl)
+        : await fetch(apiUrl, {
+            method: 'POST',
+            body: jsonBody,
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          })
       if (!response.ok) {
-        throw new Error('Network response was not ok')
+        throw new Error('GameStates API response was not ok')
       }
       const allGameStates = (await response.json()) as GameState[]
       props.setGameStates(allGameStates)
     } catch (fetchError) {
-      setError('Failed to fetch API response')
+      setError('Failed to get game states from API')
       console.error('There was an error!', fetchError)
     } finally {
       setLoading(false)
@@ -49,10 +58,18 @@ export function RunSimulation(props: RunSimulationProps): React.JSX.Element {
   return (
     <Card variant="outlined" sx={{ maxWidth: '400px' }}>
       <CardContent>
-        <Button variant="outlined" onClick={simulate} disabled={loading}>
+        <Button
+          variant="outlined"
+          onClick={async () => simulate(true)}
+          disabled={loading}
+        >
           {loading ? 'Loading...' : 'New simulation'}
         </Button>
-        <Button variant="outlined" onClick={simulate} disabled={loading}>
+        <Button
+          variant="outlined"
+          onClick={async () => simulate(false)}
+          disabled={loading}
+        >
           {loading ? 'Loading...' : `Simulate to turn ${props.targetTurn}`}
         </Button>
         <TextField
@@ -78,4 +95,22 @@ export function RunSimulation(props: RunSimulationProps): React.JSX.Element {
       </CardContent>
     </Card>
   )
+}
+
+function getApiUrl(
+  props: RunSimulationProps,
+  startNewSimulation: boolean,
+): string {
+  const apiHost = import.meta.env.PROD
+    ? 'https://game-api1.azurewebsites.net'
+    : 'https://localhost:7128'
+
+  const useNewGameSessionApi =
+    startNewSimulation ||
+    (!_.isEmpty(props.gameStates) &&
+      getCurrentTurn(props.gameStates) === initialTurn)
+
+  const queryString = `?includeAllStates=true&turnLimit=${props.targetTurn}`
+
+  return `${apiHost}/simulateGameSession${useNewGameSessionApi ? '' : 'FromState'}${queryString}`
 }

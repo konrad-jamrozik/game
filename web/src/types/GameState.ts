@@ -15,6 +15,8 @@ export type GameState = {
   readonly UpdateCount: number
 }
 
+export const initialTurn = 1
+
 export type Timeline = {
   readonly CurrentTurn: number
 }
