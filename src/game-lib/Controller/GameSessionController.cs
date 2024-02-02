@@ -74,6 +74,13 @@ public class GameSessionController
 
         GameState state = GameSession.CurrentGameState;
 
+        // Note: in the boundary case of
+        //
+        //  turnLimit == GameSession.CurrentGameState.Timeline.CurrentTurn
+        //
+        // e.g. when the game session is new and turnLimit == Timeline.InitialTurn,
+        // the game session will be immediately over, without the player getting a chance to do
+        // anything.
         while (!GameSessionOver(state, turnLimit))
         {
             _log.Info("");
@@ -153,7 +160,7 @@ public class GameSessionController
     }
 
     private static bool GameSessionOver(GameState state, int turnLimit)
-        => state.IsGameOver || state.Timeline.CurrentTurn > turnLimit;
+        => state.IsGameOver || state.Timeline.CurrentTurn >= turnLimit;
 
     /// <summary>
     /// If game is over the last turn is 'current turn minus one' instead of 'current turn'.

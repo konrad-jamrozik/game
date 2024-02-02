@@ -85,7 +85,7 @@ public class WebApplicationRoutes
     {
         int parsedTurnLimit = turnLimit ?? 30;
         int turnLimitLowerBound =
-            (initialGameState?.Timeline.CurrentTurn ?? Timeline.InitialTurn) + 1;
+            initialGameState?.Timeline.CurrentTurn ?? Timeline.InitialTurn;
         int turnLimitUpperBound = 300;
         string? error;
 
