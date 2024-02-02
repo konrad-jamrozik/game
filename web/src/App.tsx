@@ -27,7 +27,6 @@ function Footer(): React.JSX.Element {
 }
 
 export default function App(): React.JSX.Element {
-  const [agents, setAgents] = useState<Agent[]>([])
   const [targetTurn, setTargetTurn] = useState<number>(defaultTargetTurn)
   const [gameStates, setGameStates] = useState<GameState[]>([])
   return (
@@ -41,7 +40,7 @@ export default function App(): React.JSX.Element {
             justifyContent="center"
           >
             <RunSimulation
-              {...{ agents, setAgents, targetTurn, setTargetTurn, gameStates, setGameStates }}
+              {...{ targetTurn, setTargetTurn, gameStates, setGameStates }}
             />
           </Grid>
           <Grid xs={6} sx={{ bgcolor: '#002000' }}>

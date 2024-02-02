@@ -13,6 +13,8 @@ public class PlayerActions : List<PlayerAction>
 
     public GameStateUpdateLog Apply(GameState state)
     {
+        // kja this triggered: apparently the AI, during its turn, caused the game to be over.
+        // Maybe bought too much transport cap in PlayGameTurn ?
         Debug.Assert(!state.IsGameOver);
         ForEach(action =>
         {

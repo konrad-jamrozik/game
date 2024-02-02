@@ -1,10 +1,9 @@
 import { Button, Card, CardContent, TextField } from '@mui/material'
+import _ from 'lodash'
 import { useState } from 'react'
-import type { Agent, GameState } from '../types/GameState'
+import type { GameState } from '../types/GameState'
 
 export type RunSimulationProps = {
-  readonly agents: readonly Agent[]
-  readonly setAgents: React.Dispatch<React.SetStateAction<Agent[]>>
   readonly targetTurn: number
   readonly setTargetTurn: React.Dispatch<React.SetStateAction<number>>
   readonly gameStates: readonly GameState[]
@@ -14,7 +13,6 @@ export type RunSimulationProps = {
 }
 
 export function RunSimulation(props: RunSimulationProps): React.JSX.Element {
-  const [apiResponse, setApiResponse] = useState<GameState>()
   const [loading, setLoading] = useState<boolean>(false)
   const [error, setError] = useState<string>()
 
@@ -22,7 +20,7 @@ export function RunSimulation(props: RunSimulationProps): React.JSX.Element {
     ? 'https://game-api1.azurewebsites.net'
     : 'https://localhost:7128'
 
-  const queryString = `?includeAllStates=true&turnLimit=${props.targetTurn-1}`
+  const queryString = `?includeAllStates=true&turnLimit=${props.targetTurn}`
 
   const apiUrl = `${apiHost}/simulateGameSession${queryString}`
 
@@ -42,9 +40,6 @@ export function RunSimulation(props: RunSimulationProps): React.JSX.Element {
         throw new Error('Network response was not ok')
       }
       const allGameStates = (await response.json()) as GameState[]
-      const lastGameState = allGameStates.at(-1)!
-      setApiResponse(lastGameState)
-      props.setAgents(lastGameState.Assets.Agents)
       props.setGameStates(allGameStates)
     } catch (fetchError) {
       setError('Failed to fetch API response')
@@ -90,7 +85,7 @@ export function RunSimulation(props: RunSimulationProps): React.JSX.Element {
           }}
         />
         {Boolean(error) && <div>Error: {error}</div>}
-        {apiResponse && <div>{getMsg()}</div>}
+        {!_.isEmpty(props.gameStates) && <div>{getMsg()}</div>}
       </CardContent>
     </Card>
   )
