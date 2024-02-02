@@ -1,6 +1,6 @@
 import _ from 'lodash'
 import { median } from '../lib/utils'
-import type { GameStatePlayerView } from './GameStatePlayerView'
+import type { GameState } from './GameState'
 import {
   agentSurvivalSkill,
   agentUpkeepCost,
@@ -10,7 +10,7 @@ import {
 
 export type GameStateDataSeries = {
   key: GameStatsDataSeriesKey
-  dataFunc: (gs: GameStatePlayerView) => number
+  dataFunc: (gs: GameState) => number
   label: string
   color: string
 }

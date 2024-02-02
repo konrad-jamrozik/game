@@ -1,6 +1,6 @@
 // codesync UfoGameLib.Model.Ruleset
 import _ from 'lodash'
-import type { Agent, Mission } from './GameStatePlayerView'
+import type { Agent, Mission } from './GameState'
 
 export const agentUpkeepCost = 5
 export const incomeGeneratedPerAgent = agentUpkeepCost * 3

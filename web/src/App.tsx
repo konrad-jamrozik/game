@@ -10,7 +10,7 @@ import {
   missionsStatsDataSeries,
   moneyStatsDataSeries,
 } from './types/GameStateDataSeries'
-import type { Agent, GameStatePlayerView } from './types/GameStatePlayerView'
+import type { Agent, GameState } from './types/GameState'
 
 const defaultTurnLimit = 300
 
@@ -29,7 +29,7 @@ function Footer(): React.JSX.Element {
 export default function App(): React.JSX.Element {
   const [agents, setAgents] = useState<Agent[]>([])
   const [turnLimit, setTurnLimit] = useState<number>(defaultTurnLimit)
-  const [gameStates, setGameStates] = useState<GameStatePlayerView[]>([])
+  const [gameStates, setGameStates] = useState<GameState[]>([])
   return (
     <Typography component={'span'} sx={{ bgcolor: '#000020' }} gutterBottom>
       <Container maxWidth={false} sx={{ bgcolor: '#202020', my: 4 }}>

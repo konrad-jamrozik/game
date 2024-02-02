@@ -1,6 +1,6 @@
 import { Button, Card, CardContent, TextField } from '@mui/material'
 import { useState } from 'react'
-import type { Agent, GameStatePlayerView } from '../types/GameStatePlayerView'
+import type { Agent, GameState } from '../types/GameState'
 
 export type RunSimulationProps = {
   readonly agents: readonly Agent[]
@@ -8,12 +8,12 @@ export type RunSimulationProps = {
   readonly turnLimit: number
   readonly setTurnLimit: React.Dispatch<React.SetStateAction<number>>
   readonly setGameStates: React.Dispatch<
-    React.SetStateAction<GameStatePlayerView[]>
+    React.SetStateAction<GameState[]>
   >
 }
 
 export function RunSimulation(props: RunSimulationProps): React.JSX.Element {
-  const [apiResponse, setApiResponse] = useState<GameStatePlayerView>()
+  const [apiResponse, setApiResponse] = useState<GameState>()
   const [loading, setLoading] = useState<boolean>(false)
   const [error, setError] = useState<string>()
   const [lastTurn, setLastTurn] = useState<number>(0)
@@ -35,9 +35,9 @@ export function RunSimulation(props: RunSimulationProps): React.JSX.Element {
       if (!response.ok) {
         throw new Error('Network response was not ok')
       }
-      const allGameStates = (await response.json()) as GameStatePlayerView[]
+      const allGameStates = (await response.json()) as GameState[]
       const lastGameState = allGameStates.at(-1)!
-      setLastTurn(lastGameState.CurrentTurn)
+      setLastTurn(lastGameState.Timeline.CurrentTurn)
       setApiResponse(lastGameState)
       props.setAgents(lastGameState.Assets.Agents)
       props.setGameStates(allGameStates)

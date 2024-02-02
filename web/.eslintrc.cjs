@@ -270,8 +270,8 @@ module.exports = {
 //       // it works for the CLI and CI.
 //       {
 //         from: 'file',
-//         name: 'GameStatePlayerView',
-//         path: 'src/types/GameStatePlayerView.ts',
+//         name: 'GameState',
+//         path: 'src/types/GameState.ts',
 //       },
 //     ],
 //   },

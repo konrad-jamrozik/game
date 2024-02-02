@@ -28,7 +28,7 @@ public class WebApplicationRoutes
             .WithTags("API");
 
         app.MapGet("/simulateGameSession", SimulateGameSession)
-            .Produces<GameStatePlayerView>()
+            .Produces<GameState>()
             .WithTags("API");
 
         app.MapPost("/simulateGameSessionFromState", SimulateGameSessionFromState)

@@ -2,11 +2,11 @@ import type { LineSeriesType } from '@mui/x-charts'
 import { LineChart } from '@mui/x-charts/LineChart'
 import _ from 'lodash'
 import type { GameStateDataSeries } from '../types/GameStateDataSeries'
-import type { GameStatePlayerView } from '../types/GameStatePlayerView'
+import type { GameState } from '../types/GameState'
 import type { MakeOptional } from '../types/external'
 
 export type GameStatsLineChartProps = {
-  readonly gameStates: readonly GameStatePlayerView[]
+  readonly gameStates: readonly GameState[]
   readonly dataSeries: readonly GameStateDataSeries[]
 }
 
@@ -32,7 +32,7 @@ export function GameStatsLineChart(
 
   const dataset: DataSetEntry[] = _.map(props.gameStates, (gs) => {
     const obj: DataSetEntry = {
-      turn: gs.CurrentTurn,
+      turn: gs.Timeline.CurrentTurn,
       ..._.mapValues(
         _.keyBy(props.dataSeries, (ds) => ds.key),
         (ds) => ds.dataFunc(gs),

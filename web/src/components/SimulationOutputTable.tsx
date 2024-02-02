@@ -6,7 +6,7 @@ import TableContainer from '@mui/material/TableContainer'
 import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
 import _ from 'lodash'
-import type { Agent } from '../types/GameStatePlayerView'
+import type { Agent } from '../types/GameState'
 
 export type SimulationOutputTableProps = {
   readonly agents: readonly Agent[]
