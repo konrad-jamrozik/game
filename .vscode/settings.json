@@ -1,0 +1,48 @@
+{
+  "editor.quickSuggestions": {
+    "strings": true
+  },
+  "cSpell.words": [
+    "AZUREAPPSERVICE",
+    "blockquote",
+    "blockquotes",
+    "CICD",
+    "codesync",
+    "Datatable",
+    "fontsource",
+    "Jamrozik",
+    "kojamroz",
+    "playthrough",
+    "PUBLISHPROFILE",
+    "Quickstart",
+    "roboto",
+    "Ruleset",
+    "Solarius",
+    "sonarjs",
+    "staticwebapp",
+    "tailwindcss"
+  ],
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "editor.formatOnPaste": false,
+  "editor.formatOnType": false,
+  "editor.formatOnSave": true,
+  "editor.formatOnSaveMode": "file", // required to format on save
+  "files.autoSave": "off",
+  // "typescript.suggest.paths": false,
+  // "javascript.suggest.paths": false,
+  "prettier.requireConfig": true,
+  "colorize.include": [
+    "**/*.ts",
+    "**/*.tsx",
+    "**/*.css",
+    "**/*.scss",
+    "**/*.sass",
+    "**/*.less",
+    "**/*.styl"
+  ],
+  "colorize.decoration_type": "background",
+  "colorize.hide_current_line_decorations": false,
+}

@@ -28,8 +28,6 @@ export type Assets = {
   readonly Agents: Agent[]
 }
 
-
-
 export type Mission = {
   readonly Id: number
   readonly CurrentState: 'Active' | 'Successful' | 'Failed'

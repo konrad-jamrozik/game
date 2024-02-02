@@ -1,15 +1,14 @@
 import { Button, Card, CardContent, TextField } from '@mui/material'
 import _ from 'lodash'
 import { useState } from 'react'
+import { getCurrentTurn, getGameResult } from '../lib/GameStateUtils'
 import type { GameState } from '../types/GameState'
 
 export type RunSimulationProps = {
   readonly targetTurn: number
   readonly setTargetTurn: React.Dispatch<React.SetStateAction<number>>
   readonly gameStates: readonly GameState[]
-  readonly setGameStates: React.Dispatch<
-    React.SetStateAction<GameState[]>
-  >
+  readonly setGameStates: React.Dispatch<React.SetStateAction<GameState[]>>
 }
 
 export function RunSimulation(props: RunSimulationProps): React.JSX.Element {
@@ -25,9 +24,7 @@ export function RunSimulation(props: RunSimulationProps): React.JSX.Element {
   const apiUrl = `${apiHost}/simulateGameSession${queryString}`
 
   function getMsg(): string {
-    const lastGameState = props.gameStates.at(-1)!
-    const gameResult = lastGameState.IsGameWon ? 'won' : (lastGameState.IsGameLost ? 'lost' : 'undecided')
-    return `Simulation ran until turn ${lastGameState.Timeline.CurrentTurn}. Result: ${gameResult}`
+    return `Simulation ran until turn ${getCurrentTurn(props.gameStates)}. Result: ${getGameResult(props.gameStates)}`
   }
 
   async function simulate(): Promise<void> {
@@ -52,20 +49,12 @@ export function RunSimulation(props: RunSimulationProps): React.JSX.Element {
   return (
     <Card variant="outlined" sx={{ maxWidth: '400px' }}>
       <CardContent>
-        <Button
-          variant="outlined"
-          onClick={simulate}
-          disabled={loading}
-        >
+        <Button variant="outlined" onClick={simulate} disabled={loading}>
           {loading ? 'Loading...' : 'New simulation'}
         </Button>
-        <Button
-          variant="outlined"
-          onClick={simulate}
-          disabled={loading}
-        >
+        <Button variant="outlined" onClick={simulate} disabled={loading}>
           {loading ? 'Loading...' : `Simulate to turn ${props.targetTurn}`}
-        </Button>        
+        </Button>
         <TextField
           id="textfield-turns"
           label="target turn"

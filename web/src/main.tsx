@@ -17,7 +17,7 @@ if (rootElement) {
         <CssBaseline />
         <App />
       </ThemeProvider>
-    </React.StrictMode>
+    </React.StrictMode>,
   )
 } else {
   console.error(
