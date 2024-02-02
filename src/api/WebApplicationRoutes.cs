@@ -72,14 +72,6 @@ public class WebApplicationRoutes
         var controller = new GameSessionController(config, log, gameSession);
         var aiPlayer = new AIPlayer(log, AIPlayer.Intellect.Basic);
 
-        // kja currently 'turnLimit' has two meanings leading to confusion:
-        // - As passed to this method: for how many turns to play
-        // - As interpreted by controller.PlayGameSession below:
-        //   the turn number at which to stop playing.
-        // Ideas for clearer names: 'turnsToPlay' or 'maxGameTurn'.
-        if (initialGameState != null)
-            parsedTurnLimit += initialGameState.Timeline.CurrentTurn - 1;
-
         controller.PlayGameSession(turnLimit: parsedTurnLimit, aiPlayer);
 
         if (includeAllStates == true)
