@@ -1,3 +1,4 @@
+/* eslint-disable sonarjs/no-duplicate-string */
 import { Button, Card, CardContent, TextField } from '@mui/material'
 import _ from 'lodash'
 import { useState } from 'react'
@@ -15,12 +16,17 @@ export type RunSimulationProps = {
   readonly setGameStates: React.Dispatch<React.SetStateAction<GameState[]>>
 }
 
+// eslint-disable-next-line max-lines-per-function
 export function RunSimulation(props: RunSimulationProps): React.JSX.Element {
   const [loading, setLoading] = useState<boolean>(false)
   const [error, setError] = useState<string>()
 
   function getMsg(): string {
     return `Simulation ran until turn ${getCurrentTurn(props.gameStates)}. Result: ${getGameResult(props.gameStates)}`
+  }
+
+  function revertSimulation(): void {
+    props.setGameStates(props.gameStates.slice(0, props.targetTurn))
   }
 
   async function simulate(startNewSimulation: boolean): Promise<void> {
@@ -81,6 +87,17 @@ export function RunSimulation(props: RunSimulationProps): React.JSX.Element {
           }
         >
           {loading ? 'Loading...' : `Simulate to turn ${props.targetTurn}`}
+        </Button>
+        <Button
+          variant="outlined"
+          onClick={revertSimulation}
+          disabled={
+            loading ||
+            _.isEmpty(props.gameStates) ||
+            props.targetTurn >= getCurrentTurn(props.gameStates)
+          }
+        >
+          {loading ? 'Loading...' : `Revert to turn ${props.targetTurn}`}
         </Button>
         <TextField
           id="textfield-turns"
