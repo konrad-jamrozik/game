@@ -1,23 +1,27 @@
+/* eslint-disable max-statements */
 /* eslint-disable sonarjs/no-duplicate-string */
 import { Button, Card, CardContent, TextField } from '@mui/material'
 import _ from 'lodash'
 import { useState } from 'react'
 import {
-  getCurrentState,
+  getStateAtTurn,
   getCurrentTurn,
   getGameResult,
 } from '../lib/GameStateUtils'
 import { initialTurn, type GameState } from '../types/GameState'
 
 export type RunSimulationProps = {
-  readonly targetTurn: number
-  readonly setTargetTurn: React.Dispatch<React.SetStateAction<number>>
   readonly gameStates: readonly GameState[]
   readonly setGameStates: React.Dispatch<React.SetStateAction<GameState[]>>
 }
 
+const defaultStartTurn = 1
+const defaultTargetTurn = 300
+
 // eslint-disable-next-line max-lines-per-function
 export function RunSimulation(props: RunSimulationProps): React.JSX.Element {
+  const [startTurn, setStartTurn] = useState<number>(defaultStartTurn)
+  const [targetTurn, setTargetTurn] = useState<number>(defaultTargetTurn)
   const [loading, setLoading] = useState<boolean>(false)
   const [error, setError] = useState<string>()
 
@@ -25,18 +29,20 @@ export function RunSimulation(props: RunSimulationProps): React.JSX.Element {
     return `Simulation ran until turn ${getCurrentTurn(props.gameStates)}. Result: ${getGameResult(props.gameStates)}`
   }
 
-  function revertSimulation(): void {
-    props.setGameStates(props.gameStates.slice(0, props.targetTurn))
-  }
-
-  async function simulate(startNewSimulation: boolean): Promise<void> {
+  async function simulate(): Promise<void> {
     setLoading(true)
     setError('')
 
-    const apiUrl = getApiUrl(props, startNewSimulation)
+    const resolvedStartTurn = _.isEmpty(props.gameStates)
+      ? defaultStartTurn
+      : _.min([getCurrentTurn(props.gameStates), startTurn])!
+
+    const startNewSimulation = resolvedStartTurn === 1
+
+    const apiUrl = getApiUrl(props, targetTurn, startNewSimulation)
     const jsonBody: string = startNewSimulation
       ? ''
-      : JSON.stringify(getCurrentState(props.gameStates))
+      : JSON.stringify(getStateAtTurn(props.gameStates, resolvedStartTurn))
 
     try {
       console.log(`apiUrl: ${apiUrl}`)
@@ -57,7 +63,11 @@ export function RunSimulation(props: RunSimulationProps): React.JSX.Element {
       if (startNewSimulation) {
         props.setGameStates(allGameStates)
       } else {
-        props.setGameStates([...props.gameStates, ...allGameStates])
+        const gameStates = props.gameStates.slice(
+          0,
+          _.min([resolvedStartTurn, getCurrentTurn(props.gameStates)]),
+        )
+        props.setGameStates([...gameStates, ...allGameStates])
       }
     } catch (fetchError: unknown) {
       setError((fetchError as Error).message)
@@ -67,54 +77,42 @@ export function RunSimulation(props: RunSimulationProps): React.JSX.Element {
     }
   }
 
-  // kja better model:
-  // input:
-  // - "simulate from" turn
-  // - "simulate to" turn
-  // output: simulates or re-simulates between these turns
-  // if current simulation is lesser than "simulate from", the simulation tries to reach that turn from 0.
-  // the simulation may end before that (win or loss). Then so be it.
-  // and also just add "reset" button to reset the simulation to turn 0.
   return (
     <Card variant="outlined" sx={{ maxWidth: '400px' }}>
       <CardContent>
         <Button
           variant="outlined"
-          onClick={async () => simulate(true)}
-          disabled={loading}
+          onClick={simulate}
+          disabled={loading || startTurn >= targetTurn}
         >
-          {loading ? 'Loading...' : 'New simulation'}
-        </Button>
-        <Button
-          variant="outlined"
-          onClick={async () => simulate(false)}
-          disabled={
-            loading ||
-            _.isEmpty(props.gameStates) ||
-            props.targetTurn <= getCurrentTurn(props.gameStates)
-          }
-        >
-          {loading ? 'Loading...' : `Simulate to turn ${props.targetTurn}`}
-        </Button>
-        <Button
-          variant="outlined"
-          onClick={revertSimulation}
-          disabled={
-            loading ||
-            _.isEmpty(props.gameStates) ||
-            props.targetTurn >= getCurrentTurn(props.gameStates)
-          }
-        >
-          {loading ? 'Loading...' : `Revert to turn ${props.targetTurn}`}
+          {loading ? 'Loading...' : 'Simulate'}
         </Button>
         <TextField
-          id="textfield-turns"
-          label="target turn"
+          id="textfield-start-turn"
+          label="start turn"
           type="number"
-          value={props.targetTurn}
+          value={startTurn}
           onChange={(event: React.ChangeEvent) => {
             const target = event.target as HTMLInputElement
-            props.setTargetTurn(target.valueAsNumber)
+            setStartTurn(target.valueAsNumber)
+          }}
+          InputLabelProps={{
+            shrink: true,
+          }}
+          inputProps={{
+            min: 1,
+            max: 300,
+            step: 1,
+          }}
+        />
+        <TextField
+          id="textfield-target-turn"
+          label="target turn"
+          type="number"
+          value={targetTurn}
+          onChange={(event: React.ChangeEvent) => {
+            const target = event.target as HTMLInputElement
+            setTargetTurn(target.valueAsNumber)
           }}
           InputLabelProps={{
             shrink: true,
@@ -134,6 +132,7 @@ export function RunSimulation(props: RunSimulationProps): React.JSX.Element {
 
 function getApiUrl(
   props: RunSimulationProps,
+  targetTurn: number,
   startNewSimulation: boolean,
 ): string {
   const apiHost = import.meta.env.PROD
@@ -145,7 +144,7 @@ function getApiUrl(
     (!_.isEmpty(props.gameStates) &&
       getCurrentTurn(props.gameStates) === initialTurn)
 
-  const queryString = `?includeAllStates=true&turnLimit=${props.targetTurn}`
+  const queryString = `?includeAllStates=true&turnLimit=${targetTurn}`
 
   return `${apiHost}/simulateGameSession${useNewGameSessionApi ? '' : 'FromState'}${queryString}`
 }

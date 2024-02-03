@@ -1,3 +1,4 @@
+import _ from 'lodash'
 import type { GameState } from '../types/GameState'
 
 export function getGameResult(gameStates: readonly GameState[]): gameResult {
@@ -11,6 +12,13 @@ export function getGameResult(gameStates: readonly GameState[]): gameResult {
 
 export function getCurrentState(gameStates: readonly GameState[]): GameState {
   return gameStates.at(-1)!
+}
+
+export function getStateAtTurn(
+  gameStates: readonly GameState[],
+  turn: number,
+): GameState {
+  return _.findLast(gameStates, (gs) => gs.Timeline.CurrentTurn === turn)!
 }
 
 export function getCurrentTurn(gameStates: readonly GameState[]): number {
