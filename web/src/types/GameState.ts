@@ -43,20 +43,23 @@ export type MissionSite = {
   readonly Difficulty: number
 }
 
+export type AgentState =
+  | 'InTransit'
+  | 'Available'
+  | 'OnMission'
+  | 'Training'
+  | 'GatheringIntel'
+  | 'GeneratingIncome'
+  | 'Recovering'
+  | 'Terminated'
+
 export type Agent = {
   readonly Id: number
   readonly TurnHired: number
-  readonly CurrentState:
-    | 'InTransit'
-    | 'Available'
-    | 'OnMission'
-    | 'Training'
-    | 'GatheringIntel'
-    | 'GeneratingIncome'
-    | 'Recovering'
-    | 'Terminated'
+  readonly CurrentState: AgentState
   readonly MissionsSurvived: number
   readonly TurnsInTraining: number
+  readonly RecoversIn: number
 }
 
 // kja3: if I would like to have a list of GameState type keys
