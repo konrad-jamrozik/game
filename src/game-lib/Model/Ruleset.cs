@@ -62,7 +62,7 @@ public static class Ruleset
         return recoversIn;
     }
 
-    // kja there is no need to have both a formula and a roll.
+    // kja2 there is no need to have both a formula and a roll.
     // Instead, I need an abstraction that rolls and logs based on formula.
     // The implementation of this method is a formula describing 
     // the implementation of RollForAgentSurvival.

@@ -13,7 +13,7 @@ public class PlayerActions : List<PlayerAction>
 
     public GameStateUpdateLog Apply(GameState state)
     {
-        // kja this triggered: apparently the AI, during its turn, caused the game to be over.
+        // kja this triggered multiple times: apparently the AI, during its turn, caused the game to be over.
         // Maybe bought too much transport cap in PlayGameTurn ?
         Debug.Assert(!state.IsGameOver);
         ForEach(action =>
@@ -24,6 +24,7 @@ public class PlayerActions : List<PlayerAction>
             // 5 times with 2 agents or 1 time with 10 agents.
             state.UpdateCount += 1;
         });
+        Debug.Assert(!state.IsGameOver);
         // Currently GameStateUpdateLog is just a stub.
         return new GameStateUpdateLog();
     }

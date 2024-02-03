@@ -26,9 +26,6 @@ public class BasicAIPlayerIntellect : IPlayer
         if (transportCapacityToBuy > 0)
             controller.BuyTransportCapacity(transportCapacityToBuy);
 
-        // kja add
-        // Debug.Assert(!state.IsGameOver);
-
         RecallAgents(state, controller);
 
         LaunchMissions(state, controller);
