@@ -21,7 +21,7 @@ public class HireAgentsPlayerAction : PlayerAction
         _log.Info($"Hire agents. Count: {_count}");
         int totalHireCost = Ruleset.AgentHireCost * _count;
         Debug.Assert(state.Assets.Money >= totalHireCost);
-        state.Assets.Money -= Ruleset.AgentHireCost;
+        state.Assets.Money -= totalHireCost;
         for (int i = 0; i < _count; i++)
         {
             state.Assets.Agents.Add(new Agent(state.NextAgentId, state.Timeline.CurrentTurn));
