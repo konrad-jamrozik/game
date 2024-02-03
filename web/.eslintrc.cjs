@@ -165,15 +165,17 @@ module.exports = {
     // https://github.com/sindresorhus/eslint-plugin-unicorn/blob/main/docs/rules/no-empty-file.md
     // Sometimes I need empty files while figuring out how to make things work
     'unicorn/no-empty-file': 'off',
-    // https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v50.0.1/docs/rules/no-nested-ternary.md
+    // https://github.com/sindresorhus/eslint-plugin-unicorn/blob/main/docs/rules/no-nested-ternary.md
     // Conflicts with prettier: it removes the parentheses
     'unicorn/no-nested-ternary': 'off',
+    // https://github.com/sindresorhus/eslint-plugin-unicorn/blob/main/docs/rules/no-negated-condition.md
+    'unicorn/no-negated-condition': 'off',
 
-    // https://github.com/wix-incubator/eslint-plugin-lodash/blob/v7.4.0/docs/rules/import-scope.md
+    // https://github.com/wix-incubator/eslint-plugin-lodash/blob/master/docs/rules/import-scope.md
     'lodash/import-scope': ['error', 'full'],
-    // https://github.com/wix-incubator/eslint-plugin-lodash/blob/v7.4.0/docs/rules/prop-shorthand.md
+    // https://github.com/wix-incubator/eslint-plugin-lodash/blob/master/docs/rules/prop-shorthand.md
     'lodash/prop-shorthand': ['error', 'never'],
-    // https://github.com/wix-incubator/eslint-plugin-lodash/blob/v7.4.0/docs/rules/matches-prop-shorthand.md
+    // https://github.com/wix-incubator/eslint-plugin-lodash/blob/master/docs/rules/matches-prop-shorthand.md
     'lodash/matches-prop-shorthand': ['error', 'never'],
 
     'react-refresh/only-export-components': [

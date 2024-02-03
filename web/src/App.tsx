@@ -1,8 +1,11 @@
 import { Container, Link, Typography } from '@mui/material'
 import Grid from '@mui/material/Unstable_Grid2'
+import _ from 'lodash'
 import { useState } from 'react'
+import { AgentsDataGrid } from './components/AgentsDataGrid'
 import { GameStatsLineChart } from './components/GameStatsLineChart'
 import { RunSimulation } from './components/RunSimulation'
+import { getCurrentState } from './lib/GameStateUtils'
 import type { GameState } from './types/GameState'
 import {
   agentStatsDataSeries,
@@ -26,6 +29,10 @@ function Footer(): React.JSX.Element {
 
 export default function App(): React.JSX.Element {
   const [gameStates, setGameStates] = useState<GameState[]>([])
+  const agents = !_.isEmpty(gameStates)
+    ? getCurrentState(gameStates).Assets.Agents
+    : []
+
   return (
     <Typography component={'span'} sx={{ bgcolor: '#000020' }} gutterBottom>
       <Container maxWidth={false} sx={{ bgcolor: '#202020', my: 4 }}>
@@ -37,6 +44,14 @@ export default function App(): React.JSX.Element {
             justifyContent="center"
           >
             <RunSimulation {...{ gameStates, setGameStates }} />
+          </Grid>
+          <Grid
+            xs={12}
+            sx={{ bgcolor: '#000000' }}
+            display="flex"
+            justifyContent="center"
+          >
+            <AgentsDataGrid agents={agents} />
           </Grid>
           <Grid xs={6} sx={{ bgcolor: '#002000' }}>
             <GameStatsLineChart
