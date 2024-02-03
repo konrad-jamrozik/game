@@ -19,7 +19,9 @@ public class Configuration
 
     public readonly bool IncludeCallerMemberNameInLog = false;
 
-    public Configuration(IFileSystem fs)
+    public readonly bool LoggingEnabled;
+
+    public Configuration(IFileSystem fs, bool loggingEnabled = false)
     {
         // Given expected starting path on .NET 8, using the Simplified Output Paths [1]
         //   [repo_root]/artifacts/bin/game-lib/debug/.
@@ -37,5 +39,6 @@ public class Configuration
         TurnReportCsvFile = new File(saveFileDir, "turns_report.csv");
         AgentReportCsvFile = new File(saveFileDir, "agents_report.csv");
         MissionSiteReportCsvFile = new File(saveFileDir, "mission_sites_report.csv");
+        LoggingEnabled = loggingEnabled;
     }
 }

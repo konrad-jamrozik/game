@@ -80,5 +80,7 @@ public class AIPlayerTests
         controller.PlayGameSession(turnLimit, aiPlayer);
 
         // Assert: no exception was thrown and the program didn't loop indefinitely.
+
+        Console.Out.WriteLine($"Last turn: {controller.CurrentGameStatePlayerView.CurrentTurn}");
     }
 }

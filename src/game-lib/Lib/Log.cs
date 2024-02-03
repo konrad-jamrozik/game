@@ -13,7 +13,8 @@ public class Log : ILog
     {
         _config = config;
         _logs = new StringBuilder();
-        Console.WriteLine($"Created Log with log file path {_config.LogFile.FullPath}");
+        if (_config.LoggingEnabled)
+            Console.WriteLine($"Logs will be written out to file path {_config.LogFile.FullPath}");
     }
 
     public void Info(
@@ -21,8 +22,8 @@ public class Log : ILog
         [CallerFilePath] string? callerFilePath = null,
         [CallerMemberName] string? callerMemberName = null)
     {
-        // if (!callerFilePath!.Contains(nameof(GameStateDiff)))
-        //     return;
+        if (!_config.LoggingEnabled)
+            return;
 
         string log = LogPrefix(callerFilePath, callerMemberName) + message;
         Console.WriteLine(log);
@@ -31,6 +32,9 @@ public class Log : ILog
 
     public void Flush()
     {
+        if (!_config.LoggingEnabled)
+            return;
+
         if (_logs.Length > 0)
         {
             _config.LogFile.WriteAllText(_logs.ToString());
