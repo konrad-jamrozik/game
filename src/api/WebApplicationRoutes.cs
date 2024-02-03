@@ -1,4 +1,5 @@
-﻿using Lib.OS;
+﻿using System.Diagnostics;
+using Lib.OS;
 using Microsoft.AspNetCore.Http.HttpResults;
 using UfoGameLib.Controller;
 using UfoGameLib.Lib;
@@ -63,6 +64,8 @@ public class WebApplicationRoutes
     private static SimulationResponse
         SimulateGameSessionInternal(int? turnLimit, bool? includeAllStates, GameState? initialGameState)
     {
+        var stopwatch = Stopwatch.StartNew();
+
         (int parsedTurnLimit, string? error) = ParseTurnLimit(turnLimit, initialGameState);
         if (error != null)
             return TypedResults.BadRequest(error);
@@ -75,10 +78,12 @@ public class WebApplicationRoutes
 
         controller.PlayGameSession(turnLimit: parsedTurnLimit, aiPlayer);
 
-        if (includeAllStates == true)
-            return ToJsonHttpResult(gameSession.AllGameStatesAtTurnStarts());
-        else
-            return ToJsonHttpResult(gameSession.CurrentGameState);
+        SimulationResponse result = includeAllStates == true
+            ? ToJsonHttpResult(gameSession.AllGameStatesAtTurnStarts())
+            : ToJsonHttpResult(gameSession.CurrentGameState);
+
+        Console.Out.WriteLine($"SimulateGameSessionInternal runtime: {stopwatch.Elapsed}");
+        return result;
     }
 
     private static (int turnLimitVal, string? error) ParseTurnLimit(int? turnLimit, GameState? initialGameState)
