@@ -11,6 +11,23 @@ public class GameStateTests
     {
     }
 
+    [Test]
+    public void ClonesUsingJsonSerialization()
+    {
+        GameState gs = GameStateFixtures.Get();
+
+        // Act
+        GameState gsJsonClone = gs.Clone(useJsonSerialization: true);
+
+        GameState modifiedGsJsonClone = gs.Clone(useJsonSerialization: true);
+        modifiedGsJsonClone.Timeline.CurrentTurn += 1;
+
+        Assert.That(gs, Is.EqualTo(gsJsonClone));
+        Assert.That(gs, Is.Not.EqualTo(modifiedGsJsonClone));
+        new JsonDiffAssertion(baseline: gs, target: gsJsonClone, GameState.StateJsonSerializerOptions).Assert();
+        new JsonDiffAssertion(baseline: gs, target: modifiedGsJsonClone, GameState.StateJsonSerializerOptions).AssertNotEmpty();
+    }
+
     /// <summary>
     /// This test proves that:
     /// - Cloning of a game state works as expected.
@@ -52,14 +69,14 @@ public class GameStateTests
         Assert.Multiple(() =>
         {
             // Act: exercise game state equality
-            // Assert: a state is equal to its clone
+            // Assert: a state clone is equal to the original state
             Assert.That(clonedState, Is.EqualTo(originalGameState));
 
             // Act: exercise game state view equality
             // Assert: a view of a cloned state is equal to the view of the original state
             Assert.That(clonedStateView, Is.EqualTo(originalGameStateView));
 
-            // Act: exercise game state view game state reference equality
+            // Act: exercise game state view reference equality
             // Assert: two views of the same state reference the same state
             Assert.That(originalGameStateView.StateReferenceEquals(originalGameStateView2));
             // Assert: a view of a cloned state does not reference the original state
@@ -68,9 +85,13 @@ public class GameStateTests
 
             // Arrange: modify the cloned game state
             clonedState.Timeline.CurrentTurn += 1;
+            // Introduce new variables with names reflecting the fact a modification was made
+            // to the underlying state.
+            var modifiedClonedState = clonedState;
+            var modifiedClonedStateView = clonedStateView;
 
             /*
-               Assert: clonedState is not equal to originalGameState.
+               Assert: modifiedClonedState is not equal to originalGameState.
 
                This assertion is necessary, in addition to:
                
@@ -90,13 +111,13 @@ public class GameStateTests
                I originally migrated to this new behavior by updating NUnit to 4.0.0, in this commit:
                https://github.com/konrad-jamrozik/game/commit/fa17b0985af7adde4f135be3d231555b6e7621ee#diff-718fb94a7176526686c9940ce6d3b5350e548e26a234b86a7cdd4817e68b3b52R10
             */
-            Assert.That(clonedState, Is.Not.EqualTo(originalGameState));
-            Assert.That(clonedStateView, Is.Not.EqualTo(originalGameStateView));
+            Assert.That(modifiedClonedState, Is.Not.EqualTo(originalGameState));
+            Assert.That(modifiedClonedStateView, Is.Not.EqualTo(originalGameStateView));
         });
     }
 
     /// <summary>
-    /// This test is here to unit test how ASP.NET Core is going to deserialize GameState
+    /// This test is here to unit test how ASP.NET Core is going to successfully deserialize GameState
     /// from the route parameter bindings, like:
     ///
     ///   app.MapPost("/exampleRoute" /// (GameState gs) => ... );
@@ -122,11 +143,5 @@ public class GameStateTests
         string deserializedJsonString = deserializedGameState.ToJsonString();
 
         new JsonDiffAssertion(baseline: initialJsonString, target: deserializedJsonString).Assert();
-    }
-
-    [Test]
-    public void ClonesDeepAndUsingJsonSerialization()
-    {
-
     }
 }

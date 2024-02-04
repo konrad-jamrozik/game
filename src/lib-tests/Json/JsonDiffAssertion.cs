@@ -21,4 +21,12 @@ public record JsonDiffAssertion(JsonDiff Diff)
             Is.True,
             $"The expected baseline is different than the actual target. Diff:{Environment.NewLine}{Diff}");
     }
+
+    public void AssertNotEmpty()
+    {
+        NUnit.Framework.Assert.That(
+            Diff.IsEmpty,
+            Is.False,
+            $"The expected baseline is the same as the actual target. Diff:{Environment.NewLine}{Diff}");
+    }
 }
