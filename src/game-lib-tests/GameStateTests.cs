@@ -6,6 +6,8 @@ namespace UfoGameLib.Tests;
 
 public class GameStateTests
 {
+    private static readonly JsonSerializerOptions Opts = GameState.StateJsonSerializerOptions;
+
     [SetUp]
     public void Setup()
     {
@@ -22,10 +24,38 @@ public class GameStateTests
         GameState modifiedGsJsonClone = gs.Clone(useJsonSerialization: true);
         modifiedGsJsonClone.Timeline.CurrentTurn += 1;
 
-        Assert.That(gs, Is.EqualTo(gsJsonClone));
-        Assert.That(gs, Is.Not.EqualTo(modifiedGsJsonClone));
-        new JsonDiffAssertion(baseline: gs, target: gsJsonClone, GameState.StateJsonSerializerOptions).Assert();
-        new JsonDiffAssertion(baseline: gs, target: modifiedGsJsonClone, GameState.StateJsonSerializerOptions).AssertNotEmpty();
+        Assert.Multiple(() =>
+        {
+            Assert.That(gs, Is.EqualTo(gsJsonClone));
+            Assert.That(gs, Is.Not.EqualTo(modifiedGsJsonClone));
+            new JsonDiffAssertion(baseline: gs, target: gsJsonClone, Opts).Assert();
+            new JsonDiffAssertion(baseline: gs, target: modifiedGsJsonClone, Opts).AssertNotEmpty();
+        });
+    }
+
+    
+    // kja curr work
+    [Ignore("Currently fails")]
+    [Test]
+    public void DeepClones()
+    {
+        GameState gs = GameStateFixtures.Get();
+
+        // Act
+        GameState gsDeepClone = gs.Clone(useJsonSerialization: false);
+
+        GameState modifiedGsDeepClone = gs.Clone(useJsonSerialization: false);
+        modifiedGsDeepClone.Timeline.CurrentTurn += 1;
+        modifiedGsDeepClone.Assets.Agents.RemoveAt(0);
+
+        Assert.Multiple(() =>
+        {
+
+            Assert.That(gs, Is.EqualTo(gsDeepClone));
+            Assert.That(gs, Is.Not.EqualTo(modifiedGsDeepClone));
+            new JsonDiffAssertion(baseline: gs, target: gsDeepClone, Opts).Assert();
+            new JsonDiffAssertion(baseline: gs, target: modifiedGsDeepClone, Opts).AssertNotEmpty();
+        });
     }
 
     /// <summary>
@@ -138,7 +168,7 @@ public class GameStateTests
         string initialJsonString = initialGameState.ToJsonString();
 
         // Act
-        GameState deserializedGameState = JsonSerializer.Deserialize<GameState>(initialJsonString, GameState.StateJsonSerializerOptions)!;
+        GameState deserializedGameState = JsonSerializer.Deserialize<GameState>(initialJsonString, Opts)!;
 
         string deserializedJsonString = deserializedGameState.ToJsonString();
 

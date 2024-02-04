@@ -13,6 +13,7 @@ public class PlayerActions : List<PlayerAction>
 
     public GameStateUpdateLog Apply(GameState state)
     {
+        // kja fails GameSessionTests RoundTripping
         Debug.Assert(!state.IsGameOver);
         ForEach(action =>
         {
