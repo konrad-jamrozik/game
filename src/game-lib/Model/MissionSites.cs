@@ -17,4 +17,9 @@ public class MissionSites : List<MissionSite>
     public MissionSites Launched => this.Where(missionSite => missionSite.WasLaunched).ToMissionSites();
 
     public MissionSites Expired => this.Where(missionSite => missionSite.IsExpired).ToMissionSites();
+
+    public MissionSites DeepClone()
+    {
+        throw new NotImplementedException();
+    }
 }

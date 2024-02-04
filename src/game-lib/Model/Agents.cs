@@ -93,4 +93,9 @@ public class Agents : List<Agent>
 
     private void AssertAlive(IEnumerable<Agent> agents)
         => Debug.Assert(agents.All(agent => agent.IsAlive));
+
+    public Agents DeepClone()
+    {
+        throw new NotImplementedException();
+    }
 }

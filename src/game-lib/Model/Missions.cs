@@ -19,4 +19,9 @@ public class Missions : List<Mission>
     public Missions Failed => this.Where(mission => mission.IsFailed).ToMissions();
 
     public Missions Launched => this.Where(mission => mission.WasLaunched).ToMissions();
+
+    public Missions DeepClone()
+    {
+        throw new NotImplementedException();
+    }
 }

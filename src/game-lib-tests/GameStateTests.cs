@@ -33,7 +33,6 @@ public class GameStateTests
         });
     }
 
-    
     // kja curr work
     [Ignore("Currently fails")]
     [Test]

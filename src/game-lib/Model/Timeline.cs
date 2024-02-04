@@ -12,4 +12,9 @@ public class Timeline
     {
         CurrentTurn = currentTurn;
     }
+
+    public Timeline DeepClone()
+    {
+        throw new NotImplementedException();
+    }
 }

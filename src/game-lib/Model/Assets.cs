@@ -46,4 +46,9 @@ public class Assets
         // kja2 assert here none of the agents are terminated?
         Agents = agents;
     }
+
+    public Assets DeepClone()
+    {
+        throw new NotImplementedException();
+    }
 }

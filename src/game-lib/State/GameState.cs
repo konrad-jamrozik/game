@@ -84,10 +84,20 @@ public class GameState : IEquatable<GameState>
 
     public GameState Clone(bool useJsonSerialization = true)
     {
-        if (useJsonSerialization)
-            return this.Clone(StateJsonSerializerOptions);
-        else
-            return (GameState) MemberwiseClone();
+        return useJsonSerialization 
+            ? this.Clone(StateJsonSerializerOptions) 
+            : DeepClone();
+    }
+
+    private GameState DeepClone()
+    {
+        return new GameState(
+            updateCount: UpdateCount,
+            timeline: Timeline.DeepClone(),
+            assets: Assets.DeepClone(),
+            missionSites: MissionSites.DeepClone(),
+            missions: Missions.DeepClone(),
+            terminatedAgents: TerminatedAgents.DeepClone());
     }
 
     public string ToJsonString()
