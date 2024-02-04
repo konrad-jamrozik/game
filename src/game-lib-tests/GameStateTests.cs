@@ -1,5 +1,7 @@
+using System.Diagnostics;
 using System.Text.Json;
 using Lib.Tests.Json;
+using UfoGameLib.Model;
 using UfoGameLib.State;
 
 namespace UfoGameLib.Tests;
@@ -122,5 +124,47 @@ public class GameStateTests
         string deserializedJsonString = deserializedGameState.ToJsonString();
 
         new JsonDiffAssertion(baseline: initialJsonString, target: deserializedJsonString).Assert();
+    }
+
+    // Relevant doc:
+    // https://github.com/dotnet/performance/blob/main/docs/microbenchmark-design-guidelines.md
+    [Test]
+    public void MeasurePerfOfGameStateClone()
+    {
+        // kja curr work
+        // rename clone to JsonClone
+        // implement proper OO clone
+        // do comparative perf. measurements
+
+        GameState gs = NewExampleGameState();
+
+        int batchSize = 200;
+        Console.Out.WriteLine($"Measuring {batchSize} invocations of clone() (equivalent of {batchSize/2} game turns)");
+        var cloneStopwatch = Stopwatch.StartNew();
+        
+        for (int i = 0; i < batchSize; i++)
+        {
+            gs.Clone();
+        }
+        TimeSpan elapsed = cloneStopwatch.Elapsed;
+        Console.Out.WriteLine($"Time taken: {elapsed}. On average: {elapsed/batchSize}");
+    }
+
+    private static GameState NewExampleGameState()
+    {
+        var gs = GameState.NewInitialGameState();
+        for (int i = 0; i < 100; i++)
+        {
+            var agent = new Agent(id: i, turnHired: 1, Agent.AgentState.Available);
+            var terminatedAgent = new Agent(id: 100 + i, turnHired: 1, Agent.AgentState.Terminated);
+            var missionSite = new MissionSite(id: i, difficulty: 1, turnAppeared: 1, expiresIn: 1);
+            var mission = new Mission(id: i, missionSite, agentsSent: 1);
+            gs.Assets.Agents.Add(agent);
+            gs.TerminatedAgents.Add(terminatedAgent);
+            gs.MissionSites.Add(missionSite);
+            gs.Missions.Add(mission);
+        }
+
+        return gs;
     }
 }
