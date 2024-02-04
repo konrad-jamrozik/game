@@ -1,7 +1,5 @@
-using System.Diagnostics;
 using System.Text.Json;
 using Lib.Tests.Json;
-using UfoGameLib.Model;
 using UfoGameLib.State;
 
 namespace UfoGameLib.Tests;
@@ -126,39 +124,9 @@ public class GameStateTests
         new JsonDiffAssertion(baseline: initialJsonString, target: deserializedJsonString).Assert();
     }
 
-    // Relevant doc:
-    // https://github.com/dotnet/performance/blob/main/docs/microbenchmark-design-guidelines.md
     [Test]
-    public void MeasurePerfOfGameStateClone()
+    public void ClonesDeepAndUsingJsonSerialization()
     {
-        // kja curr work
-        // rename clone to JsonClone
-        // implement proper OO clone
-        // do comparative perf. measurements
 
-        GameState gs = NewExampleGameState();
-
-        PerfTools.MeasureActionRuntime(() => gs.Clone(), batchSize: 100);
-
-        // kja implement deep clone. See https://learn.microsoft.com/en-us/dotnet/api/system.object.memberwiseclone?view=net-8.0#remarks
-        PerfTools.MeasureActionRuntime(() => gs.Clone(useJsonSerialization: false), batchSize: 100);
-    }
-
-    private static GameState NewExampleGameState()
-    {
-        var gs = GameState.NewInitialGameState();
-        for (int i = 0; i < 100; i++)
-        {
-            var agent = new Agent(id: i, turnHired: 1, Agent.AgentState.Available);
-            var terminatedAgent = new Agent(id: 100 + i, turnHired: 1, Agent.AgentState.Terminated);
-            var missionSite = new MissionSite(id: i, difficulty: 1, turnAppeared: 1, expiresIn: 1);
-            var mission = new Mission(id: i, missionSite, agentsSent: 1);
-            gs.Assets.Agents.Add(agent);
-            gs.TerminatedAgents.Add(terminatedAgent);
-            gs.MissionSites.Add(missionSite);
-            gs.Missions.Add(mission);
-        }
-
-        return gs;
     }
 }
