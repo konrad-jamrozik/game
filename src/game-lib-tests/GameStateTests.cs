@@ -56,7 +56,7 @@ public class GameStateTests
             // Act: exercise game state equality
             // Assert: a state is equal to its clone
             Assert.That(clonedState, Is.EqualTo(originalGameState));
-            
+
             // Act: exercise game state view equality
             // Assert: a view of a cloned state is equal to the view of the original state
             Assert.That(clonedStateView, Is.EqualTo(originalGameStateView));
@@ -120,7 +120,7 @@ public class GameStateTests
 
         // Act
         GameState deserializedGameState = JsonSerializer.Deserialize<GameState>(initialJsonString, GameState.StateJsonSerializerOptions)!;
-        
+
         string deserializedJsonString = deserializedGameState.ToJsonString();
 
         new JsonDiffAssertion(baseline: initialJsonString, target: deserializedJsonString).Assert();
@@ -138,16 +138,10 @@ public class GameStateTests
 
         GameState gs = NewExampleGameState();
 
-        int batchSize = 200;
-        Console.Out.WriteLine($"Measuring {batchSize} invocations of clone() (equivalent of {batchSize/2} game turns)");
-        var cloneStopwatch = Stopwatch.StartNew();
-        
-        for (int i = 0; i < batchSize; i++)
-        {
-            gs.Clone();
-        }
-        TimeSpan elapsed = cloneStopwatch.Elapsed;
-        Console.Out.WriteLine($"Time taken: {elapsed}. On average: {elapsed/batchSize}");
+        PerfTools.MeasureActionRuntime(() => gs.Clone(), batchSize: 100);
+
+        // kja implement deep clone. See https://learn.microsoft.com/en-us/dotnet/api/system.object.memberwiseclone?view=net-8.0#remarks
+        PerfTools.MeasureActionRuntime(() => gs.Clone(useJsonSerialization: false), batchSize: 100);
     }
 
     private static GameState NewExampleGameState()

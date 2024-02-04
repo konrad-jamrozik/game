@@ -82,9 +82,12 @@ public class GameState : IEquatable<GameState>
     [JsonIgnore]
     public Agents AllAgents => (Assets.Agents.Concat(TerminatedAgents).ToAgents(terminated: null));
 
-    public GameState Clone()
+    public GameState Clone(bool useJsonSerialization = true)
     {
-        return this.Clone(StateJsonSerializerOptions);
+        if (useJsonSerialization)
+            return this.Clone(StateJsonSerializerOptions);
+        else
+            return (GameState) MemberwiseClone();
     }
 
     public string ToJsonString()
