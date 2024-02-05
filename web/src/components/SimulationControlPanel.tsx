@@ -103,8 +103,8 @@ export function SimulationControlPanel(
             <Grid>{startTurnInputTextField(startTurn, setStartTurn)}</Grid>
             <Grid>{targetTurnInputTextField(targetTurn, setTargetTurn)}</Grid>
           </Grid>
-          <Grid>{!_.isEmpty(props.gameStates) && getMsg()}</Grid>
-          <Grid>{Boolean(error) && `Error: ${error}`}</Grid>
+          {!_.isEmpty(props.gameStates) && <Grid xs={12}>{getMsg()}</Grid>}
+          {Boolean(error) && <Grid xs={12}>`Error: ${error}`</Grid>}
         </Grid>
       </CardContent>
     </Card>
