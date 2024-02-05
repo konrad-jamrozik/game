@@ -9,16 +9,10 @@ public class PerfTests
     [Test]
     public void MeasurePerfOfGameStateClone()
     {
-        // kja curr work
-        // rename clone to JsonClone
-        // implement proper OO clone
-        // do comparative perf. measurements
-
         GameState gs = GameStateFixtures.Get();
 
-        PerfTools.MeasureActionRuntime(() => gs.Clone(), batchSize: 100);
-
-        // kja implement deep clone. See https://learn.microsoft.com/en-us/dotnet/api/system.object.memberwiseclone?view=net-8.0#remarks
-        PerfTools.MeasureActionRuntime(() => gs.Clone(useJsonSerialization: false), batchSize: 100);
+        int batchSize = 100;
+        PerfTools.MeasureActionRuntime(() => gs.Clone(useJsonSerialization: true), batchSize);
+        PerfTools.MeasureActionRuntime(() => gs.Clone(useJsonSerialization: false), batchSize);
     }
 }

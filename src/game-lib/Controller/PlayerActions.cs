@@ -13,8 +13,10 @@ public class PlayerActions : List<PlayerAction>
 
     public GameStateUpdateLog Apply(GameState state)
     {
-        // kja fails GameSessionTests RoundTripping
-        Debug.Assert(!state.IsGameOver);
+        Debug.Assert(!state.IsGameOver, 
+            $"money: {state.Assets.Money} " +
+            $"funding: {state.Assets.Funding} " +
+            $"support: {state.Assets.Support}");
         ForEach(action =>
         {
             action.Apply(state);

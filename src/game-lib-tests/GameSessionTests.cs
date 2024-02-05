@@ -162,7 +162,7 @@ public class GameSessionTests
 
         controller.AdvanceTime();
         controller.AdvanceTime();
-        turnController.HireAgents(10);
+        turnController.HireAgents(5);
         // Need to advance time here so that hired agents are no longer InTransit and can be
         // sent on a mission.
         controller.AdvanceTime();
@@ -200,7 +200,7 @@ public class GameSessionTests
                 Assert.That(state.CurrentTurn, Is.EqualTo(10));
                 Assert.That(
                     state.Assets.Agents.Count + state.TerminatedAgents.Count,
-                    Is.EqualTo(10));
+                    Is.EqualTo(5));
                 Assert.That(state.Missions, Has.Count.EqualTo(1));
                 Assert.That(state.MissionSites, Has.Count.EqualTo(3));
 
@@ -225,7 +225,7 @@ public class GameSessionTests
         GameStatePlayerView state = controller.CurrentGameStatePlayerView;
 
         controller.AdvanceTime();
-        turnController.HireAgents(10);
+        turnController.HireAgents(5);
         // Need to advance time here so that hired agents are no longer InTransit and can be
         // sent on a mission.
         controller.AdvanceTime();
