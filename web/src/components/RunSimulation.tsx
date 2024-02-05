@@ -1,5 +1,4 @@
 /* eslint-disable max-statements */
-/* eslint-disable sonarjs/no-duplicate-string */
 import { Button, Card, CardContent, TextField } from '@mui/material'
 import _ from 'lodash'
 import { useState } from 'react'
