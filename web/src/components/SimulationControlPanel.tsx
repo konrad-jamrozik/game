@@ -99,9 +99,10 @@ export function SimulationControlPanel(
           <Grid>
             {simulateFromToTurnButton(simulate, loading, startTurn, targetTurn)}
           </Grid>
-          <Grid>{startTurnInputTextField(startTurn, setStartTurn)}</Grid>
-          <Grid>{targetTurnInputTextField(targetTurn, setTargetTurn)}</Grid>
-
+          <Grid container xsOffset={'auto'}>
+            <Grid>{startTurnInputTextField(startTurn, setStartTurn)}</Grid>
+            <Grid>{targetTurnInputTextField(targetTurn, setTargetTurn)}</Grid>
+          </Grid>
           <Grid>{!_.isEmpty(props.gameStates) && getMsg()}</Grid>
           <Grid>{Boolean(error) && `Error: ${error}`}</Grid>
         </Grid>
