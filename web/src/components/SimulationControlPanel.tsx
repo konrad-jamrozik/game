@@ -30,6 +30,12 @@ export function SimulationControlPanel(
     return `Simulation ran until turn ${getCurrentTurn(props.gameStates)}. Result: ${getGameResult(props.gameStates)}`
   }
 
+  function reset(): void {
+    setLoading(false)
+    setError('')
+    props.setGameStates([])
+  }
+
   async function simulate(turnsToSimulate?: number): Promise<void> {
     setLoading(true)
     setError('')
@@ -93,7 +99,7 @@ export function SimulationControlPanel(
             <Grid>
               {simulateFor1TurnButton(simulate, loading, props.gameStates)}
             </Grid>
-            <Grid xsOffset={'auto'}>{resetButton(loading)}</Grid>
+            <Grid xsOffset={'auto'}>{resetButton(reset, loading)}</Grid>
           </Grid>
 
           <Grid>
@@ -137,7 +143,7 @@ function resolveStartAndTargetTurn(
   } else {
     resolvedTargetTurn = !_.isUndefined(currentTurn)
       ? currentTurn + turnsToSimulate
-      : initialTurn + turnsToSimulate
+      : initialTurn - 1 + turnsToSimulate
   }
   return { resolvedStartTurn, resolvedTargetTurn }
 }
@@ -233,9 +239,9 @@ function simulateFromToTurnButton(
   )
 }
 
-function resetButton(loading: boolean): React.JSX.Element {
+function resetButton(reset: () => void, loading: boolean): React.JSX.Element {
   return (
-    <Button variant="outlined" disabled={loading}>
+    <Button variant="outlined" onClick={reset} disabled={loading}>
       {`Reset`}
     </Button>
   )
