@@ -25,4 +25,9 @@ export function getCurrentTurn(gameStates: readonly GameState[]): number {
   return getCurrentState(gameStates).Timeline.CurrentTurn
 }
 
+export function isGameOver(gameStates: readonly GameState[]): boolean {
+  const lastGameState = getCurrentState(gameStates)
+  return lastGameState.IsGameOver
+}
+
 export type gameResult = 'won' | 'lost' | 'undecided'

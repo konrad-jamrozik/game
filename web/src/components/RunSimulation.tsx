@@ -7,6 +7,7 @@ import {
   getStateAtTurn,
   getCurrentTurn,
   getGameResult,
+  isGameOver,
 } from '../lib/GameStateUtils'
 import { initialTurn, type GameState } from '../types/GameState'
 
@@ -29,17 +30,26 @@ export function RunSimulation(props: RunSimulationProps): React.JSX.Element {
     return `Simulation ran until turn ${getCurrentTurn(props.gameStates)}. Result: ${getGameResult(props.gameStates)}`
   }
 
-  async function simulate(): Promise<void> {
+  async function simulate(turnsToSimulate?: number): Promise<void> {
     setLoading(true)
     setError('')
 
-    const resolvedStartTurn = _.isEmpty(props.gameStates)
-      ? defaultStartTurn
-      : _.min([getCurrentTurn(props.gameStates), startTurn])!
+    const currentTurn: number = getCurrentTurn(props.gameStates)
+
+    let resolvedStartTurn: number = defaultStartTurn
+    if (!_.isEmpty(props.gameStates)) {
+      resolvedStartTurn = _.isUndefined(turnsToSimulate)
+        ? _.min([currentTurn, startTurn])!
+        : currentTurn
+    }
 
     const startNewSimulation = resolvedStartTurn === 1
 
-    const apiUrl = getApiUrl(props, targetTurn, startNewSimulation)
+    const resolvedTargetTurn = _.isUndefined(turnsToSimulate)
+      ? targetTurn
+      : currentTurn + turnsToSimulate
+
+    const apiUrl = getApiUrl(props, resolvedTargetTurn, startNewSimulation)
     const jsonBody: string = startNewSimulation
       ? ''
       : JSON.stringify(getStateAtTurn(props.gameStates, resolvedStartTurn))
@@ -82,10 +92,20 @@ export function RunSimulation(props: RunSimulationProps): React.JSX.Element {
       <CardContent>
         <Button
           variant="outlined"
-          onClick={simulate}
+          onClick={async () => simulate()}
           disabled={loading || startTurn >= targetTurn}
         >
-          {loading ? 'Loading...' : 'Simulate'}
+          {`Simulate turns ${startTurn} to ${targetTurn}`}
+        </Button>
+        <Button
+          variant="outlined"
+          onClick={async () => simulate(1)}
+          disabled={
+            loading ||
+            (!_.isEmpty(props.gameStates) && isGameOver(props.gameStates))
+          }
+        >
+          {'Simulate 1 turn'}
         </Button>
         <TextField
           id="textfield-start-turn"
