@@ -16,7 +16,7 @@ export function missionLaunched(mission: Mission): boolean {
   )
 }
 
-export function agentSurvivalSkill(agent: Agent): number {
+export function getSurvivalSkill(agent: Agent): number {
   return (
     agent.TurnsInTraining * agentTrainingCoefficient + skillFromMissions(agent)
   )

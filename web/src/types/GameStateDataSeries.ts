@@ -2,7 +2,7 @@ import _ from 'lodash'
 import { median } from '../lib/utils'
 import type { GameState } from './GameState'
 import {
-  agentSurvivalSkill,
+  getSurvivalSkill,
   agentUpkeepCost,
   incomeGeneratedPerAgent,
   missionLaunched,
@@ -156,8 +156,8 @@ export const allGameStatsDataSeriesByKey: AllStatsDataSeries = {
   maxAgentSurvSkill: {
     dataFunc: (gs) =>
       gs.Assets.Agents.length > 0
-        ? agentSurvivalSkill(
-            _.maxBy(gs.Assets.Agents, (agent) => agentSurvivalSkill(agent))!,
+        ? getSurvivalSkill(
+            _.maxBy(gs.Assets.Agents, (agent) => getSurvivalSkill(agent))!,
           )
         : 0,
     label: 'Max surv. skill',
@@ -166,14 +166,14 @@ export const allGameStatsDataSeriesByKey: AllStatsDataSeries = {
   meanAgentSurvSkill: {
     dataFunc: (gs) =>
       gs.Assets.Agents.length > 0
-        ? _.meanBy(gs.Assets.Agents, (agent) => agentSurvivalSkill(agent))
+        ? _.meanBy(gs.Assets.Agents, (agent) => getSurvivalSkill(agent))
         : 0,
     label: 'Mean surv. skill',
     color: '#7347cd',
   },
   medianAgentSurvSkill: {
     dataFunc: (gs) => {
-      const survSkills = _.map(gs.Assets.Agents, (ag) => agentSurvivalSkill(ag))
+      const survSkills = _.map(gs.Assets.Agents, (ag) => getSurvivalSkill(ag))
       return gs.Assets.Agents.length > 0 ? median(survSkills) : 0
     },
     label: 'Median surv. skill',

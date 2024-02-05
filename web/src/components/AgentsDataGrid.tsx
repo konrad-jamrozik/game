@@ -7,6 +7,7 @@ import {
 } from '@mui/x-data-grid'
 import _ from 'lodash'
 import type { Agent, AgentState } from '../types/GameState'
+import { getSurvivalSkill } from '../types/ruleset'
 
 export type AgentsDataGridProps = {
   readonly agents: readonly Agent[]
@@ -31,6 +32,12 @@ export function AgentsDataGrid(props: AgentsDataGridProps): React.JSX.Element {
         checkboxSelection
         disableRowSelectionOnClick
         onRowSelectionModelChange={onRowSelectionModelChange}
+        rowHeight={30}
+        sx={{
+          '& .MuiDataGrid-footerContainer': {
+            minHeight: '40px', // Reduce the height of the footer container
+          },
+        }}
       />
     </Box>
   )
@@ -52,34 +59,41 @@ type AgentRow = {
   turnsInTraining: number
   recoversIn: number
   missionsSurvived: number
+  survivalSkill: number
 }
 
+const defaultRowWidth = 110
 const columns: GridColDef[] = [
-  { field: 'id', headerName: 'ID', width: 90 },
+  { field: 'id', headerName: 'Agent ID', width: 90 },
   {
     field: 'state',
     headerName: 'State',
-    width: 150,
+    width: defaultRowWidth,
   },
   {
-    field: 'turnHired',
-    headerName: 'Turn Hired',
-    width: 150,
-  },
-  {
-    field: 'turnsInTraining',
-    headerName: 'Training T#',
-    width: 150,
+    field: 'survivalSkill',
+    headerName: 'Skill',
+    width: defaultRowWidth,
   },
   {
     field: 'recoversIn',
     headerName: 'Recovers In',
-    width: 150,
+    width: defaultRowWidth,
   },
   {
     field: 'missionsSurvived',
     headerName: 'Missions#',
-    width: 150,
+    width: defaultRowWidth,
+  },
+  {
+    field: 'turnHired',
+    headerName: 'Turn Hired',
+    width: defaultRowWidth,
+  },
+  {
+    field: 'turnsInTraining',
+    headerName: 'Training T#',
+    width: defaultRowWidth,
   },
 ]
 function getRow(agent: Agent): AgentRow {
@@ -90,5 +104,6 @@ function getRow(agent: Agent): AgentRow {
     turnsInTraining: agent.TurnsInTraining,
     recoversIn: agent.RecoversIn,
     missionsSurvived: agent.MissionsSurvived,
+    survivalSkill: getSurvivalSkill(agent),
   }
 }
