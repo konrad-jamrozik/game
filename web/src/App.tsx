@@ -3,6 +3,7 @@ import Grid from '@mui/material/Unstable_Grid2'
 import _ from 'lodash'
 import { useState } from 'react'
 import { AgentsDataGrid } from './components/AgentsDataGrid'
+import { AssetsDataGrid } from './components/AssetsDataGrid'
 import { GameStatsLineChart } from './components/GameStatsLineChart'
 import { SimulationControlPanel } from './components/SimulationControlPanel'
 import { getCurrentState } from './lib/GameStateUtils'
@@ -37,19 +38,24 @@ export default function App(): React.JSX.Element {
     <Typography component={'span'} sx={{ bgcolor: '#000020' }} gutterBottom>
       <Container maxWidth={false} sx={{ bgcolor: '#202020', my: 4 }}>
         <Grid container spacing={2} sx={{ bgcolor: '#333333' }}>
-          <Grid
-            xs={12}
-            sx={{ bgcolor: '#200000' }}
-            display="flex"
-            justifyContent="center"
-          >
+          <Grid xs={6} sx={{ bgcolor: '#200000' }}>
             <SimulationControlPanel {...{ gameStates, setGameStates }} />
           </Grid>
           <Grid
             xs={6}
             sx={(theme) => ({ bgcolor: theme.palette.background.default })}
-            display="flex"
-            justifyContent="center"
+          >
+            <AssetsDataGrid
+              assets={
+                !_.isEmpty(gameStates)
+                  ? getCurrentState(gameStates).Assets
+                  : undefined
+              }
+            />
+          </Grid>
+          <Grid
+            xs={6}
+            sx={(theme) => ({ bgcolor: theme.palette.background.default })}
           >
             <AgentsDataGrid agents={agents} />
           </Grid>

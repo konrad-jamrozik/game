@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import { agentStateColors } from '../lib/rendering'
+import { agentStateColors, assetsColors } from '../lib/rendering'
 import { median } from '../lib/utils'
 import type { GameState } from './GameState'
 import {
@@ -49,12 +49,12 @@ export const allGameStatsDataSeriesByKey: AllStatsDataSeries = {
   money: {
     dataFunc: (gs) => gs.Assets.Money,
     label: 'Money',
-    color: 'darkGreen',
+    color: assetsColors.Money,
   },
   funding: {
     dataFunc: (gs) => gs.Assets.Funding,
     label: 'Funding',
-    color: 'gold',
+    color: assetsColors.Funding,
   },
   incomeGenerated: {
     dataFunc: (gs) =>
@@ -75,22 +75,22 @@ export const allGameStatsDataSeriesByKey: AllStatsDataSeries = {
   intel: {
     dataFunc: (gs) => gs.Assets.Intel,
     label: 'Intel',
-    color: agentStateColors.GatheringIntel,
+    color: assetsColors.Intel,
   },
   support: {
     dataFunc: (gs) => gs.Assets.Support * supportScale,
     label: 'Support/10',
-    color: 'darkOliveGreen',
+    color: assetsColors.Support,
   },
   maxTransportCapacity: {
     dataFunc: (gs) => gs.Assets.MaxTransportCapacity,
     label: 'Trp. Cap',
-    color: agentStateColors.InTransit,
+    color: assetsColors.MaxTransportCapacity,
   },
   agents: {
     dataFunc: (gs) => _.size(gs.Assets.Agents),
     label: 'Agents',
-    color: agentStateColors.Available,
+    color: assetsColors.Agents,
   },
   terminatedAgents: {
     dataFunc: (gs) => _.size(gs.TerminatedAgents),

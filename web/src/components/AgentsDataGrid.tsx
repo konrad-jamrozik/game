@@ -16,7 +16,7 @@ export type AgentsDataGridProps = {
 }
 
 const tableHeight = defaultComponentHeight
-
+const defaultRowWidth = 110
 export function AgentsDataGrid(props: AgentsDataGridProps): React.JSX.Element {
   const rows: AgentRow[] = _.map(props.agents, getRow)
 
@@ -66,19 +66,6 @@ type AgentRow = {
   survivalSkill: number
 }
 
-function getRow(agent: Agent): AgentRow {
-  return {
-    id: agent.Id,
-    state: agent.CurrentState,
-    turnHired: agent.TurnHired,
-    turnsInTraining: agent.TurnsInTraining,
-    recoversIn: agent.RecoversIn,
-    missionsSurvived: agent.MissionsSurvived,
-    survivalSkill: getSurvivalSkill(agent),
-  }
-}
-
-const defaultRowWidth = 110
 const columns: GridColDef[] = [
   { field: 'id', headerName: 'Agent ID', width: 90 },
   {
@@ -113,3 +100,15 @@ const columns: GridColDef[] = [
     width: defaultRowWidth,
   },
 ]
+
+function getRow(agent: Agent): AgentRow {
+  return {
+    id: agent.Id,
+    state: agent.CurrentState,
+    turnHired: agent.TurnHired,
+    turnsInTraining: agent.TurnsInTraining,
+    recoversIn: agent.RecoversIn,
+    missionsSurvived: agent.MissionsSurvived,
+    survivalSkill: getSurvivalSkill(agent),
+  }
+}
