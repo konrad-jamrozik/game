@@ -46,7 +46,7 @@ export default function App(): React.JSX.Element {
             <RunSimulation {...{ gameStates, setGameStates }} />
           </Grid>
           <Grid
-            xs={12}
+            xs={6}
             sx={{ bgcolor: '#000000' }}
             display="flex"
             justifyContent="center"
