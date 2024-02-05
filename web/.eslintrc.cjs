@@ -89,6 +89,8 @@ module.exports = {
     'no-inline-comments': 'off',
     // https://eslint.org/docs/latest/rules/multiline-comment-style
     'multiline-comment-style': 'off',
+    // https://eslint.org/docs/latest/rules/no-undefined
+    'no-undefined': 'off',
 
     // Disabled because it triggers too many false positives plus the
     // VSCode ESLint extension doesn't appear to recognize some of the allowed
