@@ -1,14 +1,17 @@
-import { Box } from '@mui/material'
+import { Box, Typography } from '@mui/material'
 import {
   DataGrid,
   type GridCallbackDetails,
   type GridColDef,
   type GridRowSelectionModel,
+  type GridRenderCellParams,
+  GridValidRowModel,
 } from '@mui/x-data-grid'
 import _ from 'lodash'
 import { defaultComponentHeight } from '../lib/utils'
 import type { Agent, AgentState } from '../types/GameState'
 import { getSurvivalSkill } from '../types/ruleset'
+import { ReactElement } from 'react'
 
 export type AgentsDataGridProps = {
   readonly agents: readonly Agent[]
@@ -65,6 +68,34 @@ type AgentRow = {
   survivalSkill: number
 }
 
+function renderAgentStateCell(
+  params: GridRenderCellParams<GridValidRowModel, AgentState>,
+): React.JSX.Element {
+  const agentState: AgentState = params.value!
+  let style = {}
+  let displayedValue: string = agentState
+
+  if (params.value === 'Recovering') {
+    style = { color: 'red' }
+  } else if (params.value === 'GeneratingIncome') {
+    displayedValue = 'Income'
+  }
+
+  return <Typography style={style}>{displayedValue}</Typography>
+}
+
+function getRow(agent: Agent): AgentRow {
+  return {
+    id: agent.Id,
+    state: agent.CurrentState,
+    turnHired: agent.TurnHired,
+    turnsInTraining: agent.TurnsInTraining,
+    recoversIn: agent.RecoversIn,
+    missionsSurvived: agent.MissionsSurvived,
+    survivalSkill: getSurvivalSkill(agent),
+  }
+}
+
 const defaultRowWidth = 110
 const columns: GridColDef[] = [
   { field: 'id', headerName: 'Agent ID', width: 90 },
@@ -72,6 +103,7 @@ const columns: GridColDef[] = [
     field: 'state',
     headerName: 'State',
     width: defaultRowWidth,
+    renderCell: renderAgentStateCell,
   },
   {
     field: 'survivalSkill',
@@ -99,14 +131,3 @@ const columns: GridColDef[] = [
     width: defaultRowWidth,
   },
 ]
-function getRow(agent: Agent): AgentRow {
-  return {
-    id: agent.Id,
-    state: agent.CurrentState,
-    turnHired: agent.TurnHired,
-    turnsInTraining: agent.TurnsInTraining,
-    recoversIn: agent.RecoversIn,
-    missionsSurvived: agent.MissionsSurvived,
-    survivalSkill: getSurvivalSkill(agent),
-  }
-}
