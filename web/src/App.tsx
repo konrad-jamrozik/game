@@ -47,7 +47,7 @@ export default function App(): React.JSX.Element {
           </Grid>
           <Grid
             xs={6}
-            sx={{ bgcolor: '#000000' }}
+            sx={(theme) => ({ bgcolor: theme.palette.background.default })}
             display="flex"
             justifyContent="center"
           >

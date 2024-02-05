@@ -139,6 +139,8 @@ module.exports = {
     '@typescript-eslint/no-use-before-define': 'off',
     // https://typescript-eslint.io/rules/no-non-null-assertion/
     '@typescript-eslint/no-non-null-assertion': 'off',
+    // https://typescript-eslint.io/rules/max-params/
+    '@typescript-eslint/max-params': ['error', { max: 5 }],
 
     // https://github.com/import-js/eslint-plugin-import/blob/main/docs/rules/order.md
     'import/order': [
