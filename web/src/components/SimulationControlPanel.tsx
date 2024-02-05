@@ -9,7 +9,7 @@ import {
 } from '../lib/GameStateUtils'
 import { initialTurn, type GameState } from '../types/GameState'
 
-export type RunSimulationProps = {
+export type SimulationControlPanelProps = {
   readonly gameStates: readonly GameState[]
   readonly setGameStates: React.Dispatch<React.SetStateAction<GameState[]>>
 }
@@ -17,7 +17,9 @@ export type RunSimulationProps = {
 const defaultStartTurn = 1
 const defaultTargetTurn = 50
 
-export function RunSimulation(props: RunSimulationProps): React.JSX.Element {
+export function SimulationControlPanel(
+  props: SimulationControlPanelProps,
+): React.JSX.Element {
   const [startTurn, setStartTurn] = useState<number>(defaultStartTurn)
   const [targetTurn, setTargetTurn] = useState<number>(defaultTargetTurn)
   const [loading, setLoading] = useState<boolean>(false)
@@ -221,7 +223,7 @@ function resetButton(loading: boolean): React.JSX.Element {
 }
 
 function getApiUrl(
-  props: RunSimulationProps,
+  props: SimulationControlPanelProps,
   targetTurn: number,
   startNewSimulation: boolean,
 ): string {

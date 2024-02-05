@@ -4,7 +4,7 @@ import _ from 'lodash'
 import { useState } from 'react'
 import { AgentsDataGrid } from './components/AgentsDataGrid'
 import { GameStatsLineChart } from './components/GameStatsLineChart'
-import { RunSimulation } from './components/RunSimulation'
+import { SimulationControlPanel } from './components/SimulationControlPanel'
 import { getCurrentState } from './lib/GameStateUtils'
 import type { GameState } from './types/GameState'
 import {
@@ -43,7 +43,7 @@ export default function App(): React.JSX.Element {
             display="flex"
             justifyContent="center"
           >
-            <RunSimulation {...{ gameStates, setGameStates }} />
+            <SimulationControlPanel {...{ gameStates, setGameStates }} />
           </Grid>
           <Grid
             xs={6}
