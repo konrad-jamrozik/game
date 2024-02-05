@@ -6,6 +6,7 @@ import {
   type GridRowSelectionModel,
 } from '@mui/x-data-grid'
 import _ from 'lodash'
+import { defaultComponentHeight } from '../lib/utils'
 import type { Agent, AgentState } from '../types/GameState'
 import { getSurvivalSkill } from '../types/ruleset'
 
@@ -13,11 +14,13 @@ export type AgentsDataGridProps = {
   readonly agents: readonly Agent[]
 }
 
+const tableHeight = defaultComponentHeight
+
 export function AgentsDataGrid(props: AgentsDataGridProps): React.JSX.Element {
   const rows: AgentRow[] = _.map(props.agents, getRow)
 
   return (
-    <Box sx={{ height: 400, width: '100%' }}>
+    <Box sx={{ height: tableHeight, width: '100%' }}>
       <DataGrid
         rows={rows}
         columns={columns}

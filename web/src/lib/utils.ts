@@ -1,5 +1,7 @@
 import _ from 'lodash'
 
+export const defaultComponentHeight = 500
+
 export function median(numbers: number[]): number {
   if (numbers.length === 0) {
     console.error('median() got empty array as input!')

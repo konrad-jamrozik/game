@@ -1,6 +1,7 @@
 import type { LineSeriesType } from '@mui/x-charts'
 import { LineChart } from '@mui/x-charts/LineChart'
 import _ from 'lodash'
+import { defaultComponentHeight } from '../lib/utils'
 import type { GameState } from '../types/GameState'
 import type { GameStateDataSeries } from '../types/GameStateDataSeries'
 import type { MakeOptional } from '../types/external'
@@ -15,7 +16,7 @@ type DataSetEntry = {
   turn: number
 }
 
-const chartHeight = 500
+const chartHeight = defaultComponentHeight
 
 export function GameStatsLineChart(
   props: GameStatsLineChartProps,
