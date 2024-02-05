@@ -1,17 +1,15 @@
-import { Box, Typography } from '@mui/material'
+import { Box } from '@mui/material'
 import {
   DataGrid,
   type GridCallbackDetails,
   type GridColDef,
   type GridRowSelectionModel,
-  type GridRenderCellParams,
-  GridValidRowModel,
 } from '@mui/x-data-grid'
 import _ from 'lodash'
+import { renderAgentStateCell } from '../lib/rendering'
 import { defaultComponentHeight } from '../lib/utils'
 import type { Agent, AgentState } from '../types/GameState'
 import { getSurvivalSkill } from '../types/ruleset'
-import { ReactElement } from 'react'
 
 export type AgentsDataGridProps = {
   readonly agents: readonly Agent[]
@@ -66,22 +64,6 @@ type AgentRow = {
   recoversIn: number
   missionsSurvived: number
   survivalSkill: number
-}
-
-function renderAgentStateCell(
-  params: GridRenderCellParams<GridValidRowModel, AgentState>,
-): React.JSX.Element {
-  const agentState: AgentState = params.value!
-  let style = {}
-  let displayedValue: string = agentState
-
-  if (params.value === 'Recovering') {
-    style = { color: 'red' }
-  } else if (params.value === 'GeneratingIncome') {
-    displayedValue = 'Income'
-  }
-
-  return <Typography style={style}>{displayedValue}</Typography>
 }
 
 function getRow(agent: Agent): AgentRow {

@@ -1,9 +1,10 @@
 import _ from 'lodash'
+import { agentStateColors } from '../lib/rendering'
 import { median } from '../lib/utils'
 import type { GameState } from './GameState'
 import {
-  getSurvivalSkill,
   agentUpkeepCost,
+  getSurvivalSkill,
   incomeGeneratedPerAgent,
   missionLaunched,
 } from './ruleset'
@@ -64,7 +65,7 @@ export const allGameStatsDataSeriesByKey: AllStatsDataSeries = {
         ),
       ) * incomeGeneratedPerAgent,
     label: 'Income generated',
-    color: 'GoldenRod',
+    color: agentStateColors.GeneratingIncome,
   },
   upkeep: {
     dataFunc: (gs) => _.size(gs.Assets.Agents) * agentUpkeepCost,
@@ -74,7 +75,7 @@ export const allGameStatsDataSeriesByKey: AllStatsDataSeries = {
   intel: {
     dataFunc: (gs) => gs.Assets.Intel,
     label: 'Intel',
-    color: 'dodgerBlue',
+    color: agentStateColors.GatheringIntel,
   },
   support: {
     dataFunc: (gs) => gs.Assets.Support * supportScale,
@@ -84,17 +85,17 @@ export const allGameStatsDataSeriesByKey: AllStatsDataSeries = {
   maxTransportCapacity: {
     dataFunc: (gs) => gs.Assets.MaxTransportCapacity,
     label: 'Trp. Cap',
-    color: 'blue',
+    color: agentStateColors.InTransit,
   },
   agents: {
     dataFunc: (gs) => _.size(gs.Assets.Agents),
     label: 'Agents',
-    color: 'darkGreen',
+    color: agentStateColors.Available,
   },
   terminatedAgents: {
     dataFunc: (gs) => _.size(gs.TerminatedAgents),
     label: 'Terminated agents',
-    color: 'darkRed',
+    color: agentStateColors.Terminated,
   },
   inTraining: {
     dataFunc: (gs) =>
@@ -105,7 +106,7 @@ export const allGameStatsDataSeriesByKey: AllStatsDataSeries = {
         ),
       ),
     label: 'InTraining',
-    color: 'purple',
+    color: agentStateColors.Training,
   },
   generatingIncome: {
     dataFunc: (gs) =>
@@ -116,7 +117,7 @@ export const allGameStatsDataSeriesByKey: AllStatsDataSeries = {
         ),
       ),
     label: 'GeneratingIncome',
-    color: 'gold',
+    color: agentStateColors.GeneratingIncome,
   },
   gatheringIntel: {
     dataFunc: (gs) =>
@@ -127,7 +128,7 @@ export const allGameStatsDataSeriesByKey: AllStatsDataSeries = {
         ),
       ),
     label: 'GatheringIntel',
-    color: 'dodgerBlue',
+    color: agentStateColors.GatheringIntel,
   },
   recovering: {
     dataFunc: (gs) =>
@@ -138,7 +139,7 @@ export const allGameStatsDataSeriesByKey: AllStatsDataSeries = {
         ),
       ),
     label: 'Recovering',
-    color: 'crimson',
+    color: agentStateColors.Recovering,
   },
   avgDiffLast5MissionSites: {
     dataFunc: (gs) =>
@@ -194,7 +195,7 @@ export const allGameStatsDataSeriesByKey: AllStatsDataSeries = {
         ),
       ),
     label: 'Missions successful',
-    color: 'darkGReen',
+    color: 'darkGreen',
   },
   missionsFailed: {
     dataFunc: (gs) =>
