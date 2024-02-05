@@ -17,7 +17,6 @@ export type RunSimulationProps = {
 const defaultStartTurn = 1
 const defaultTargetTurn = 50
 
-// eslint-disable-next-line max-lines-per-function
 export function RunSimulation(props: RunSimulationProps): React.JSX.Element {
   const [startTurn, setStartTurn] = useState<number>(defaultStartTurn)
   const [targetTurn, setTargetTurn] = useState<number>(defaultTargetTurn)
@@ -41,9 +40,9 @@ export function RunSimulation(props: RunSimulationProps): React.JSX.Element {
     const startNewSimulation = resolvedStartTurn === 1
 
     const apiUrl = getApiUrl(props, resolvedTargetTurn, startNewSimulation)
-    const jsonBody: string = startNewSimulation
-      ? ''
-      : JSON.stringify(getStateAtTurn(props.gameStates, resolvedStartTurn))
+    const jsonBody: string = !startNewSimulation
+      ? JSON.stringify(getStateAtTurn(props.gameStates, resolvedStartTurn))
+      : ''
 
     try {
       console.log(`apiUrl: ${apiUrl}`)
