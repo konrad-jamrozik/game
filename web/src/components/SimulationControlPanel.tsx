@@ -1,4 +1,5 @@
 import { Button, Card, CardContent, CardHeader, TextField } from '@mui/material'
+import Grid from '@mui/material/Unstable_Grid2'
 import _ from 'lodash'
 import { useState } from 'react'
 import {
@@ -86,13 +87,24 @@ export function SimulationControlPanel(
         sx={{ paddingTop: '8px', paddingBottom: '0px' }}
       />
       <CardContent>
-        {resetButton(loading)}
-        {simulateFromToTurnButton(simulate, loading, startTurn, targetTurn)}
-        {simulateFor1TurnButton(simulate, loading, props.gameStates)}
-        {startTurnInputTextField(startTurn, setStartTurn)}
-        {targetTurnInputTextField(targetTurn, setTargetTurn)}
-        {Boolean(error) && <div>Error: {error}</div>}
-        {!_.isEmpty(props.gameStates) && <div>{getMsg()}</div>}
+        <Grid container spacing={1}>
+          <Grid xs={12}>{currentTurnLabel(props.gameStates)}</Grid>
+          <Grid container xs={12}>
+            <Grid>
+              {simulateFor1TurnButton(simulate, loading, props.gameStates)}
+            </Grid>
+            <Grid xsOffset={'auto'}>{resetButton(loading)}</Grid>
+          </Grid>
+
+          <Grid>{startTurnInputTextField(startTurn, setStartTurn)}</Grid>
+          <Grid>{targetTurnInputTextField(targetTurn, setTargetTurn)}</Grid>
+          <Grid xs={12}>
+            {simulateFromToTurnButton(simulate, loading, startTurn, targetTurn)}
+          </Grid>
+
+          <Grid>{!_.isEmpty(props.gameStates) && getMsg()}</Grid>
+          <Grid>{Boolean(error) && `Error: ${error}`}</Grid>
+        </Grid>
       </CardContent>
     </Card>
   )
@@ -129,19 +141,26 @@ function resolveStartAndTargetTurn(
   return { resolvedStartTurn, resolvedTargetTurn }
 }
 
-function targetTurnInputTextField(
-  targetTurn: number,
-  setTargetTurn: React.Dispatch<React.SetStateAction<number>>,
+function currentTurnLabel(gameStates: readonly GameState[]): string {
+  return `Current turn: ${
+    !_.isEmpty(gameStates) ? getCurrentTurn(gameStates) : 'N/A'
+  }`
+}
+
+function startTurnInputTextField(
+  startTurn: number,
+  setStartTurn: React.Dispatch<React.SetStateAction<number>>,
 ): React.JSX.Element {
   return (
     <TextField
-      id="textfield-target-turn"
-      label="target turn"
+      margin="dense"
+      id="textfield-start-turn"
+      label="start turn"
       type="number"
-      value={targetTurn}
+      value={startTurn}
       onChange={(event: React.ChangeEvent) => {
         const target = event.target as HTMLInputElement
-        setTargetTurn(target.valueAsNumber)
+        setStartTurn(target.valueAsNumber)
       }}
       InputLabelProps={{
         shrink: true,
@@ -155,19 +174,20 @@ function targetTurnInputTextField(
   )
 }
 
-function startTurnInputTextField(
-  startTurn: number,
-  setStartTurn: React.Dispatch<React.SetStateAction<number>>,
+function targetTurnInputTextField(
+  targetTurn: number,
+  setTargetTurn: React.Dispatch<React.SetStateAction<number>>,
 ): React.JSX.Element {
   return (
     <TextField
-      id="textfield-start-turn"
-      label="start turn"
+      margin="dense"
+      id="textfield-target-turn"
+      label="target turn"
       type="number"
-      value={startTurn}
+      value={targetTurn}
       onChange={(event: React.ChangeEvent) => {
         const target = event.target as HTMLInputElement
-        setStartTurn(target.valueAsNumber)
+        setTargetTurn(target.valueAsNumber)
       }}
       InputLabelProps={{
         shrink: true,
@@ -209,7 +229,7 @@ function simulateFromToTurnButton(
       onClick={async () => simulate()}
       disabled={loading || startTurn >= targetTurn}
     >
-      {`Simulate turns ${startTurn} to ${targetTurn}`}
+      {`Simulate from turn ${startTurn} to ${targetTurn}`}
     </Button>
   )
 }
