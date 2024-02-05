@@ -29,7 +29,15 @@ namespace UfoGameLib.State;
 /// as it is done right now.
 /// This improvement could perhaps be accomplished with source-generators:
 /// https://learn.microsoft.com/en-us/dotnet/standard/serialization/system-text-json/source-generation-modes?pivots=dotnet-8-0
-/// 
+///
+/// Note: the underlying logic of reference-preserving deep cloning done by this converter
+/// (i.e. what to serialize as reference vs directly, and in which order to deserialize)
+/// is replicated via .DeepClone() methods on the object tree rooted at GameState
+/// and could be deduplicated.
+/// See GameState.DeepClone() for the top-level ordering of deserialization that duplicates
+/// the deserialization order of GameStateJsonConverter.Read().
+/// See GameState.Clone() for entry invocation point for these parallel implementation of the same logic.
+///
 /// For additional context on what gap this converter fills, see:
 /// - https://github.com/dotnet/docs/issues/35020
 /// - https://github.com/dotnet/runtime/issues/73302#issuecomment-1204104384
@@ -107,7 +115,6 @@ class GameStateJsonConverter : JsonConverterSupportingReferences<GameState>
         Agents terminatedAgents =
             Deserialize<List<Agent>>(gameStateNode, nameof(GameState.TerminatedAgents)).ToAgents(terminated: true);
         
-
         var missions = new Missions(
             DeserializeObjArrayWithDepRefProps(
                 objJsonArray: JsonArray(gameStateNode, nameof(GameState.Missions)),

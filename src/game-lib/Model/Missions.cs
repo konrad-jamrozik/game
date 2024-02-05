@@ -20,8 +20,12 @@ public class Missions : List<Mission>
 
     public Missions Launched => this.Where(mission => mission.WasLaunched).ToMissions();
 
-    public Missions DeepClone()
+    public Missions DeepClone(MissionSites clonedMissionSites)
     {
-        throw new NotImplementedException();
+        return new Missions(this.Select(mission =>
+        {
+            MissionSite clonedMissionSite = clonedMissionSites.Single(clonedSite => clonedSite.Id == mission.Site.Id);
+            return mission.DeepClone(clonedMissionSite);
+        }));
     }
 }

@@ -91,13 +91,15 @@ public class GameState : IEquatable<GameState>
 
     private GameState DeepClone()
     {
+        MissionSites clonedMissionSites = MissionSites.DeepClone();
+        Missions clonedMissions = Missions.DeepClone(clonedMissionSites);
         return new GameState(
             updateCount: UpdateCount,
             timeline: Timeline.DeepClone(),
-            assets: Assets.DeepClone(),
-            missionSites: MissionSites.DeepClone(),
-            missions: Missions.DeepClone(),
-            terminatedAgents: TerminatedAgents.DeepClone());
+            assets: Assets.DeepClone(clonedMissions),
+            missionSites: clonedMissionSites,
+            missions: clonedMissions,
+            terminatedAgents: TerminatedAgents.DeepClone(clonedMissions, terminated: true));
     }
 
     public string ToJsonString()

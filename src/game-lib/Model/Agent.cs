@@ -2,6 +2,9 @@ using System.Text.Json.Serialization;
 
 namespace UfoGameLib.Model;
 
+// kja2 should this implement IIdentifiable the same as MissionSite?
+// I think currently it doesn't because Agents are never serialized by reference
+// by GameStateJsonConverter, so it doesn't matter if they implement IIdentifiable
 public class Agent
 {
     public enum AgentState
@@ -255,5 +258,25 @@ public class Agent
         // missions succeeded or failed, that's why this comparison allows the difference of 1.
         Debug.Assert(MissionsSucceeded + MissionsFailed >= MissionsSurvived);
         Debug.Assert(MissionsSucceeded + MissionsFailed <= MissionsSurvived + 1);
+        // kja2 add invariant that terminated agent is not on a mission
+    }
+
+    public Agent DeepClone(Mission? clonedMission)
+    {
+        return new Agent(
+            Id,
+            TurnHired,
+            CurrentState,
+            clonedMission,
+            RecoversIn,
+            TurnTerminated,
+            Sacked,
+            MissionsSurvived,
+            MissionsSucceeded,
+            MissionsFailed,
+            TurnsInTraining,
+            TurnsGeneratingIncome,
+            TurnsGatheringIntel,
+            TurnsInRecovery);
     }
 }

@@ -20,6 +20,6 @@ public class MissionSites : List<MissionSite>
 
     public MissionSites DeepClone()
     {
-        throw new NotImplementedException();
+        return new MissionSites(this.Select(missionSite => missionSite.DeepClone()));
     }
 }

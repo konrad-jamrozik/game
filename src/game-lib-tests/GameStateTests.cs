@@ -33,8 +33,6 @@ public class GameStateTests
         });
     }
 
-    // kja curr work
-    [Ignore("Currently fails")]
     [Test]
     public void DeepClones()
     {

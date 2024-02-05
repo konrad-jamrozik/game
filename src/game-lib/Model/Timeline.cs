@@ -15,6 +15,6 @@ public class Timeline
 
     public Timeline DeepClone()
     {
-        throw new NotImplementedException();
+        return (Timeline) MemberwiseClone();
     }
 }

@@ -14,17 +14,12 @@ public class Mission : IIdentifiable
 
     public readonly int AgentsSent;
 
-    public MissionSite Site;
     public MissionState CurrentState;
 
-    public Mission(int id, MissionSite site, int turn, int agentsSent) : this(
-        id, 
-        site,
-        agentsSent)
-    {
-        Debug.Assert(site.IsActive);
-        site.LaunchMission(turn);
-    }
+    public MissionSite Site;
+
+    public int? AgentsSurvived { get; private set; }
+    public int? AgentsTerminated { get; private set; }
 
     [JsonConstructor]
     public Mission(
@@ -47,8 +42,14 @@ public class Mission : IIdentifiable
                 && (AgentsSent == AgentsSurvived + AgentsTerminated)));
     }
 
-    public int? AgentsSurvived { get; private set; }
-    public int? AgentsTerminated { get; private set; }
+    public Mission(int id, MissionSite site, int turn, int agentsSent) : this(
+        id, 
+        site,
+        agentsSent)
+    {
+        Debug.Assert(site.IsActive);
+        site.LaunchMission(turn);
+    }
 
     [JsonIgnore]
     public bool IsActive => CurrentState == MissionState.Active;
@@ -74,5 +75,16 @@ public class Mission : IIdentifiable
         Debug.Assert(AgentsTerminated == null);
         AgentsSurvived = agentsSurvived;
         AgentsTerminated = agentsTerminated;
+    }
+
+    public Mission DeepClone(MissionSite clonedMissionSite)
+    {
+        return new Mission(
+            id: Id,
+            site: clonedMissionSite,
+            agentsSent: AgentsSent,
+            currentState: CurrentState,
+            agentsSurvived: AgentsSurvived,
+            agentsTerminated: AgentsTerminated);
     }
 }

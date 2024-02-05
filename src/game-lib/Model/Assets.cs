@@ -47,8 +47,15 @@ public class Assets
         Agents = agents;
     }
 
-    public Assets DeepClone()
+    public Assets DeepClone(Missions clonedMissions)
     {
-        throw new NotImplementedException();
+        return new Assets(
+            Money,
+            Intel,
+            Funding,
+            Support,
+            CurrentTransportCapacity,
+            MaxTransportCapacity,
+            Agents.DeepClone(clonedMissions, terminated: false));
     }
 }

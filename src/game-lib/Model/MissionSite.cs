@@ -8,6 +8,10 @@ public class MissionSite : IIdentifiable
     public readonly int Difficulty;
     public readonly int TurnAppeared;
 
+    public int? TurnDeactivated { get; private set; }
+    public bool Expired { get; private set; }
+    public int? ExpiresIn { get; private set; }
+
     [JsonConstructor]
     public MissionSite(
         int id,
@@ -27,10 +31,6 @@ public class MissionSite : IIdentifiable
         ExpiresIn = expiresIn;
         AssertStatusInvariant();
     }
-
-    public int? TurnDeactivated { get; private set; }
-    public bool Expired { get; private set; }
-    public int? ExpiresIn { get; private set; }
 
     [JsonIgnore]
     public bool IsActive => TurnDeactivated == null && !Expired && ExpiresIn >= 0;
@@ -84,4 +84,9 @@ public class MissionSite : IIdentifiable
 
     private void AssertStatusInvariant()
         => Debug.Assert(IsActive ^ IsExpired ^ WasLaunched);
+
+    public MissionSite DeepClone()
+    {
+        return (MissionSite) MemberwiseClone();
+    }
 }

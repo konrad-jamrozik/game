@@ -94,8 +94,13 @@ public class Agents : List<Agent>
     private void AssertAlive(IEnumerable<Agent> agents)
         => Debug.Assert(agents.All(agent => agent.IsAlive));
 
-    public Agents DeepClone()
+    public Agents DeepClone(Missions clonedMissions, bool terminated)
     {
-        throw new NotImplementedException();
+        return new Agents(this.Select(agent =>
+        {
+            Mission? clonedMission =
+                clonedMissions.SingleOrDefault(clonedMission => clonedMission.Id == agent.CurrentMission?.Id);
+            return agent.DeepClone(clonedMission);
+        }), terminated);
     }
 }
