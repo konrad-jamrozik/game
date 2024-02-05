@@ -83,8 +83,8 @@ export function SimulationControlPanel(
   return (
     <Card variant="outlined" sx={{ maxWidth: '480px' }}>
       <CardHeader
-        title="Simulation"
-        sx={{ paddingTop: '8px', paddingBottom: '0px' }}
+        title="Simulation control panel"
+        sx={{ paddingBottom: '0px' }}
       />
       <CardContent>
         <Grid container spacing={1}>
