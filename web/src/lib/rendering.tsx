@@ -35,7 +35,7 @@ export function renderAssetNameCell(
 }
 
 export const agentStateColors: { [key in AgentState]: string } = {
-  InTransit: 'blue',
+  InTransit: '#0050ff',
   OnMission: 'darkOrange',
   Available: 'darkGreen',
   Training: 'MediumPurple',
