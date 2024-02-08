@@ -5,6 +5,7 @@ import { useState } from 'react'
 import { AgentsDataGrid } from './components/AgentsDataGrid'
 import { AssetsDataGrid } from './components/AssetsDataGrid'
 import { GameStatsLineChart } from './components/GameStatsLineChart'
+import { MissionSitesDataGrid } from './components/MissionSitesDataGrid'
 import { SimulationControlPanel } from './components/SimulationControlPanel'
 import { getCurrentState } from './lib/GameStateUtils'
 import type { GameState } from './types/GameState'
@@ -38,17 +39,29 @@ export default function App(): React.JSX.Element {
     <Typography component={'span'} sx={{ bgcolor: '#000020' }} gutterBottom>
       <Container maxWidth={false} sx={{ bgcolor: '#202020', my: 4 }}>
         <Grid container spacing={2} sx={{ bgcolor: '#333333' }}>
-          <Grid xs={6} sx={{ bgcolor: '#200000' }}>
+          <Grid xs={5} sx={{ bgcolor: '#200000' }}>
             <SimulationControlPanel {...{ gameStates, setGameStates }} />
           </Grid>
           <Grid
-            xs={6}
+            xs={3}
             sx={(theme) => ({ bgcolor: theme.palette.background.default })}
           >
             <AssetsDataGrid
               assets={
                 !_.isEmpty(gameStates)
                   ? getCurrentState(gameStates).Assets
+                  : undefined
+              }
+            />
+          </Grid>
+          <Grid
+            xs={4}
+            sx={(theme) => ({ bgcolor: theme.palette.background.default })}
+          >
+            <MissionSitesDataGrid
+              missionSites={
+                !_.isEmpty(gameStates)
+                  ? getCurrentState(gameStates).MissionSites
                   : undefined
               }
             />

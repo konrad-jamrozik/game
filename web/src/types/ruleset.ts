@@ -1,11 +1,19 @@
 // codesync UfoGameLib.Model.Ruleset
 import _ from 'lodash'
-import type { Agent, Mission } from './GameState'
+import type { Agent, Mission, MissionSite } from './GameState'
 
 export const agentUpkeepCost = 5
 export const incomeGeneratedPerAgent = agentUpkeepCost * 3
 
 export const agentTrainingCoefficient = 1
+
+export function isActive(missionSite: MissionSite): boolean {
+  return (
+    _.isNil(missionSite.TurnDeactivated) &&
+    !missionSite.Expired &&
+    (_.isNil(missionSite.ExpiresIn) || missionSite.ExpiresIn >= 0)
+  )
+}
 
 // kja3: instead of replicating this logic from backend here,
 // make backend expose this property in the returned json. Applies to all such
