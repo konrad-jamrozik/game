@@ -25,22 +25,10 @@ export function AssetsDataGrid(props: AssetsDataGridProps): React.JSX.Element {
         rows={rows}
         getRowId={(row: AssetRow) => row.name}
         columns={columns}
-        initialState={{
-          pagination: {
-            paginationModel: {
-              pageSize: 100,
-            },
-          },
-        }}
-        pageSizeOptions={[25, 50, 100]}
         disableRowSelectionOnClick
         onRowSelectionModelChange={onRowSelectionModelChange}
         rowHeight={30}
-        sx={{
-          '& .MuiDataGrid-footerContainer': {
-            minHeight: '40px', // Reduce the height of the footer container
-          },
-        }}
+        hideFooterPagination={true}
       />
     </Box>
   )
@@ -64,7 +52,7 @@ const columns: GridColDef[] = [
   {
     field: 'name',
     headerName: 'Asset',
-    width: 170,
+    width: defaultRowWidth,
     renderCell: renderAssetNameCell,
   },
   {
