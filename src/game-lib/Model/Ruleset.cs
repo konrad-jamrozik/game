@@ -33,6 +33,7 @@ public static class Ruleset
         // For an agent to survive, they must roll above the survival threshold, in the range [1..100].
         // Survival threshold of 0 means agent always survives. 
         // Survival threshold of 100 means agent never survives.
+        // See also AgentSurvivalChance.
         bool survived = survivalRoll > survivalThreshold;
         int recoversIn = ComputeRecoversIn(survived, survivalRoll, survivalThreshold);
         log.Info(
@@ -66,6 +67,22 @@ public static class Ruleset
     // Instead, I need an abstraction that rolls and logs based on formula.
     // The implementation of this method is a formula describing 
     // the implementation of RollForAgentSurvival.
+    /**
+     * As of 2/7/2024 the formula is:
+     * 100% - mission difficulty + agent survival skill
+     * AND no more than 100%
+     * AND no less than 1%
+     *
+     * In addition, BaseMissionSiteDifficulty is 30.
+     *
+     * As such:
+     * - An agent having the same survival skill as mission difficulty will always survive it.
+     *   E.g. difficulty of 30 and skill of 30 will result in 100% - 30 + 30 = 100%
+     * - Each point of survival skill below mission difficulty is 1% less chance of survival.
+     *   E.g. difficulty of 150 and skill of 135 will result in 100% - 150 + 135 = 100% - 15 = 85%
+     * - A completely rookie agent has a 70% chance to survive the easiest mission.
+     *   100% - 30 + 0 = 70%.
+     */
     public static int AgentSurvivalChance(Agent agent, int difficulty)
         => AgentSurvivalRollUpperBound - AgentSurvivalThreshold(agent, difficulty);
 
