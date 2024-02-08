@@ -33,7 +33,6 @@ export function AssetsDataGrid(props: AssetsDataGridProps): React.JSX.Element {
           },
         }}
         pageSizeOptions={[25, 50, 100]}
-        checkboxSelection
         disableRowSelectionOnClick
         onRowSelectionModelChange={onRowSelectionModelChange}
         rowHeight={30}
@@ -59,7 +58,6 @@ function onRowSelectionModelChange(
 type AssetRow = {
   name: string
   current: number
-  diff: number
 }
 
 const columns: GridColDef[] = [
@@ -74,26 +72,20 @@ const columns: GridColDef[] = [
     headerName: 'Current',
     width: defaultRowWidth,
   },
-  {
-    field: 'diff',
-    headerName: 'Diff',
-    width: defaultRowWidth,
-  },
 ]
 
 function getRows(assets?: Assets): AssetRow[] {
   return !_.isUndefined(assets)
     ? [
-        { name: 'Money', current: assets.Money, diff: 0 },
-        { name: 'Intel', current: assets.Intel, diff: 0 },
-        { name: 'Support', current: assets.Support, diff: 0 },
-        { name: 'Funding', current: assets.Funding, diff: 0 },
+        { name: 'Money', current: assets.Money },
+        { name: 'Intel', current: assets.Intel },
+        { name: 'Support', current: assets.Support },
+        { name: 'Funding', current: assets.Funding },
         {
           name: 'MaxTransportCapacity',
           current: assets.MaxTransportCapacity,
-          diff: 0,
         },
-        { name: 'Agents', current: assets.Agents.length, diff: 0 },
+        { name: 'Agents', current: assets.Agents.length },
       ]
     : []
 }
