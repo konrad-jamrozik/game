@@ -30,14 +30,17 @@ export type GameStatsDataSeriesKey =
   | 'terminatedAgents'
   | 'support'
   | 'maxTransportCapacity'
-  | 'avgDiffLast5MissionSites'
-  | 'maxAgentSurvSkill'
-  | 'meanAgentSurvSkill'
-  | 'medianAgentSurvSkill'
   | 'missionsLaunched'
   | 'missionsSuccessful'
   | 'missionsFailed'
   | 'missionSitesExpired'
+  | GameStatsDerivedDataSeriesKey
+
+export type GameStatsDerivedDataSeriesKey =
+  | 'avgDiffLast5MissionSites'
+  | 'maxAgentSurvSkill'
+  | 'meanAgentSurvSkill'
+  | 'medianAgentSurvSkill'
 
 type AllStatsDataSeries = {
   [K in GameStatsDataSeriesKey]: Omit<GameStateDataSeries, 'key'>
