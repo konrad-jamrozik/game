@@ -56,7 +56,7 @@ function onRowSelectionModelChange(
   console.log('details:', details)
 }
 
-type AgentRow = {
+export type AgentRow = {
   id: number
   state: AgentState
   turnHired: number

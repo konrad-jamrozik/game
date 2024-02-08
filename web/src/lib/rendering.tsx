@@ -1,9 +1,11 @@
 import { Typography } from '@mui/material'
-import type { GridRenderCellParams, GridValidRowModel } from '@mui/x-data-grid'
+import type { GridRenderCellParams } from '@mui/x-data-grid'
+import type { AgentRow } from '../components/AgentsDataGrid'
+import type { AssetRow } from '../components/AssetsDataGrid'
 import type { AgentState, Assets } from '../types/GameState'
 
 export function renderAgentStateCell(
-  params: GridRenderCellParams<GridValidRowModel, AgentState>,
+  params: GridRenderCellParams<AgentRow, AgentState>,
 ): React.JSX.Element {
   const agentState: AgentState = params.value!
   let style = {}
@@ -21,7 +23,7 @@ export function renderAgentStateCell(
 }
 
 export function renderAssetNameCell(
-  params: GridRenderCellParams<GridValidRowModel, keyof Assets>,
+  params: GridRenderCellParams<AssetRow, keyof Assets>,
 ): React.JSX.Element {
   const assetName: keyof Assets = params.value!
   let style = {}

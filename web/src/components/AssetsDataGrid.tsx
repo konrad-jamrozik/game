@@ -1,6 +1,7 @@
-import { Box } from '@mui/material'
+import { Box, Button } from '@mui/material'
 import {
   DataGrid,
+  type GridRenderCellParams,
   type GridCallbackDetails,
   type GridColDef,
   type GridRowSelectionModel,
@@ -43,9 +44,10 @@ function onRowSelectionModelChange(
   console.log('details:', details)
 }
 
-type AssetRow = {
+export type AssetRow = {
   name: string
-  current: number
+  value: number
+  isManageable?: boolean
 }
 
 const columns: GridColDef[] = [
@@ -56,24 +58,50 @@ const columns: GridColDef[] = [
     renderCell: renderAssetNameCell,
   },
   {
-    field: 'current',
-    headerName: 'Current',
+    field: 'value',
+    headerName: 'Value',
     width: defaultRowWidth,
+  },
+  {
+    field: 'isManageable',
+    disableColumnMenu: true,
+    sortable: false,
+    headerName: '',
+    width: 150,
+    renderCell: (
+      params: GridRenderCellParams<AssetRow, boolean | undefined>,
+    ): React.JSX.Element | undefined => {
+      const isManageable = Boolean(params.value)
+      const row: AssetRow = params.row
+
+      return isManageable ? (
+        <Button
+          variant="text"
+          color="primary"
+          onClick={() => {
+            console.log(`Clicked! ${JSON.stringify(row.name, undefined, 2)}`)
+          }}
+        >
+          Manage
+        </Button>
+      ) : undefined
+    },
   },
 ]
 
 function getRows(assets?: Assets): AssetRow[] {
   return !_.isUndefined(assets)
     ? [
-        { name: 'Money', current: assets.Money },
-        { name: 'Intel', current: assets.Intel },
-        { name: 'Support', current: assets.Support },
-        { name: 'Funding', current: assets.Funding },
+        { name: 'Money', value: assets.Money, isManageable: true },
+        { name: 'Intel', value: assets.Intel, isManageable: true },
+        { name: 'Support', value: assets.Support, isManageable: true },
+        { name: 'Funding', value: assets.Funding },
         {
           name: 'MaxTransportCapacity',
-          current: assets.MaxTransportCapacity,
+          value: assets.MaxTransportCapacity,
+          isManageable: true,
         },
-        { name: 'Agents', current: assets.Agents.length },
+        { name: 'Agents', value: assets.Agents.length, isManageable: true },
       ]
     : []
 }
