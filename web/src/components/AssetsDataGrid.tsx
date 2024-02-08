@@ -14,8 +14,8 @@ export type AssetsDataGridProps = {
   readonly assets: Assets | undefined
 }
 
-const tableHeight = 290
-const defaultRowWidth = 110
+const tableHeight = 310
+const defaultRowWidth = 100
 
 export function AssetsDataGrid(props: AssetsDataGridProps): React.JSX.Element {
   const rows: AssetRow[] = getRows(props.assets)
@@ -54,20 +54,23 @@ const columns: GridColDef[] = [
   {
     field: 'name',
     headerName: 'Asset',
+    disableColumnMenu: true,
+    sortable: false,
     width: defaultRowWidth,
     renderCell: renderAssetNameCell,
   },
   {
     field: 'value',
     headerName: 'Value',
-    width: defaultRowWidth,
+    disableColumnMenu: true,
+    width: 80,
   },
   {
     field: 'isManageable',
     disableColumnMenu: true,
     sortable: false,
     headerName: '',
-    width: 150,
+    width: defaultRowWidth,
     renderCell: (
       params: GridRenderCellParams<AssetRow, boolean | undefined>,
     ): React.JSX.Element | undefined => {

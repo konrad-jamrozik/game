@@ -1,6 +1,7 @@
-import { Box } from '@mui/material'
+import { Box, Button } from '@mui/material'
 import {
   DataGrid,
+  type GridRenderCellParams,
   type GridCallbackDetails,
   type GridColDef,
   type GridRowSelectionModel,
@@ -13,8 +14,8 @@ export type MissionSitesDataGridProps = {
   readonly missionSites: MissionSite[] | undefined
 }
 
-const tableHeight = 290
-const defaultRowWidth = 110
+const tableHeight = 310
+const defaultRowWidth = 90
 
 export function MissionSitesDataGrid(
   props: MissionSitesDataGridProps,
@@ -54,17 +55,44 @@ const columns: GridColDef[] = [
   {
     field: 'id',
     headerName: 'Id',
-    width: 90,
+    disableColumnMenu: true,
+    width: defaultRowWidth,
   },
   {
     field: 'difficulty',
     headerName: 'Difficulty',
+    disableColumnMenu: true,
     width: defaultRowWidth,
   },
   {
     field: 'expiresIn',
     headerName: 'Expires in',
+    disableColumnMenu: true,
     width: defaultRowWidth,
+  },
+  {
+    field: 'deploy',
+    disableColumnMenu: true,
+    sortable: false,
+    headerName: '',
+    width: defaultRowWidth,
+    renderCell: (
+      params: GridRenderCellParams<MissionSiteRow, true>,
+    ): React.JSX.Element | undefined => {
+      const row: MissionSiteRow = params.row
+
+      return (
+        <Button
+          variant="text"
+          color="primary"
+          onClick={() => {
+            console.log(`Clicked! ${JSON.stringify(row.id, undefined, 2)}`)
+          }}
+        >
+          Deploy
+        </Button>
+      )
+    },
   },
 ]
 
