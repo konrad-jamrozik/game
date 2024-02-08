@@ -69,7 +69,7 @@ public static class Ruleset
     // the implementation of RollForAgentSurvival.
     /**
      * As of 2/7/2024 the formula is:
-     * 100% - mission difficulty + agent survival skill
+     * 100%  + agent survival skill - mission difficulty
      * AND no more than 100%
      * AND no less than 1%
      *
@@ -77,11 +77,15 @@ public static class Ruleset
      *
      * As such:
      * - An agent having the same survival skill as mission difficulty will always survive it.
-     *   E.g. difficulty of 30 and skill of 30 will result in 100% - 30 + 30 = 100%
+     *   E.g. difficulty of 30 and skill of 30 will result in 100% + 30 - 30 = 100%
      * - Each point of survival skill below mission difficulty is 1% less chance of survival.
-     *   E.g. difficulty of 150 and skill of 135 will result in 100% - 150 + 135 = 100% - 15 = 85%
+     *   E.g. difficulty of 150 and skill of 135 will result in 100% + 135 - 150 = 235 - 150 = 85%
      * - A completely rookie agent has a 70% chance to survive the easiest mission.
-     *   100% - 30 + 0 = 70%.
+     *   100% + 0 - 30 + 0 = 70%.
+     * - An agent, to "naturally" achieve at least 1% chance of surviving a mission, must have at least
+     *   ((mission difficulty - 100) + 1) survival skill.
+     *   E.g. a mission with difficulty of 125 will give only 1% chance of survival to any agent
+     *   with skill as high as 26: 100% + 26 - 125 = 1%.
      */
     public static int AgentSurvivalChance(Agent agent, int difficulty)
         => AgentSurvivalRollUpperBound - AgentSurvivalThreshold(agent, difficulty);
