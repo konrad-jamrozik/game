@@ -38,14 +38,16 @@ export default function App(): React.JSX.Element {
   return (
     <Typography component={'span'} sx={{ bgcolor: '#000020' }} gutterBottom>
       <Container maxWidth={false} sx={{ bgcolor: '#202020', my: 4 }}>
-        <Grid container spacing={2} sx={{ bgcolor: '#333333' }}>
-          <Grid xs={5} sx={{ bgcolor: '#200000' }}>
+        <Grid
+          container
+          justifyContent={'center'}
+          spacing={2}
+          sx={{ bgcolor: '#303030' }}
+        >
+          <Grid sx={{ bgcolor: '#200000' }}>
             <SimulationControlPanel {...{ gameStates, setGameStates }} />
           </Grid>
-          <Grid
-            xs={3}
-            sx={(theme) => ({ bgcolor: theme.palette.background.default })}
-          >
+          <Grid sx={{ bgcolor: '#300030' }}>
             <AssetsDataGrid
               assets={
                 !_.isEmpty(gameStates)
@@ -54,10 +56,7 @@ export default function App(): React.JSX.Element {
               }
             />
           </Grid>
-          <Grid
-            xs={4}
-            sx={(theme) => ({ bgcolor: theme.palette.background.default })}
-          >
+          <Grid sx={{ bgcolor: '#302000' }}>
             <MissionSitesDataGrid
               missionSites={
                 !_.isEmpty(gameStates)
@@ -66,43 +65,40 @@ export default function App(): React.JSX.Element {
               }
             />
           </Grid>
-          <Grid
-            xs={6}
-            sx={(theme) => ({ bgcolor: theme.palette.background.default })}
-          >
+          <Grid sx={{ bgcolor: '#002040' }}>
             <AgentsDataGrid agents={agents} />
           </Grid>
-          <Grid xs={6} sx={{ bgcolor: '#002000' }}>
+          <Grid sx={{ bgcolor: '#003000' }}>
             <GameStatsLineChart
               gameStates={gameStates}
               dataSeries={moneyStatsDataSeries}
             />
           </Grid>
-          <Grid xs={6} sx={{ bgcolor: '#202000' }}>
+          <Grid sx={{ bgcolor: '#303000' }}>
             <GameStatsLineChart
               gameStates={gameStates}
               dataSeries={agentStatsDataSeries}
             />
           </Grid>
-          <Grid xs={6} sx={{ bgcolor: '#202000' }}>
+          <Grid sx={{ bgcolor: '#402000' }}>
             <GameStatsLineChart
               gameStates={gameStates}
               dataSeries={intelStatsDataSeries}
             />
           </Grid>
-          <Grid xs={6} sx={{ bgcolor: '#002000' }}>
+          <Grid sx={{ bgcolor: '#002040' }}>
             <GameStatsLineChart
               gameStates={gameStates}
               dataSeries={miscStatsDataSeries}
             />
           </Grid>
-          <Grid xs={6} sx={{ bgcolor: '#202000' }}>
+          <Grid sx={{ bgcolor: '#003030' }}>
             <GameStatsLineChart
               gameStates={gameStates}
               dataSeries={missionsStatsDataSeries}
             />
           </Grid>
-          <Grid xs={12} sx={{ bgcolor: '#000020' }}>
+          <Grid xs={12} sx={{ bgcolor: '#300020' }}>
             <Footer />
           </Grid>
         </Grid>

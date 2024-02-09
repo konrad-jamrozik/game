@@ -87,7 +87,7 @@ export function SimulationControlPanel(
   }
 
   return (
-    <Card variant="outlined" sx={{ maxWidth: '480px' }}>
+    <Card variant="outlined" sx={{ width: 390 }}>
       <CardHeader
         title="Simulation control panel"
         sx={{ paddingBottom: '0px' }}
@@ -234,7 +234,7 @@ function simulateFromToTurnButton(
       onClick={async () => simulate()}
       disabled={loading || startTurn >= targetTurn}
     >
-      {`Simulate turns: ${startTurn} to ${targetTurn}`}
+      {`Simulate turns:`}
     </Button>
   )
 }

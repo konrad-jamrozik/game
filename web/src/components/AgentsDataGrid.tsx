@@ -16,12 +16,12 @@ export type AgentsDataGridProps = {
 }
 
 const tableHeight = defaultComponentHeight
-const defaultRowWidth = 110
+
 export function AgentsDataGrid(props: AgentsDataGridProps): React.JSX.Element {
   const rows: AgentRow[] = _.map(props.agents, getRow)
 
   return (
-    <Box sx={{ height: tableHeight, width: '100%' }}>
+    <Box sx={{ height: tableHeight, width: 430 }}>
       <DataGrid
         rows={rows}
         columns={columns}
@@ -31,17 +31,25 @@ export function AgentsDataGrid(props: AgentsDataGridProps): React.JSX.Element {
               pageSize: 100,
             },
           },
+          columns: {
+            columnVisibilityModel: {
+              missionsSurvived: false,
+              turnHired: false,
+              turnsInTraining: false,
+            },
+          },
         }}
         pageSizeOptions={[25, 50, 100]}
         checkboxSelection
         disableRowSelectionOnClick
         onRowSelectionModelChange={onRowSelectionModelChange}
         rowHeight={30}
-        sx={{
+        sx={(theme) => ({
+          bgcolor: theme.palette.background.default,
           '& .MuiDataGrid-footerContainer': {
             minHeight: '40px', // Reduce the height of the footer container
           },
-        }}
+        })}
       />
     </Box>
   )
@@ -59,13 +67,14 @@ function onRowSelectionModelChange(
 export type AgentRow = {
   id: number
   state: AgentState
-  turnHired: number
-  turnsInTraining: number
+  survivalSkill: number
   recoversIn: number
   missionsSurvived: number
-  survivalSkill: number
+  turnHired: number
+  turnsInTraining: number
 }
 
+const defaultRowWidth = 100
 const columns: GridColDef[] = [
   { field: 'id', headerName: 'Agent ID', width: 90 },
   {
@@ -77,11 +86,11 @@ const columns: GridColDef[] = [
   {
     field: 'survivalSkill',
     headerName: 'Skill',
-    width: defaultRowWidth,
+    width: 70,
   },
   {
     field: 'recoversIn',
-    headerName: 'Recovers In',
+    headerName: 'Recv T#',
     width: defaultRowWidth,
   },
   {

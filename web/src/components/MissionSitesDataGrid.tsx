@@ -15,7 +15,6 @@ export type MissionSitesDataGridProps = {
 }
 
 const tableHeight = 310
-const defaultRowWidth = 90
 
 export function MissionSitesDataGrid(
   props: MissionSitesDataGridProps,
@@ -23,7 +22,7 @@ export function MissionSitesDataGrid(
   const rows: MissionSiteRow[] = getRows(props.missionSites)
 
   return (
-    <Box sx={{ height: tableHeight, width: '100%' }}>
+    <Box sx={{ height: tableHeight, width: 340 }}>
       <DataGrid
         rows={rows}
         columns={columns}
@@ -31,6 +30,7 @@ export function MissionSitesDataGrid(
         onRowSelectionModelChange={onRowSelectionModelChange}
         rowHeight={30}
         hideFooterPagination={true}
+        sx={(theme) => ({ bgcolor: theme.palette.background.default })}
       />
     </Box>
   )
@@ -51,6 +51,8 @@ type MissionSiteRow = {
   expiresIn: number
 }
 
+const defaultRowWidth = 80
+
 const columns: GridColDef[] = [
   {
     field: 'id',
@@ -66,7 +68,7 @@ const columns: GridColDef[] = [
   },
   {
     field: 'expiresIn',
-    headerName: 'Expires in',
+    headerName: 'Exp T#',
     disableColumnMenu: true,
     width: defaultRowWidth,
   },

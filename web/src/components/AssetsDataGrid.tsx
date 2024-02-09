@@ -15,13 +15,12 @@ export type AssetsDataGridProps = {
 }
 
 const tableHeight = 310
-const defaultRowWidth = 100
 
 export function AssetsDataGrid(props: AssetsDataGridProps): React.JSX.Element {
   const rows: AssetRow[] = getRows(props.assets)
 
   return (
-    <Box sx={{ height: tableHeight, width: '100%' }}>
+    <Box sx={{ height: tableHeight, width: 262 }}>
       <DataGrid
         rows={rows}
         getRowId={(row: AssetRow) => row.name}
@@ -30,6 +29,7 @@ export function AssetsDataGrid(props: AssetsDataGridProps): React.JSX.Element {
         onRowSelectionModelChange={onRowSelectionModelChange}
         rowHeight={30}
         hideFooterPagination={true}
+        sx={(theme) => ({ bgcolor: theme.palette.background.default })}
       />
     </Box>
   )
@@ -43,6 +43,8 @@ function onRowSelectionModelChange(
   console.log('rowSelectionModel:', rowSelectionModel)
   console.log('details:', details)
 }
+
+const defaultRowWidth = 100
 
 export type AssetRow = {
   name: string
@@ -63,7 +65,7 @@ const columns: GridColDef[] = [
     field: 'value',
     headerName: 'Value',
     disableColumnMenu: true,
-    width: 80,
+    width: 60,
   },
   {
     field: 'isManageable',

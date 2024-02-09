@@ -1,3 +1,4 @@
+import { Box } from '@mui/material'
 import type { LineSeriesType } from '@mui/x-charts'
 import { LineChart } from '@mui/x-charts/LineChart'
 import _ from 'lodash'
@@ -56,27 +57,29 @@ export function GameStatsLineChart(
   )
 
   return (
-    <LineChart
-      sx={{ bgcolor: '#161616' }}
-      xAxis={[
-        {
-          dataKey: 'turn',
-          label: 'Turn',
-          scaleType: 'linear',
-          min: 1,
-          max: xAxisMax,
-        },
-      ]}
-      yAxis={[
-        {
-          scaleType: 'linear',
-          min: 0,
-          max: yAxisMax,
-        },
-      ]}
-      series={series}
-      dataset={dataset}
-      height={chartHeight}
-    />
+    <Box sx={{ width: 700 }}>
+      <LineChart
+        sx={{ bgcolor: '#161616' }}
+        xAxis={[
+          {
+            dataKey: 'turn',
+            label: 'Turn',
+            scaleType: 'linear',
+            min: 1,
+            max: xAxisMax,
+          },
+        ]}
+        yAxis={[
+          {
+            scaleType: 'linear',
+            min: 0,
+            max: yAxisMax,
+          },
+        ]}
+        series={series}
+        dataset={dataset}
+        height={chartHeight}
+      />
+    </Box>
   )
 }
