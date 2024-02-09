@@ -22,7 +22,7 @@ export function MissionSitesDataGrid(
   const rows: MissionSiteRow[] = getRows(props.missionSites)
 
   return (
-    <Box sx={{ height: tableHeight, width: 340 }}>
+    <Box sx={{ height: tableHeight, width: 358 }}>
       <DataGrid
         rows={rows}
         columns={columns}
@@ -51,33 +51,31 @@ type MissionSiteRow = {
   expiresIn: number
 }
 
-const defaultRowWidth = 80
-
 const columns: GridColDef[] = [
   {
     field: 'id',
     headerName: 'Id',
     disableColumnMenu: true,
-    width: defaultRowWidth,
+    width: 70,
   },
   {
     field: 'difficulty',
     headerName: 'Difficulty',
     disableColumnMenu: true,
-    width: defaultRowWidth,
+    width: 110,
   },
   {
     field: 'expiresIn',
     headerName: 'Exp T#',
     disableColumnMenu: true,
-    width: defaultRowWidth,
+    width: 95,
   },
   {
     field: 'deploy',
     disableColumnMenu: true,
     sortable: false,
     headerName: '',
-    width: defaultRowWidth,
+    width: 80,
     renderCell: (
       params: GridRenderCellParams<MissionSiteRow, true>,
     ): React.JSX.Element | undefined => {

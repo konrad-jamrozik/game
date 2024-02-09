@@ -20,7 +20,7 @@ export function AssetsDataGrid(props: AssetsDataGridProps): React.JSX.Element {
   const rows: AssetRow[] = getRows(props.assets)
 
   return (
-    <Box sx={{ height: tableHeight, width: 262 }}>
+    <Box sx={{ height: tableHeight, width: 292 }}>
       <DataGrid
         rows={rows}
         getRowId={(row: AssetRow) => row.name}
@@ -44,8 +44,6 @@ function onRowSelectionModelChange(
   console.log('details:', details)
 }
 
-const defaultRowWidth = 100
-
 export type AssetRow = {
   name: string
   value: number
@@ -58,21 +56,21 @@ const columns: GridColDef[] = [
     headerName: 'Asset',
     disableColumnMenu: true,
     sortable: false,
-    width: defaultRowWidth,
+    width: 100,
     renderCell: renderAssetNameCell,
   },
   {
     field: 'value',
     headerName: 'Value',
     disableColumnMenu: true,
-    width: 60,
+    width: 90,
   },
   {
     field: 'isManageable',
     disableColumnMenu: true,
     sortable: false,
     headerName: '',
-    width: defaultRowWidth,
+    width: 100,
     renderCell: (
       params: GridRenderCellParams<AssetRow, boolean | undefined>,
     ): React.JSX.Element | undefined => {
