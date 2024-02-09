@@ -21,7 +21,7 @@ export function AgentsDataGrid(props: AgentsDataGridProps): React.JSX.Element {
   const rows: AgentRow[] = _.map(props.agents, getRow)
 
   return (
-    <Box sx={{ height: tableHeight, width: 484 }}>
+    <Box sx={{ height: tableHeight, width: 540 }}>
       <DataGrid
         rows={rows}
         columns={columns}
