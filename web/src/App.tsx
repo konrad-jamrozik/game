@@ -1,4 +1,4 @@
-import { Container, Link, Typography } from '@mui/material'
+import { Link, Typography } from '@mui/material'
 import Grid from '@mui/material/Unstable_Grid2'
 import _ from 'lodash'
 import { useState } from 'react'
@@ -37,72 +37,71 @@ export default function App(): React.JSX.Element {
 
   return (
     <Typography component={'span'} sx={{ bgcolor: '#000020' }} gutterBottom>
-      <Container maxWidth={false} sx={{ bgcolor: '#202020', my: 4 }}>
-        <Grid
-          container
-          justifyContent={'center'}
-          spacing={2}
-          sx={{ bgcolor: '#303030' }}
-        >
-          <Grid sx={{ bgcolor: '#200000' }}>
-            <SimulationControlPanel {...{ gameStates, setGameStates }} />
-          </Grid>
-          <Grid sx={{ bgcolor: '#300030' }}>
-            <AssetsDataGrid
-              assets={
-                !_.isEmpty(gameStates)
-                  ? getCurrentState(gameStates).Assets
-                  : undefined
-              }
-            />
-          </Grid>
-          <Grid sx={{ bgcolor: '#302000' }}>
-            <MissionSitesDataGrid
-              missionSites={
-                !_.isEmpty(gameStates)
-                  ? getCurrentState(gameStates).MissionSites
-                  : undefined
-              }
-            />
-          </Grid>
-          <Grid sx={{ bgcolor: '#002040' }}>
-            <AgentsDataGrid agents={agents} />
-          </Grid>
-          <Grid sx={{ bgcolor: '#003000' }}>
-            <GameStatsLineChart
-              gameStates={gameStates}
-              dataSeries={moneyStatsDataSeries}
-            />
-          </Grid>
-          <Grid sx={{ bgcolor: '#303000' }}>
-            <GameStatsLineChart
-              gameStates={gameStates}
-              dataSeries={agentStatsDataSeries}
-            />
-          </Grid>
-          <Grid sx={{ bgcolor: '#402000' }}>
-            <GameStatsLineChart
-              gameStates={gameStates}
-              dataSeries={intelStatsDataSeries}
-            />
-          </Grid>
-          <Grid sx={{ bgcolor: '#002040' }}>
-            <GameStatsLineChart
-              gameStates={gameStates}
-              dataSeries={miscStatsDataSeries}
-            />
-          </Grid>
-          <Grid sx={{ bgcolor: '#003030' }}>
-            <GameStatsLineChart
-              gameStates={gameStates}
-              dataSeries={missionsStatsDataSeries}
-            />
-          </Grid>
-          <Grid xs={12} sx={{ bgcolor: '#300020' }}>
-            <Footer />
-          </Grid>
+      <Grid
+        container
+        justifyContent={'center'}
+        spacing={2}
+        marginTop={2}
+        bgcolor={'#303030'}
+      >
+        <Grid sx={{ bgcolor: '#200000' }}>
+          <SimulationControlPanel {...{ gameStates, setGameStates }} />
         </Grid>
-      </Container>
+        <Grid sx={{ bgcolor: '#300030' }}>
+          <AssetsDataGrid
+            assets={
+              !_.isEmpty(gameStates)
+                ? getCurrentState(gameStates).Assets
+                : undefined
+            }
+          />
+        </Grid>
+        <Grid sx={{ bgcolor: '#302000' }}>
+          <MissionSitesDataGrid
+            missionSites={
+              !_.isEmpty(gameStates)
+                ? getCurrentState(gameStates).MissionSites
+                : undefined
+            }
+          />
+        </Grid>
+        <Grid sx={{ bgcolor: '#002040' }}>
+          <AgentsDataGrid agents={agents} />
+        </Grid>
+        <Grid sx={{ bgcolor: '#003000' }}>
+          <GameStatsLineChart
+            gameStates={gameStates}
+            dataSeries={moneyStatsDataSeries}
+          />
+        </Grid>
+        <Grid sx={{ bgcolor: '#303000' }}>
+          <GameStatsLineChart
+            gameStates={gameStates}
+            dataSeries={agentStatsDataSeries}
+          />
+        </Grid>
+        <Grid sx={{ bgcolor: '#402000' }}>
+          <GameStatsLineChart
+            gameStates={gameStates}
+            dataSeries={intelStatsDataSeries}
+          />
+        </Grid>
+        <Grid sx={{ bgcolor: '#002040' }}>
+          <GameStatsLineChart
+            gameStates={gameStates}
+            dataSeries={miscStatsDataSeries}
+          />
+        </Grid>
+        <Grid sx={{ bgcolor: '#003030' }}>
+          <GameStatsLineChart
+            gameStates={gameStates}
+            dataSeries={missionsStatsDataSeries}
+          />
+        </Grid>
+        <Grid xs={12} sx={{ bgcolor: '#300020' }}>
+          <Footer />
+        </Grid>
+      </Grid>
     </Typography>
   )
 }
