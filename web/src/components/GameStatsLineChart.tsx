@@ -57,7 +57,7 @@ export function GameStatsLineChart(
   )
 
   return (
-    <Box sx={{ width: 700 }}>
+    <Box width={'100%'}>
       <LineChart
         sx={{ bgcolor: '#161616' }}
         xAxis={[

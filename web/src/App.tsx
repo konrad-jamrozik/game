@@ -68,31 +68,31 @@ export default function App(): React.JSX.Element {
         <Grid sx={{ bgcolor: '#002040' }}>
           <AgentsDataGrid agents={agents} />
         </Grid>
-        <Grid sx={{ bgcolor: '#003000' }}>
+        <Grid xs={12} lg={6} sx={{ bgcolor: '#003000' }}>
           <GameStatsLineChart
             gameStates={gameStates}
             dataSeries={moneyStatsDataSeries}
           />
         </Grid>
-        <Grid sx={{ bgcolor: '#303000' }}>
+        <Grid xs={12} lg={6} sx={{ bgcolor: '#303000' }}>
           <GameStatsLineChart
             gameStates={gameStates}
             dataSeries={agentStatsDataSeries}
           />
         </Grid>
-        <Grid sx={{ bgcolor: '#402000' }}>
+        <Grid xs={12} lg={6} sx={{ bgcolor: '#402000' }}>
           <GameStatsLineChart
             gameStates={gameStates}
             dataSeries={intelStatsDataSeries}
           />
         </Grid>
-        <Grid sx={{ bgcolor: '#002040' }}>
+        <Grid xs={12} lg={6} sx={{ bgcolor: '#002040' }}>
           <GameStatsLineChart
             gameStates={gameStates}
             dataSeries={miscStatsDataSeries}
           />
         </Grid>
-        <Grid sx={{ bgcolor: '#003030' }}>
+        <Grid xs={12} lg={6} sx={{ bgcolor: '#003030' }}>
           <GameStatsLineChart
             gameStates={gameStates}
             dataSeries={missionsStatsDataSeries}
