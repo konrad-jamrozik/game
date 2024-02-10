@@ -186,6 +186,9 @@ function ActionDropdown(): React.JSX.Element {
     setAction(target.value)
   }
 
+  // kja the selected value must be retained between click to 'simulate turn'
+  // Also avoid the action label jumping
+  // Also avoid the console warning
   return (
     <Box width={210} marginY={1}>
       <TextField
