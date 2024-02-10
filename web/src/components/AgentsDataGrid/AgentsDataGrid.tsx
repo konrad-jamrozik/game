@@ -1,9 +1,6 @@
-import AddIcon from '@mui/icons-material/Add'
-import ChecklistIcon from '@mui/icons-material/Checklist'
-import { Box, Button, MenuItem, TextField } from '@mui/material'
+import { Box } from '@mui/material'
 import {
   DataGrid,
-  GridToolbarContainer,
   useGridApiRef,
   type GridCallbackDetails,
   type GridColDef,
@@ -13,10 +10,11 @@ import {
 } from '@mui/x-data-grid'
 import _ from 'lodash'
 import { useState } from 'react'
-import { renderAgentStateCell } from '../lib/rendering'
-import { defaultComponentHeight } from '../lib/utils'
-import type { Agent, AgentState } from '../types/GameState'
-import { getSurvivalSkill } from '../types/ruleset'
+import { renderAgentStateCell } from '../../lib/rendering'
+import { defaultComponentHeight } from '../../lib/utils'
+import type { Agent, AgentState } from '../../types/GameState'
+import { getSurvivalSkill } from '../../types/ruleset'
+import { AgentsDataGridToolbar } from './AgentsDataGridToolbar'
 
 export type AgentsDataGridProps = {
   readonly agents: readonly Agent[]
@@ -34,6 +32,7 @@ function onRowSelectionModelChange(
 
 export function AgentsDataGrid(props: AgentsDataGridProps): React.JSX.Element {
   const rows: AgentRow[] = _.map(props.agents, getRow)
+  const [action, setAction] = useState<string>('None')
 
   const apiRef = useGridApiRef()
 
@@ -65,7 +64,11 @@ export function AgentsDataGrid(props: AgentsDataGridProps): React.JSX.Element {
           },
         }}
         slots={{
-          toolbar: () => toolbar(getSelectedRowsIds),
+          toolbar: () => (
+            <AgentsDataGridToolbar
+              {...{ getSelectedRowsIds, action, setAction }}
+            />
+          ),
         }}
         pageSizeOptions={[25, 50, 100]}
         checkboxSelection
@@ -80,33 +83,6 @@ export function AgentsDataGrid(props: AgentsDataGridProps): React.JSX.Element {
         })}
       />
     </Box>
-  )
-}
-
-function toolbar(getSelectedRowsIds: () => number[]): React.JSX.Element {
-  const selectedRowIds: number[] = getSelectedRowsIds()
-
-  function handleHireAgent(): void {
-    console.log('Hire agent clicked!')
-    console.log('toolbar selectedRowIds:', selectedRowIds)
-  }
-
-  const selectedAgentCount = selectedRowIds.length
-  return (
-    <GridToolbarContainer>
-      <Button color="primary" startIcon={<AddIcon />} onClick={handleHireAgent}>
-        Hire agent
-      </Button>
-      <Button
-        color="primary"
-        startIcon={<ChecklistIcon />}
-        style={{ whiteSpace: 'pre' }}
-      >
-        Act on <span style={{ width: '30px' }}>{selectedAgentCount}</span>{' '}
-        agents
-      </Button>
-      <ActionDropdown />
-    </GridToolbarContainer>
   )
 }
 
@@ -165,47 +141,4 @@ function getRow(agent: Agent): AgentRow {
     missionsSurvived: agent.MissionsSurvived,
     survivalSkill: getSurvivalSkill(agent),
   }
-}
-
-const options = [
-  'None',
-  'Assign to income gen.',
-  'Assign to intel gath.',
-  'Assign to training',
-  'Recall',
-  'Sack',
-]
-
-function ActionDropdown(): React.JSX.Element {
-  const [action, setAction] = useState<string>('None')
-
-  function handleChange(event: React.ChangeEvent): void {
-    const target = event.target as HTMLInputElement
-    console.log(`"action" is: ${action}`)
-    console.log(`Set "action" to ${target.value}`)
-    setAction(target.value)
-  }
-
-  // kja the selected value must be retained between click to 'simulate turn'
-  // Also avoid the action label jumping
-  // Also avoid the console warning
-  return (
-    <Box width={210} marginY={1}>
-      <TextField
-        fullWidth
-        size="small"
-        id="action-textfield-select"
-        select
-        label="Action"
-        defaultValue={'None'}
-        onChange={handleChange}
-      >
-        {_.map(options, (option) => (
-          <MenuItem key={option} value={option}>
-            {option}
-          </MenuItem>
-        ))}
-      </TextField>
-    </Box>
-  )
 }

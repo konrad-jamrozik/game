@@ -1,6 +1,6 @@
 import { Typography } from '@mui/material'
 import type { GridRenderCellParams } from '@mui/x-data-grid'
-import type { AgentRow } from '../components/AgentsDataGrid'
+import type { AgentRow } from '../components/AgentsDataGrid/AgentsDataGrid'
 import type { AssetRow } from '../components/AssetsDataGrid'
 import type { AgentState, Assets } from '../types/GameState'
 
