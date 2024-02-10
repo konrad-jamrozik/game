@@ -24,21 +24,24 @@ export type AgentsDataGridProps = {
 
 const tableHeight = defaultComponentHeight
 
+// https://mui.com/x/react-data-grid/row-selection/#controlled-row-selection
+function onRowSelectionModelChange(
+  rowSelectionModel: GridRowSelectionModel,
+  details: GridCallbackDetails,
+): void {
+  console.log('rowSelectionModel:', rowSelectionModel, 'details:', details)
+}
+
 export function AgentsDataGrid(props: AgentsDataGridProps): React.JSX.Element {
   const rows: AgentRow[] = _.map(props.agents, getRow)
 
   const apiRef = useGridApiRef()
 
-  // https://mui.com/x/api/data-grid/data-grid/
-  function onRowSelectionModelChange(
-    rowSelectionModel: GridRowSelectionModel,
-    details: GridCallbackDetails,
-  ): void {
-    console.log('rowSelectionModel:', rowSelectionModel, 'details:', details)
+  function getSelectedRowsIds(): number[] {
     const selectedRows: Map<GridRowId, GridValidRowModel> =
       apiRef.current.getSelectedRows()
     const selectedRowIds: GridRowId[] = [...selectedRows.keys()]
-    console.log(`Selected rows: ${JSON.stringify(selectedRowIds)}`)
+    return _.map(selectedRowIds, (gridRowId) => gridRowId as number)
   }
 
   return (
@@ -62,7 +65,7 @@ export function AgentsDataGrid(props: AgentsDataGridProps): React.JSX.Element {
           },
         }}
         slots={{
-          toolbar,
+          toolbar: () => toolbar(getSelectedRowsIds),
         }}
         pageSizeOptions={[25, 50, 100]}
         checkboxSelection
@@ -80,13 +83,15 @@ export function AgentsDataGrid(props: AgentsDataGridProps): React.JSX.Element {
   )
 }
 
-function handleHireAgent(): void {
-  console.log('Hire agent clicked!')
-}
+function toolbar(getSelectedRowsIds: () => number[]): React.JSX.Element {
+  const selectedRowIds: number[] = getSelectedRowsIds()
 
-function toolbar(): React.JSX.Element {
-  // kja hook it up to selection model
-  const agCount = 999
+  function handleHireAgent(): void {
+    console.log('Hire agent clicked!')
+    console.log('toolbar selectedRowIds:', selectedRowIds)
+  }
+
+  const selectedAgentCount = selectedRowIds.length
   return (
     <GridToolbarContainer>
       <Button color="primary" startIcon={<AddIcon />} onClick={handleHireAgent}>
@@ -97,7 +102,8 @@ function toolbar(): React.JSX.Element {
         startIcon={<ChecklistIcon />}
         style={{ whiteSpace: 'pre' }}
       >
-        Act on <span style={{ width: '25px' }}>{agCount}</span> agents
+        Act on <span style={{ width: '30px' }}>{selectedAgentCount}</span>{' '}
+        agents
       </Button>
       <ActionDropdown />
     </GridToolbarContainer>
