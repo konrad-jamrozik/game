@@ -4,9 +4,12 @@ import { Box, Button, MenuItem, TextField } from '@mui/material'
 import {
   DataGrid,
   GridToolbarContainer,
+  useGridApiRef,
   type GridCallbackDetails,
   type GridColDef,
+  type GridRowId,
   type GridRowSelectionModel,
+  type GridValidRowModel,
 } from '@mui/x-data-grid'
 import _ from 'lodash'
 import { useState } from 'react'
@@ -24,9 +27,24 @@ const tableHeight = defaultComponentHeight
 export function AgentsDataGrid(props: AgentsDataGridProps): React.JSX.Element {
   const rows: AgentRow[] = _.map(props.agents, getRow)
 
+  const apiRef = useGridApiRef()
+
+  // https://mui.com/x/api/data-grid/data-grid/
+  function onRowSelectionModelChange(
+    rowSelectionModel: GridRowSelectionModel,
+    details: GridCallbackDetails,
+  ): void {
+    console.log('rowSelectionModel:', rowSelectionModel, 'details:', details)
+    const selectedRows: Map<GridRowId, GridValidRowModel> =
+      apiRef.current.getSelectedRows()
+    const selectedRowIds: GridRowId[] = [...selectedRows.keys()]
+    console.log(`Selected rows: ${JSON.stringify(selectedRowIds)}`)
+  }
+
   return (
     <Box sx={{ height: tableHeight, width: 550 }}>
       <DataGrid
+        apiRef={apiRef}
         rows={rows}
         columns={columns}
         initialState={{
@@ -84,15 +102,6 @@ function toolbar(): React.JSX.Element {
       <ActionDropdown />
     </GridToolbarContainer>
   )
-}
-
-// https://mui.com/x/api/data-grid/data-grid/
-function onRowSelectionModelChange(
-  rowSelectionModel: GridRowSelectionModel,
-  details: GridCallbackDetails,
-): void {
-  console.log('rowSelectionModel:', rowSelectionModel)
-  console.log('details:', details)
 }
 
 export type AgentRow = {
