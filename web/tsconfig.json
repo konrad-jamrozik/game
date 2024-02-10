@@ -4,14 +4,14 @@
     // [vite-react]
     "@tsconfig/vite-react/tsconfig.json",
     // [strictest]
-    "@tsconfig/strictest/tsconfig.json",
+    "@tsconfig/strictest/tsconfig.json"
   ],
   "compilerOptions": {
     "target": "ES2022",
-    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "lib": ["ES2022", "DOM", "DOM.Iterable"]
   },
   "include": ["src"],
-  "references": [{ "path": "./tsconfig.node.json" }],
+  "references": [{ "path": "./tsconfig.node.json" }]
 }
 
 // [vite-react]: https://www.npmjs.com/package/@tsconfig/vite-react from [tsconfig bases]
