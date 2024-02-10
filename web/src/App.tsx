@@ -1,4 +1,4 @@
-import { Link, Typography } from '@mui/material'
+import { Container, Link, Typography } from '@mui/material'
 import Grid from '@mui/material/Unstable_Grid2'
 import _ from 'lodash'
 import { useState } from 'react'
@@ -42,6 +42,7 @@ export default function App(): React.JSX.Element {
         justifyContent={'center'}
         spacing={2}
         marginTop={2}
+        marginX={0}
         bgcolor={'#303030'}
       >
         <Grid sx={{ bgcolor: '#200000' }}>
