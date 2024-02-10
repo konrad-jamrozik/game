@@ -1,5 +1,6 @@
 import AddIcon from '@mui/icons-material/Add'
-import { Box, Button } from '@mui/material'
+import ChecklistIcon from '@mui/icons-material/Checklist'
+import { Box, Button, MenuItem, TextField } from '@mui/material'
 import {
   DataGrid,
   GridToolbarContainer,
@@ -8,6 +9,7 @@ import {
   type GridRowSelectionModel,
 } from '@mui/x-data-grid'
 import _ from 'lodash'
+import { useState } from 'react'
 import { renderAgentStateCell } from '../lib/rendering'
 import { defaultComponentHeight } from '../lib/utils'
 import type { Agent, AgentState } from '../types/GameState'
@@ -23,7 +25,7 @@ export function AgentsDataGrid(props: AgentsDataGridProps): React.JSX.Element {
   const rows: AgentRow[] = _.map(props.agents, getRow)
 
   return (
-    <Box sx={{ height: tableHeight, width: 540 }}>
+    <Box sx={{ height: tableHeight, width: 550 }}>
       <DataGrid
         rows={rows}
         columns={columns}
@@ -65,11 +67,21 @@ function handleHireAgent(): void {
 }
 
 function toolbar(): React.JSX.Element {
+  // kja hook it up to selection model
+  const agCount = 999
   return (
     <GridToolbarContainer>
       <Button color="primary" startIcon={<AddIcon />} onClick={handleHireAgent}>
         Hire agent
       </Button>
+      <Button
+        color="primary"
+        startIcon={<ChecklistIcon />}
+        style={{ whiteSpace: 'pre' }}
+      >
+        Act on <span style={{ width: '25px' }}>{agCount}</span> agents
+      </Button>
+      <ActionDropdown />
     </GridToolbarContainer>
   )
 }
@@ -138,4 +150,44 @@ function getRow(agent: Agent): AgentRow {
     missionsSurvived: agent.MissionsSurvived,
     survivalSkill: getSurvivalSkill(agent),
   }
+}
+
+const options = [
+  'None',
+  'Assign to income gen.',
+  'Assign to intel gath.',
+  'Assign to training',
+  'Recall',
+  'Sack',
+]
+
+function ActionDropdown(): React.JSX.Element {
+  const [action, setAction] = useState<string>('None')
+
+  function handleChange(event: React.ChangeEvent): void {
+    const target = event.target as HTMLInputElement
+    console.log(`"action" is: ${action}`)
+    console.log(`Set "action" to ${target.value}`)
+    setAction(target.value)
+  }
+
+  return (
+    <Box width={210} marginY={1}>
+      <TextField
+        fullWidth
+        size="small"
+        id="action-textfield-select"
+        select
+        label="Action"
+        defaultValue={'None'}
+        onChange={handleChange}
+      >
+        {_.map(options, (option) => (
+          <MenuItem key={option} value={option}>
+            {option}
+          </MenuItem>
+        ))}
+      </TextField>
+    </Box>
+  )
 }
