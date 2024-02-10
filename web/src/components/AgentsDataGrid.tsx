@@ -1,6 +1,8 @@
-import { Box } from '@mui/material'
+import AddIcon from '@mui/icons-material/Add'
+import { Box, Button } from '@mui/material'
 import {
   DataGrid,
+  GridToolbarContainer,
   type GridCallbackDetails,
   type GridColDef,
   type GridRowSelectionModel,
@@ -39,6 +41,9 @@ export function AgentsDataGrid(props: AgentsDataGridProps): React.JSX.Element {
             },
           },
         }}
+        slots={{
+          toolbar,
+        }}
         pageSizeOptions={[25, 50, 100]}
         checkboxSelection
         disableRowSelectionOnClick
@@ -52,6 +57,20 @@ export function AgentsDataGrid(props: AgentsDataGridProps): React.JSX.Element {
         })}
       />
     </Box>
+  )
+}
+
+function handleHireAgent(): void {
+  console.log('Hire agent clicked!')
+}
+
+function toolbar(): React.JSX.Element {
+  return (
+    <GridToolbarContainer>
+      <Button color="primary" startIcon={<AddIcon />} onClick={handleHireAgent}>
+        Hire agent
+      </Button>
+    </GridToolbarContainer>
   )
 }
 
