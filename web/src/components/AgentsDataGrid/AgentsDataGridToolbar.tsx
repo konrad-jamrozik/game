@@ -2,13 +2,14 @@ import AddIcon from '@mui/icons-material/Add'
 import ChecklistIcon from '@mui/icons-material/Checklist'
 import { Button } from '@mui/material'
 import { GridToolbarContainer } from '@mui/x-data-grid'
-import { AgentsActionDropdown } from './AgentsActionDropdown'
+import {
+  AgentsActionDropdown,
+  type AgentsActionDropdownProps,
+} from './AgentsActionDropdown'
 
 type AgentsDataGridToolbarProps = {
   getSelectedRowsIds: () => number[]
-  readonly action: string
-  readonly setAction: React.Dispatch<React.SetStateAction<string>>
-}
+} & AgentsActionDropdownProps
 
 export function AgentsDataGridToolbar(
   props: AgentsDataGridToolbarProps,
@@ -18,6 +19,13 @@ export function AgentsDataGridToolbar(
   function handleHireAgent(): void {
     console.log('Hire agent clicked!')
     console.log('toolbar selectedRowIds:', selectedRowIds)
+  }
+
+  function handleAct(): void {
+    console.log(
+      `Act on agents clicked! agents ` +
+        `ids: ${selectedRowIds.toString()} (#${selectedRowIds.length}), action: ${props.action}`,
+    )
   }
 
   const selectedAgentCount = selectedRowIds.length
@@ -30,6 +38,7 @@ export function AgentsDataGridToolbar(
         color="primary"
         startIcon={<ChecklistIcon />}
         style={{ whiteSpace: 'pre' }}
+        onClick={handleAct}
       >
         Act on <span style={{ width: '30px' }}>{selectedAgentCount}</span>{' '}
         agents
