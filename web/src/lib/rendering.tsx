@@ -8,10 +8,8 @@ export function renderAgentStateCell(
   params: GridRenderCellParams<AgentRow, AgentState>,
 ): React.JSX.Element {
   const agentState: AgentState = params.value!
-  let style = {}
   let displayedValue: string = agentState
 
-  style = { color: agentStateColors[agentState] }
   if (params.value === 'GeneratingIncome') {
     displayedValue = 'Income'
   }
@@ -19,7 +17,7 @@ export function renderAgentStateCell(
     displayedValue = 'Intel'
   }
 
-  return <Typography style={style}>{displayedValue}</Typography>
+  return <Typography sx={getSx(agentState)}>{displayedValue}</Typography>
 }
 
 export function renderAssetNameCell(
@@ -61,7 +59,7 @@ export const assetsColors: { [key in keyof Assets]: string } = {
 
 type MiscValues = 'Cost'
 
-type AllStylableValues = keyof Assets | MiscValues
+type AllStylableValues = keyof Assets | AgentState | MiscValues
 
 export const miscColors: { [key in MiscValues]: string } = {
   Cost: 'red',
@@ -69,5 +67,6 @@ export const miscColors: { [key in MiscValues]: string } = {
 
 const allColors: { [key in AllStylableValues]: string } = {
   ...assetsColors,
+  ...agentStateColors,
   ...miscColors,
 }
