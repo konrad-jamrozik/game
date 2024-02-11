@@ -95,16 +95,16 @@ const columns: GridColDef[] = [
 function getRows(assets?: Assets): AssetRow[] {
   return !_.isUndefined(assets)
     ? [
-        { name: 'Money', value: assets.Money, isManageable: true },
-        { name: 'Intel', value: assets.Intel, isManageable: true },
-        { name: 'Support', value: assets.Support, isManageable: true },
+        { name: 'Money', value: assets.Money },
+        { name: 'Intel', value: assets.Intel },
+        { name: 'Support', value: assets.Support },
         { name: 'Funding', value: assets.Funding },
         {
           name: 'MaxTransportCapacity',
           value: assets.MaxTransportCapacity,
           isManageable: true,
         },
-        { name: 'Agents', value: assets.Agents.length, isManageable: true },
+        { name: 'Agents', value: assets.Agents.length },
       ]
     : []
 }
