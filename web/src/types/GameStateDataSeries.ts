@@ -87,7 +87,7 @@ export const allGameStatsDataSeriesByKey: AllStatsDataSeries = {
   },
   maxTransportCapacity: {
     dataFunc: (gs) => gs.Assets.MaxTransportCapacity,
-    label: 'Trp. Cap',
+    label: 'Transp. Cap',
     color: assetsColors.MaxTransportCapacity,
   },
   agents: {
