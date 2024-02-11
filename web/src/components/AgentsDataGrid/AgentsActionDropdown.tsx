@@ -43,6 +43,7 @@ const options = [
   'Assign to income gen.',
   'Assign to intel gath.',
   'Assign to training',
+  'Deploy on a mission',
   'Recall',
   'Sack',
 ]
