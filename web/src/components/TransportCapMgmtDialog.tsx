@@ -2,15 +2,17 @@ import Button from '@mui/material/Button'
 import Dialog from '@mui/material/Dialog'
 import DialogActions from '@mui/material/DialogActions'
 import DialogContent from '@mui/material/DialogContent'
-import DialogContentText from '@mui/material/DialogContentText'
 import DialogTitle from '@mui/material/DialogTitle'
 import Grid from '@mui/material/Unstable_Grid2'
 import { Fragment, useState } from 'react'
 import { getSx } from '../lib/rendering'
+import { transportCapBuyingCost } from '../types/ruleset'
 import { Label } from './Label'
 
 export type TransportCapMgmtDialogProps = {
   readonly rowName: string
+  readonly money: number
+  readonly maxTransportCapacity: number
   //   readonly open: boolean
   //   readonly setOpen: React.Dispatch<React.SetStateAction<boolean>>
 }
@@ -26,6 +28,11 @@ export default function TransportCapMgmtDialog(
 
   function handleClose(): void {
     setOpen(false)
+  }
+
+  // eslint-disable-next-line unicorn/consistent-function-scoping
+  function handleIncreaseTransportCap(): void {
+    console.log("Clicked 'increase transport capacity'!")
   }
 
   return (
@@ -58,40 +65,35 @@ export default function TransportCapMgmtDialog(
             padding: '10px',
           }}
         >
-          <DialogContentText
-            // bgcolor={'#209000'}
-            id="transportCap-dialog-description"
+          <Grid
+            container
+            spacing={1}
+            // bgcolor="rgba(100,100,100,0.5)"
           >
-            <Grid
-              container
-              spacing={1}
-              // bgcolor="rgba(100,100,100,0.5)"
-            >
-              <Grid xs={8}>
-                <Label sx={getSx('Money')}>Money</Label>
-              </Grid>
-              <Grid xs={4}>
-                <Label>300</Label>
-              </Grid>
-              <Grid xs={8}>
-                <Label sx={getSx('MaxTransportCapacity')}>
-                  Current capacity
-                </Label>
-              </Grid>
-              <Grid xs={4}>
-                <Label>8</Label>
-              </Grid>
-              <Grid xs={8}>
-                <Label sx={getSx('Cost')}>Capacity increase cost</Label>
-              </Grid>
-              <Grid xs={4}>
-                <Label>200</Label>
-              </Grid>
-              <Grid xs={12} display="flex" justifyContent="center">
-                <Button variant="contained">Increase transport capacity</Button>
-              </Grid>
+            <Grid xs={8}>
+              <Label sx={getSx('Money')}>Money</Label>
             </Grid>
-          </DialogContentText>
+            <Grid xs={4}>
+              <Label>{props.money}</Label>
+            </Grid>
+            <Grid xs={8}>
+              <Label sx={getSx('MaxTransportCapacity')}>Current capacity</Label>
+            </Grid>
+            <Grid xs={4}>
+              <Label>{props.maxTransportCapacity}</Label>
+            </Grid>
+            <Grid xs={8}>
+              <Label sx={getSx('Cost')}>Capacity increase cost</Label>
+            </Grid>
+            <Grid xs={4}>
+              <Label>{transportCapBuyingCost(1)}</Label>
+            </Grid>
+            <Grid xs={12} display="flex" justifyContent="center">
+              <Button variant="contained" onClick={handleIncreaseTransportCap}>
+                Increase transport capacity
+              </Button>
+            </Grid>
+          </Grid>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Close</Button>

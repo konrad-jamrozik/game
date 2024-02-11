@@ -25,7 +25,10 @@ export function AssetsDataGrid(props: AssetsDataGridProps): React.JSX.Element {
       <DataGrid
         rows={rows}
         getRowId={(row: AssetRow) => row.name}
-        columns={columns()}
+        columns={columns(
+          props.assets?.Money,
+          props.assets?.MaxTransportCapacity,
+        )}
         disableRowSelectionOnClick
         onRowSelectionModelChange={onRowSelectionModelChange}
         rowHeight={30}
@@ -51,7 +54,7 @@ export type AssetRow = {
   isManageable?: boolean
 }
 
-function columns(): GridColDef[] {
+function columns(money?: number, maxTransportCapacity?: number): GridColDef[] {
   return [
     {
       field: 'name',
@@ -79,8 +82,16 @@ function columns(): GridColDef[] {
         const isManageable = Boolean(params.value)
         const row: AssetRow = params.row
 
+        // Note: we can assume here that money and maxTransportCapacity are defined
+        // because if we are able to display this dialog, it means the button for it
+        // was available to click, which means there is at least one game state which
+        // has these values defined.
         return isManageable ? (
-          <TransportCapMgmtDialog rowName={row.name} />
+          <TransportCapMgmtDialog
+            rowName={row.name}
+            money={money!}
+            maxTransportCapacity={maxTransportCapacity!}
+          />
         ) : undefined
       },
     },

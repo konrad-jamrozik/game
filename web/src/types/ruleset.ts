@@ -50,3 +50,7 @@ const skillFromEachFirstMission = [18, 15, 12, 9, 6]
 
 const skillFromEachMissionBeyondFirstMissions =
   skillFromEachFirstMission.at(-1)!
+
+export function transportCapBuyingCost(cap: number): number {
+  return cap * 200
+}
