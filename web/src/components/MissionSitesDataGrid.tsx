@@ -77,7 +77,7 @@ const columns: GridColDef[] = [
     headerName: '',
     width: 80,
     renderCell: (
-      params: GridRenderCellParams<MissionSiteRow, true>,
+      params: GridRenderCellParams<MissionSiteRow>,
     ): React.JSX.Element | undefined => {
       const row: MissionSiteRow = params.row
 
