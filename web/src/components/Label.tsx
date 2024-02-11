@@ -1,9 +1,11 @@
-import { Paper } from '@mui/material'
+import { Paper, Typography, type SxProps, type Theme } from '@mui/material'
 
 export type LabelProps = {
+  sx?: SxProps<Theme>
   children?: React.ReactNode
 }
 export function Label(props: LabelProps): React.JSX.Element {
+  const sx = props.sx ?? {}
   return (
     <Paper
       sx={{
@@ -12,15 +14,7 @@ export function Label(props: LabelProps): React.JSX.Element {
         margin: '2px',
       }}
     >
-      {props.children}
+      <Typography sx={sx}>{props.children}</Typography>
     </Paper>
   )
-}
-// eslint-disable-next-line no-lone-blocks
-{
-  // kja typography copied over from rendering.tsx / renderAssetNameCell
-  // Can be copied over {props.childredn}
-  // <Typography style={{ color: 'darkGreen' }}>{props.children}</Typography>
-  //
-  //<Typography style={style}>{displayedValue}</Typography>style = { color: assetsColors[assetName] } */
 }

@@ -6,6 +6,7 @@ import DialogContentText from '@mui/material/DialogContentText'
 import DialogTitle from '@mui/material/DialogTitle'
 import Grid from '@mui/material/Unstable_Grid2'
 import { Fragment, useState } from 'react'
+import { getSx } from '../lib/rendering'
 import { Label } from './Label'
 
 export type TransportCapMgmtDialogProps = {
@@ -67,25 +68,21 @@ export default function TransportCapMgmtDialog(
               // bgcolor="rgba(100,100,100,0.5)"
             >
               <Grid xs={8}>
-                <Label>Money</Label>
+                <Label sx={getSx('Money')}>Money</Label>
               </Grid>
               <Grid xs={4}>
                 <Label>300</Label>
               </Grid>
               <Grid xs={8}>
-                <Label>Projected</Label>
-              </Grid>
-              <Grid xs={4}>
-                <Label>N/A</Label>
-              </Grid>
-              <Grid xs={8}>
-                <Label>Current capacity</Label>
+                <Label sx={getSx('MaxTransportCapacity')}>
+                  Current capacity
+                </Label>
               </Grid>
               <Grid xs={4}>
                 <Label>8</Label>
               </Grid>
               <Grid xs={8}>
-                <Label>Capacity increase cost</Label>
+                <Label sx={getSx('Cost')}>Capacity increase cost</Label>
               </Grid>
               <Grid xs={4}>
                 <Label>200</Label>
