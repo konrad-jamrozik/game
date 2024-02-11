@@ -1,4 +1,3 @@
-import { Paper } from '@mui/material'
 import Button from '@mui/material/Button'
 import Dialog from '@mui/material/Dialog'
 import DialogActions from '@mui/material/DialogActions'
@@ -7,6 +6,7 @@ import DialogContentText from '@mui/material/DialogContentText'
 import DialogTitle from '@mui/material/DialogTitle'
 import Grid from '@mui/material/Unstable_Grid2'
 import { Fragment, useState } from 'react'
+import { Label } from './Label'
 
 export type TransportCapMgmtDialogProps = {
   readonly rowName: string
@@ -52,8 +52,8 @@ export default function TransportCapMgmtDialog(
         </DialogTitle>
         <DialogContent
           sx={{
-            bgcolor: '#205050',
-            width: '380px',
+            // bgcolor: '#205050',
+            width: '320px',
             padding: '10px',
           }}
         >
@@ -61,25 +61,35 @@ export default function TransportCapMgmtDialog(
             // bgcolor={'#209000'}
             id="transportCap-dialog-description"
           >
-            <Grid container spacing={1} bgcolor="rgba(100,100,100,0.5)">
-              <Grid xs={6}>
-                <Paper
-                  sx={{
-                    padding: '2px',
-                    paddingX: '10px',
-                    margin: '2px',
-                  }}
-                >
-                  Money
-                </Paper>
+            <Grid
+              container
+              spacing={1}
+              // bgcolor="rgba(100,100,100,0.5)"
+            >
+              <Grid xs={8}>
+                <Label>Money</Label>
               </Grid>
-              <Grid xs={6}>300</Grid>
-              <Grid xs={6}>Projected</Grid>
-              <Grid xs={6}>340 (+40)</Grid>
-              <Grid xs={6}>Current cap.</Grid>
-              <Grid xs={6}>8</Grid>
-              <Grid xs={6}>Capacity increase cost</Grid>
-              <Grid xs={6}>200</Grid>
+              <Grid xs={4}>
+                <Label>300</Label>
+              </Grid>
+              <Grid xs={8}>
+                <Label>Projected</Label>
+              </Grid>
+              <Grid xs={4}>
+                <Label>N/A</Label>
+              </Grid>
+              <Grid xs={8}>
+                <Label>Current capacity</Label>
+              </Grid>
+              <Grid xs={4}>
+                <Label>8</Label>
+              </Grid>
+              <Grid xs={8}>
+                <Label>Capacity increase cost</Label>
+              </Grid>
+              <Grid xs={4}>
+                <Label>200</Label>
+              </Grid>
               <Grid xs={12} display="flex" justifyContent="center">
                 <Button variant="contained">Increase transport capacity</Button>
               </Grid>
