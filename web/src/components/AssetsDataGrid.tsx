@@ -1,14 +1,15 @@
-import { Box, Button } from '@mui/material'
+import { Box } from '@mui/material'
 import {
   DataGrid,
-  type GridRenderCellParams,
   type GridCallbackDetails,
   type GridColDef,
+  type GridRenderCellParams,
   type GridRowSelectionModel,
 } from '@mui/x-data-grid'
 import _ from 'lodash'
 import { renderAssetNameCell } from '../lib/rendering'
 import type { Assets } from '../types/GameState'
+import TransportCapMgmtDialog from './TransportCapMgmtDialog'
 
 export type AssetsDataGridProps = {
   readonly assets: Assets | undefined
@@ -24,7 +25,7 @@ export function AssetsDataGrid(props: AssetsDataGridProps): React.JSX.Element {
       <DataGrid
         rows={rows}
         getRowId={(row: AssetRow) => row.name}
-        columns={columns}
+        columns={columns()}
         disableRowSelectionOnClick
         onRowSelectionModelChange={onRowSelectionModelChange}
         rowHeight={30}
@@ -50,47 +51,41 @@ export type AssetRow = {
   isManageable?: boolean
 }
 
-const columns: GridColDef[] = [
-  {
-    field: 'name',
-    headerName: 'Asset',
-    disableColumnMenu: true,
-    sortable: false,
-    width: 100,
-    renderCell: renderAssetNameCell,
-  },
-  {
-    field: 'value',
-    headerName: 'Value',
-    disableColumnMenu: true,
-    width: 90,
-  },
-  {
-    field: 'isManageable',
-    disableColumnMenu: true,
-    sortable: false,
-    headerName: '',
-    width: 100,
-    renderCell: (
-      params: GridRenderCellParams<AssetRow, boolean | undefined>,
-    ): React.JSX.Element | undefined => {
-      const isManageable = Boolean(params.value)
-      const row: AssetRow = params.row
-
-      return isManageable ? (
-        <Button
-          variant="text"
-          color="primary"
-          onClick={() => {
-            console.log(`Clicked! ${JSON.stringify(row.name, undefined, 2)}`)
-          }}
-        >
-          Manage
-        </Button>
-      ) : undefined
+function columns(): GridColDef[] {
+  return [
+    {
+      field: 'name',
+      headerName: 'Asset',
+      disableColumnMenu: true,
+      sortable: false,
+      width: 100,
+      renderCell: renderAssetNameCell,
     },
-  },
-]
+    {
+      field: 'value',
+      headerName: 'Value',
+      disableColumnMenu: true,
+      width: 90,
+    },
+    {
+      field: 'isManageable',
+      disableColumnMenu: true,
+      sortable: false,
+      headerName: '',
+      width: 100,
+      renderCell: (
+        params: GridRenderCellParams<AssetRow, boolean | undefined>,
+      ): React.JSX.Element | undefined => {
+        const isManageable = Boolean(params.value)
+        const row: AssetRow = params.row
+
+        return isManageable ? (
+          <TransportCapMgmtDialog rowName={row.name} />
+        ) : undefined
+      },
+    },
+  ]
+}
 
 function getRows(assets?: Assets): AssetRow[] {
   return !_.isUndefined(assets)
