@@ -16,3 +16,11 @@ export function Label(props: LabelProps): React.JSX.Element {
     </Paper>
   )
 }
+// eslint-disable-next-line no-lone-blocks
+{
+  // kja typography copied over from rendering.tsx / renderAssetNameCell
+  // Can be copied over {props.childredn}
+  // <Typography style={{ color: 'darkGreen' }}>{props.children}</Typography>
+  //
+  //<Typography style={style}>{displayedValue}</Typography>style = { color: assetsColors[assetName] } */
+}
