@@ -24,24 +24,20 @@ public class GameTurnController
     public void BuyTransportCapacity(int capacity)
         => PlayerActions.Apply(new BuyTransportCapacityPlayerAction(_log, capacity), _gameState);
 
-    public void SackAgent(int id)
-        => PlayerActions.Apply(new SackAgentsPlayerAction(
-                _log,
-                _gameState.Assets.Agents.Single(agent => agent.Id == id).ToAgents()),
-            _gameState);
+    public void SackAgents(int[] agentsIds)
+        => PlayerActions.Apply(new SackAgentsPlayerAction(_log, GetAgentsByIds(agentsIds)), _gameState);
 
     public void SackAgents(Agents agents)
-        => PlayerActions.Apply(
-            new SackAgentsPlayerAction(
-                _log,
-                agents),
-            _gameState);
+        => PlayerActions.Apply(new SackAgentsPlayerAction(_log, agents), _gameState);
 
     public void SendAgentsToTraining(Agents agents)
         => PlayerActions.Apply(new SendAgentsToTrainingPlayerAction(_log, agents), _gameState);
 
     public void SendAgentsToGenerateIncome(Agents agents)
         => PlayerActions.Apply(new SendAgentsToGenerateIncomePlayerAction(_log, agents), _gameState);
+
+    public void SendAgentsToGenerateIncome(int[] agentsIds)
+        => PlayerActions.Apply(new SendAgentsToGenerateIncomePlayerAction(_log, GetAgentsByIds(agentsIds)), _gameState);
 
     public void SendAgentsToGatherIntel(Agents agents)
         => PlayerActions.Apply(new SendAgentsToGatherIntelPlayerAction(_log, agents), _gameState);
@@ -67,4 +63,7 @@ public class GameTurnController
 
     public void LaunchMission(MissionSite site, Agents agents)
         => PlayerActions.Apply(new LaunchMissionPlayerAction(_log, site, agents), _gameState);
+
+    private Agents GetAgentsByIds(int[] agentsIds) =>
+        _gameState.Assets.Agents.GetByIds(agentsIds);
 }

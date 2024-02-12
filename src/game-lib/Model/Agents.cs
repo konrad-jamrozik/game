@@ -73,6 +73,21 @@ public class Agents : List<Agent>
     public Agent AgentAtPercentile(int percentile, Func<Agent, int> orderBy)
         => this.OrderBy(orderBy).TakePercent(percentile).Last();
 
+    
+    // kja2 add assertions that all searched agents were found
+    public Agents GetByIds(int[] ids) =>
+        this.Where(agent => ids.Contains(agent.Id)).ToAgents();
+
+    public Agents DeepClone(Missions clonedMissions, bool terminated)
+    {
+        return new Agents(this.Select(agent =>
+        {
+            Mission? clonedMission =
+                clonedMissions.SingleOrDefault(clonedMission => clonedMission.Id == agent.CurrentMission?.Id);
+            return agent.DeepClone(clonedMission);
+        }), terminated);
+    }
+
     private void AssertAliveness(IEnumerable<Agent> agents)
     {
         switch (_terminated)
@@ -93,14 +108,4 @@ public class Agents : List<Agent>
 
     private void AssertAlive(IEnumerable<Agent> agents)
         => Debug.Assert(agents.All(agent => agent.IsAlive));
-
-    public Agents DeepClone(Missions clonedMissions, bool terminated)
-    {
-        return new Agents(this.Select(agent =>
-        {
-            Mission? clonedMission =
-                clonedMissions.SingleOrDefault(clonedMission => clonedMission.Id == agent.CurrentMission?.Id);
-            return agent.DeepClone(clonedMission);
-        }), terminated);
-    }
 }

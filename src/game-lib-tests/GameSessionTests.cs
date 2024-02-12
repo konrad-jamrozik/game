@@ -166,7 +166,7 @@ public class GameSessionTests
         // Need to advance time here so that hired agents are no longer InTransit and can be
         // sent on a mission.
         controller.AdvanceTime();
-        turnController.SackAgent(id: 0);
+        turnController.SackAgents(agentsIds: [0]);
 
         GameStatePlayerView state = controller.CurrentGameStatePlayerView;
         turnController.LaunchMission(
