@@ -13,11 +13,12 @@ import { useState } from 'react'
 import { renderAgentStateCell } from '../../lib/rendering'
 import { defaultComponentHeight } from '../../lib/utils'
 import type { Agent, AgentState } from '../../types/GameState'
-import { getSurvivalSkill } from '../../types/ruleset'
+import { canBeSentOnMission, getSurvivalSkill } from '../../types/ruleset'
 import { AgentsDataGridToolbar } from './AgentsDataGridToolbar'
 
 export type AgentsDataGridProps = {
   readonly agents: readonly Agent[]
+  readonly deploymentDisplay?: boolean
 }
 
 const tableHeight = defaultComponentHeight
@@ -31,7 +32,12 @@ function onRowSelectionModelChange(
 }
 
 export function AgentsDataGrid(props: AgentsDataGridProps): React.JSX.Element {
-  const rows: AgentRow[] = _.map(props.agents, getRow)
+  const deploymentDisplay: boolean = props.deploymentDisplay ?? false
+  const agents = !deploymentDisplay
+    ? props.agents
+    : _.filter(props.agents, canBeSentOnMission)
+
+  const rows: AgentRow[] = _.map(agents, getRow)
   const [action, setAction] = useState<string>('None')
 
   const apiRef = useGridApiRef()
@@ -44,7 +50,7 @@ export function AgentsDataGrid(props: AgentsDataGridProps): React.JSX.Element {
   }
 
   return (
-    <Box sx={{ height: tableHeight, width: 550 }}>
+    <Box sx={{ height: tableHeight, width: !deploymentDisplay ? 550 : 380 }}>
       <DataGrid
         apiRef={apiRef}
         rows={rows}
@@ -57,21 +63,27 @@ export function AgentsDataGrid(props: AgentsDataGridProps): React.JSX.Element {
           },
           columns: {
             columnVisibilityModel: {
+              recoversIn: !deploymentDisplay,
               missionsSurvived: false,
               turnHired: false,
               turnsInTraining: false,
             },
           },
         }}
-        slots={{
-          toolbar: () => (
-            <AgentsDataGridToolbar
-              {...{ getSelectedRowsIds, action, setAction }}
-            />
-          ),
-        }}
+        slots={
+          !deploymentDisplay
+            ? {
+                toolbar: () => (
+                  <AgentsDataGridToolbar
+                    {...{ getSelectedRowsIds, action, setAction }}
+                  />
+                ),
+              }
+            : {}
+        }
         pageSizeOptions={[25, 50, 100]}
         checkboxSelection
+        hideFooterSelectedRowCount={deploymentDisplay}
         disableRowSelectionOnClick
         onRowSelectionModelChange={onRowSelectionModelChange}
         rowHeight={30}

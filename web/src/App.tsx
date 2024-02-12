@@ -63,6 +63,7 @@ export default function App(): React.JSX.Element {
               ? getCurrentState(gameStates).MissionSites
               : undefined
           }
+          agents={agents}
         />
       </Grid>
       <Grid sx={{ bgcolor: '#002040' }}>

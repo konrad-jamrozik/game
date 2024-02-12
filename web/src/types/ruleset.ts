@@ -1,6 +1,6 @@
 // codesync UfoGameLib.Model.Ruleset
 import _ from 'lodash'
-import type { Agent, Mission, MissionSite } from './GameState'
+import type { Agent, AgentState, Mission, MissionSite } from './GameState'
 
 export const agentUpkeepCost = 5
 export const incomeGeneratedPerAgent = agentUpkeepCost * 3
@@ -53,4 +53,9 @@ const skillFromEachMissionBeyondFirstMissions =
 
 export function transportCapBuyingCost(cap: number): number {
   return cap * 200
+}
+
+export function canBeSentOnMission(agent: Agent): boolean {
+  const validAgentStates: AgentState[] = ['Available', 'Training']
+  return _.includes(validAgentStates, agent.CurrentState)
 }

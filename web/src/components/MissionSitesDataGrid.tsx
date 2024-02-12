@@ -1,4 +1,4 @@
-import { Box, Button } from '@mui/material'
+import { Box } from '@mui/material'
 import {
   DataGrid,
   type GridRenderCellParams,
@@ -7,11 +7,13 @@ import {
   type GridRowSelectionModel,
 } from '@mui/x-data-grid'
 import _ from 'lodash'
-import type { MissionSite } from '../types/GameState'
+import type { Agent, MissionSite } from '../types/GameState'
 import { isActive } from '../types/ruleset'
+import DeployMissionDialog from './DeployMissionDialog'
 
 export type MissionSitesDataGridProps = {
   readonly missionSites: MissionSite[] | undefined
+  readonly agents: Agent[] | undefined
 }
 
 const tableHeight = 310
@@ -20,6 +22,55 @@ export function MissionSitesDataGrid(
   props: MissionSitesDataGridProps,
 ): React.JSX.Element {
   const rows: MissionSiteRow[] = getRows(props.missionSites)
+
+  const columns: GridColDef[] = [
+    {
+      field: 'id',
+      headerName: 'Id',
+      disableColumnMenu: true,
+      width: 70,
+    },
+    {
+      field: 'difficulty',
+      headerName: 'Difficulty',
+      disableColumnMenu: true,
+      width: 110,
+    },
+    {
+      field: 'expiresIn',
+      headerName: 'Exp T#',
+      disableColumnMenu: true,
+      width: 95,
+    },
+    {
+      field: 'deploy',
+      disableColumnMenu: true,
+      sortable: false,
+      headerName: '',
+      width: 80,
+      renderCell: (
+        params: GridRenderCellParams<MissionSiteRow>,
+      ): React.JSX.Element | undefined => {
+        const row: MissionSiteRow = params.row
+
+        // Note: we can assume here that missionSite and props.agents are defined
+        // because if we are able to display this dialog, it means the button for it
+        // was available to click, which means there is at least one game state which
+        // has these values defined.
+
+        const missionSite: MissionSite = _.find(props.missionSites, {
+          Id: row.id,
+        })!
+
+        return (
+          <DeployMissionDialog
+            missionSite={missionSite}
+            agents={props.agents!}
+          />
+        )
+      },
+    },
+  ]
 
   return (
     <Box sx={{ height: tableHeight, width: 358 }}>
@@ -50,51 +101,6 @@ type MissionSiteRow = {
   difficulty: number
   expiresIn: number
 }
-
-const columns: GridColDef[] = [
-  {
-    field: 'id',
-    headerName: 'Id',
-    disableColumnMenu: true,
-    width: 70,
-  },
-  {
-    field: 'difficulty',
-    headerName: 'Difficulty',
-    disableColumnMenu: true,
-    width: 110,
-  },
-  {
-    field: 'expiresIn',
-    headerName: 'Exp T#',
-    disableColumnMenu: true,
-    width: 95,
-  },
-  {
-    field: 'deploy',
-    disableColumnMenu: true,
-    sortable: false,
-    headerName: '',
-    width: 80,
-    renderCell: (
-      params: GridRenderCellParams<MissionSiteRow>,
-    ): React.JSX.Element | undefined => {
-      const row: MissionSiteRow = params.row
-
-      return (
-        <Button
-          variant="text"
-          color="primary"
-          onClick={() => {
-            console.log(`Clicked! ${JSON.stringify(row.id, undefined, 2)}`)
-          }}
-        >
-          Deploy
-        </Button>
-      )
-    },
-  },
-]
 
 function getRows(missionSites?: MissionSite[]): MissionSiteRow[] {
   if (_.isUndefined(missionSites)) {

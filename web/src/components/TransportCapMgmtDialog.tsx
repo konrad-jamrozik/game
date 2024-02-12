@@ -13,8 +13,6 @@ export type TransportCapMgmtDialogProps = {
   readonly rowName: string
   readonly money: number
   readonly maxTransportCapacity: number
-  //   readonly open: boolean
-  //   readonly setOpen: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 export default function TransportCapMgmtDialog(
