@@ -17,7 +17,7 @@ export type SimulationControlPanelProps = {
 }
 
 const defaultStartTurn = 1
-const defaultTargetTurn = 50
+const defaultTargetTurn = 120
 
 // eslint-disable-next-line max-lines-per-function
 export function SimulationControlPanel(
@@ -89,7 +89,7 @@ export function SimulationControlPanel(
   }
 
   return (
-    <Card variant="outlined" sx={{ width: 400 }}>
+    <Card variant="outlined" sx={{ width: 500 }}>
       <CardHeader
         title="Simulation control panel"
         sx={{ paddingBottom: '0px' }}
@@ -235,7 +235,7 @@ function AdvanceTimeButton(
       onClick={async () => simulate(1)}
       disabled={loading || (!_.isEmpty(gameStates) && isGameOver(gameStates))}
     >
-      {'Advance time'}
+      {'Advance 1 turn'}
     </Button>
   )
 }
@@ -251,7 +251,7 @@ function SimulateFor1TurnButton(
       onClick={async () => simulate(1)}
       disabled={loading || (!_.isEmpty(gameStates) && isGameOver(gameStates))}
     >
-      {'Simulate 1 turn'}
+      {'Delegate 1 turn to AI'}
     </Button>
   )
 }
@@ -268,7 +268,7 @@ function SimulateFromToTurnButton(
       onClick={async () => simulate()}
       disabled={loading || startTurn >= targetTurn}
     >
-      {`Simulate turns:`}
+      {`Delegate turns to AI:`}
     </Button>
   )
 }
@@ -277,6 +277,8 @@ function ResetCurrentTurnButton(
   reset: () => void,
   loading: boolean,
 ): React.JSX.Element {
+  // kja implement properly setting this value
+  const playerMadeActions = true
   return (
     <Button
       variant="outlined"
@@ -284,7 +286,10 @@ function ResetCurrentTurnButton(
       disabled={loading}
       color="warning"
     >
-      {`Reset current turn`}
+      {
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+        playerMadeActions ? `Reset current turn` : `Revert to previous turn`
+      }
     </Button>
   )
 }

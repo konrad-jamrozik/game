@@ -69,8 +69,14 @@ export default function DeployMissionDialog(
               />
             </Grid>
             <Grid xs={12} display="flex" justifyContent="center">
-              <Button variant="contained" onClick={handleLaunchMission}>
-                Launch mission with {rowSelectionModel.length} agents
+              <Button
+                variant="contained"
+                onClick={handleLaunchMission}
+                disabled={rowSelectionModel.length === 0}
+              >
+                {rowSelectionModel.length === 0
+                  ? 'Select agents to launch mission'
+                  : `Launch mission with ${rowSelectionModel.length} agents`}
               </Button>
             </Grid>
           </Grid>
