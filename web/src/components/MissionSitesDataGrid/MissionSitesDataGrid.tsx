@@ -7,8 +7,8 @@ import {
   type GridRowSelectionModel,
 } from '@mui/x-data-grid'
 import _ from 'lodash'
-import type { Agent, MissionSite } from '../types/GameState'
-import { isActive } from '../types/ruleset'
+import type { Agent, MissionSite } from '../../types/GameState'
+import { isActive } from '../../types/ruleset'
 import DeployMissionDialog from './DeployMissionDialog'
 
 export type MissionSitesDataGridProps = {

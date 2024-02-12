@@ -8,9 +8,9 @@ import {
   getGameResult,
   getStateAtTurn,
   isGameOver,
-} from '../lib/GameStateUtils'
-import { initialTurn, type GameState } from '../types/GameState'
-import { Label } from './Label'
+} from '../../lib/GameStateUtils'
+import { initialTurn, type GameState } from '../../types/GameState'
+import { Label } from '../Label'
 
 export type SimulationControlPanelProps = {
   readonly gameStates: readonly GameState[]
