@@ -20,7 +20,6 @@ export type SimulationControlPanelProps = {
 const defaultStartTurn = 1
 const defaultTargetTurn = 120
 
-// eslint-disable-next-line max-lines-per-function
 export function SimulationControlPanel(
   props: SimulationControlPanelProps,
 ): React.JSX.Element {
@@ -33,60 +32,30 @@ export function SimulationControlPanel(
     return `Simulation ran until turn ${getCurrentTurn(props.gameStates)}. Result: ${getGameResult(props.gameStates)}`
   }
 
+  async function boundSimulate(turnsToSimulate?: number): Promise<void> {
+    await simulate({
+      gameStates: props.gameStates,
+      setGameStates: props.setGameStates,
+      setLoading,
+      setError,
+      startTurn,
+      targetTurn,
+      turnsToSimulate,
+    })
+  }
+
+  // readonly gameStates: readonly GameState[]
+  // readonly setGameStates: React.Dispatch<React.SetStateAction<GameState[]>>
+  // readonly setLoading: React.Dispatch<React.SetStateAction<boolean>>
+  // readonly setError: React.Dispatch<React.SetStateAction<string>>
+  // readonly startTurn: number
+  // readonly targetTurn: number
+  // readonly turnsToSimulate?: number
+
   function reset(): void {
     setLoading(false)
     setError('')
     props.setGameStates([])
-  }
-
-  async function simulate(turnsToSimulate?: number): Promise<void> {
-    setLoading(true)
-    setError('')
-
-    const { resolvedStartTurn, resolvedTargetTurn } = resolveStartAndTargetTurn(
-      props.gameStates,
-      startTurn,
-      targetTurn,
-      turnsToSimulate,
-    )
-    const startNewSimulation = resolvedStartTurn === 1
-
-    const apiUrl = getApiUrl(props, resolvedTargetTurn, startNewSimulation)
-    const jsonBody: string = !startNewSimulation
-      ? JSON.stringify(getStateAtTurn(props.gameStates, resolvedStartTurn))
-      : ''
-
-    try {
-      console.log(`apiUrl: ${apiUrl}`)
-      const response = startNewSimulation
-        ? await fetch(apiUrl)
-        : await fetch(apiUrl, {
-            method: 'POST',
-            body: jsonBody,
-            headers: {
-              'Content-Type': 'application/json',
-            },
-          })
-      if (!response.ok) {
-        const errorContents = await response.text()
-        throw new Error(errorContents)
-      }
-      const allGameStates = (await response.json()) as GameState[]
-      if (startNewSimulation) {
-        props.setGameStates(allGameStates)
-      } else {
-        const gameStates = props.gameStates.slice(
-          0,
-          _.min([resolvedStartTurn, getCurrentTurn(props.gameStates)]),
-        )
-        props.setGameStates([...gameStates, ...allGameStates])
-      }
-    } catch (fetchError: unknown) {
-      setError((fetchError as Error).message)
-      console.error(fetchError)
-    } finally {
-      setLoading(false)
-    }
   }
 
   return (
@@ -102,7 +71,7 @@ export function SimulationControlPanel(
           </Grid>
           <Grid container xs={12} marginBottom={'0px'}>
             <Grid>
-              {advanceTimeButton(simulate, loading, props.gameStates)}
+              {advanceTimeButton(boundSimulate, loading, props.gameStates)}
             </Grid>
             <Grid xsOffset={'auto'}>
               {resetCurrentTurnButton(reset, loading)}
@@ -110,7 +79,7 @@ export function SimulationControlPanel(
           </Grid>
           <Grid container xs={12} marginBottom={'0px'}>
             <Grid>
-              {simulateFor1TurnButton(simulate, loading, props.gameStates)}
+              {simulateFor1TurnButton(boundSimulate, loading, props.gameStates)}
             </Grid>
             <Grid xsOffset={'auto'}>
               {wipeSimulationButton(reset, loading)}
@@ -118,7 +87,12 @@ export function SimulationControlPanel(
           </Grid>
 
           <Grid>
-            {simulateFromToTurnButton(simulate, loading, startTurn, targetTurn)}
+            {simulateFromToTurnButton(
+              boundSimulate,
+              loading,
+              startTurn,
+              targetTurn,
+            )}
           </Grid>
           <Grid container xsOffset={'auto'}>
             <Grid>{startTurnInputTextField(startTurn, setStartTurn)}</Grid>
@@ -134,6 +108,70 @@ export function SimulationControlPanel(
       </CardContent>
     </Card>
   )
+}
+
+type SimulateParams = {
+  readonly gameStates: readonly GameState[]
+  readonly setGameStates: React.Dispatch<React.SetStateAction<GameState[]>>
+  readonly setLoading: React.Dispatch<React.SetStateAction<boolean>>
+  readonly setError: React.Dispatch<React.SetStateAction<string | undefined>>
+  readonly startTurn: number
+  readonly targetTurn: number
+  readonly turnsToSimulate?: number | undefined
+}
+
+async function simulate(params: SimulateParams): Promise<void> {
+  params.setLoading(true)
+  params.setError('')
+
+  const { resolvedStartTurn, resolvedTargetTurn } = resolveStartAndTargetTurn(
+    params.gameStates,
+    params.startTurn,
+    params.targetTurn,
+    params.turnsToSimulate,
+  )
+  const startNewSimulation = resolvedStartTurn === 1
+
+  const apiUrl = getApiUrl(
+    params.gameStates,
+    resolvedTargetTurn,
+    startNewSimulation,
+  )
+  const jsonBody: string = !startNewSimulation
+    ? JSON.stringify(getStateAtTurn(params.gameStates, resolvedStartTurn))
+    : ''
+
+  try {
+    console.log(`apiUrl: ${apiUrl}`)
+    const response = startNewSimulation
+      ? await fetch(apiUrl)
+      : await fetch(apiUrl, {
+          method: 'POST',
+          body: jsonBody,
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        })
+    if (!response.ok) {
+      const errorContents = await response.text()
+      throw new Error(errorContents)
+    }
+    const allGameStates = (await response.json()) as GameState[]
+    if (startNewSimulation) {
+      params.setGameStates(allGameStates)
+    } else {
+      const gameStates = params.gameStates.slice(
+        0,
+        _.min([resolvedStartTurn, getCurrentTurn(params.gameStates)]),
+      )
+      params.setGameStates([...gameStates, ...allGameStates])
+    }
+  } catch (fetchError: unknown) {
+    params.setError((fetchError as Error).message)
+    console.error(fetchError)
+  } finally {
+    params.setLoading(false)
+  }
 }
 
 function resolveStartAndTargetTurn(
@@ -307,7 +345,7 @@ function wipeSimulationButton(
 }
 
 function getApiUrl(
-  props: SimulationControlPanelProps,
+  gameStates: readonly GameState[],
   targetTurn: number,
   startNewSimulation: boolean,
 ): string {
@@ -317,8 +355,7 @@ function getApiUrl(
 
   const useNewGameSessionApi =
     startNewSimulation ||
-    (!_.isEmpty(props.gameStates) &&
-      getCurrentTurn(props.gameStates) === initialTurn)
+    (!_.isEmpty(gameStates) && getCurrentTurn(gameStates) === initialTurn)
 
   const queryString = `?includeAllStates=true&turnLimit=${targetTurn}`
 
