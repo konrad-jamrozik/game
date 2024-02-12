@@ -50,7 +50,7 @@ export function SimulationControlPanel(
   }
 
   return (
-    <Card variant="outlined" sx={{ width: 430 }}>
+    <Card variant="outlined" sx={{ width: 440 }}>
       <CardHeader
         title="Simulation control panel"
         sx={{ paddingBottom: '0px' }}
