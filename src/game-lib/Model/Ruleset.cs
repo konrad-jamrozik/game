@@ -73,7 +73,7 @@ public static class Ruleset
      * AND no more than 100%
      * AND no less than 1%
      *
-     * In addition, BaseMissionSiteDifficulty is 30.
+     * BaseMissionSiteDifficulty is 30.
      *
      * As such:
      * - An agent having the same survival skill as mission difficulty will always survive it.
