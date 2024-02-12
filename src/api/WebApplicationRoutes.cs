@@ -14,6 +14,10 @@ using SimulationResponse = Results<
     JsonHttpResult<GameState>,
     BadRequest<string>>;
 
+using ApplyPlayerActionResponse = Results<
+    JsonHttpResult<GameState>,
+    BadRequest<string>>;
+
 public class WebApplicationRoutes
 {
     public void Register(WebApplication app)
@@ -21,11 +25,11 @@ public class WebApplicationRoutes
         app.MapGet("/helloCoinFlip", HelloCoinFlip)
             .WithTags("API");
 
-        app.MapGet("/initialGameState", () => GetCurrentStateResponse(NewGameSession()))
+        app.MapGet("/initialGameState", () => ApiUtils.GetCurrentStateResponse(NewGameSession()))
             .Produces<GameState>()
             .WithTags("API");
 
-        app.MapGet("/initialGameStatePlayerView", () => GetCurrentStatePlayerViewResponse(NewGameSession()))
+        app.MapGet("/initialGameStatePlayerView", () => ApiUtils.GetCurrentStatePlayerViewResponse(NewGameSession()))
             .Produces<GameStatePlayerView>()
             .WithTags("API");
 
@@ -34,6 +38,11 @@ public class WebApplicationRoutes
             .WithTags("API");
 
         app.MapPost("/simulateGameSessionFromState", SimulateGameSessionFromState)
+            .Accepts<GameState>("application/json")
+            .Produces<GameState>()
+            .WithTags("API");
+
+        app.MapPost("/applyPlayerAction", ApplyPlayerActionInternal)
             .Accepts<GameState>("application/json")
             .Produces<GameState>()
             .WithTags("API");
@@ -79,10 +88,36 @@ public class WebApplicationRoutes
         controller.PlayGameSession(turnLimit: parsedTurnLimit, aiPlayer);
 
         SimulationResponse result = includeAllStates == true
-            ? ToJsonHttpResult(gameSession.AllGameStatesAtTurnStarts())
-            : ToJsonHttpResult(gameSession.CurrentGameState);
+            ? ApiUtils.ToJsonHttpResult(gameSession.AllGameStatesAtTurnStarts())
+            : ApiUtils.ToJsonHttpResult(gameSession.CurrentGameState);
 
         Console.Out.WriteLine($"SimulateGameSessionInternal runtime: {stopwatch.Elapsed}");
+        return result;
+    }
+
+    private static async Task<ApplyPlayerActionResponse>
+        ApplyPlayerAction(HttpRequest req)
+    {
+        (GameState? gs, string? error) = await ParseGameState(req);
+        if (error != null)
+            return TypedResults.BadRequest(error);
+
+        // kja WIP
+        return ApplyPlayerActionInternal(gs!, new PlayerActionPayload());
+    }
+
+    private static ApplyPlayerActionResponse
+        ApplyPlayerActionInternal(GameState gameState, PlayerActionPayload playerAction)
+    {
+
+        var config = new Configuration(new SimulatedFileSystem());
+        var log = new Log(config);
+        var gameSession = NewGameSession(gameState);
+        var controller = new GameSessionController(config, log, gameSession);
+
+        playerAction.Apply(controller);
+
+        ApplyPlayerActionResponse result = ApiUtils.ToJsonHttpResult(gameSession.CurrentGameState);
         return result;
     }
 
@@ -131,34 +166,8 @@ public class WebApplicationRoutes
         var gameSession = new GameSession(new RandomGen(new Random()), initialGameState);
         return gameSession;
     }
-
-    private static JsonHttpResult<GameStatePlayerView> GetCurrentStatePlayerViewResponse(GameSession gameSession)
-    {
-        var gameStatePlayerView = new GameStatePlayerView(() => gameSession.CurrentGameState);
-        return ToJsonHttpResult(gameStatePlayerView);
-    }
-
-    private static JsonHttpResult<GameState> GetCurrentStateResponse(GameSession gameSession)
-    {
-        // This will be serialized to JSON per:
-        // https://learn.microsoft.com/en-us/aspnet/core/tutorials/min-web-api?view=aspnetcore-8.0&tabs=visual-studio#return-values
-        // https://learn.microsoft.com/en-us/aspnet/core/fundamentals/minimal-apis/responses?view=aspnetcore-8.0#configure-json-serialization-options-for-an-endpoint
-        GameState gs = gameSession.CurrentGameState;
-        return ToJsonHttpResult(gs);
-    }
-
-    private static JsonHttpResult<GameState> ToJsonHttpResult(GameState gs)
-        => TypedResults.Json(gs, GameState.StateJsonSerializerOptions);
-
-    private static JsonHttpResult<GameState[]> ToJsonHttpResult(GameState[] gss)
-        => TypedResults.Json(gss, GameState.StateJsonSerializerOptions);
-
-    private static JsonHttpResult<GameStatePlayerView> ToJsonHttpResult(GameStatePlayerView gs)
-        => TypedResults.Json(gs, GameState.StateJsonSerializerOptions);
-
-    private static JsonHttpResult<GameStatePlayerView[]> ToJsonHttpResult(GameStatePlayerView[] gss)
-        => TypedResults.Json(gss, GameState.StateJsonSerializerOptions);
 }
+
 
 // Relevant docs:
 //

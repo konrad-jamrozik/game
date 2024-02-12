@@ -30,6 +30,13 @@ public class GameTurnController
                 _gameState.Assets.Agents.Single(agent => agent.Id == id).ToAgents()),
             _gameState);
 
+    public void SackAgents(Agents agents)
+        => PlayerActions.Apply(
+            new SackAgentsPlayerAction(
+                _log,
+                agents),
+            _gameState);
+
     public void SendAgentsToTraining(Agents agents)
         => PlayerActions.Apply(new SendAgentsToTrainingPlayerAction(_log, agents), _gameState);
 
