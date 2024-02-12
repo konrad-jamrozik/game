@@ -42,7 +42,7 @@ public class WebApplicationRoutes
             .Produces<GameState>()
             .WithTags("API");
 
-        app.MapPost("/applyPlayerAction", ApplyPlayerActionInternal)
+        app.MapPost("/applyPlayerAction", ApplyPlayerAction)
             .Accepts<GameState>("application/json")
             .Produces<GameState>()
             .WithTags("API");
@@ -98,6 +98,7 @@ public class WebApplicationRoutes
     private static async Task<ApplyPlayerActionResponse>
         ApplyPlayerAction(HttpRequest req)
     {
+        Console.Out.WriteLine("Invoked ApplyPlayerAction!");
         (GameState? gs, string? error) = await ParseGameState(req);
         if (error != null)
             return TypedResults.BadRequest(error);
