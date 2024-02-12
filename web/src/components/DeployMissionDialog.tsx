@@ -4,10 +4,10 @@ import DialogActions from '@mui/material/DialogActions'
 import DialogContent from '@mui/material/DialogContent'
 import DialogTitle from '@mui/material/DialogTitle'
 import Grid from '@mui/material/Unstable_Grid2'
+import type { GridRowSelectionModel } from '@mui/x-data-grid'
 import { Fragment, useState } from 'react'
 import type { Agent, MissionSite } from '../types/GameState'
 import { AgentsDataGrid } from './AgentsDataGrid/AgentsDataGrid'
-import { GridRowSelectionModel } from '@mui/x-data-grid'
 
 export type DeployMissionDialogProps = {
   readonly agents: Agent[]

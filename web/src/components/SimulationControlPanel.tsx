@@ -9,6 +9,7 @@ import {
   isGameOver,
 } from '../lib/GameStateUtils'
 import { initialTurn, type GameState } from '../types/GameState'
+import { Label } from './Label'
 
 export type SimulationControlPanelProps = {
   readonly gameStates: readonly GameState[]
@@ -18,6 +19,7 @@ export type SimulationControlPanelProps = {
 const defaultStartTurn = 1
 const defaultTargetTurn = 50
 
+// eslint-disable-next-line max-lines-per-function
 export function SimulationControlPanel(
   props: SimulationControlPanelProps,
 ): React.JSX.Element {
@@ -87,29 +89,45 @@ export function SimulationControlPanel(
   }
 
   return (
-    <Card variant="outlined" sx={{ width: 390 }}>
+    <Card variant="outlined" sx={{ width: 400 }}>
       <CardHeader
         title="Simulation control panel"
         sx={{ paddingBottom: '0px' }}
       />
       <CardContent>
         <Grid container spacing={1}>
-          <Grid xs={12}>{currentTurnLabel(props.gameStates)}</Grid>
+          <Grid xs={12}>
+            <Label>{currentTurnLabel(props.gameStates)}</Label>
+          </Grid>
           <Grid container xs={12} marginBottom={'0px'}>
             <Grid>
-              {simulateFor1TurnButton(simulate, loading, props.gameStates)}
+              {AdvanceTimeButton(simulate, loading, props.gameStates)}
             </Grid>
-            <Grid xsOffset={'auto'}>{resetButton(reset, loading)}</Grid>
+            <Grid xsOffset={'auto'}>
+              {ResetCurrentTurnButton(reset, loading)}
+            </Grid>
+          </Grid>
+          <Grid container xs={12} marginBottom={'0px'}>
+            <Grid>
+              {SimulateFor1TurnButton(simulate, loading, props.gameStates)}
+            </Grid>
+            <Grid xsOffset={'auto'}>
+              {WipeSimulationButton(reset, loading)}
+            </Grid>
           </Grid>
 
           <Grid>
-            {simulateFromToTurnButton(simulate, loading, startTurn, targetTurn)}
+            {SimulateFromToTurnButton(simulate, loading, startTurn, targetTurn)}
           </Grid>
           <Grid container xsOffset={'auto'}>
-            <Grid>{startTurnInputTextField(startTurn, setStartTurn)}</Grid>
-            <Grid>{targetTurnInputTextField(targetTurn, setTargetTurn)}</Grid>
+            <Grid>{StartTurnInputTextField(startTurn, setStartTurn)}</Grid>
+            <Grid>{TargetTurnInputTextField(targetTurn, setTargetTurn)}</Grid>
           </Grid>
-          {!_.isEmpty(props.gameStates) && <Grid xs={12}>{getMsg()}</Grid>}
+          {!_.isEmpty(props.gameStates) && (
+            <Grid xs={12}>
+              <Label>{getMsg()}</Label>
+            </Grid>
+          )}
           {Boolean(error) && <Grid xs={12}>`Error: ${error}`</Grid>}
         </Grid>
       </CardContent>
@@ -154,7 +172,7 @@ function currentTurnLabel(gameStates: readonly GameState[]): string {
   }`
 }
 
-function startTurnInputTextField(
+function StartTurnInputTextField(
   startTurn: number,
   setStartTurn: React.Dispatch<React.SetStateAction<number>>,
 ): React.JSX.Element {
@@ -180,7 +198,7 @@ function startTurnInputTextField(
   )
 }
 
-function targetTurnInputTextField(
+function TargetTurnInputTextField(
   targetTurn: number,
   setTargetTurn: React.Dispatch<React.SetStateAction<number>>,
 ): React.JSX.Element {
@@ -206,7 +224,23 @@ function targetTurnInputTextField(
   )
 }
 
-function simulateFor1TurnButton(
+function AdvanceTimeButton(
+  simulate: (turnsToSimulate?: number) => Promise<void>,
+  loading: boolean,
+  gameStates: readonly GameState[],
+): React.JSX.Element {
+  return (
+    <Button
+      variant="contained"
+      onClick={async () => simulate(1)}
+      disabled={loading || (!_.isEmpty(gameStates) && isGameOver(gameStates))}
+    >
+      {'Advance time'}
+    </Button>
+  )
+}
+
+function SimulateFor1TurnButton(
   simulate: (turnsToSimulate?: number) => Promise<void>,
   loading: boolean,
   gameStates: readonly GameState[],
@@ -222,7 +256,7 @@ function simulateFor1TurnButton(
   )
 }
 
-function simulateFromToTurnButton(
+function SimulateFromToTurnButton(
   simulate: (turnsToSimulate?: number) => Promise<void>,
   loading: boolean,
   startTurn: number,
@@ -239,10 +273,29 @@ function simulateFromToTurnButton(
   )
 }
 
-function resetButton(reset: () => void, loading: boolean): React.JSX.Element {
+function ResetCurrentTurnButton(
+  reset: () => void,
+  loading: boolean,
+): React.JSX.Element {
   return (
-    <Button variant="outlined" onClick={reset} disabled={loading}>
-      {`Reset`}
+    <Button
+      variant="outlined"
+      onClick={reset}
+      disabled={loading}
+      color="warning"
+    >
+      {`Reset current turn`}
+    </Button>
+  )
+}
+
+function WipeSimulationButton(
+  reset: () => void,
+  loading: boolean,
+): React.JSX.Element {
+  return (
+    <Button variant="outlined" onClick={reset} disabled={loading} color="error">
+      {`Wipe simulation`}
     </Button>
   )
 }
