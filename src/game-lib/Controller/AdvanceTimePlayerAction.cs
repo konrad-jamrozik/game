@@ -90,6 +90,14 @@ public class AdvanceTimePlayerAction : PlayerAction
             ? Mission.MissionState.Successful
             : Mission.MissionState.Failed;
 
+        // Note: UpdateAgentMissionStats and EvaluateAgentsOnMission are not
+        // computed at the same time.
+        // This is because UpdateAgentMissionStats depends on Ruleset.MissionSuccessful which
+        // depends on EvaluateAgentsOnMission.
+        // Specifically, to set given agent's stat on successful missions, we need to
+        // know if a mission is successful. To know if a mission is successful,
+        // we need to know how many agents survived it. As soon as we know if given agent
+        // survived a mission, we set their status.
         UpdateAgentMissionStats(agentsOnMission, missionSuccessful);
         
         _log.Info($"Evaluated {mission.LogString}. result: {mission.CurrentState,7}, " +

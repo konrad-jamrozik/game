@@ -183,6 +183,9 @@ public class Agent
     public void MakeAvailable()
     {
         Debug.Assert(!IsAvailable);
+        // kja2 for better assertions, make special method for making agent available from mission
+        // Think about this as a different edge in the state transition diagram, originating from different
+        // node but targeting the same node.
         if (IsOnMission)
             CurrentMission = null;
         CurrentState = AgentState.Available;
