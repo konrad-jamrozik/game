@@ -22,7 +22,7 @@ export async function simulate(params: SimulateParams): Promise<void> {
     params.targetTurn,
     params.turnsToSimulate,
   )
-  const startNewSimulation = resolvedStartTurn === 1
+  const startNewSimulation = resolvedStartTurn === initialTurn
 
   const apiUrl = getApiUrl(
     params.gameStates,
@@ -79,14 +79,14 @@ function resolveStartAndTargetTurn(
     ? getCurrentTurn(gameStates)
     : undefined
 
-  let resolvedStartTurn = 0
+  let resolvedStartTurn = initialTurn
   if (!_.isEmpty(gameStates)) {
     resolvedStartTurn = _.isUndefined(turnsToSimulate)
       ? _.min([currentTurn, startTurn])!
       : currentTurn!
   }
 
-  let resolvedTargetTurn = 0
+  let resolvedTargetTurn = initialTurn
   if (_.isUndefined(turnsToSimulate)) {
     resolvedTargetTurn = targetTurn
   } else {
