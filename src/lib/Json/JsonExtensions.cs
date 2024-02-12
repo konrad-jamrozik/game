@@ -98,16 +98,17 @@ public static class JsonExtensions
     /// Issue for native support of converting DOM (JsonElement) to a typed object:
     /// https://github.com/dotnet/runtime/issues/31274
     /// </remarks>
-    public static T? ToObject<T>(this JsonElement element)
+    public static T? ToObject<T>(this JsonElement element, JsonSerializerOptions? options)
     {
         string json = element.GetRawText();
         // kj2-json make JSON without comments into reusable OO logic.
         string jsonWithoutComments = string.Join(Environment.NewLine,
             json.Split(Environment.NewLine).Where(line => !line.TrimStart().StartsWith("//")));
-        return JsonSerializer.Deserialize<T>(jsonWithoutComments);
+        return JsonSerializer.Deserialize<T>(jsonWithoutComments, options);
     }
 
-    public static T? ToObject<T>(this JsonDocument document) => ToObject<T>(document.RootElement);
+    public static T? ToObject<T>(this JsonDocument document, JsonSerializerOptions? options)
+        => ToObject<T>(document.RootElement, options);
 
     /// <remarks>
     /// Using Newtonsoft.Json's JObject to do the merging as System.Text.Json doesn't support it as of

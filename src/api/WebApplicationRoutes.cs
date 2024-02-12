@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using Lib.Json;
 using Lib.OS;
 using Microsoft.AspNetCore.Http.HttpResults;
 using UfoGameLib.Controller;
@@ -99,17 +100,21 @@ public class WebApplicationRoutes
         ApplyPlayerAction(HttpRequest req)
     {
         Console.Out.WriteLine("Invoked ApplyPlayerAction!");
-        (GameState? gs, string? error) = await ParseGameState(req);
+
+        (ApplyPlayerActionRequestBody? body, string? error) = await ParseGameApplyPlayerActionBody(req);
         if (error != null)
             return TypedResults.BadRequest(error);
 
-        // kja WIP
-        return ApplyPlayerActionInternal(gs!, new PlayerActionPayload());
+        return ApplyPlayerActionInternal(body!.GameState, body.PlayerAction);
     }
 
     private static ApplyPlayerActionResponse
         ApplyPlayerActionInternal(GameState gameState, PlayerActionPayload playerAction)
     {
+        Console.Out.WriteLine(
+            $"Invoked ApplyPlayerActionInternal! " +
+            $"gs: {gameState.ToJsonString()}, " +
+            $"playerAction: {playerAction.ToIndentedUnsafeJsonString()}");
 
         var config = new Configuration(new SimulatedFileSystem());
         var log = new Log(config);
@@ -162,22 +167,31 @@ public class WebApplicationRoutes
         return (parsedGameState, error);
     }
 
+    private static async Task<(ApplyPlayerActionRequestBody? body, string? error)> ParseGameApplyPlayerActionBody(
+        HttpRequest req)
+    {
+        string? error;
+        ApplyPlayerActionRequestBody? parsedBody;
+        if (req.HasJsonContentType())
+        {
+            // Deserialization method invocation and configuration as explained by:
+            // https://learn.microsoft.com/en-us/aspnet/core/fundamentals/minimal-apis/parameter-binding?view=aspnetcore-8.0#configure-json-deserialization-options-for-an-endpoint
+            parsedBody =
+                (await req.ReadFromJsonAsync<ApplyPlayerActionRequestBody>(GameState.StateJsonSerializerOptions))!;
+            error = null;
+        }
+        else
+        {
+            parsedBody = null;
+            error = "Expected GameState and PlayerActionPayload to be passed in the request body";
+        }
+
+        return (parsedBody, error);
+    }
+
     private static GameSession NewGameSession(GameState? initialGameState = null)
     {
         var gameSession = new GameSession(new RandomGen(new Random()), initialGameState);
         return gameSession;
     }
 }
-
-
-// Relevant docs:
-//
-// TypedResults
-// https://learn.microsoft.com/en-us/aspnet/core/fundamentals/minimal-apis?view=aspnetcore-8.0#return-typedresults
-// https://learn.microsoft.com/en-us/aspnet/core/fundamentals/minimal-apis/openapi?view=aspnetcore-8.0#describe-response-types
-//
-// Multiple response types (Results<>) doc:
-// https://learn.microsoft.com/en-us/aspnet/core/fundamentals/minimal-apis/openapi?view=aspnetcore-8.0#multiple-response-types
-//
-// [System.Text.Json] : More accurate error messages when failing to map fields or parameters #88048
-// https://github.com/dotnet/runtime/issues/88048

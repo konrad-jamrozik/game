@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http.HttpResults;
+﻿using System.Text.Json;
+using Microsoft.AspNetCore.Http.HttpResults;
 using UfoGameLib.State;
 
 namespace UfoGameLib.Api;
@@ -32,5 +33,22 @@ public static class ApiUtils
     private static JsonHttpResult<GameStatePlayerView[]> ToJsonHttpResult(GameStatePlayerView[] gss)
         => TypedResults.Json(gss, GameState.StateJsonSerializerOptions);
 
-
+    public static async Task<JsonElement> ParseJsonElement(HttpRequest request)
+    {
+        using var jsonDoc = await JsonDocument.ParseAsync(request.Body);
+        JsonElement root = jsonDoc.RootElement;
+        return root.Clone();
+    }
 }
+
+// Relevant docs:
+//
+// TypedResults
+// https://learn.microsoft.com/en-us/aspnet/core/fundamentals/minimal-apis?view=aspnetcore-8.0#return-typedresults
+// https://learn.microsoft.com/en-us/aspnet/core/fundamentals/minimal-apis/openapi?view=aspnetcore-8.0#describe-response-types
+//
+// Multiple response types (Results<>) doc:
+// https://learn.microsoft.com/en-us/aspnet/core/fundamentals/minimal-apis/openapi?view=aspnetcore-8.0#multiple-response-types
+//
+// [System.Text.Json] : More accurate error messages when failing to map fields or parameters #88048
+// https://github.com/dotnet/runtime/issues/88048
