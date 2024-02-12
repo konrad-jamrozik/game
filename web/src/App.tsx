@@ -29,6 +29,7 @@ function Footer(): React.JSX.Element {
   )
 }
 
+const lineChartAspectRatio = '1.5'
 export default function App(): React.JSX.Element {
   const [gameStates, setGameStates] = useState<GameState[]>([])
   const agents = !_.isEmpty(gameStates)
@@ -69,31 +70,51 @@ export default function App(): React.JSX.Element {
       <Grid sx={{ bgcolor: '#002040' }}>
         <AgentsDataGrid agents={agents} />
       </Grid>
-      <Grid xs={12} lg={6} sx={{ bgcolor: '#003000' }}>
+      <Grid
+        xs={12}
+        lg={6}
+        sx={{ bgcolor: '#003000', aspectRatio: lineChartAspectRatio }}
+      >
         <GameStatsLineChart
           gameStates={gameStates}
           dataSeries={moneyStatsDataSeries}
         />
       </Grid>
-      <Grid xs={12} lg={6} sx={{ bgcolor: '#303000' }}>
+      <Grid
+        xs={12}
+        lg={6}
+        sx={{ bgcolor: '#303000', aspectRatio: lineChartAspectRatio }}
+      >
         <GameStatsLineChart
           gameStates={gameStates}
           dataSeries={agentStatsDataSeries}
         />
       </Grid>
-      <Grid xs={12} lg={6} sx={{ bgcolor: '#402000' }}>
+      <Grid
+        xs={12}
+        lg={6}
+        sx={{ bgcolor: '#402000', aspectRatio: lineChartAspectRatio }}
+      >
         <GameStatsLineChart
           gameStates={gameStates}
           dataSeries={intelStatsDataSeries}
         />
       </Grid>
-      <Grid xs={12} lg={6} sx={{ bgcolor: '#002040' }}>
+      <Grid
+        xs={12}
+        lg={6}
+        sx={{ bgcolor: '#002040', aspectRatio: lineChartAspectRatio }}
+      >
         <GameStatsLineChart
           gameStates={gameStates}
           dataSeries={miscStatsDataSeries}
         />
       </Grid>
-      <Grid xs={12} lg={6} sx={{ bgcolor: '#003030' }}>
+      <Grid
+        xs={12}
+        lg={6}
+        sx={{ bgcolor: '#003030', aspectRatio: lineChartAspectRatio }}
+      >
         <GameStatsLineChart
           gameStates={gameStates}
           dataSeries={missionsStatsDataSeries}

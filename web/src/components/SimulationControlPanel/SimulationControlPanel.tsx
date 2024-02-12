@@ -50,7 +50,7 @@ export function SimulationControlPanel(
   }
 
   return (
-    <Card variant="outlined" sx={{ width: 500 }}>
+    <Card variant="outlined" sx={{ width: 430 }}>
       <CardHeader
         title="Simulation control panel"
         sx={{ paddingBottom: '0px' }}
@@ -113,6 +113,7 @@ function startTurnInputTextField(
 ): React.JSX.Element {
   return (
     <TextField
+      sx={{ width: 90 }}
       id="textfield-start-turn"
       label="start turn"
       type="number"
@@ -139,6 +140,7 @@ function targetTurnInputTextField(
 ): React.JSX.Element {
   return (
     <TextField
+      sx={{ width: 90 }}
       id="textfield-target-turn"
       label="target turn"
       type="number"
