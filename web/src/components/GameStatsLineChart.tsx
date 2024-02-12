@@ -1,8 +1,7 @@
-import { Box } from '@mui/material'
-import type { LineSeriesType } from '@mui/x-charts'
+import { Box, useMediaQuery, useTheme } from '@mui/material'
+import type { LegendRendererProps, LineSeriesType } from '@mui/x-charts'
 import { LineChart } from '@mui/x-charts/LineChart'
 import _ from 'lodash'
-import { defaultComponentHeight } from '../lib/utils'
 import type { GameState } from '../types/GameState'
 import type { GameStateDataSeries } from '../types/GameStateDataSeries'
 import type { MakeOptional } from '../types/external'
@@ -54,6 +53,16 @@ export function GameStatsLineChart(
     defaultYAxisMax,
   )
 
+  // https://mui.com/material-ui/react-use-media-query/
+  const theme = useTheme()
+  const smallDisplay = useMediaQuery(theme.breakpoints.down('sm'))
+  const smallDisplayLegendProps: Partial<LegendRendererProps> = {
+    itemMarkWidth: 12,
+    itemMarkHeight: 12,
+    labelStyle: { fontSize: 12 },
+    padding: { bottom: 0 },
+  }
+
   return (
     <Box width={'100%'} height={'100%'}>
       <LineChart
@@ -76,6 +85,9 @@ export function GameStatsLineChart(
         ]}
         series={series}
         dataset={dataset}
+        slotProps={{
+          legend: smallDisplay ? smallDisplayLegendProps : {},
+        }}
       />
     </Box>
   )
