@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import { Button, Card, CardContent, CardHeader, TextField } from '@mui/material'
 import Grid from '@mui/material/Unstable_Grid2'
 import _ from 'lodash'
@@ -28,7 +29,7 @@ export function SimulationControlPanel(
   const [loading, setLoading] = useState<boolean>(false)
   const [error, setError] = useState<string>()
 
-  function getMsg(): string {
+  function simulationRunMsg(): string {
     return `Simulation ran until turn ${getCurrentTurn(props.gameStates)}. Result: ${getGameResult(props.gameStates)}`
   }
 
@@ -101,31 +102,31 @@ export function SimulationControlPanel(
           </Grid>
           <Grid container xs={12} marginBottom={'0px'}>
             <Grid>
-              {AdvanceTimeButton(simulate, loading, props.gameStates)}
+              {advanceTimeButton(simulate, loading, props.gameStates)}
             </Grid>
             <Grid xsOffset={'auto'}>
-              {ResetCurrentTurnButton(reset, loading)}
+              {resetCurrentTurnButton(reset, loading)}
             </Grid>
           </Grid>
           <Grid container xs={12} marginBottom={'0px'}>
             <Grid>
-              {SimulateFor1TurnButton(simulate, loading, props.gameStates)}
+              {simulateFor1TurnButton(simulate, loading, props.gameStates)}
             </Grid>
             <Grid xsOffset={'auto'}>
-              {WipeSimulationButton(reset, loading)}
+              {wipeSimulationButton(reset, loading)}
             </Grid>
           </Grid>
 
           <Grid>
-            {SimulateFromToTurnButton(simulate, loading, startTurn, targetTurn)}
+            {simulateFromToTurnButton(simulate, loading, startTurn, targetTurn)}
           </Grid>
           <Grid container xsOffset={'auto'}>
-            <Grid>{StartTurnInputTextField(startTurn, setStartTurn)}</Grid>
-            <Grid>{TargetTurnInputTextField(targetTurn, setTargetTurn)}</Grid>
+            <Grid>{startTurnInputTextField(startTurn, setStartTurn)}</Grid>
+            <Grid>{targetTurnInputTextField(targetTurn, setTargetTurn)}</Grid>
           </Grid>
           {!_.isEmpty(props.gameStates) && (
             <Grid xs={12}>
-              <Label>{getMsg()}</Label>
+              <Label>{simulationRunMsg()}</Label>
             </Grid>
           )}
           {Boolean(error) && <Grid xs={12}>`Error: ${error}`</Grid>}
@@ -172,7 +173,7 @@ function currentTurnLabel(gameStates: readonly GameState[]): string {
   }`
 }
 
-function StartTurnInputTextField(
+function startTurnInputTextField(
   startTurn: number,
   setStartTurn: React.Dispatch<React.SetStateAction<number>>,
 ): React.JSX.Element {
@@ -198,7 +199,7 @@ function StartTurnInputTextField(
   )
 }
 
-function TargetTurnInputTextField(
+function targetTurnInputTextField(
   targetTurn: number,
   setTargetTurn: React.Dispatch<React.SetStateAction<number>>,
 ): React.JSX.Element {
@@ -224,7 +225,7 @@ function TargetTurnInputTextField(
   )
 }
 
-function AdvanceTimeButton(
+function advanceTimeButton(
   simulate: (turnsToSimulate?: number) => Promise<void>,
   loading: boolean,
   gameStates: readonly GameState[],
@@ -240,7 +241,7 @@ function AdvanceTimeButton(
   )
 }
 
-function SimulateFor1TurnButton(
+function simulateFor1TurnButton(
   simulate: (turnsToSimulate?: number) => Promise<void>,
   loading: boolean,
   gameStates: readonly GameState[],
@@ -256,7 +257,7 @@ function SimulateFor1TurnButton(
   )
 }
 
-function SimulateFromToTurnButton(
+function simulateFromToTurnButton(
   simulate: (turnsToSimulate?: number) => Promise<void>,
   loading: boolean,
   startTurn: number,
@@ -273,7 +274,7 @@ function SimulateFromToTurnButton(
   )
 }
 
-function ResetCurrentTurnButton(
+function resetCurrentTurnButton(
   reset: () => void,
   loading: boolean,
 ): React.JSX.Element {
@@ -294,7 +295,7 @@ function ResetCurrentTurnButton(
   )
 }
 
-function WipeSimulationButton(
+function wipeSimulationButton(
   reset: () => void,
   loading: boolean,
 ): React.JSX.Element {
