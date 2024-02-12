@@ -2,7 +2,6 @@ import { Box } from '@mui/material'
 import {
   DataGrid,
   useGridApiRef,
-  type GridCallbackDetails,
   type GridColDef,
   type GridRowId,
   type GridRowSelectionModel,
@@ -19,26 +18,20 @@ import { AgentsDataGridToolbar } from './AgentsDataGridToolbar'
 export type AgentsDataGridProps = {
   readonly agents: readonly Agent[]
   readonly deploymentDisplay?: boolean
-}
-
-const tableHeight = defaultComponentHeight
-
-// https://mui.com/x/react-data-grid/row-selection/#controlled-row-selection
-function onRowSelectionModelChange(
-  rowSelectionModel: GridRowSelectionModel,
-  details: GridCallbackDetails,
-): void {
-  console.log('rowSelectionModel:', rowSelectionModel, 'details:', details)
+  readonly rowSelectionModel?: GridRowSelectionModel
+  readonly setRowSelectionModel?: React.Dispatch<
+    React.SetStateAction<GridRowSelectionModel>
+  >
 }
 
 export function AgentsDataGrid(props: AgentsDataGridProps): React.JSX.Element {
+  const [action, setAction] = useState<string>('None')
   const deploymentDisplay: boolean = props.deploymentDisplay ?? false
   const agents = !deploymentDisplay
     ? props.agents
     : _.filter(props.agents, canBeSentOnMission)
 
   const rows: AgentRow[] = _.map(agents, getRow)
-  const [action, setAction] = useState<string>('None')
 
   const apiRef = useGridApiRef()
 
@@ -49,8 +42,22 @@ export function AgentsDataGrid(props: AgentsDataGridProps): React.JSX.Element {
     return _.map(selectedRowIds, (gridRowId) => gridRowId as number)
   }
 
+  // https://mui.com/x/react-data-grid/row-selection/#controlled-row-selection
+  function onRowSelectionModelChange(
+    rowSelectionModel: GridRowSelectionModel,
+  ): void {
+    if (!_.isUndefined(props.setRowSelectionModel)) {
+      props.setRowSelectionModel(rowSelectionModel)
+    }
+  }
+
   return (
-    <Box sx={{ height: tableHeight, width: !deploymentDisplay ? 550 : 380 }}>
+    <Box
+      sx={{
+        height: !deploymentDisplay ? defaultComponentHeight : 460,
+        width: !deploymentDisplay ? 550 : 420,
+      }}
+    >
       <DataGrid
         apiRef={apiRef}
         rows={rows}
@@ -85,6 +92,7 @@ export function AgentsDataGrid(props: AgentsDataGridProps): React.JSX.Element {
         checkboxSelection
         hideFooterSelectedRowCount={deploymentDisplay}
         disableRowSelectionOnClick
+        {...(props.rowSelectionModel ?? {})}
         onRowSelectionModelChange={onRowSelectionModelChange}
         rowHeight={30}
         sx={(theme) => ({

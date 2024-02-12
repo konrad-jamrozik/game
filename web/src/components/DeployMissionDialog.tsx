@@ -7,6 +7,7 @@ import Grid from '@mui/material/Unstable_Grid2'
 import { Fragment, useState } from 'react'
 import type { Agent, MissionSite } from '../types/GameState'
 import { AgentsDataGrid } from './AgentsDataGrid/AgentsDataGrid'
+import { GridRowSelectionModel } from '@mui/x-data-grid'
 
 export type DeployMissionDialogProps = {
   readonly agents: Agent[]
@@ -17,6 +18,8 @@ export default function DeployMissionDialog(
   props: DeployMissionDialogProps,
 ): React.JSX.Element {
   const [open, setOpen] = useState<boolean>(false)
+  const [rowSelectionModel, setRowSelectionModel] =
+    useState<GridRowSelectionModel>([])
 
   function handleClickOpen(): void {
     setOpen(true)
@@ -49,7 +52,7 @@ export default function DeployMissionDialog(
         <DialogContent
           sx={{
             // bgcolor: '#205050',
-            width: '400px',
+            width: '440px',
             padding: '10px',
           }}
         >
@@ -59,11 +62,15 @@ export default function DeployMissionDialog(
             // bgcolor="rgba(100,100,100,0.5)"
           >
             <Grid xs={12} display="flex" justifyContent="center">
-              <AgentsDataGrid agents={props.agents} deploymentDisplay={true} />
+              <AgentsDataGrid
+                agents={props.agents}
+                deploymentDisplay={true}
+                {...{ rowSelectionModel, setRowSelectionModel }}
+              />
             </Grid>
             <Grid xs={12} display="flex" justifyContent="center">
               <Button variant="contained" onClick={handleLaunchMission}>
-                Launch mission
+                Launch mission with {rowSelectionModel.length} agents
               </Button>
             </Grid>
           </Grid>
