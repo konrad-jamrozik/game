@@ -34,13 +34,19 @@ public class EmptySchemaGenerator : OpenApiSchemaGenerator
                     new JsonSchema
                     {
                         Type = JsonObjectType.None,
-                        Example = typeName == nameof(GameState)
-                            ? "Call '/initialGameState' to obtain example value of GameState"
-                            : null
+                        Example = GetSchemaExample(typeName)
                     });
             }
         }
 
         base.Generate(schema, contextualType, schemaResolver);
     }
+
+    private static string? GetSchemaExample(string typeName)
+        => typeName switch
+        {
+            nameof(GameState) => "Call '/initialGameState' to obtain example value of GameState",
+            nameof(ApplyPlayerActionRequestBody) => "{ 'GameState': {...}, 'PlayerAction': {...} }",
+            _ => null
+        };
 }
