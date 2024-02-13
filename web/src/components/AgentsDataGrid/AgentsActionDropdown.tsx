@@ -17,7 +17,7 @@ export function AgentsActionDropdown(
   }
 
   return (
-    <Box width={210} marginY={1}>
+    <Box width={210} marginY={1} marginRight={0.5}>
       <TextField
         fullWidth
         size="small"

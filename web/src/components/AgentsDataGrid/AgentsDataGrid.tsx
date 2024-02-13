@@ -59,7 +59,7 @@ export function AgentsDataGrid(props: AgentsDataGridProps): React.JSX.Element {
       sx={{
         height: !deploymentDisplay ? defaultComponentHeight : 460,
         minWidth: defaultComponentMinWidth,
-        maxWidth: !deploymentDisplay ? 550 : 420,
+        maxWidth: !deploymentDisplay ? 550 : 400,
         width: '100%',
       }}
     >
