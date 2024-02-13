@@ -30,6 +30,9 @@ function Footer(): React.JSX.Element {
 }
 
 const lineChartAspectRatio = '1.5'
+const lineChartMaxWidth = '700px'
+
+// eslint-disable-next-line max-lines-per-function
 export default function App(): React.JSX.Element {
   const [gameStates, setGameStates] = useState<GameState[]>([])
   const agents = !_.isEmpty(gameStates)
@@ -73,7 +76,11 @@ export default function App(): React.JSX.Element {
       <Grid
         xs={12}
         lg={6}
-        sx={{ bgcolor: '#003000', aspectRatio: lineChartAspectRatio }}
+        sx={{
+          bgcolor: '#003000',
+          aspectRatio: lineChartAspectRatio,
+          maxWidth: lineChartMaxWidth,
+        }}
       >
         <GameStatsLineChart
           gameStates={gameStates}
@@ -83,7 +90,11 @@ export default function App(): React.JSX.Element {
       <Grid
         xs={12}
         lg={6}
-        sx={{ bgcolor: '#303000', aspectRatio: lineChartAspectRatio }}
+        sx={{
+          bgcolor: '#303000',
+          aspectRatio: lineChartAspectRatio,
+          maxWidth: lineChartMaxWidth,
+        }}
       >
         <GameStatsLineChart
           gameStates={gameStates}
@@ -93,7 +104,11 @@ export default function App(): React.JSX.Element {
       <Grid
         xs={12}
         lg={6}
-        sx={{ bgcolor: '#402000', aspectRatio: lineChartAspectRatio }}
+        sx={{
+          bgcolor: '#402000',
+          aspectRatio: lineChartAspectRatio,
+          maxWidth: lineChartMaxWidth,
+        }}
       >
         <GameStatsLineChart
           gameStates={gameStates}
@@ -103,7 +118,11 @@ export default function App(): React.JSX.Element {
       <Grid
         xs={12}
         lg={6}
-        sx={{ bgcolor: '#002040', aspectRatio: lineChartAspectRatio }}
+        sx={{
+          bgcolor: '#002040',
+          aspectRatio: lineChartAspectRatio,
+          maxWidth: lineChartMaxWidth,
+        }}
       >
         <GameStatsLineChart
           gameStates={gameStates}
@@ -113,7 +132,11 @@ export default function App(): React.JSX.Element {
       <Grid
         xs={12}
         lg={6}
-        sx={{ bgcolor: '#003030', aspectRatio: lineChartAspectRatio }}
+        sx={{
+          bgcolor: '#003030',
+          aspectRatio: lineChartAspectRatio,
+          maxWidth: lineChartMaxWidth,
+        }}
       >
         <GameStatsLineChart
           gameStates={gameStates}

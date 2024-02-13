@@ -21,6 +21,7 @@ export type SimulationControlPanelProps = {
 const defaultStartTurn = 1
 const defaultTargetTurn = 120
 
+// eslint-disable-next-line max-lines-per-function
 export function SimulationControlPanel(
   props: SimulationControlPanelProps,
 ): React.JSX.Element {
@@ -64,7 +65,13 @@ export function SimulationControlPanel(
   }
 
   return (
-    <Card variant="outlined" sx={{ width: 440 }}>
+    <Card
+      variant="outlined"
+      sx={{
+        maxWidth: 440,
+        width: '100%',
+      }}
+    >
       <CardHeader
         title="Simulation control panel"
         sx={{ paddingBottom: '0px' }}

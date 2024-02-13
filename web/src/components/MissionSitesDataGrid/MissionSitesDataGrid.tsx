@@ -73,7 +73,7 @@ export function MissionSitesDataGrid(
   ]
 
   return (
-    <Box sx={{ height: tableHeight, width: 358 }}>
+    <Box sx={{ height: tableHeight, maxWidth: 358, width: '100%' }}>
       <DataGrid
         rows={rows}
         columns={columns}
