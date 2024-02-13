@@ -113,7 +113,6 @@ public class WebApplicationRoutes
     {
         Console.Out.WriteLine(
             $"Invoked ApplyPlayerActionInternal! " +
-            $"gs: {gameState.ToJsonString()}, " +
             $"playerAction: {playerAction.ToIndentedUnsafeJsonString()}");
 
         var config = new Configuration(new SimulatedFileSystem());
