@@ -3,6 +3,12 @@ using UfoGameLib.Controller;
 
 namespace UfoGameLib.Api;
 
+/// <summary>
+/// Represents a player action payload. The payload is expected to be deserialized
+/// from a system boundary, e.g. from a JSON string received from a POST HTTP request.
+///
+/// The payload can be applied to a GameSessionController. See the Apply() method.
+/// </summary>
 public class PlayerActionPayload
 {
     public readonly string Action;
@@ -17,6 +23,12 @@ public class PlayerActionPayload
         TargetId = targetId;
     }
 
+    /// <summary>
+    /// This method translates the PlayerActionPayload to appropriate player action
+    /// on current GameState of the GameSessionController controller, and applies it.
+    /// </summary>
+    /// <returns>The output of this method is a mutation of the controller.GameSession.CurrentGameState,
+    /// per the applied player action as captured by this payload.</returns>
     public void Apply(GameSessionController controller)
     {
         // https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/operators/patterns#property-pattern
