@@ -8,7 +8,9 @@ import {
   isGameOver,
 } from '../../lib/GameStateUtils'
 import type { GameState } from '../../types/GameState'
+import type { PlayerActionPayload } from '../../types/PlayerActionPayload'
 import { Label } from '../Label'
+import { applyPlayerAction } from './applyPlayerAction'
 import { simulate } from './simulate'
 
 export type SimulationControlPanelProps = {
@@ -43,6 +45,18 @@ export function SimulationControlPanel(
     })
   }
 
+  async function applySpecificPlayerAction(
+    playerAction: PlayerActionPayload,
+  ): Promise<void> {
+    await applyPlayerAction({
+      gameStates: props.gameStates,
+      setGameStates: props.setGameStates,
+      setLoading,
+      setError,
+      playerAction,
+    })
+  }
+
   function reset(): void {
     setLoading(false)
     setError('')
@@ -62,7 +76,11 @@ export function SimulationControlPanel(
           </Grid>
           <Grid container xs={12} marginBottom={'0px'}>
             <Grid>
-              {advanceTimeButton(simulateTurns, loading, props.gameStates)}
+              {advanceTimeButton(
+                applySpecificPlayerAction,
+                loading,
+                props.gameStates,
+              )}
             </Grid>
             <Grid xsOffset={'auto'}>
               {resetCurrentTurnButton(reset, loading)}
@@ -162,14 +180,16 @@ function targetTurnInputTextField(
 }
 
 function advanceTimeButton(
-  simulateTurns: (turnsToSimulate?: number) => Promise<void>,
+  applySpecificPlayerAction: (
+    PlayerAction: PlayerActionPayload,
+  ) => Promise<void>,
   loading: boolean,
   gameStates: readonly GameState[],
 ): React.JSX.Element {
   return (
     <Button
       variant="contained"
-      onClick={async () => simulateTurns(1)}
+      onClick={async () => applySpecificPlayerAction({ Action: 'AdvanceTime' })}
       disabled={loading || (!_.isEmpty(gameStates) && isGameOver(gameStates))}
     >
       {'Advance 1 turn'}

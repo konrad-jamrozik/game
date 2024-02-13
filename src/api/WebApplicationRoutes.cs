@@ -126,7 +126,7 @@ public class WebApplicationRoutes
         {
             // If the player action is "AdvanceTime" and the gameState is null,
             // then we treat this as special case of "initialize game session to initial game state",
-            // hence we just return.
+            // hence we just return gameSession.CurrentGameState.
         }
 
         ApplyPlayerActionResponse result = ApiUtils.ToJsonHttpResult(gameSession.CurrentGameState);
