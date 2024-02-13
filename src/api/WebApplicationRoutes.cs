@@ -105,11 +105,11 @@ public class WebApplicationRoutes
         if (error != null)
             return TypedResults.BadRequest(error);
 
-        return ApplyPlayerActionInternal(body!.GameState, body.PlayerAction);
+        return ApplyPlayerActionInternal(body!.PlayerAction, body.GameState);
     }
 
     private static ApplyPlayerActionResponse
-        ApplyPlayerActionInternal(GameState gameState, PlayerActionPayload playerAction)
+        ApplyPlayerActionInternal(PlayerActionPayload playerAction, GameState? gameState)
     {
         Console.Out.WriteLine(
             $"Invoked ApplyPlayerActionInternal! " +
@@ -120,7 +120,14 @@ public class WebApplicationRoutes
         var gameSession = NewGameSession(gameState);
         var controller = new GameSessionController(config, log, gameSession);
 
-        playerAction.Apply(controller);
+        if (playerAction.Action != "AdvanceTime" || gameState is not null)
+            playerAction.Apply(controller);
+        else
+        {
+            // If the player action is "AdvanceTime" and the gameState is null,
+            // then we treat this as special case of "initialize game session to initial game state",
+            // hence we just return.
+        }
 
         ApplyPlayerActionResponse result = ApiUtils.ToJsonHttpResult(gameSession.CurrentGameState);
         return result;
