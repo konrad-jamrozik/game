@@ -35,8 +35,12 @@ public class PlayerActionPayload
         // https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/operators/patterns#positional-pattern
 
         Console.Out.WriteLine($"Called PlayerActionsPayload.Apply(). Action: {Action}");
-        // kja WIP
-        Action apply = Action switch
+        Action apply = TranslatePlayerActionToControllerAction(controller);
+        apply();
+    }
+
+    private Action TranslatePlayerActionToControllerAction(GameSessionController controller)
+        => Action switch
         {
             "AdvanceTime" => controller.AdvanceTime,
             "BuyTransportCap" => () => controller.TurnController.BuyTransportCapacity(1),
@@ -46,15 +50,7 @@ public class PlayerActionPayload
             "SendAgentsToIntelGathering" => () => controller.TurnController.SendAgentsToGatherIntel(Ids!),
             "SendAgentsToTraining" => () => controller.TurnController.SendAgentsToTraining(Ids!),
             "RecallAgents" => () => controller.TurnController.RecallAgents(Ids!),
-            _ => () => { Console.Out.Write($"Unsupported action of {Action}"); }
+            "LaunchMission" => () => controller.TurnController.LaunchMission(TargetId!.Value, Ids!),
+            _ => () => throw new InvalidOperationException($"Unsupported player action of '{Action}'")
         };
-
-        apply();
-
-        // int i = 1;
-        // var agent = new Agent(id: i, turnHired: 1, Agent.AgentState.Available);
-        // var missionSite = new MissionSite(id: i, difficulty: 1, turnAppeared: 1, expiresIn: 1);
-        
-        // controller.TurnController.LaunchMission(missionSite, [agent]);
-    }
 }

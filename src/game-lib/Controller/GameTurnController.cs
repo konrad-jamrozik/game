@@ -72,6 +72,12 @@ public class GameTurnController
     public void LaunchMission(MissionSite site, Agents agents)
         => PlayerActions.Apply(new LaunchMissionPlayerAction(_log, site, agents), _gameState);
 
+    public void LaunchMission(int siteId, int[] agentsIds)
+        => LaunchMission(GetMissionSiteById(siteId), GetAgentsByIds(agentsIds));
+
+    private MissionSite GetMissionSiteById(int siteId) =>
+        _gameState.MissionSites.Single(site => site.Id == siteId);
+
     private Agents GetAgentsByIds(int[] agentsIds) =>
         _gameState.Assets.Agents.GetByIds(agentsIds);
 }
