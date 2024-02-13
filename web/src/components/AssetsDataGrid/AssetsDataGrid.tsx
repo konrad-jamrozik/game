@@ -8,6 +8,7 @@ import {
 } from '@mui/x-data-grid'
 import _ from 'lodash'
 import { renderAssetNameCell } from '../../lib/rendering'
+import { defaultComponentMinWidth } from '../../lib/utils'
 import type { Assets } from '../../types/GameState'
 import TransportCapMgmtDialog from './TransportCapMgmtDialog'
 
@@ -21,7 +22,14 @@ export function AssetsDataGrid(props: AssetsDataGridProps): React.JSX.Element {
   const rows: AssetRow[] = getRows(props.assets)
 
   return (
-    <Box sx={{ height: tableHeight, maxWidth: 292, width: '100%' }}>
+    <Box
+      sx={{
+        height: tableHeight,
+        minWidth: defaultComponentMinWidth,
+        maxWidth: 292,
+        width: '100%',
+      }}
+    >
       <DataGrid
         rows={rows}
         getRowId={(row: AssetRow) => row.name}

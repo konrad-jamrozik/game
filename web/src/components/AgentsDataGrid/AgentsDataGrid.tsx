@@ -10,7 +10,10 @@ import {
 import _ from 'lodash'
 import { useState } from 'react'
 import { renderAgentStateCell } from '../../lib/rendering'
-import { defaultComponentHeight } from '../../lib/utils'
+import {
+  defaultComponentHeight,
+  defaultComponentMinWidth,
+} from '../../lib/utils'
 import type { Agent, AgentState } from '../../types/GameState'
 import { canBeSentOnMission, getSurvivalSkill } from '../../types/ruleset'
 import { AgentsDataGridToolbar } from './AgentsDataGridToolbar'
@@ -55,6 +58,7 @@ export function AgentsDataGrid(props: AgentsDataGridProps): React.JSX.Element {
     <Box
       sx={{
         height: !deploymentDisplay ? defaultComponentHeight : 460,
+        minWidth: defaultComponentMinWidth,
         maxWidth: !deploymentDisplay ? 550 : 420,
         width: '100%',
       }}

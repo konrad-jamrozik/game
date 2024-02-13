@@ -1,12 +1,13 @@
 import { Box } from '@mui/material'
 import {
   DataGrid,
-  type GridRenderCellParams,
   type GridCallbackDetails,
   type GridColDef,
+  type GridRenderCellParams,
   type GridRowSelectionModel,
 } from '@mui/x-data-grid'
 import _ from 'lodash'
+import { defaultComponentMinWidth } from '../../lib/utils'
 import type { Agent, MissionSite } from '../../types/GameState'
 import { isActive } from '../../types/ruleset'
 import DeployMissionDialog from './DeployMissionDialog'
@@ -73,7 +74,14 @@ export function MissionSitesDataGrid(
   ]
 
   return (
-    <Box sx={{ height: tableHeight, maxWidth: 358, width: '100%' }}>
+    <Box
+      sx={{
+        height: tableHeight,
+        minWidth: defaultComponentMinWidth,
+        maxWidth: 358,
+        width: '100%',
+      }}
+    >
       <DataGrid
         rows={rows}
         columns={columns}
