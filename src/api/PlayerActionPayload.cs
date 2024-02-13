@@ -9,26 +9,24 @@ namespace UfoGameLib.Api;
 ///
 /// The payload can be applied to a GameSessionController. See the Apply() method.
 /// </summary>
-public class PlayerActionPayload
+[method: JsonConstructor]
+public class PlayerActionPayload(string action, int[]? ids, int? targetId)
 {
-    public readonly string Action;
-    public readonly int[]? Ids;
-    public readonly int? TargetId;
-
-    [JsonConstructor]
-    public PlayerActionPayload(string action, int[]? ids, int? targetId)
-    {
-        Action = action;
-        Ids = ids;
-        TargetId = targetId;
-    }
+    // ReSharper disable MemberCanBePrivate.Global
+    // Reason for ReSharper disable: these fields are used by the deserializer.
+    public readonly string Action = action;
+    public readonly int[]? Ids = ids;
+    public readonly int? TargetId = targetId;
+    // ReSharper restore MemberCanBePrivate.Global
 
     /// <summary>
     /// This method translates the PlayerActionPayload to appropriate player action
     /// on current GameState of the GameSessionController controller, and applies it.
     /// </summary>
-    /// <returns>The output of this method is a mutation of the controller.GameSession.CurrentGameState,
-    /// per the applied player action as captured by this payload.</returns>
+    /// <returns>
+    /// The output of this method is a mutation of the controller.GameSession.CurrentGameState,
+    /// per the applied player action as captured by this payload.
+    /// </returns>
     public void Apply(GameSessionController controller)
     {
         // https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/operators/patterns#property-pattern
