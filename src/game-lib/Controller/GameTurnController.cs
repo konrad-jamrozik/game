@@ -24,26 +24,34 @@ public class GameTurnController
     public void BuyTransportCapacity(int capacity)
         => PlayerActions.Apply(new BuyTransportCapacityPlayerAction(_log, capacity), _gameState);
 
-    public void SackAgents(int[] agentsIds)
-        => PlayerActions.Apply(new SackAgentsPlayerAction(_log, GetAgentsByIds(agentsIds)), _gameState);
-
     public void SackAgents(Agents agents)
         => PlayerActions.Apply(new SackAgentsPlayerAction(_log, agents), _gameState);
 
+    public void SackAgents(int[] agentsIds) => SackAgents(GetAgentsByIds(agentsIds));
+
     public void SendAgentsToTraining(Agents agents)
         => PlayerActions.Apply(new SendAgentsToTrainingPlayerAction(_log, agents), _gameState);
+
+    public void SendAgentsToTraining(int[] agentsIds)
+        => SendAgentsToTraining(GetAgentsByIds(agentsIds));
 
     public void SendAgentsToGenerateIncome(Agents agents)
         => PlayerActions.Apply(new SendAgentsToGenerateIncomePlayerAction(_log, agents), _gameState);
 
     public void SendAgentsToGenerateIncome(int[] agentsIds)
-        => PlayerActions.Apply(new SendAgentsToGenerateIncomePlayerAction(_log, GetAgentsByIds(agentsIds)), _gameState);
+        => SendAgentsToGenerateIncome(GetAgentsByIds(agentsIds));
 
     public void SendAgentsToGatherIntel(Agents agents)
         => PlayerActions.Apply(new SendAgentsToGatherIntelPlayerAction(_log, agents), _gameState);
 
+    public void SendAgentsToGatherIntel(int[] agentsIds)
+        => SendAgentsToGatherIntel(GetAgentsByIds(agentsIds));
+
     public void RecallAgents(Agents agents)
         => PlayerActions.Apply(new RecallAgentsPlayerAction(_log, agents), _gameState);
+
+    public void RecallAgents(int[] agentsIds)
+        => RecallAgents(GetAgentsByIds(agentsIds));
 
     /// <summary>
     /// Convenience method. LaunchMission, but instead of choosing specific agents,
