@@ -174,6 +174,8 @@ module.exports = {
     'unicorn/no-nested-ternary': 'off',
     // https://github.com/sindresorhus/eslint-plugin-unicorn/blob/main/docs/rules/no-negated-condition.md
     'unicorn/no-negated-condition': 'off',
+    // https://github.com/sindresorhus/eslint-plugin-unicorn/blob/main/docs/rules/no-keyword-prefix.md
+    'unicorn/no-keyword-prefix': 'off',
 
     // https://github.com/wix-incubator/eslint-plugin-lodash/blob/master/docs/rules/import-scope.md
     'lodash/import-scope': ['error', 'full'],

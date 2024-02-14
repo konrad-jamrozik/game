@@ -2,6 +2,7 @@ import { Button, Card, CardContent, CardHeader, TextField } from '@mui/material'
 import Grid from '@mui/material/Unstable_Grid2'
 import _ from 'lodash'
 import { useState } from 'react'
+import { useGameSession } from '../../lib/GameSession'
 import type { GameState } from '../../lib/GameState'
 import {
   getCurrentTurn,
@@ -29,6 +30,7 @@ export function SimulationControlPanel(
   const [targetTurn, setTargetTurn] = useState<number>(defaultTargetTurn)
   const [loading, setLoading] = useState<boolean>(false)
   const [error, setError] = useState<string>()
+  const gameSession = useGameSession()
 
   function simulationRunMsg(): string {
     return `Simulation ran until turn ${getCurrentTurn(props.gameStates)}. Result: ${getGameResult(props.gameStates)}`
@@ -44,6 +46,7 @@ export function SimulationControlPanel(
       targetTurn,
       turnsToSimulate,
     })
+    gameSession.advanceTimeBy1Turn()
   }
 
   async function applySpecificPlayerAction(
