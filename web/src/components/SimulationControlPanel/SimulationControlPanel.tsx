@@ -2,13 +2,13 @@ import { Button, Card, CardContent, CardHeader, TextField } from '@mui/material'
 import Grid from '@mui/material/Unstable_Grid2'
 import _ from 'lodash'
 import { useState } from 'react'
+import type { GameState } from '../../lib/GameState'
 import {
   getCurrentTurn,
   getGameResult,
   isGameOver,
 } from '../../lib/GameStateUtils'
-import type { GameState } from '../../types/GameState'
-import type { PlayerActionPayload } from '../../types/PlayerActionPayload'
+import type { PlayerActionPayload } from '../../lib/PlayerActionPayload'
 import { Label } from '../Label'
 import { applyPlayerAction } from './applyPlayerAction'
 import { simulate } from './simulate'

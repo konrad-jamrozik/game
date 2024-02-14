@@ -7,15 +7,15 @@ import { AssetsDataGrid } from './components/AssetsDataGrid/AssetsDataGrid'
 import { GameStatsLineChart } from './components/GameStatsLineChart'
 import { MissionSitesDataGrid } from './components/MissionSitesDataGrid/MissionSitesDataGrid'
 import { SimulationControlPanel } from './components/SimulationControlPanel/SimulationControlPanel'
-import { getCurrentState } from './lib/GameStateUtils'
-import type { GameState } from './types/GameState'
+import type { GameState } from './lib/GameState'
 import {
   agentStatsDataSeries,
   intelStatsDataSeries,
   miscStatsDataSeries,
   missionsStatsDataSeries,
   moneyStatsDataSeries,
-} from './types/GameStateDataSeries'
+} from './lib/GameStateDataSeries'
+import { getCurrentState } from './lib/GameStateUtils'
 
 function Footer(): React.JSX.Element {
   return (

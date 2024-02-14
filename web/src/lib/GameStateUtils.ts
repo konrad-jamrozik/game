@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import type { GameState } from '../types/GameState'
+import type { GameState } from './GameState'
 
 export function getGameResult(gameStates: readonly GameState[]): gameResult {
   const lastGameState = getCurrentState(gameStates)

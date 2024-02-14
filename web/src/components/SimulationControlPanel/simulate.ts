@@ -1,6 +1,6 @@
 import _ from 'lodash'
+import { initialTurn, type GameState } from '../../lib/GameState'
 import { getCurrentTurn, getStateAtTurn } from '../../lib/GameStateUtils'
-import { initialTurn, type GameState } from '../../types/GameState'
 
 type SimulateParams = {
   readonly gameStates: readonly GameState[]

@@ -7,9 +7,9 @@ import {
   type GridRowSelectionModel,
 } from '@mui/x-data-grid'
 import _ from 'lodash'
+import type { Agent, MissionSite } from '../../lib/GameState'
+import { isActive } from '../../lib/ruleset'
 import { defaultComponentMinWidth } from '../../lib/utils'
-import type { Agent, MissionSite } from '../../types/GameState'
-import { isActive } from '../../types/ruleset'
 import DeployMissionDialog from './DeployMissionDialog'
 
 export type MissionSitesDataGridProps = {

@@ -1,7 +1,7 @@
 import _ from 'lodash'
+import type { GameState } from '../../lib/GameState'
 import { getCurrentState } from '../../lib/GameStateUtils'
-import type { GameState } from '../../types/GameState'
-import type { PlayerActionPayload } from '../../types/PlayerActionPayload'
+import type { PlayerActionPayload } from '../../lib/PlayerActionPayload'
 
 // kja introduce a new class for managing gameStates history. Use it instead of passing around 'gameStates' and 'setGameStates'.
 type ApplyPlayerActionParams = {

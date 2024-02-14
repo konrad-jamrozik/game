@@ -2,9 +2,9 @@ import { Box, useMediaQuery, useTheme } from '@mui/material'
 import type { LegendRendererProps, LineSeriesType } from '@mui/x-charts'
 import { LineChart } from '@mui/x-charts/LineChart'
 import _ from 'lodash'
-import type { GameState } from '../types/GameState'
-import type { GameStateDataSeries } from '../types/GameStateDataSeries'
-import type { MakeOptional } from '../types/external'
+import type { GameState } from '../lib/GameState'
+import type { GameStateDataSeries } from '../lib/GameStateDataSeries'
+import type { MakeOptional } from '../lib/external'
 
 export type GameStatsLineChartProps = {
   readonly gameStates: readonly GameState[]

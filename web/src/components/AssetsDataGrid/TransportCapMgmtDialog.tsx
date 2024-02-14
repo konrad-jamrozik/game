@@ -6,7 +6,7 @@ import DialogTitle from '@mui/material/DialogTitle'
 import Grid from '@mui/material/Unstable_Grid2'
 import { Fragment, useState } from 'react'
 import { getSx } from '../../lib/rendering'
-import { transportCapBuyingCost } from '../../types/ruleset'
+import { transportCapBuyingCost } from '../../lib/ruleset'
 import { Label } from '../Label'
 
 export type TransportCapMgmtDialogProps = {

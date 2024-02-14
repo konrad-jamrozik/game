@@ -7,9 +7,9 @@ import {
   type GridRowSelectionModel,
 } from '@mui/x-data-grid'
 import _ from 'lodash'
+import type { Assets } from '../../lib/GameState'
 import { renderAssetNameCell } from '../../lib/rendering'
 import { defaultComponentMinWidth } from '../../lib/utils'
-import type { Assets } from '../../types/GameState'
 import TransportCapMgmtDialog from './TransportCapMgmtDialog'
 
 export type AssetsDataGridProps = {

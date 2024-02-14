@@ -9,13 +9,13 @@ import {
 } from '@mui/x-data-grid'
 import _ from 'lodash'
 import { useState } from 'react'
+import type { Agent, AgentState } from '../../lib/GameState'
 import { renderAgentStateCell } from '../../lib/rendering'
+import { canBeSentOnMission, getSurvivalSkill } from '../../lib/ruleset'
 import {
   defaultComponentHeight,
   defaultComponentMinWidth,
 } from '../../lib/utils'
-import type { Agent, AgentState } from '../../types/GameState'
-import { canBeSentOnMission, getSurvivalSkill } from '../../types/ruleset'
 import { AgentsDataGridToolbar } from './AgentsDataGridToolbar'
 
 export type AgentsDataGridProps = {
