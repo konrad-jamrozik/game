@@ -4,7 +4,7 @@ import { useState } from 'react'
 import type { GameState } from './GameState'
 import { getCurrentState } from './GameStateUtils'
 import type { PlayerActionPayload } from './PlayerActionPayload'
-import { callApiToAdvanceTimeBy1Turn } from './gameSessionApi'
+import { callApiToAdvanceTimeBy1Turn } from './api/applyPlayerActionApi'
 
 export function useGameSession(): GameSession {
   const [data, setData] = useState<GameSessionData>(initialGameSessionData)

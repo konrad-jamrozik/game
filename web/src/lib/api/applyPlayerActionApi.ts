@@ -1,5 +1,5 @@
-import type { GameState } from './GameState'
-import type { PlayerActionPayload } from './PlayerActionPayload'
+import type { GameState } from '../GameState'
+import type { PlayerActionPayload } from '../PlayerActionPayload'
 import {
   type FetchCallbacks,
   callApi,
