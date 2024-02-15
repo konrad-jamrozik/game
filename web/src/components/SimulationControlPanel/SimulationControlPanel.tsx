@@ -44,6 +44,9 @@ export function SimulationControlPanel(
       turnsToSimulate,
     })
     if (!_.isUndefined(newGameStates)) {
+      // kja bug: this will remove existing game states in earlier turns.
+      // Proper fix is to completely get rid of "setGameStates" (see todo above)
+      // and instead have domain specific method, like "upsert turns"
       props.gameSession.setGameStates(newGameStates)
     }
   }

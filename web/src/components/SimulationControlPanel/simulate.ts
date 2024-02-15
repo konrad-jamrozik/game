@@ -1,6 +1,7 @@
 import _ from 'lodash'
 import { initialTurn, type GameState } from '../../lib/GameState'
-import { getCurrentTurn, getStateAtTurn } from '../../lib/GameStateUtils'
+import { getCurrentTurn } from '../../lib/GameStateUtils'
+import { callSimulateGameSessionApi } from '../../lib/api/simulateGameSessionApi'
 
 type SimulateParams = {
   readonly gameStates: readonly GameState[]
@@ -11,7 +12,6 @@ type SimulateParams = {
   readonly turnsToSimulate?: number | undefined
 }
 
-// eslint-disable-next-line max-statements
 export async function simulate(
   params: SimulateParams,
 ): Promise<GameState[] | undefined> {
@@ -26,48 +26,12 @@ export async function simulate(
   )
   const startNewSimulation = resolvedStartTurn === initialTurn
 
-  const apiUrl = getApiUrl(
-    params.gameStates,
-    resolvedTargetTurn,
+  return callSimulateGameSessionApi({
+    ...params,
+    resolvedStartTurn,
     startNewSimulation,
-  )
-  const jsonBody: string = !startNewSimulation
-    ? JSON.stringify(getStateAtTurn(params.gameStates, resolvedStartTurn))
-    : ''
-
-  try {
-    console.log(`apiUrl: ${apiUrl}`)
-    const response = startNewSimulation
-      ? await fetch(apiUrl)
-      : await fetch(apiUrl, {
-          method: 'POST',
-          body: jsonBody,
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        })
-    if (!response.ok) {
-      const errorContents = await response.text()
-      throw new Error(errorContents)
-    }
-    const allGameStates = (await response.json()) as GameState[]
-    if (startNewSimulation) {
-      return allGameStates
-      // eslint-disable-next-line no-else-return
-    } else {
-      const gameStates = params.gameStates.slice(
-        0,
-        _.min([resolvedStartTurn, getCurrentTurn(params.gameStates)]),
-      )
-      return [...gameStates, ...allGameStates]
-    }
-  } catch (fetchError: unknown) {
-    params.setError((fetchError as Error).message)
-    console.error(fetchError)
-    return undefined
-  } finally {
-    params.setLoading(false)
-  }
+    resolvedTargetTurn,
+  })
 }
 
 function resolveStartAndTargetTurn(
@@ -99,22 +63,4 @@ function resolveStartAndTargetTurn(
       : initialTurn - 1 + turnsToSimulate
   }
   return { resolvedStartTurn, resolvedTargetTurn }
-}
-
-function getApiUrl(
-  gameStates: readonly GameState[],
-  targetTurn: number,
-  startNewSimulation: boolean,
-): string {
-  const apiHost = import.meta.env.PROD
-    ? 'https://game-api1.azurewebsites.net'
-    : 'https://localhost:7128'
-
-  const useNewGameSessionApi =
-    startNewSimulation ||
-    (!_.isEmpty(gameStates) && getCurrentTurn(gameStates) === initialTurn)
-
-  const queryString = `?includeAllStates=true&turnLimit=${targetTurn}`
-
-  return `${apiHost}/simulateGameSession${useNewGameSessionApi ? '' : 'FromState'}${queryString}`
 }
