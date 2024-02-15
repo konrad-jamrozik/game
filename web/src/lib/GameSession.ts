@@ -42,7 +42,7 @@ export class GameSession {
     return this.data.gameStates
   }
 
-  public setGameStates(gameStates: GameState[]): void {
+  public setGameStates(gameStates: readonly GameState[]): void {
     this.setData({
       ...this.data,
       gameStates,

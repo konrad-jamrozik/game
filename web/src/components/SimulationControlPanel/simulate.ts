@@ -14,7 +14,7 @@ type SimulateParams = {
 
 export async function simulate(
   params: SimulateParams,
-): Promise<GameState[] | undefined> {
+): Promise<readonly GameState[]> {
   params.setLoading(true)
   params.setError('')
 
@@ -26,12 +26,31 @@ export async function simulate(
   )
   const startNewSimulation = resolvedStartTurn === initialTurn
 
-  return callSimulateGameSessionApi({
+  const newGameStates = await callSimulateGameSessionApi({
     ...params,
     resolvedStartTurn,
     startNewSimulation,
     resolvedTargetTurn,
   })
+
+  return upsertNewGameStatesToExisting(params, resolvedStartTurn, newGameStates)
+}
+
+function upsertNewGameStatesToExisting(
+  params: SimulateParams,
+  resolvedStartTurn: number,
+  newGameStates: readonly GameState[] | undefined,
+): readonly GameState[] {
+  if (_.isUndefined(newGameStates)) {
+    return params.gameStates
+  }
+
+  const existingGameStates = params.gameStates.slice(
+    0,
+    _.min([resolvedStartTurn, getCurrentTurn(params.gameStates)]),
+  )
+
+  return [...existingGameStates, ...newGameStates]
 }
 
 function resolveStartAndTargetTurn(

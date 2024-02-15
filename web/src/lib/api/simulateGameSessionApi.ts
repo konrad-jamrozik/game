@@ -16,7 +16,7 @@ export async function callSimulateGameSessionApi(
     resolvedStartTurn: number
     resolvedTargetTurn: number
   },
-): Promise<GameState[] | undefined> {
+): Promise<readonly GameState[] | undefined> {
   const jsonBody: string = !params.startNewSimulation
     ? JSON.stringify(
         getStateAtTurn(params.gameStates, params.resolvedStartTurn),

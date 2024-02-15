@@ -35,7 +35,10 @@ export function SimulationControlPanel(
   }
 
   async function simulateTurns(turnsToSimulate?: number): Promise<void> {
-    const newGameStates = await simulate({
+    // kja replace simulateTurns body with:
+    // await props.gameSession.simulateTurns(startTurn, targetTurn, turnsToSimulate, setLoading, setError)
+    // then ponder how to simplify these 3 synonymous inputs: startTurn, targetTurn, turnsToSimulate
+    const updatedGameStates = await simulate({
       gameStates,
       setLoading,
       setError,
@@ -43,12 +46,7 @@ export function SimulationControlPanel(
       targetTurn,
       turnsToSimulate,
     })
-    if (!_.isUndefined(newGameStates)) {
-      // kja bug: this will remove existing game states in earlier turns.
-      // Proper fix is to completely get rid of "setGameStates" (see todo above)
-      // and instead have domain specific method, like "upsert turns"
-      props.gameSession.setGameStates(newGameStates)
-    }
+    props.gameSession.setGameStates(updatedGameStates)
   }
 
   async function advanceTimeBy1Turn(): Promise<void> {
