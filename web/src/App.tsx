@@ -1,13 +1,12 @@
 import { Link, Typography } from '@mui/material'
 import Grid from '@mui/material/Unstable_Grid2'
 import _ from 'lodash'
-import { useState } from 'react'
 import { AgentsDataGrid } from './components/AgentsDataGrid/AgentsDataGrid'
 import { AssetsDataGrid } from './components/AssetsDataGrid/AssetsDataGrid'
 import { GameStatsLineChart } from './components/GameStatsLineChart'
 import { MissionSitesDataGrid } from './components/MissionSitesDataGrid/MissionSitesDataGrid'
 import { SimulationControlPanel } from './components/SimulationControlPanel/SimulationControlPanel'
-import type { GameState } from './lib/GameState'
+import { useGameSession } from './lib/GameSession'
 import {
   agentStatsDataSeries,
   intelStatsDataSeries,
@@ -34,7 +33,8 @@ const lineChartMaxWidth = '700px'
 
 // eslint-disable-next-line max-lines-per-function
 export default function App(): React.JSX.Element {
-  const [gameStates, setGameStates] = useState<GameState[]>([])
+  const gameSession = useGameSession()
+  const gameStates = gameSession.getGameStates()
   const agents = !_.isEmpty(gameStates)
     ? getCurrentState(gameStates).Assets.Agents
     : []
@@ -49,7 +49,7 @@ export default function App(): React.JSX.Element {
       bgcolor={'#303030'}
     >
       <Grid sx={{ bgcolor: '#200000' }}>
-        <SimulationControlPanel {...{ gameStates, setGameStates }} />
+        <SimulationControlPanel gameSession={gameSession} />
       </Grid>
       <Grid sx={{ bgcolor: '#300030' }}>
         <AssetsDataGrid

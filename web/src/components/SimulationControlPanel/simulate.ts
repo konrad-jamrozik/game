@@ -4,7 +4,6 @@ import { getCurrentTurn, getStateAtTurn } from '../../lib/GameStateUtils'
 
 type SimulateParams = {
   readonly gameStates: readonly GameState[]
-  readonly setGameStates: React.Dispatch<React.SetStateAction<GameState[]>>
   readonly setLoading: React.Dispatch<React.SetStateAction<boolean>>
   readonly setError: React.Dispatch<React.SetStateAction<string | undefined>>
   readonly startTurn: number
@@ -12,7 +11,10 @@ type SimulateParams = {
   readonly turnsToSimulate?: number | undefined
 }
 
-export async function simulate(params: SimulateParams): Promise<void> {
+// eslint-disable-next-line max-statements
+export async function simulate(
+  params: SimulateParams,
+): Promise<GameState[] | undefined> {
   params.setLoading(true)
   params.setError('')
 
@@ -50,17 +52,19 @@ export async function simulate(params: SimulateParams): Promise<void> {
     }
     const allGameStates = (await response.json()) as GameState[]
     if (startNewSimulation) {
-      params.setGameStates(allGameStates)
+      return allGameStates
+      // eslint-disable-next-line no-else-return
     } else {
       const gameStates = params.gameStates.slice(
         0,
         _.min([resolvedStartTurn, getCurrentTurn(params.gameStates)]),
       )
-      params.setGameStates([...gameStates, ...allGameStates])
+      return [...gameStates, ...allGameStates]
     }
   } catch (fetchError: unknown) {
     params.setError((fetchError as Error).message)
     console.error(fetchError)
+    return undefined
   } finally {
     params.setLoading(false)
   }

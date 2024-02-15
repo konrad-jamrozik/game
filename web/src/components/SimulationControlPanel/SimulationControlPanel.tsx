@@ -3,7 +3,7 @@ import { Button, Card, CardContent, CardHeader, TextField } from '@mui/material'
 import Grid from '@mui/material/Unstable_Grid2'
 import _ from 'lodash'
 import { useState } from 'react'
-import { useGameSession } from '../../lib/GameSession'
+import type { GameSession } from '../../lib/GameSession'
 import type { GameState } from '../../lib/GameState'
 import {
   getCurrentTurn,
@@ -14,8 +14,7 @@ import { Label } from '../Label'
 import { simulate } from './simulate'
 
 export type SimulationControlPanelProps = {
-  readonly gameStates: readonly GameState[]
-  readonly setGameStates: React.Dispatch<React.SetStateAction<GameState[]>>
+  readonly gameSession: GameSession
 }
 
 const defaultStartTurn = 1
@@ -29,38 +28,34 @@ export function SimulationControlPanel(
   const [targetTurn, setTargetTurn] = useState<number>(defaultTargetTurn)
   const [loading, setLoading] = useState<boolean>(false)
   const [error, setError] = useState<string>()
-  const gameSession = useGameSession()
+  const gameStates = props.gameSession.getGameStates()
 
   function simulationRunMsg(): string {
-    return `Simulation ran until turn ${getCurrentTurn(props.gameStates)}. Result: ${getGameResult(props.gameStates)}`
+    return `Simulation ran until turn ${getCurrentTurn(gameStates)}. Result: ${getGameResult(gameStates)}`
   }
 
   async function simulateTurns(turnsToSimulate?: number): Promise<void> {
-    await simulate({
-      gameStates: props.gameStates,
-      setGameStates: props.setGameStates,
+    const newGameStates = await simulate({
+      gameStates,
       setLoading,
       setError,
       startTurn,
       targetTurn,
       turnsToSimulate,
     })
+    if (!_.isUndefined(newGameStates)) {
+      props.gameSession.setGameStates(newGameStates)
+    }
   }
 
   async function advanceTimeBy1Turn(): Promise<void> {
-    const newGameStates = await gameSession.advanceTimeBy1Turn(
-      setLoading,
-      setError,
-    )
-    if (!_.isUndefined(newGameStates)) {
-      props.setGameStates(newGameStates)
-    }
+    await props.gameSession.advanceTimeBy1Turn(setLoading, setError)
   }
 
   function reset(): void {
     setLoading(false)
     setError('')
-    props.setGameStates([])
+    props.gameSession.setGameStates([])
   }
 
   return (
@@ -78,11 +73,11 @@ export function SimulationControlPanel(
       <CardContent>
         <Grid container spacing={1}>
           <Grid xs={12}>
-            <Label>{currentTurnLabel(props.gameStates)}</Label>
+            <Label>{currentTurnLabel(gameStates)}</Label>
           </Grid>
           <Grid container xs={12} marginBottom={'0px'}>
             <Grid>
-              {advanceTimeButton(advanceTimeBy1Turn, loading, props.gameStates)}
+              {advanceTimeButton(advanceTimeBy1Turn, loading, gameStates)}
             </Grid>
             <Grid xsOffset={'auto'}>
               {resetCurrentTurnButton(reset, loading)}
@@ -90,7 +85,7 @@ export function SimulationControlPanel(
           </Grid>
           <Grid container xs={12} marginBottom={'0px'}>
             <Grid>
-              {simulateFor1TurnButton(simulateTurns, loading, props.gameStates)}
+              {simulateFor1TurnButton(simulateTurns, loading, gameStates)}
             </Grid>
             <Grid xsOffset={'auto'}>
               {wipeSimulationButton(reset, loading)}
@@ -109,7 +104,7 @@ export function SimulationControlPanel(
             <Grid>{startTurnInputTextField(startTurn, setStartTurn)}</Grid>
             <Grid>{targetTurnInputTextField(targetTurn, setTargetTurn)}</Grid>
           </Grid>
-          {!_.isEmpty(props.gameStates) && (
+          {!_.isEmpty(gameStates) && (
             <Grid xs={12}>
               <Label>{simulationRunMsg()}</Label>
             </Grid>

@@ -40,6 +40,17 @@ export class GameSession {
     return undefined
   }
 
+  public getGameStates(): readonly GameState[] {
+    return this.data.gameStates
+  }
+
+  public setGameStates(gameStates: GameState[]): void {
+    this.setData({
+      ...this.data,
+      gameStates,
+    })
+  }
+
   public appendNextTurnGameState(gameState: GameState): GameState[] {
     const newGameStates = [...this.data.gameStates, gameState]
     console.log(`appendNextTurnGameState()`)
