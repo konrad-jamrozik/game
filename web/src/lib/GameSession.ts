@@ -2,6 +2,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { useState } from 'react'
 import type { GameState } from './GameState'
+import { getCurrentState } from './GameStateUtils'
 import type { PlayerActionPayload } from './PlayerActionPayload'
 
 export function useGameSession(): GameSession {
@@ -23,6 +24,22 @@ export class GameSession {
     const newCounter = this.data.counter + 1
     this.setData({ ...this.data, counter: newCounter })
     console.log(`advanceTimeBy1Turn(). newCounter: ${newCounter}`)
+  }
+
+  public appendNewTurnGameState(gameState: GameState): GameState[] {
+    const newGameStates = [...this.data.gameStates, gameState]
+    console.log(`appendNewTurnGameState()`)
+    this.setData({
+      ...this.data,
+      gameStates: newGameStates,
+    })
+    return newGameStates
+  }
+
+  public getCurrentGameState(): GameState | undefined {
+    return this.data.gameStates.length > 0
+      ? getCurrentState(this.data.gameStates)
+      : undefined
   }
 }
 

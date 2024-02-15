@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import { Button, Card, CardContent, CardHeader, TextField } from '@mui/material'
 import Grid from '@mui/material/Unstable_Grid2'
 import _ from 'lodash'
@@ -9,9 +10,8 @@ import {
   getGameResult,
   isGameOver,
 } from '../../lib/GameStateUtils'
-import type { PlayerActionPayload } from '../../lib/PlayerActionPayload'
 import { Label } from '../Label'
-import { applyPlayerAction } from './applyPlayerAction'
+import { callApiToAdvanceTimeBy1Turn } from './callApiToAdvanceTimeBy1Turn'
 import { simulate } from './simulate'
 
 export type SimulationControlPanelProps = {
@@ -46,19 +46,31 @@ export function SimulationControlPanel(
       targetTurn,
       turnsToSimulate,
     })
-    gameSession.advanceTimeBy1Turn()
   }
 
-  async function applySpecificPlayerAction(
-    playerAction: PlayerActionPayload,
-  ): Promise<void> {
-    await applyPlayerAction({
-      gameStates: props.gameStates,
-      setGameStates: props.setGameStates,
+  // async function applySpecificPlayerAction(
+  //   playerAction: PlayerActionPayload,
+  // ): Promise<void> {
+  //   await applyPlayerAction({
+  //     gameStates: props.gameStates,
+  //     setGameStates: props.setGameStates,
+  //     setLoading,
+  //     setError,
+  //     playerAction,
+  //   })
+  //   gameSession.advanceTimeBy1Turn()
+  // }
+
+  async function callApiToAdvanceTimeBy1TurnBound(): Promise<void> {
+    const newGameState = await callApiToAdvanceTimeBy1Turn({
+      currentGameState: gameSession.getCurrentGameState(),
       setLoading,
       setError,
-      playerAction,
     })
+    if (!_.isUndefined(newGameState)) {
+      const newGameStates = gameSession.appendNewTurnGameState(newGameState)
+      props.setGameStates(newGameStates)
+    }
   }
 
   function reset(): void {
@@ -86,12 +98,19 @@ export function SimulationControlPanel(
           </Grid>
           <Grid container xs={12} marginBottom={'0px'}>
             <Grid>
+              {advanceTimeButton2(
+                callApiToAdvanceTimeBy1TurnBound,
+                loading,
+                props.gameStates,
+              )}
+            </Grid>
+            {/* <Grid>
               {advanceTimeButton(
                 applySpecificPlayerAction,
                 loading,
                 props.gameStates,
               )}
-            </Grid>
+            </Grid> */}
             <Grid xsOffset={'auto'}>
               {resetCurrentTurnButton(reset, loading)}
             </Grid>
@@ -189,20 +208,36 @@ function targetTurnInputTextField(
   )
 }
 
-function advanceTimeButton(
-  applySpecificPlayerAction: (
-    PlayerAction: PlayerActionPayload,
-  ) => Promise<void>,
+// function advanceTimeButton(
+//   applySpecificPlayerAction: (
+//     PlayerAction: PlayerActionPayload,
+//   ) => Promise<void>,
+//   loading: boolean,
+//   gameStates: readonly GameState[],
+// ): React.JSX.Element {
+//   return (
+//     <Button
+//       variant="contained"
+//       onClick={async () => applySpecificPlayerAction({ Action: 'AdvanceTime' })}
+//       disabled={loading || (!_.isEmpty(gameStates) && isGameOver(gameStates))}
+//     >
+//       {'Advance 1 turn'}
+//     </Button>
+//   )
+// }
+
+function advanceTimeButton2(
+  onClick: () => Promise<void>,
   loading: boolean,
   gameStates: readonly GameState[],
 ): React.JSX.Element {
   return (
     <Button
       variant="contained"
-      onClick={async () => applySpecificPlayerAction({ Action: 'AdvanceTime' })}
+      onClick={onClick}
       disabled={loading || (!_.isEmpty(gameStates) && isGameOver(gameStates))}
     >
-      {'Advance 1 turn'}
+      {'Advance 1 turn!'}
     </Button>
   )
 }
