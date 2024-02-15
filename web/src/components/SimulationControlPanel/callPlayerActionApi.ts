@@ -4,19 +4,19 @@ import type { GameState } from '../../lib/GameState'
 import type { PlayerActionPayload } from '../../lib/PlayerActionPayload'
 
 // kja introduce a new class for managing gameStates history. Use it instead of passing around 'gameStates' and 'setGameStates'.
-type CallApiToAdvanceTimeBy1TurnParams = {
+type CallPlayerActionApiParams = {
   readonly currentGameState: GameState | undefined
+  readonly playerActionPayload: PlayerActionPayload
   readonly setLoading: React.Dispatch<React.SetStateAction<boolean>>
   readonly setError: React.Dispatch<React.SetStateAction<string | undefined>>
 }
-export async function callApiToAdvanceTimeBy1Turn(
-  params: CallApiToAdvanceTimeBy1TurnParams,
+export async function callPlayerActionApi(
+  params: CallPlayerActionApiParams,
 ): Promise<GameState | undefined> {
   params.setLoading(true)
   params.setError('')
 
-  const { currentGameState } = params
-  const playerActionPayload = { Action: 'AdvanceTime' }
+  const { currentGameState, playerActionPayload } = params
 
   const apiUrl = getApplyPlayerActionApiUrl()
   const jsonBody: string = JSON.stringify(

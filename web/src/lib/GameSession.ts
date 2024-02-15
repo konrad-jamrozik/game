@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import _ from 'lodash'
 import { useState } from 'react'
-import { callApiToAdvanceTimeBy1Turn } from '../components/SimulationControlPanel/callApiToAdvanceTimeBy1Turn'
+import { callPlayerActionApi } from '../components/SimulationControlPanel/callPlayerActionApi'
 import type { GameState } from './GameState'
 import { getCurrentState } from './GameStateUtils'
 import type { PlayerActionPayload } from './PlayerActionPayload'
@@ -26,8 +26,9 @@ export class GameSession {
     setLoading: React.Dispatch<React.SetStateAction<boolean>>,
     setError: React.Dispatch<React.SetStateAction<string | undefined>>,
   ): Promise<GameState[] | undefined> {
-    const newGameState = await callApiToAdvanceTimeBy1Turn({
+    const newGameState = await callPlayerActionApi({
       currentGameState: this.getCurrentGameState(),
+      playerActionPayload: { Action: 'AdvanceTime' },
       setLoading,
       setError,
     })

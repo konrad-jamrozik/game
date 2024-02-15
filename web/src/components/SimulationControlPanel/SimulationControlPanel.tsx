@@ -47,19 +47,6 @@ export function SimulationControlPanel(
     })
   }
 
-  // async function applySpecificPlayerAction(
-  //   playerAction: PlayerActionPayload,
-  // ): Promise<void> {
-  //   await applyPlayerAction({
-  //     gameStates: props.gameStates,
-  //     setGameStates: props.setGameStates,
-  //     setLoading,
-  //     setError,
-  //     playerAction,
-  //   })
-  //   gameSession.advanceTimeBy1Turn()
-  // }
-
   async function advanceTimeBy1Turn(): Promise<void> {
     const newGameStates = await gameSession.advanceTimeBy1Turn(
       setLoading,
