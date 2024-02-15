@@ -109,7 +109,7 @@ export function SimulationControlPanel(
               <Label>{simulationRunMsg()}</Label>
             </Grid>
           )}
-          {Boolean(error) && <Grid xs={12}>`Error: ${error}`</Grid>}
+          {Boolean(error) && <Grid xs={12}>Error: {error}</Grid>}
         </Grid>
       </CardContent>
     </Card>
