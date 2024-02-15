@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import _ from 'lodash'
-import { log } from './api'
 
 export function getPostJsonRequest(apiUrl: URL, jsonBody: string): Request {
   return new Request(apiUrl.toString(), {
@@ -53,4 +52,19 @@ function getHost(): string {
   return import.meta.env.PROD
     ? 'https://game-api1.azurewebsites.net'
     : 'https://localhost:7128'
+}
+
+export async function log(req: Request, pretty?: boolean): Promise<string> {
+  const text = await req.clone().text()
+
+  if (pretty ?? false) {
+    // JSON.parse here is to avoid escaping of quotes. See
+    // https://chat.openai.com/share/d6abd2a4-0265-4ea2-8bbb-f30eeee0f787
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    const parsed = JSON.parse(text)
+    // eslint-disable-next-line sonarjs/prefer-immediate-return
+    const stringified = JSON.stringify(parsed, undefined, 2)
+    return stringified
+  }
+  return text
 }

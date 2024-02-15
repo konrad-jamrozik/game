@@ -5,7 +5,7 @@ import {
   callApi,
   getApiUrl,
   getPostJsonRequest,
-} from './callApi'
+} from './genericApiUtils'
 
 export async function callApiToAdvanceTimeBy1Turn(
   params: FetchCallbacks & { currentGameState?: GameState | undefined },
@@ -15,21 +15,6 @@ export async function callApiToAdvanceTimeBy1Turn(
     playerActionPayload: { Action: 'AdvanceTime' },
     currentGameState: params.currentGameState,
   })
-}
-
-export async function log(req: Request, pretty?: boolean): Promise<string> {
-  const text = await req.clone().text()
-
-  if (pretty ?? false) {
-    // JSON.parse here is to avoid escaping of quotes. See
-    // https://chat.openai.com/share/d6abd2a4-0265-4ea2-8bbb-f30eeee0f787
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    const parsed = JSON.parse(text)
-    // eslint-disable-next-line sonarjs/prefer-immediate-return
-    const stringified = JSON.stringify(parsed, undefined, 2)
-    return stringified
-  }
-  return text
 }
 
 async function callApplyPlayerActionApi(

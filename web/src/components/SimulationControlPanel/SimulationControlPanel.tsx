@@ -187,7 +187,7 @@ function advanceTimeButton(
       onClick={advanceTimeBy1Turn}
       disabled={loading || (!_.isEmpty(gameStates) && isGameOver(gameStates))}
     >
-      {'Advance 1 turn!'}
+      {'Advance 1 turn'}
     </Button>
   )
 }
