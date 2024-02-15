@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import { Button, Card, CardContent, CardHeader, TextField } from '@mui/material'
 import Grid from '@mui/material/Unstable_Grid2'
 import _ from 'lodash'
@@ -36,8 +37,20 @@ export function SimulationControlPanel(
 
   async function simulateTurns(turnsToSimulate?: number): Promise<void> {
     // kja replace simulateTurns body with:
-    // await props.gameSession.simulateTurns(startTurn, targetTurn, turnsToSimulate, setLoading, setError)
+    //
+    //   await props.gameSession.simulateTurns(startTurn, targetTurn, turnsToSimulate, setLoading, setError)
+    //
     // then ponder how to simplify these 3 synonymous inputs: startTurn, targetTurn, turnsToSimulate
+    // Probably there are two exclusive modes:
+    // - defined start and end turn (used by simulateFromToTurnButton)
+    // - XOR turnsToSimulate from current turn
+    //   (used by simulateFor1TurnButton and conceptually also by advanceTimeButton, but different API route)
+    // invocation of this method should make it clearer. Either two separate method or "turnsToRunDescriptor"
+    // param or similar.
+    // kja dedup simulateFor1TurnButton and advanceTimeButton
+    //     both these calls advance game session by 1 turn, but they use different API routes: one of them uses
+    //     AI player, one doesn't. Probably I should consolidate them into one API route that takes extra param like
+    //     "useAI: name_of_the_AI". If AI is used, then before the time is advanced, the backend AI will try to do things first.
     const updatedGameStates = await simulate({
       gameStates,
       setLoading,
