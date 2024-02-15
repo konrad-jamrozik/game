@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import _ from 'lodash'
 
 export function getPostJsonRequest(apiUrl: URL, jsonBody: string): Request {
