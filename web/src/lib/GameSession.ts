@@ -5,36 +5,39 @@ import type { GameState } from './GameState'
 import type { PlayerActionPayload } from './PlayerActionPayload'
 
 export function useGameSession(): GameSession {
-  const [counter, setCounter] = useState<number>(0)
-  return new GameSession(counter, setCounter)
-}
-
-export type GameSessionData = {
-  readonly gameStates: readonly GameState[]
-  readonly currentTurnStates: readonly GameState[]
-  readonly playerActions: readonly PlayerActionPayload[]
-  readonly counter: number
+  const [data, setData] = useState<GameSessionData>(initialGameSessionData)
+  return new GameSession(data, setData)
 }
 
 export class GameSession {
-  private readonly gameSessionData: GameSessionData
   public constructor(
-    counter: number,
-    private readonly setCounter: React.Dispatch<React.SetStateAction<number>>,
+    private readonly data: GameSessionData,
+    private readonly setData: React.Dispatch<
+      React.SetStateAction<GameSessionData>
+    >,
   ) {
-    this.gameSessionData = {
-      gameStates: [],
-      currentTurnStates: [],
-      playerActions: [],
-      counter,
-    }
+    this.data = data
   }
 
   public advanceTimeBy1Turn(): void {
-    const newCounter = this.gameSessionData.counter + 1
-    this.setCounter(newCounter)
+    const newCounter = this.data.counter + 1
+    this.setData({ ...this.data, counter: newCounter })
     console.log(`advanceTimeBy1Turn(). newCounter: ${newCounter}`)
   }
+}
+
+type GameSessionData = {
+  readonly gameStates: readonly GameState[]
+  readonly currentTurnGameStates: readonly GameState[]
+  readonly currentTurnPlayerActions: readonly PlayerActionPayload[]
+  readonly counter: number
+}
+
+const initialGameSessionData: GameSessionData = {
+  gameStates: [],
+  currentTurnGameStates: [],
+  currentTurnPlayerActions: [],
+  counter: 0,
 }
 
 /**
