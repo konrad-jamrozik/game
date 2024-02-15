@@ -9,6 +9,7 @@ type CallPlayerActionApiParams = {
   readonly setLoading: React.Dispatch<React.SetStateAction<boolean>>
   readonly setError: React.Dispatch<React.SetStateAction<string | undefined>>
 }
+
 export async function callPlayerActionApi(
   params: CallPlayerActionApiParams,
 ): Promise<GameState | undefined> {

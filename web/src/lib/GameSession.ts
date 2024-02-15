@@ -2,10 +2,10 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import _ from 'lodash'
 import { useState } from 'react'
-import { callPlayerActionApi } from '../components/SimulationControlPanel/callPlayerActionApi'
 import type { GameState } from './GameState'
 import { getCurrentState } from './GameStateUtils'
 import type { PlayerActionPayload } from './PlayerActionPayload'
+import { callApiToAdvanceTimeBy1Turn } from './api'
 
 export function useGameSession(): GameSession {
   const [data, setData] = useState<GameSessionData>(initialGameSessionData)
@@ -26,11 +26,10 @@ export class GameSession {
     setLoading: React.Dispatch<React.SetStateAction<boolean>>,
     setError: React.Dispatch<React.SetStateAction<string | undefined>>,
   ): Promise<GameState[] | undefined> {
-    const newGameState = await callPlayerActionApi({
-      currentGameState: this.getCurrentGameState(),
-      playerActionPayload: { Action: 'AdvanceTime' },
+    const newGameState = await callApiToAdvanceTimeBy1Turn({
       setLoading,
       setError,
+      currentGameState: this.getCurrentGameState(),
     })
     if (!_.isUndefined(newGameState)) {
       // eslint-disable-next-line sonarjs/prefer-immediate-return
