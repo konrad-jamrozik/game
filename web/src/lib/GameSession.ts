@@ -1,6 +1,8 @@
 /* eslint-disable @typescript-eslint/parameter-properties */
 /* eslint-disable @typescript-eslint/no-unused-vars */
+import _ from 'lodash'
 import { useState } from 'react'
+import { callApiToAdvanceTimeBy1Turn } from '../components/SimulationControlPanel/callApiToAdvanceTimeBy1Turn'
 import type { GameState } from './GameState'
 import { getCurrentState } from './GameStateUtils'
 import type { PlayerActionPayload } from './PlayerActionPayload'
@@ -26,9 +28,26 @@ export class GameSession {
     console.log(`advanceTimeBy1Turn(). newCounter: ${newCounter}`)
   }
 
-  public appendNewTurnGameState(gameState: GameState): GameState[] {
+  public async advanceTimeBy1TurnByCallingApi(
+    setLoading: React.Dispatch<React.SetStateAction<boolean>>,
+    setError: React.Dispatch<React.SetStateAction<string | undefined>>,
+  ): Promise<GameState[] | undefined> {
+    const newGameState = await callApiToAdvanceTimeBy1Turn({
+      currentGameState: this.getCurrentGameState(),
+      setLoading,
+      setError,
+    })
+    if (!_.isUndefined(newGameState)) {
+      // eslint-disable-next-line sonarjs/prefer-immediate-return
+      const newGameStates = this.appendNextTurnGameState(newGameState)
+      return newGameStates
+    }
+    return undefined
+  }
+
+  public appendNextTurnGameState(gameState: GameState): GameState[] {
     const newGameStates = [...this.data.gameStates, gameState]
-    console.log(`appendNewTurnGameState()`)
+    console.log(`appendNextTurnGameState()`)
     this.setData({
       ...this.data,
       gameStates: newGameStates,

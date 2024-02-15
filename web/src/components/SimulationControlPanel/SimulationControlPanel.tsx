@@ -61,14 +61,24 @@ export function SimulationControlPanel(
   //   gameSession.advanceTimeBy1Turn()
   // }
 
-  async function callApiToAdvanceTimeBy1TurnBound(): Promise<void> {
-    const newGameState = await callApiToAdvanceTimeBy1Turn({
-      currentGameState: gameSession.getCurrentGameState(),
+  // async function callApiToAdvanceTimeBy1TurnBound(): Promise<void> {
+  //   const newGameState = await callApiToAdvanceTimeBy1Turn({
+  //     currentGameState: gameSession.getCurrentGameState(),
+  //     setLoading,
+  //     setError,
+  //   })
+  //   if (!_.isUndefined(newGameState)) {
+  //     const newGameStates = gameSession.appendNextTurnGameState(newGameState)
+  //     props.setGameStates(newGameStates)
+  //   }
+  // }
+
+  async function callApiToAdvanceTimeBy1TurnBound2(): Promise<void> {
+    const newGameStates = await gameSession.advanceTimeBy1TurnByCallingApi(
       setLoading,
       setError,
-    })
-    if (!_.isUndefined(newGameState)) {
-      const newGameStates = gameSession.appendNewTurnGameState(newGameState)
+    )
+    if (!_.isUndefined(newGameStates)) {
       props.setGameStates(newGameStates)
     }
   }
@@ -99,7 +109,7 @@ export function SimulationControlPanel(
           <Grid container xs={12} marginBottom={'0px'}>
             <Grid>
               {advanceTimeButton2(
-                callApiToAdvanceTimeBy1TurnBound,
+                callApiToAdvanceTimeBy1TurnBound2,
                 loading,
                 props.gameStates,
               )}
