@@ -3,7 +3,6 @@ import _ from 'lodash'
 import type { GameState } from '../../lib/GameState'
 import type { PlayerActionPayload } from '../../lib/PlayerActionPayload'
 
-// kja introduce a new class for managing gameStates history. Use it instead of passing around 'gameStates' and 'setGameStates'.
 type CallPlayerActionApiParams = {
   readonly currentGameState: GameState | undefined
   readonly playerActionPayload: PlayerActionPayload

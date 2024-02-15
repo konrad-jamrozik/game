@@ -34,6 +34,8 @@ const lineChartMaxWidth = '700px'
 // eslint-disable-next-line max-lines-per-function
 export default function App(): React.JSX.Element {
   const gameSession = useGameSession()
+  // kja gameStates nor agents should be gotten out of gameSession.
+  // Instead, the consumer code should make calls on gameSession methods.
   const gameStates = gameSession.getGameStates()
   const agents = !_.isEmpty(gameStates)
     ? getCurrentState(gameStates).Assets.Agents

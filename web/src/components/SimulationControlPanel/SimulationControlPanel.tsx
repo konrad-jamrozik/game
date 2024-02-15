@@ -28,6 +28,8 @@ export function SimulationControlPanel(
   const [targetTurn, setTargetTurn] = useState<number>(defaultTargetTurn)
   const [loading, setLoading] = useState<boolean>(false)
   const [error, setError] = useState<string>()
+  // kja gameStates should not be gotten out of gameSession.
+  // Instead, the consumer code should make calls on gameSession methods.
   const gameStates = props.gameSession.getGameStates()
 
   function simulationRunMsg(): string {
