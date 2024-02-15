@@ -1,5 +1,11 @@
 import _ from 'lodash'
 
+export function getGetRequest(apiUrl: URL): Request {
+  return new Request(apiUrl.toString(), {
+    method: 'GET',
+  })
+}
+
 export function getPostJsonRequest(apiUrl: URL, jsonBody: string): Request {
   return new Request(apiUrl.toString(), {
     method: 'POST',
