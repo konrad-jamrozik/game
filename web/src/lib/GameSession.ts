@@ -22,13 +22,7 @@ export class GameSession {
     this.data = data
   }
 
-  public advanceTimeBy1Turn(): void {
-    const newCounter = this.data.counter + 1
-    this.setData({ ...this.data, counter: newCounter })
-    console.log(`advanceTimeBy1Turn(). newCounter: ${newCounter}`)
-  }
-
-  public async advanceTimeBy1TurnByCallingApi(
+  public async advanceTimeBy1Turn(
     setLoading: React.Dispatch<React.SetStateAction<boolean>>,
     setError: React.Dispatch<React.SetStateAction<string | undefined>>,
   ): Promise<GameState[] | undefined> {
@@ -66,28 +60,13 @@ type GameSessionData = {
   readonly gameStates: readonly GameState[]
   readonly currentTurnGameStates: readonly GameState[]
   readonly currentTurnPlayerActions: readonly PlayerActionPayload[]
-  readonly counter: number
 }
 
 const initialGameSessionData: GameSessionData = {
   gameStates: [],
   currentTurnGameStates: [],
   currentTurnPlayerActions: [],
-  counter: 0,
 }
-
-/**
-
-  public wipeGameSession(): void {
-    this.gameSessionData = {
-      gameStates: [],
-      currentTurnStates: [],
-      playerActions: [],
-    }
-  }
-
-  public advanceTimeBy1Turn(): void {}
-*/
 
 // I am going to need:
 

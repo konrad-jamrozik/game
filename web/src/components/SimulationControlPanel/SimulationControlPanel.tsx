@@ -11,7 +11,6 @@ import {
   isGameOver,
 } from '../../lib/GameStateUtils'
 import { Label } from '../Label'
-import { callApiToAdvanceTimeBy1Turn } from './callApiToAdvanceTimeBy1Turn'
 import { simulate } from './simulate'
 
 export type SimulationControlPanelProps = {
@@ -61,20 +60,8 @@ export function SimulationControlPanel(
   //   gameSession.advanceTimeBy1Turn()
   // }
 
-  // async function callApiToAdvanceTimeBy1TurnBound(): Promise<void> {
-  //   const newGameState = await callApiToAdvanceTimeBy1Turn({
-  //     currentGameState: gameSession.getCurrentGameState(),
-  //     setLoading,
-  //     setError,
-  //   })
-  //   if (!_.isUndefined(newGameState)) {
-  //     const newGameStates = gameSession.appendNextTurnGameState(newGameState)
-  //     props.setGameStates(newGameStates)
-  //   }
-  // }
-
-  async function callApiToAdvanceTimeBy1TurnBound2(): Promise<void> {
-    const newGameStates = await gameSession.advanceTimeBy1TurnByCallingApi(
+  async function advanceTimeBy1Turn(): Promise<void> {
+    const newGameStates = await gameSession.advanceTimeBy1Turn(
       setLoading,
       setError,
     )
@@ -108,19 +95,8 @@ export function SimulationControlPanel(
           </Grid>
           <Grid container xs={12} marginBottom={'0px'}>
             <Grid>
-              {advanceTimeButton2(
-                callApiToAdvanceTimeBy1TurnBound2,
-                loading,
-                props.gameStates,
-              )}
+              {advanceTimeButton(advanceTimeBy1Turn, loading, props.gameStates)}
             </Grid>
-            {/* <Grid>
-              {advanceTimeButton(
-                applySpecificPlayerAction,
-                loading,
-                props.gameStates,
-              )}
-            </Grid> */}
             <Grid xsOffset={'auto'}>
               {resetCurrentTurnButton(reset, loading)}
             </Grid>
@@ -218,33 +194,15 @@ function targetTurnInputTextField(
   )
 }
 
-// function advanceTimeButton(
-//   applySpecificPlayerAction: (
-//     PlayerAction: PlayerActionPayload,
-//   ) => Promise<void>,
-//   loading: boolean,
-//   gameStates: readonly GameState[],
-// ): React.JSX.Element {
-//   return (
-//     <Button
-//       variant="contained"
-//       onClick={async () => applySpecificPlayerAction({ Action: 'AdvanceTime' })}
-//       disabled={loading || (!_.isEmpty(gameStates) && isGameOver(gameStates))}
-//     >
-//       {'Advance 1 turn'}
-//     </Button>
-//   )
-// }
-
-function advanceTimeButton2(
-  onClick: () => Promise<void>,
+function advanceTimeButton(
+  advanceTimeBy1Turn: () => Promise<void>,
   loading: boolean,
   gameStates: readonly GameState[],
 ): React.JSX.Element {
   return (
     <Button
       variant="contained"
-      onClick={onClick}
+      onClick={advanceTimeBy1Turn}
       disabled={loading || (!_.isEmpty(gameStates) && isGameOver(gameStates))}
     >
       {'Advance 1 turn!'}
