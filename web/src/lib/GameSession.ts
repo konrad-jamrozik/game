@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/parameter-properties */
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import _ from 'lodash'
 import { useState } from 'react'
 import type { GameState } from './GameState'

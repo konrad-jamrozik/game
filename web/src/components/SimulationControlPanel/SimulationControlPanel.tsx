@@ -1,4 +1,3 @@
-/* eslint-disable max-lines */
 import { Button, Card, CardContent, CardHeader, TextField } from '@mui/material'
 import Grid from '@mui/material/Unstable_Grid2'
 import _ from 'lodash'
@@ -20,7 +19,6 @@ export type SimulationControlPanelProps = {
 const defaultStartTurn = 1
 const defaultTargetTurn = 120
 
-// eslint-disable-next-line max-lines-per-function
 export function SimulationControlPanel(
   props: SimulationControlPanelProps,
 ): React.JSX.Element {
