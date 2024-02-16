@@ -14,7 +14,6 @@ import {
   missionsStatsDataSeries,
   moneyStatsDataSeries,
 } from './lib/GameStateDataSeries'
-import { getCurrentState } from './lib/GameStateUtils'
 
 function Footer(): React.JSX.Element {
   return (
@@ -38,7 +37,7 @@ export default function App(): React.JSX.Element {
   // Instead, the consumer code should make calls on gameSession methods.
   const gameStates = gameSession.getGameStates()
   const agents = !_.isEmpty(gameStates)
-    ? getCurrentState(gameStates).Assets.Agents
+    ? gameSession.getCurrentState().Assets.Agents
     : []
 
   return (
@@ -57,7 +56,7 @@ export default function App(): React.JSX.Element {
         <AssetsDataGrid
           assets={
             !_.isEmpty(gameStates)
-              ? getCurrentState(gameStates).Assets
+              ? gameSession.getCurrentState().Assets
               : undefined
           }
         />
@@ -66,7 +65,7 @@ export default function App(): React.JSX.Element {
         <MissionSitesDataGrid
           missionSites={
             !_.isEmpty(gameStates)
-              ? getCurrentState(gameStates).MissionSites
+              ? gameSession.getCurrentState().MissionSites
               : undefined
           }
           agents={agents}

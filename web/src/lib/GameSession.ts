@@ -2,7 +2,6 @@
 import _ from 'lodash'
 import { useState } from 'react'
 import type { GameState } from './GameState'
-import { getCurrentState } from './GameStateUtils'
 import type { PlayerActionPayload } from './PlayerActionPayload'
 import { callApiToAdvanceTimeBy1Turn } from './api/applyPlayerActionApi'
 
@@ -60,11 +59,40 @@ export class GameSession {
   }
 
   public getCurrentGameState(): GameState | undefined {
-    return this.data.gameStates.length > 0
-      ? getCurrentState(this.data.gameStates)
-      : undefined
+    return this.data.gameStates.length > 0 ? this.getCurrentState() : undefined
+  }
+
+  public getCurrentTurn(): number {
+    return this.getCurrentState().Timeline.CurrentTurn
+  }
+
+  public getGameResult(): GameResult {
+    const lastGameState = this.getCurrentState()
+    return lastGameState.IsGameWon
+      ? 'won'
+      : lastGameState.IsGameLost
+        ? 'lost'
+        : 'undecided'
+  }
+
+  public getStateAtTurn(turn: number): GameState {
+    return _.findLast(
+      this.data.gameStates,
+      (gs) => gs.Timeline.CurrentTurn === turn,
+    )!
+  }
+
+  public isGameOver(): boolean {
+    const lastGameState = this.getCurrentState()
+    return lastGameState.IsGameOver
+  }
+
+  public getCurrentState(): GameState {
+    return this.data.gameStates.at(-1)!
   }
 }
+
+export type GameResult = 'won' | 'lost' | 'undecided'
 
 type GameSessionData = {
   readonly gameStates: readonly GameState[]

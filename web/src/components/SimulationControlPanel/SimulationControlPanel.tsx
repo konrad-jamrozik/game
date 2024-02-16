@@ -5,11 +5,6 @@ import _ from 'lodash'
 import { useState } from 'react'
 import type { GameSession } from '../../lib/GameSession'
 import type { GameState } from '../../lib/GameState'
-import {
-  getCurrentTurn,
-  getGameResult,
-  isGameOver,
-} from '../../lib/GameStateUtils'
 import { Label } from '../Label'
 import { simulate } from './simulate'
 
@@ -32,7 +27,7 @@ export function SimulationControlPanel(
   const gameStates = props.gameSession.getGameStates()
 
   function simulationRunMsg(): string {
-    return `Simulation ran until turn ${getCurrentTurn(gameStates)}. Result: ${getGameResult(gameStates)}`
+    return `Simulation ran until turn ${props.gameSession.getCurrentTurn()}. Result: ${props.gameSession.getGameResult()}`
   }
 
   async function simulateTurns(turnsToSimulate?: number): Promise<void> {
@@ -52,6 +47,7 @@ export function SimulationControlPanel(
     //     AI player, one doesn't. Probably I should consolidate them into one API route that takes extra param like
     //     "useAI: name_of_the_AI". If AI is used, then before the time is advanced, the backend AI will try to do things first.
     const updatedGameStates = await simulate({
+      gameSession: props.gameSession,
       gameStates,
       setLoading,
       setError,
@@ -87,11 +83,16 @@ export function SimulationControlPanel(
       <CardContent>
         <Grid container spacing={1}>
           <Grid xs={12}>
-            <Label>{currentTurnLabel(gameStates)}</Label>
+            <Label>{currentTurnLabel(props.gameSession, gameStates)}</Label>
           </Grid>
           <Grid container xs={12} marginBottom={'0px'}>
             <Grid>
-              {advanceTimeButton(advanceTimeBy1Turn, loading, gameStates)}
+              {advanceTimeButton(
+                advanceTimeBy1Turn,
+                loading,
+                props.gameSession,
+                gameStates,
+              )}
             </Grid>
             <Grid xsOffset={'auto'}>
               {resetCurrentTurnButton(reset, loading)}
@@ -99,7 +100,12 @@ export function SimulationControlPanel(
           </Grid>
           <Grid container xs={12} marginBottom={'0px'}>
             <Grid>
-              {simulateFor1TurnButton(simulateTurns, loading, gameStates)}
+              {simulateFor1TurnButton(
+                simulateTurns,
+                loading,
+                props.gameSession,
+                gameStates,
+              )}
             </Grid>
             <Grid xsOffset={'auto'}>
               {wipeSimulationButton(reset, loading)}
@@ -130,9 +136,12 @@ export function SimulationControlPanel(
   )
 }
 
-function currentTurnLabel(gameStates: readonly GameState[]): string {
+function currentTurnLabel(
+  gameSession: GameSession,
+  gameStates: readonly GameState[],
+): string {
   return `Current turn: ${
-    !_.isEmpty(gameStates) ? getCurrentTurn(gameStates) : 'N/A'
+    !_.isEmpty(gameStates) ? gameSession.getCurrentTurn() : 'N/A'
   }`
 }
 
@@ -193,13 +202,14 @@ function targetTurnInputTextField(
 function advanceTimeButton(
   advanceTimeBy1Turn: () => Promise<void>,
   loading: boolean,
+  gameSession: GameSession,
   gameStates: readonly GameState[],
 ): React.JSX.Element {
   return (
     <Button
       variant="contained"
       onClick={advanceTimeBy1Turn}
-      disabled={loading || (!_.isEmpty(gameStates) && isGameOver(gameStates))}
+      disabled={loading || (!_.isEmpty(gameStates) && gameSession.isGameOver())}
     >
       {'Advance 1 turn'}
     </Button>
@@ -209,13 +219,14 @@ function advanceTimeButton(
 function simulateFor1TurnButton(
   simulateTurns: (turnsToSimulate?: number) => Promise<void>,
   loading: boolean,
+  gameSession: GameSession,
   gameStates: readonly GameState[],
 ): React.JSX.Element {
   return (
     <Button
       variant="outlined"
       onClick={async () => simulateTurns(1)}
-      disabled={loading || (!_.isEmpty(gameStates) && isGameOver(gameStates))}
+      disabled={loading || (!_.isEmpty(gameStates) && gameSession.isGameOver())}
     >
       {'Delegate 1 turn to AI'}
     </Button>
