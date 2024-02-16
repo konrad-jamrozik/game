@@ -35,12 +35,6 @@ export async function simulate(
     resolvedTargetTurn,
   })
 
-  // kja bug here when trying to simulate turn:
-  // GameSession.ts:66 Uncaught (in promise) TypeError: Cannot read properties of undefined (reading 'Timeline')
-  // at GameSession.getCurrentTurn (GameSession.ts:66:33)
-  // at upsertNewGameStatesToExisting (simulate.ts:58:50)
-  // at simulate (simulate.ts:44:10)
-  // at async simulateTurns (SimulationControlPanel.tsx:49:31)
   return upsertNewGameStatesToExisting(params, resolvedStartTurn, newGameStates)
 }
 
@@ -55,12 +49,14 @@ function upsertNewGameStatesToExisting(
 
   const currentTurn = !_.isEmpty(params.gameStates)
     ? params.gameSession.getCurrentTurn()
-    : resolvedStartTurn
+    : undefined
 
-  const existingGameStates = params.gameStates.slice(
-    0,
-    _.min([resolvedStartTurn, currentTurn]),
-  )
+  const valuesToMin = [
+    resolvedStartTurn,
+    ...(!_.isUndefined(currentTurn) ? [currentTurn] : []),
+  ]
+
+  const existingGameStates = params.gameStates.slice(0, _.min(valuesToMin))
 
   return [...existingGameStates, ...newGameStates]
 }
