@@ -1,4 +1,3 @@
-/* eslint-disable max-statements */
 /* eslint-disable @typescript-eslint/parameter-properties */
 import _ from 'lodash'
 import { useState } from 'react'
