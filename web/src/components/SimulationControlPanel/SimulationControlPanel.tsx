@@ -48,7 +48,6 @@ export function SimulationControlPanel(
     //     "useAI: name_of_the_AI". If AI is used, then before the time is advanced, the backend AI will try to do things first.
     const updatedGameStates = await simulate({
       gameSession: props.gameSession,
-      gameStates,
       setLoading,
       setError,
       startTurn,

@@ -13,7 +13,6 @@ export async function callSimulateGameSessionApi(
   params: FetchCallbacks & {
     startNewSimulation: boolean
     gameSession: GameSession
-    gameStates: readonly GameState[]
     resolvedStartTurn: number
     resolvedTargetTurn: number
   },
@@ -25,7 +24,6 @@ export async function callSimulateGameSessionApi(
     : ''
   const apiUrl = getSimulateApiUrl(
     params.gameSession,
-    params.gameStates,
     params.resolvedTargetTurn,
     params.startNewSimulation,
   )
@@ -37,13 +35,11 @@ export async function callSimulateGameSessionApi(
 
 function getSimulateApiUrl(
   gameSession: GameSession,
-  gameStates: readonly GameState[],
   resolvedTargetTurn: number,
   startNewSimulation: boolean,
 ): URL {
   const useNewGameSessionApi =
-    startNewSimulation ||
-    (!_.isEmpty(gameStates) && gameSession.getCurrentTurn() === initialTurn)
+    startNewSimulation || gameSession.getCurrentTurnUnsafe() === initialTurn
 
   const path = `simulateGameSession${useNewGameSessionApi ? '' : 'FromState'}`
   const queryString = `includeAllStates=true&turnLimit=${resolvedTargetTurn}`

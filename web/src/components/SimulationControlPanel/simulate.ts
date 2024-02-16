@@ -5,7 +5,6 @@ import { callSimulateGameSessionApi } from '../../lib/api/simulateGameSessionApi
 
 type SimulateParams = {
   readonly gameSession: GameSession
-  readonly gameStates: readonly GameState[]
   readonly setLoading: React.Dispatch<React.SetStateAction<boolean>>
   readonly setError: React.Dispatch<React.SetStateAction<string | undefined>>
   readonly startTurn: number
@@ -21,7 +20,6 @@ export async function simulate(
 
   const { resolvedStartTurn, resolvedTargetTurn } = resolveStartAndTargetTurn(
     params.gameSession,
-    params.gameStates,
     params.startTurn,
     params.targetTurn,
     params.turnsToSimulate,
@@ -44,26 +42,25 @@ function upsertNewGameStatesToExisting(
   newGameStates: readonly GameState[] | undefined,
 ): readonly GameState[] {
   if (_.isUndefined(newGameStates)) {
-    return params.gameStates
+    return params.gameSession.getGameStates()
   }
 
-  const currentTurn = !_.isEmpty(params.gameStates)
-    ? params.gameSession.getCurrentTurn()
-    : undefined
+  const currentTurn = params.gameSession.getCurrentTurnUnsafe()
 
   const valuesToMin = [
     resolvedStartTurn,
     ...(!_.isUndefined(currentTurn) ? [currentTurn] : []),
   ]
 
-  const existingGameStates = params.gameStates.slice(0, _.min(valuesToMin))
+  const existingGameStates = params.gameSession
+    .getGameStates()
+    .slice(0, _.min(valuesToMin))
 
   return [...existingGameStates, ...newGameStates]
 }
 
 function resolveStartAndTargetTurn(
   gameSession: GameSession,
-  gameStates: readonly GameState[],
   startTurn: number,
   targetTurn: number,
   turnsToSimulate?: number,
@@ -71,15 +68,17 @@ function resolveStartAndTargetTurn(
   resolvedStartTurn: number
   resolvedTargetTurn: number
 } {
-  const currentTurn = !_.isEmpty(gameStates)
-    ? gameSession.getCurrentTurn()
-    : undefined
+  const currentTurn = gameSession.getCurrentTurnUnsafe()
 
   let resolvedStartTurn = initialTurn
-  if (!_.isEmpty(gameStates)) {
+  if (!_.isUndefined(currentTurn)) {
     resolvedStartTurn = _.isUndefined(turnsToSimulate)
-      ? _.min([currentTurn, startTurn])!
-      : currentTurn!
+      ? // if turnsToSimulate is not defined, we simulate from the startTurn,
+        // but if startTurn is after the currentTurn, then we must simulate from currentTurn,
+        // otherwise there would be gap in simulated turns
+        _.min([currentTurn, startTurn])!
+      : // if turnsToSimulate is defined, we simulate the turnsToSimulate from currentTurn
+        currentTurn
   }
 
   let resolvedTargetTurn = initialTurn

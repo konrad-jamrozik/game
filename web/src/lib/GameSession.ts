@@ -66,6 +66,10 @@ export class GameSession {
     return this.getCurrentState().Timeline.CurrentTurn
   }
 
+  public getCurrentTurnUnsafe(): number | undefined {
+    return this.getCurrentStateUnsafe()?.Timeline.CurrentTurn
+  }
+
   public getGameResult(): GameResult {
     const lastGameState = this.getCurrentState()
     return lastGameState.IsGameWon
