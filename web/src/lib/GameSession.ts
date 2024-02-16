@@ -90,6 +90,10 @@ export class GameSession {
   public getCurrentState(): GameState {
     return this.data.gameStates.at(-1)!
   }
+
+  public getCurrentStateUnsafe(): GameState | undefined {
+    return this.data.gameStates.at(-1)!
+  }
 }
 
 export type GameResult = 'won' | 'lost' | 'undecided'

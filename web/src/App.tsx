@@ -33,12 +33,9 @@ const lineChartMaxWidth = '700px'
 // eslint-disable-next-line max-lines-per-function
 export default function App(): React.JSX.Element {
   const gameSession = useGameSession()
-  // kja gameStates nor agents should be gotten out of gameSession.
-  // Instead, the consumer code should make calls on gameSession methods.
   const gameStates = gameSession.getGameStates()
-  const agents = !_.isEmpty(gameStates)
-    ? gameSession.getCurrentState().Assets.Agents
-    : []
+  const currentGameState = gameSession.getCurrentStateUnsafe()
+  const agents = currentGameState?.Assets.Agents
 
   return (
     <Grid
@@ -53,21 +50,11 @@ export default function App(): React.JSX.Element {
         <SimulationControlPanel gameSession={gameSession} />
       </Grid>
       <Grid sx={{ bgcolor: '#300030' }}>
-        <AssetsDataGrid
-          assets={
-            !_.isEmpty(gameStates)
-              ? gameSession.getCurrentState().Assets
-              : undefined
-          }
-        />
+        <AssetsDataGrid assets={currentGameState?.Assets} />
       </Grid>
       <Grid sx={{ bgcolor: '#302000' }}>
         <MissionSitesDataGrid
-          missionSites={
-            !_.isEmpty(gameStates)
-              ? gameSession.getCurrentState().MissionSites
-              : undefined
-          }
+          missionSites={currentGameState?.MissionSites}
           agents={agents}
         />
       </Grid>

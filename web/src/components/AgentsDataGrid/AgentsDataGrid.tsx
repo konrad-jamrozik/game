@@ -19,7 +19,7 @@ import {
 import { AgentsDataGridToolbar } from './AgentsDataGridToolbar'
 
 export type AgentsDataGridProps = {
-  readonly agents: readonly Agent[]
+  readonly agents: readonly Agent[] | undefined
   readonly deploymentDisplay?: boolean
   readonly rowSelectionModel?: GridRowSelectionModel
   readonly setRowSelectionModel?: React.Dispatch<
