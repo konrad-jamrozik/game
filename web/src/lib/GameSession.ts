@@ -141,12 +141,10 @@ export class GameSession {
       return
     }
 
+    // assert: resolvedStartTurn <= currentTUrn
+
     const firstTurnInNewGameStates =
       gameStatesToUpsert.at(0)!.Timeline.CurrentTurn
-
-    if (currentTurn + 1 < resolvedStartTurn) {
-      throw new Error('Cannot have a gap in turns of the game states')
-    }
 
     if (resolvedStartTurn < firstTurnInNewGameStates) {
       throw new Error(
@@ -154,14 +152,7 @@ export class GameSession {
       )
     }
 
-    // kja this is broken. resolvedStartTurn and firstTurnToUpsert are not well defined.
-    // Some issues:
-    // Q: if the goal is to simulate 1 turn, and the currentTurn is 7, then what should be the values here?
-    // A: resolvedStartTurn should be 8 and firstTurnToUpsert should be 8, but firstToUpsert will evaluate to 7.
-    //    Unclear what would be resolvedStartTurn value.
-    // Q: when the API to advance 1 turn from turn 15 is called, then which game states should be returned?
-    // A: I think now it will return up to two states, turn 15 and 16, so state 15 needs to be cut off.
-    const firstTurnToUpsert = _.min([currentTurn, resolvedStartTurn])!
+    const firstTurnToUpsert = resolvedStartTurn + 1
     const retainedGameStatesSliceStart = 0
     const retainedGameStatesSliceEnd = firstTurnToUpsert - initialTurn
     const newGameStatesSliceStart = firstTurnToUpsert - firstTurnInNewGameStates
@@ -173,17 +164,16 @@ export class GameSession {
         `resolvedStartTurn: ${resolvedStartTurn}, ` +
         `firstTurnToUpsert: ${firstTurnToUpsert}, ` +
         `firstTurnInNewGameStates: ${firstTurnInNewGameStates}, ` +
-        `[ ${retainedGameStatesSliceStart} - ${retainedGameStatesSliceEnd} ], ` +
-        `[ ${newGameStatesSliceStart} - ${newGameStatesSliceEnd} ].`,
+        `retainedSlice: [ ${retainedGameStatesSliceStart} - ${retainedGameStatesSliceEnd} ` +
+        `( T: ${retainedGameStatesSliceStart + initialTurn} - ${retainedGameStatesSliceEnd + initialTurn - 1} ) ], ` +
+        `newSlice: [ ${newGameStatesSliceStart} - ${newGameStatesSliceEnd} ` +
+        `( T: ${newGameStatesSliceStart + firstTurnInNewGameStates} - ${newGameStatesSliceEnd + firstTurnInNewGameStates - 1} ) ] `,
     )
 
     const retainedGameStates = this.getGameStates().slice(
       retainedGameStatesSliceStart,
       retainedGameStatesSliceEnd,
     )
-    // need to upsert turn 7
-    // new states has turn 5 at position 0
-    // hence offset is
     const newGameStates = gameStatesToUpsert.slice(
       newGameStatesSliceStart,
       newGameStatesSliceEnd,

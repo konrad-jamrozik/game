@@ -66,5 +66,8 @@ function resolveStartAndTargetTurn(
       ? currentTurn + turnsToSimulate
       : initialTurn - 1 + turnsToSimulate
   }
+
+  // assert: resolvedStartTurn <= currentTurn
+
   return { resolvedStartTurn, resolvedTargetTurn }
 }
