@@ -1,6 +1,6 @@
 import _ from 'lodash'
 import type { GameSession } from '../../lib/GameSession'
-import { initialTurn, type GameState } from '../../lib/GameState'
+import { initialTurn } from '../../lib/GameState'
 import { callSimulateGameSessionApi } from '../../lib/api/simulateGameSessionApi'
 
 type SimulateParams = {
@@ -12,9 +12,7 @@ type SimulateParams = {
   readonly turnsToSimulate?: number | undefined
 }
 
-export async function simulate(
-  params: SimulateParams,
-): Promise<readonly GameState[]> {
+export async function simulate(params: SimulateParams): Promise<void> {
   params.setLoading(true)
   params.setError('')
 
@@ -24,7 +22,7 @@ export async function simulate(
     params.targetTurn,
     params.turnsToSimulate,
   )
-  const startNewSimulation = resolvedStartTurn === initialTurn
+  const startNewSimulation = !params.gameSession.isGameSessionLoaded()
 
   const newGameStates = await callSimulateGameSessionApi({
     ...params,
@@ -33,30 +31,9 @@ export async function simulate(
     resolvedTargetTurn,
   })
 
-  return upsertNewGameStatesToExisting(params, resolvedStartTurn, newGameStates)
-}
-
-function upsertNewGameStatesToExisting(
-  params: SimulateParams,
-  resolvedStartTurn: number,
-  newGameStates: readonly GameState[] | undefined,
-): readonly GameState[] {
-  if (_.isUndefined(newGameStates)) {
-    return params.gameSession.getGameStates()
+  if (!_.isUndefined(newGameStates)) {
+    params.gameSession.upsertGameStates(newGameStates, resolvedStartTurn)
   }
-
-  const currentTurn = params.gameSession.getCurrentTurnUnsafe()
-
-  const valuesToMin = [
-    resolvedStartTurn,
-    ...(!_.isUndefined(currentTurn) ? [currentTurn] : []),
-  ]
-
-  const existingGameStates = params.gameSession
-    .getGameStates()
-    .slice(0, _.min(valuesToMin))
-
-  return [...existingGameStates, ...newGameStates]
 }
 
 function resolveStartAndTargetTurn(

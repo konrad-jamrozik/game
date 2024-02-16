@@ -42,7 +42,7 @@ export function SimulationControlPanel(
     //     both these calls advance game session by 1 turn, but they use different API routes: one of them uses
     //     AI player, one doesn't. Probably I should consolidate them into one API route that takes extra param like
     //     "useAI: name_of_the_AI". If AI is used, then before the time is advanced, the backend AI will try to do things first.
-    const updatedGameStates = await simulate({
+    await simulate({
       gameSession: props.gameSession,
       setLoading,
       setError,
@@ -50,7 +50,6 @@ export function SimulationControlPanel(
       targetTurn,
       turnsToSimulate,
     })
-    props.gameSession.setGameStates(updatedGameStates)
   }
 
   async function advanceTimeBy1Turn(): Promise<void> {

@@ -1,6 +1,6 @@
 import _ from 'lodash'
 import type { GameSession } from '../GameSession'
-import { initialTurn, type GameState } from '../GameState'
+import type { GameState } from '../GameState'
 import {
   callApi,
   getPostJsonRequest,
@@ -16,14 +16,13 @@ export async function callSimulateGameSessionApi(
     resolvedStartTurn: number
     resolvedTargetTurn: number
   },
-): Promise<readonly GameState[] | undefined> {
+): Promise<GameState[] | undefined> {
   const jsonBody: string = !params.startNewSimulation
     ? JSON.stringify(
         params.gameSession.getStateAtTurn(params.resolvedStartTurn),
       )
     : ''
   const apiUrl = getSimulateApiUrl(
-    params.gameSession,
     params.resolvedTargetTurn,
     params.startNewSimulation,
   )
@@ -34,12 +33,10 @@ export async function callSimulateGameSessionApi(
 }
 
 function getSimulateApiUrl(
-  gameSession: GameSession,
   resolvedTargetTurn: number,
   startNewSimulation: boolean,
 ): URL {
-  const useNewGameSessionApi =
-    startNewSimulation || gameSession.getCurrentTurnUnsafe() === initialTurn
+  const useNewGameSessionApi = startNewSimulation
 
   const path = `simulateGameSession${useNewGameSessionApi ? '' : 'FromState'}`
   const queryString = `includeAllStates=true&turnLimit=${resolvedTargetTurn}`

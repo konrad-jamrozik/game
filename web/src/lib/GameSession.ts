@@ -1,7 +1,8 @@
+/* eslint-disable max-statements */
 /* eslint-disable @typescript-eslint/parameter-properties */
 import _ from 'lodash'
 import { useState } from 'react'
-import type { GameState } from './GameState'
+import { initialTurn, type GameState } from './GameState'
 import type { PlayerActionPayload } from './PlayerActionPayload'
 import { callApiToAdvanceTimeBy1Turn } from './api/applyPlayerActionApi'
 
@@ -18,6 +19,22 @@ export class GameSession {
     >,
   ) {
     this.data = data
+  }
+
+  private static verify(gameStates: readonly GameState[]): void {
+    if (_.isEmpty(gameStates)) {
+      throw new Error('gameStates must not be empty')
+    }
+    const firstTurn = gameStates.at(0)!.Timeline.CurrentTurn
+    // Verify that CurrentTurn increments in all gameStates
+    if (
+      !_.every(
+        gameStates,
+        (gs, index) => gs.Timeline.CurrentTurn === firstTurn + index,
+      )
+    ) {
+      throw new Error('gameStates must have sequential turns')
+    }
   }
 
   public async advanceTimeBy1Turn(
@@ -45,7 +62,8 @@ export class GameSession {
     return !_.isEmpty(this.data.gameStates)
   }
 
-  public setGameStates(gameStates: readonly GameState[]): void {
+  public setGameStates(gameStates: GameState[]): void {
+    GameSession.verify(gameStates)
     this.setData({
       ...this.data,
       gameStates,
@@ -106,6 +124,73 @@ export class GameSession {
 
   public getCurrentStateUnsafe(): GameState | undefined {
     return this.data.gameStates.at(-1)!
+  }
+
+  public upsertGameStates(
+    gameStatesToUpsert: GameState[],
+    resolvedStartTurn: number,
+  ): void {
+    if (_.isEmpty(gameStatesToUpsert)) {
+      throw new Error('newGameStates must not be empty')
+    }
+    const currentTurn = this.getCurrentTurnUnsafe()
+
+    if (_.isUndefined(currentTurn)) {
+      // kja dedup this setGameStates invocation
+      this.setGameStates(gameStatesToUpsert)
+      return
+    }
+
+    const firstTurnInNewGameStates =
+      gameStatesToUpsert.at(0)!.Timeline.CurrentTurn
+
+    if (currentTurn + 1 < resolvedStartTurn) {
+      throw new Error('Cannot have a gap in turns of the game states')
+    }
+
+    if (resolvedStartTurn < firstTurnInNewGameStates) {
+      throw new Error(
+        'resolvedStartTurn must be at least firstTurnInNewGameStates',
+      )
+    }
+
+    // kja this is broken. resolvedStartTurn and firstTurnToUpsert are not well defined.
+    // Some issues:
+    // Q: if the goal is to simulate 1 turn, and the currentTurn is 7, then what should be the values here?
+    // A: resolvedStartTurn should be 8 and firstTurnToUpsert should be 8, but firstToUpsert will evaluate to 7.
+    //    Unclear what would be resolvedStartTurn value.
+    // Q: when the API to advance 1 turn from turn 15 is called, then which game states should be returned?
+    // A: I think now it will return up to two states, turn 15 and 16, so state 15 needs to be cut off.
+    const firstTurnToUpsert = _.min([currentTurn, resolvedStartTurn])!
+    const retainedGameStatesSliceStart = 0
+    const retainedGameStatesSliceEnd = firstTurnToUpsert - initialTurn
+    const newGameStatesSliceStart = firstTurnToUpsert - firstTurnInNewGameStates
+    const newGameStatesSliceEnd = gameStatesToUpsert.length
+
+    console.log(
+      `Upserting game states. ` +
+        `currentTurn: ${currentTurn}, ` +
+        `resolvedStartTurn: ${resolvedStartTurn}, ` +
+        `firstTurnToUpsert: ${firstTurnToUpsert}, ` +
+        `firstTurnInNewGameStates: ${firstTurnInNewGameStates}, ` +
+        `[ ${retainedGameStatesSliceStart} - ${retainedGameStatesSliceEnd} ], ` +
+        `[ ${newGameStatesSliceStart} - ${newGameStatesSliceEnd} ].`,
+    )
+
+    const retainedGameStates = this.getGameStates().slice(
+      retainedGameStatesSliceStart,
+      retainedGameStatesSliceEnd,
+    )
+    // need to upsert turn 7
+    // new states has turn 5 at position 0
+    // hence offset is
+    const newGameStates = gameStatesToUpsert.slice(
+      newGameStatesSliceStart,
+      newGameStatesSliceEnd,
+    )
+
+    const gameStatesAfterUpsertion = [...retainedGameStates, ...newGameStates]
+    this.setGameStates(gameStatesAfterUpsertion)
   }
 }
 

@@ -21,7 +21,8 @@
     "Solarius",
     "sonarjs",
     "staticwebapp",
-    "tailwindcss"
+    "tailwindcss",
+    "upsertion"
   ],
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "[javascript]": {
