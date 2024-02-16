@@ -23,7 +23,7 @@ export class GameSession {
 
   private static verify(gameStates: readonly GameState[]): void {
     if (_.isEmpty(gameStates)) {
-      throw new Error('gameStates must not be empty')
+      return
     }
     const firstTurn = gameStates.at(0)!.Timeline.CurrentTurn
     // Verify that CurrentTurn increments in all gameStates
@@ -133,15 +133,8 @@ export class GameSession {
     if (_.isEmpty(gameStatesToUpsert)) {
       throw new Error('newGameStates must not be empty')
     }
-    const currentTurn = this.getCurrentTurnUnsafe()
 
-    if (_.isUndefined(currentTurn)) {
-      // kja dedup this setGameStates invocation
-      this.setGameStates(gameStatesToUpsert)
-      return
-    }
-
-    // assert: resolvedStartTurn <= currentTUrn
+    // assert: resolvedStartTurn <= currentTurn
 
     const firstTurnInNewGameStates =
       gameStatesToUpsert.at(0)!.Timeline.CurrentTurn
@@ -152,7 +145,9 @@ export class GameSession {
       )
     }
 
-    const firstTurnToUpsert = resolvedStartTurn + 1
+    const firstTurnToUpsert = this.isGameSessionLoaded()
+      ? resolvedStartTurn + 1
+      : initialTurn
     const retainedGameStatesSliceStart = 0
     const retainedGameStatesSliceEnd = firstTurnToUpsert - initialTurn
     const newGameStatesSliceStart = firstTurnToUpsert - firstTurnInNewGameStates
@@ -160,7 +155,7 @@ export class GameSession {
 
     console.log(
       `Upserting game states. ` +
-        `currentTurn: ${currentTurn}, ` +
+        `currentTurn: ${this.getCurrentTurnUnsafe()}, ` +
         `resolvedStartTurn: ${resolvedStartTurn}, ` +
         `firstTurnToUpsert: ${firstTurnToUpsert}, ` +
         `firstTurnInNewGameStates: ${firstTurnInNewGameStates}, ` +
