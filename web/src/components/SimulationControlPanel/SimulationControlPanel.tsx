@@ -4,7 +4,6 @@ import Grid from '@mui/material/Unstable_Grid2'
 import _ from 'lodash'
 import { useState } from 'react'
 import type { GameSession } from '../../lib/GameSession'
-import type { GameState } from '../../lib/GameState'
 import { Label } from '../Label'
 import { simulate } from './simulate'
 
@@ -22,9 +21,6 @@ export function SimulationControlPanel(
   const [targetTurn, setTargetTurn] = useState<number>(defaultTargetTurn)
   const [loading, setLoading] = useState<boolean>(false)
   const [error, setError] = useState<string>()
-  // kja gameStates should not be gotten out of gameSession.
-  // Instead, the consumer code should make calls on gameSession methods.
-  const gameStates = props.gameSession.getGameStates()
 
   function simulationRunMsg(): string {
     return `Simulation ran until turn ${props.gameSession.getCurrentTurn()}. Result: ${props.gameSession.getGameResult()}`
@@ -82,7 +78,7 @@ export function SimulationControlPanel(
       <CardContent>
         <Grid container spacing={1}>
           <Grid xs={12}>
-            <Label>{currentTurnLabel(props.gameSession, gameStates)}</Label>
+            <Label>{currentTurnLabel(props.gameSession)}</Label>
           </Grid>
           <Grid container xs={12} marginBottom={'0px'}>
             <Grid>
@@ -90,7 +86,6 @@ export function SimulationControlPanel(
                 advanceTimeBy1Turn,
                 loading,
                 props.gameSession,
-                gameStates,
               )}
             </Grid>
             <Grid xsOffset={'auto'}>
@@ -103,7 +98,6 @@ export function SimulationControlPanel(
                 simulateTurns,
                 loading,
                 props.gameSession,
-                gameStates,
               )}
             </Grid>
             <Grid xsOffset={'auto'}>
@@ -123,7 +117,7 @@ export function SimulationControlPanel(
             <Grid>{startTurnInputTextField(startTurn, setStartTurn)}</Grid>
             <Grid>{targetTurnInputTextField(targetTurn, setTargetTurn)}</Grid>
           </Grid>
-          {!_.isEmpty(gameStates) && (
+          {props.gameSession.isGameSessionLoaded() && (
             <Grid xs={12}>
               <Label>{simulationRunMsg()}</Label>
             </Grid>
@@ -135,13 +129,8 @@ export function SimulationControlPanel(
   )
 }
 
-function currentTurnLabel(
-  gameSession: GameSession,
-  gameStates: readonly GameState[],
-): string {
-  return `Current turn: ${
-    !_.isEmpty(gameStates) ? gameSession.getCurrentTurn() : 'N/A'
-  }`
+function currentTurnLabel(gameSession: GameSession): string {
+  return `Current turn: ${gameSession.getCurrentTurnUnsafe() ?? 'N/A'}`
 }
 
 function startTurnInputTextField(
@@ -202,13 +191,12 @@ function advanceTimeButton(
   advanceTimeBy1Turn: () => Promise<void>,
   loading: boolean,
   gameSession: GameSession,
-  gameStates: readonly GameState[],
 ): React.JSX.Element {
   return (
     <Button
       variant="contained"
       onClick={advanceTimeBy1Turn}
-      disabled={loading || (!_.isEmpty(gameStates) && gameSession.isGameOver())}
+      disabled={loading || (gameSession.isGameOverUnsafe() ?? false)}
     >
       {'Advance 1 turn'}
     </Button>
@@ -219,13 +207,12 @@ function simulateFor1TurnButton(
   simulateTurns: (turnsToSimulate?: number) => Promise<void>,
   loading: boolean,
   gameSession: GameSession,
-  gameStates: readonly GameState[],
 ): React.JSX.Element {
   return (
     <Button
       variant="outlined"
       onClick={async () => simulateTurns(1)}
-      disabled={loading || (!_.isEmpty(gameStates) && gameSession.isGameOver())}
+      disabled={loading || (gameSession.isGameOverUnsafe() ?? false)}
     >
       {'Delegate 1 turn to AI'}
     </Button>

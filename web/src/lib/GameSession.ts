@@ -41,6 +41,10 @@ export class GameSession {
     return this.data.gameStates
   }
 
+  public isGameSessionLoaded(): boolean {
+    return !_.isEmpty(this.data.gameStates)
+  }
+
   public setGameStates(gameStates: readonly GameState[]): void {
     this.setData({
       ...this.data,
@@ -89,6 +93,11 @@ export class GameSession {
   public isGameOver(): boolean {
     const lastGameState = this.getCurrentState()
     return lastGameState.IsGameOver
+  }
+
+  public isGameOverUnsafe(): boolean | undefined {
+    const lastGameState = this.getCurrentStateUnsafe()
+    return lastGameState?.IsGameOver
   }
 
   public getCurrentState(): GameState {
