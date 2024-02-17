@@ -16,7 +16,7 @@ import type { GameSession } from '../../lib/GameSession'
 import { initialTurn } from '../../lib/GameState'
 import { Label } from '../Label'
 
-export type SimulationControlPanelProps = {
+export type GameSessionControlPanelProps = {
   readonly gameSession: GameSession
 }
 
@@ -33,8 +33,8 @@ const defaultTargetTurn = 120
 // advance turns with turn limit 2 and game state at turn 1: returns game state at turn 2
 // advance turns with turn limit 2 and no game state: returns game states at turn 1 and 2
 // advance turns with turn limit 50 and game state at turn 30: returns game states at turns 31 to 50
-export function SimulationControlPanel(
-  props: SimulationControlPanelProps,
+export function GameSessionControlPanel(
+  props: GameSessionControlPanelProps,
 ): React.JSX.Element {
   const [startTurn, setStartTurn] = useState<number>(defaultStartTurn)
   const [targetTurn, setTargetTurn] = useState<number>(defaultTargetTurn)

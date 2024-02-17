@@ -3,9 +3,9 @@ import Grid from '@mui/material/Unstable_Grid2'
 import _ from 'lodash'
 import { AgentsDataGrid } from './components/AgentsDataGrid/AgentsDataGrid'
 import { AssetsDataGrid } from './components/AssetsDataGrid/AssetsDataGrid'
+import { GameSessionControlPanel } from './components/GameSessionControlPanel/GameSessionControlPanel'
 import { GameStatsLineChart } from './components/GameStatsLineChart'
 import { MissionSitesDataGrid } from './components/MissionSitesDataGrid/MissionSitesDataGrid'
-import { SimulationControlPanel } from './components/SimulationControlPanel/SimulationControlPanel'
 import { useGameSession } from './lib/GameSession'
 import {
   agentStatsDataSeries,
@@ -47,7 +47,7 @@ export default function App(): React.JSX.Element {
       bgcolor={'#303030'}
     >
       <Grid sx={{ bgcolor: '#200000' }}>
-        <SimulationControlPanel gameSession={gameSession} />
+        <GameSessionControlPanel gameSession={gameSession} />
       </Grid>
       <Grid sx={{ bgcolor: '#300030' }}>
         <AssetsDataGrid assets={currentGameState?.Assets} />
