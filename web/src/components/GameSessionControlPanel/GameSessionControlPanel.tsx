@@ -23,13 +23,6 @@ export type GameSessionControlPanelProps = {
 const defaultStartTurn = 1
 const defaultTargetTurn = 120
 
-// kja The backend route should only return new states, not the passed in.
-// Some cases for the "advanceTurns" route:
-// advanceTurns with turn limit 1 and no game state: returns initialGameState with initialTurn
-// advanceTurns with turn limit 1 and game state at turn 1: throws "cannot advance to turn 1, already there"
-// advance turns with turn limit 2 and game state at turn 1: returns game state at turn 2
-// advance turns with turn limit 2 and no game state: returns game states at turn 1 and 2
-// advance turns with turn limit 50 and game state at turn 30: returns game states at turns 31 to 50
 export function GameSessionControlPanel(
   props: GameSessionControlPanelProps,
 ): React.JSX.Element {
@@ -334,9 +327,11 @@ function resolveStartAndTargetTurn(
 
   // If currentTurns is not defined, the turns to advance start from initialTurn until initialTurn + turnsToAdvance -1.
   // For example, initialTurn is 1 and turnsToAdvance is 3, then the interval is [1, 3].
-  // This is a special case. Because currentTurn is not defined, we assume the game session is not loaded.
-  // As a result, we are not advancing starting from initialTurn, but from "before" initialTurn.
+  //
+  // This code branch is a special case. Because currentTurn is not defined, we assume the game session is not loaded.
+  // As a result, we are not advancing starting from initialTurn, but from "before" initialTurn (or "into" initialTurn).
   // It is assumed here that the downstream code will interpret this special case correctly.
+  //
   // Consider case of turnsToAdvance = 1. Then the interval is [initialTurn, initialTurn], as it should:
   // we just want to advance to the initialTurn.
   if (turnsToAdvanceDefined && !currentTurnDefined) {

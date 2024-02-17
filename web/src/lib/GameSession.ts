@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/parameter-properties */
-import _ from 'lodash'
+import _, { first } from 'lodash'
 import { useState } from 'react'
 import { initialTurn, type GameState } from './GameState'
 import type { PlayerActionPayload } from './PlayerActionPayload'
@@ -60,7 +60,7 @@ export class GameSession {
       startGameState,
     })
     if (!_.isUndefined(newGameStates)) {
-      this.upsertGameStates(newGameStates, params.startTurn)
+      this.upsertGameStates(newGameStates)
     }
   }
 
@@ -139,52 +139,32 @@ export class GameSession {
     return this.data.gameStates.at(-1)!
   }
 
-  public upsertGameStates(
-    gameStatesToUpsert: GameState[],
-    upsertStartTurn: number,
-  ): void {
-    if (_.isEmpty(gameStatesToUpsert)) {
+  public upsertGameStates(newGameStates: GameState[]): void {
+    if (_.isEmpty(newGameStates)) {
       throw new Error('newGameStates must not be empty')
     }
 
-    // assert: resolvedStartTurn <= currentTurn
+    const firstTurnInNewGameStates = newGameStates.at(0)!.Timeline.CurrentTurn
+    const lastTurnInNewGameStates = newGameStates.at(-1)!.Timeline.CurrentTurn
 
-    const firstTurnInNewGameStates =
-      gameStatesToUpsert.at(0)!.Timeline.CurrentTurn
-
-    if (upsertStartTurn < firstTurnInNewGameStates) {
-      throw new Error(
-        'resolvedStartTurn must be at least firstTurnInNewGameStates',
-      )
-    }
-
-    const firstTurnToUpsert = this.isGameSessionLoaded()
-      ? upsertStartTurn + 1
-      : initialTurn
     const retainedGameStatesSliceStart = 0
-    const retainedGameStatesSliceEnd = firstTurnToUpsert - initialTurn
-    const newGameStatesSliceStart = firstTurnToUpsert - firstTurnInNewGameStates
-    const newGameStatesSliceEnd = gameStatesToUpsert.length
-
-    console.log(
-      `Upserting game states. ` +
-        `currentTurn: ${this.getCurrentTurnUnsafe()}, ` +
-        `upsertStartTurn: ${upsertStartTurn}, ` +
-        `firstTurnToUpsert: ${firstTurnToUpsert}, ` +
-        `firstTurnInNewGameStates: ${firstTurnInNewGameStates}, ` +
-        `retainedSlice: [ ${retainedGameStatesSliceStart} - ${retainedGameStatesSliceEnd} ` +
-        `( T: ${retainedGameStatesSliceStart + initialTurn} - ${retainedGameStatesSliceEnd + initialTurn - 1} ) ], ` +
-        `newSlice: [ ${newGameStatesSliceStart} - ${newGameStatesSliceEnd} ` +
-        `( T: ${newGameStatesSliceStart + firstTurnInNewGameStates} - ${newGameStatesSliceEnd + firstTurnInNewGameStates - 1} ) ] `,
-    )
+    const retainedGameStatesSliceEnd = firstTurnInNewGameStates - initialTurn
 
     const retainedGameStates = this.getGameStates().slice(
       retainedGameStatesSliceStart,
       retainedGameStatesSliceEnd,
     )
-    const newGameStates = gameStatesToUpsert.slice(
-      newGameStatesSliceStart,
-      newGameStatesSliceEnd,
+    const firstTurnInRetainedGameStates =
+      retainedGameStates.at(0)?.Timeline.CurrentTurn
+    const lastTurnInRetainedGameStates =
+      retainedGameStates.at(-1)?.Timeline.CurrentTurn
+
+    console.log(
+      `Upserting game states. ` +
+        `currentTurn: ${this.getCurrentTurnUnsafe()}, ` +
+        `firstTurnInNewGameStates: ${firstTurnInNewGameStates}, ` +
+        `retainedGameStates turns: [ ${firstTurnInRetainedGameStates} - ${lastTurnInRetainedGameStates} ], ` +
+        `newGameStates turns: [ ${firstTurnInNewGameStates} - ${lastTurnInNewGameStates} ]`,
     )
 
     const gameStatesAfterUpsertion = [...retainedGameStates, ...newGameStates]

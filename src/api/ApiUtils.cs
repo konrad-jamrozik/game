@@ -84,13 +84,13 @@ public static class ApiUtils
     public static JsonHttpResult<GameState> ToJsonHttpResult(GameState gs)
         => TypedResults.Json(gs, GameState.StateJsonSerializerOptions);
 
-    public static JsonHttpResult<GameState[]> ToJsonHttpResult(GameState[] gss)
+    public static JsonHttpResult<List<GameState>> ToJsonHttpResult(List<GameState> gss)
         => TypedResults.Json(gss, GameState.StateJsonSerializerOptions);
 
     public static JsonHttpResult<GameStatePlayerView> ToJsonHttpResult(GameStatePlayerView gs)
         => TypedResults.Json(gs, GameState.StateJsonSerializerOptions);
 
-    public static JsonHttpResult<GameStatePlayerView[]> ToJsonHttpResult(GameStatePlayerView[] gss)
+    public static JsonHttpResult<List<GameStatePlayerView>> ToJsonHttpResult(List<GameStatePlayerView> gss)
         => TypedResults.Json(gss, GameState.StateJsonSerializerOptions);
 
     public static async Task<JsonElement> ParseJsonElement(HttpRequest request)

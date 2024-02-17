@@ -25,12 +25,12 @@ public class GameSession
         CurrentGameState = currentGameState ?? GameState.NewInitialGameState();
     }
 
-    public GameState[] AllGameStates => PastGameStates.Concat(CurrentGameState.WrapInList()).ToArray();
+    public List<GameState> AllGameStates => PastGameStates.Concat(CurrentGameState.WrapInList()).ToList();
 
-    public GameState[] AllGameStatesAtTurnStarts()
+    public List<GameState> AllGameStatesAtTurnStarts()
         => AllGameStates
             .AtTurnStarts()
-            .ToArray();
+            .ToList();
 
     public GameState? PreviousGameState => PastGameStates.Any() ? PastGameStates.Last() : null;
 
