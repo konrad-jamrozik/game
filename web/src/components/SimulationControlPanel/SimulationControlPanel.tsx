@@ -1,6 +1,14 @@
 /* eslint-disable max-lines */
 /* eslint-disable max-lines-per-function */
-import { Button, Card, CardContent, CardHeader, TextField } from '@mui/material'
+import {
+  Button,
+  Card,
+  CardContent,
+  CardHeader,
+  TextField,
+  useMediaQuery,
+  useTheme,
+} from '@mui/material'
 import Grid from '@mui/material/Unstable_Grid2'
 import _ from 'lodash'
 import { useState } from 'react'
@@ -73,6 +81,10 @@ export function SimulationControlPanel(
     props.gameSession.setGameStates([])
   }
 
+  const theme = useTheme()
+  const smallDisplay = useMediaQuery(theme.breakpoints.down('sm'))
+  const textFieldWidth = smallDisplay ? 64 : 90
+
   return (
     <Card
       variant="outlined"
@@ -119,8 +131,16 @@ export function SimulationControlPanel(
             )}
           </Grid>
           <Grid container xsOffset={'auto'}>
-            <Grid>{startTurnInputTextField(startTurn, setStartTurn)}</Grid>
-            <Grid>{targetTurnInputTextField(targetTurn, setTargetTurn)}</Grid>
+            <Grid>
+              {startTurnInputTextField(startTurn, setStartTurn, textFieldWidth)}
+            </Grid>
+            <Grid>
+              {targetTurnInputTextField(
+                targetTurn,
+                setTargetTurn,
+                textFieldWidth,
+              )}
+            </Grid>
           </Grid>
           {props.gameSession.isGameSessionLoaded() && (
             <Grid xs={12}>
@@ -138,15 +158,14 @@ function currentTurnLabel(gameSession: GameSession): string {
   return `Current turn: ${gameSession.getCurrentTurnUnsafe() ?? 'N/A'}`
 }
 
-const textFieldWidth = 64
-
 function startTurnInputTextField(
   startTurn: number,
   setStartTurn: React.Dispatch<React.SetStateAction<number>>,
+  width: number,
 ): React.JSX.Element {
   return (
     <TextField
-      sx={{ width: textFieldWidth }}
+      sx={{ width }}
       id="textfield-start-turn"
       label="start"
       type="number"
@@ -170,10 +189,11 @@ function startTurnInputTextField(
 function targetTurnInputTextField(
   targetTurn: number,
   setTargetTurn: React.Dispatch<React.SetStateAction<number>>,
+  width: number,
 ): React.JSX.Element {
   return (
     <TextField
-      sx={{ width: textFieldWidth }}
+      sx={{ width }}
       id="textfield-target-turn"
       label="target"
       type="number"

@@ -124,6 +124,7 @@ public class WebApplicationRoutes
             playerAction.Apply(controller);
         else
         {
+            // kja this will be converted to "advanceTurns" route
             // If the player action is "AdvanceTime" and the gameState is null,
             // then we treat this as special case of "initialize game session to initial game state",
             // hence we just return gameSession.CurrentGameState.
