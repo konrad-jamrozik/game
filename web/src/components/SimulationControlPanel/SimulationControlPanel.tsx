@@ -15,7 +15,6 @@ import { useState } from 'react'
 import type { GameSession } from '../../lib/GameSession'
 import { initialTurn } from '../../lib/GameState'
 import { Label } from '../Label'
-import { simulate } from './simulate'
 
 export type SimulationControlPanelProps = {
   readonly gameSession: GameSession
@@ -53,27 +52,22 @@ export function SimulationControlPanel(
       props.gameSession.getCurrentTurnUnsafe(),
       turnsToSimulate,
     )
-
-    // kja replace simulateTurns body with:
-    //
-    //   await props.gameSession.simulateTurns(startTurn, targetTurn, turnsToSimulate, setLoading, setError)
-    //
-    // kja dedup simulateFor1TurnButton and advanceTimeButton
-    //     both these calls advance game session by 1 turn, but they use different API routes: one of them uses
-    //     AI player, one doesn't. Probably I should consolidate them into one API route that takes extra param like
-    //     "useAI: name_of_the_AI". If AI is used, then before the time is advanced, the backend AI will try to do things first.
-    await simulate({
-      gameSession: props.gameSession,
+    await props.gameSession.advanceTurns({
       setLoading,
       setError,
       startTurn: resolvedStartTurn,
       targetTurn: resolvedTargetTurn,
       delegateToAi: true,
     })
+
+    // kja dedup simulateFor1TurnButton and advanceTimeButton
+    //     both these calls advance game session by 1 turn, but they use different API routes: one of them uses
+    //     AI player, one doesn't. Probably I should consolidate them into one API route that takes extra param like
+    //     "useAI: name_of_the_AI". If AI is used, then before the time is advanced, the backend AI will try to do things first.
   }
 
   async function advanceTimeBy1Turn(): Promise<void> {
-    await props.gameSession.advanceTimeBy1Turn(setLoading, setError)
+    await props.gameSession.advanceTimeBy1Turn({ setLoading, setError })
   }
 
   function reset(): void {

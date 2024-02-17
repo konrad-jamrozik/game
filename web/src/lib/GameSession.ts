@@ -3,7 +3,9 @@ import _ from 'lodash'
 import { useState } from 'react'
 import { initialTurn, type GameState } from './GameState'
 import type { PlayerActionPayload } from './PlayerActionPayload'
+import { callAdvanceTurnsApi } from './api/advanceTurnsApi'
 import { callApiToAdvanceTimeBy1Turn } from './api/applyPlayerActionApi'
+import type { FetchCallbacks } from './api/genericApiUtils'
 
 export function useGameSession(): GameSession {
   const [data, setData] = useState<GameSessionData>(initialGameSessionData)
@@ -37,12 +39,10 @@ export class GameSession {
   }
 
   public async advanceTimeBy1Turn(
-    setLoading: React.Dispatch<React.SetStateAction<boolean>>,
-    setError: React.Dispatch<React.SetStateAction<string | undefined>>,
+    params: FetchCallbacks,
   ): Promise<GameState[] | undefined> {
     const newGameState = await callApiToAdvanceTimeBy1Turn({
-      setLoading,
-      setError,
+      ...params,
       currentGameState: this.getCurrentGameState(),
     })
     if (!_.isUndefined(newGameState)) {
@@ -51,6 +51,23 @@ export class GameSession {
       return newGameStates
     }
     return undefined
+  }
+
+  public async advanceTurns(
+    params: FetchCallbacks & {
+      startTurn: number
+      targetTurn: number
+      delegateToAi?: boolean
+    },
+  ): Promise<void> {
+    const startGameState = this.getStateAtTurn(params.startTurn)
+    const newGameStates = await callAdvanceTurnsApi({
+      ...params,
+      startGameState,
+    })
+    if (!_.isUndefined(newGameStates)) {
+      this.upsertGameStates(newGameStates, params.startTurn)
+    }
   }
 
   public getGameStates(): readonly GameState[] {
@@ -102,6 +119,7 @@ export class GameSession {
         : 'undecided'
   }
 
+  // kja getStateAtTurn() will require more precision: at the start of the turn, or end of the turn?
   public getStateAtTurn(turn: number): GameState {
     return _.findLast(
       this.data.gameStates,
