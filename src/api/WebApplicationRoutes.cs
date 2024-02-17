@@ -67,7 +67,7 @@ public class WebApplicationRoutes
         if (error != null)
             return TypedResults.BadRequest(error);
 
-        return SimulateGameSessionInternal(turnLimit, includeAllStates, gs!);
+        return AdvanceTurnsInternal(turnLimit, includeAllStates, delegateToAi, gs);
     }
 
     private static async Task<SimulationResponse>
@@ -84,12 +84,6 @@ public class WebApplicationRoutes
         SimulateGameSession(int? turnLimit, bool? includeAllStates)
     {
         return AdvanceTurnsInternal(turnLimit, includeAllStates, delegateToAi: true);
-    }
-
-    private static SimulationResponse
-        SimulateGameSessionInternal(int? turnLimit, bool? includeAllStates, GameState? initialGameState)
-    {
-        return AdvanceTurnsInternal(turnLimit, includeAllStates, delegateToAi: true, initialGameState);
     }
 
     private static SimulationResponse
