@@ -43,6 +43,11 @@ public class WebApplicationRoutes
             .Produces<GameState>()
             .WithTags("API");
 
+        app.MapPost("/advanceTurns", AdvanceTurns)
+            .Accepts<GameState>("application/json")
+            .Produces<GameState>()
+            .WithTags("API");
+
         app.MapPost("/applyPlayerAction", ApplyPlayerAction)
             .Accepts<ApplyPlayerActionRequestBody>("application/json")
             .Produces<GameState>()
@@ -56,7 +61,7 @@ public class WebApplicationRoutes
     }
 
     private static async Task<SimulationResponse>
-        SimulateGameSessionFromState(HttpRequest req, int? turnLimit, bool? includeAllStates)
+        AdvanceTurns(HttpRequest req, int? turnLimit, bool? includeAllStates, bool? delegateToAi)
     {
         (GameState? gs, string? error) = await ParseGameState(req);
         if (error != null)
@@ -65,14 +70,34 @@ public class WebApplicationRoutes
         return SimulateGameSessionInternal(turnLimit, includeAllStates, gs!);
     }
 
+    private static async Task<SimulationResponse>
+        SimulateGameSessionFromState(HttpRequest req, int? turnLimit, bool? includeAllStates)
+    {
+        (GameState? gs, string? error) = await ParseGameState(req);
+        if (error != null)
+            return TypedResults.BadRequest(error);
+
+        return AdvanceTurnsInternal(turnLimit, includeAllStates, delegateToAi: true, gs!);
+    }
+
     private static SimulationResponse
         SimulateGameSession(int? turnLimit, bool? includeAllStates)
     {
-        return SimulateGameSessionInternal(turnLimit, includeAllStates, null);
+        return AdvanceTurnsInternal(turnLimit, includeAllStates, delegateToAi: true);
     }
 
     private static SimulationResponse
         SimulateGameSessionInternal(int? turnLimit, bool? includeAllStates, GameState? initialGameState)
+    {
+        return AdvanceTurnsInternal(turnLimit, includeAllStates, delegateToAi: true, initialGameState);
+    }
+
+    private static SimulationResponse
+        AdvanceTurnsInternal(
+            int? turnLimit,
+            bool? includeAllStates,
+            bool? delegateToAi = false,
+            GameState? initialGameState = null)
     {
         var stopwatch = Stopwatch.StartNew();
 
@@ -84,7 +109,11 @@ public class WebApplicationRoutes
         var log = new Log(config);
         var gameSession = NewGameSession(initialGameState);
         var controller = new GameSessionController(config, log, gameSession);
-        var aiPlayer = new AIPlayer(log, AIPlayer.Intellect.Basic);
+        var aiPlayer = new AIPlayer(
+            log,
+            delegateToAi == true 
+                ? AIPlayer.Intellect.Basic 
+                : AIPlayer.Intellect.DoNothing);
 
         controller.PlayGameSession(turnLimit: parsedTurnLimit, aiPlayer);
 
@@ -92,7 +121,7 @@ public class WebApplicationRoutes
             ? ApiUtils.ToJsonHttpResult(gameSession.AllGameStatesAtTurnStarts())
             : ApiUtils.ToJsonHttpResult(gameSession.CurrentGameState);
 
-        Console.Out.WriteLine($"SimulateGameSessionInternal runtime: {stopwatch.Elapsed}");
+        Console.Out.WriteLine($"AdvanceTurnsInternal runtime: {stopwatch.Elapsed}");
         return result;
     }
 
