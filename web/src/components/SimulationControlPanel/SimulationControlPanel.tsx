@@ -1,9 +1,11 @@
+/* eslint-disable max-lines */
 /* eslint-disable max-lines-per-function */
 import { Button, Card, CardContent, CardHeader, TextField } from '@mui/material'
 import Grid from '@mui/material/Unstable_Grid2'
 import _ from 'lodash'
 import { useState } from 'react'
 import type { GameSession } from '../../lib/GameSession'
+import { initialTurn } from '../../lib/GameState'
 import { Label } from '../Label'
 import { simulate } from './simulate'
 
@@ -14,6 +16,16 @@ export type SimulationControlPanelProps = {
 const defaultStartTurn = 1
 const defaultTargetTurn = 120
 
+// kja there should be no route "simulateGameSession" and "SimulateGameSessionFromState" in the backend
+// instead, it should be "advanceTurns" that optionally take as input current state and AI player to use.
+// If no game state is passed, it starts new game. The turns are always advance to max turnLimit.
+// The backend route should only return new states, not the passed in.
+// Some cases:
+// advanceTurns with turn limit 1 and no game state: returns initialGameState with initialTurn
+// advanceTurns with turn limit 1 and game state at turn 1: throws "cannot advance to turn 1, already there"
+// advance turns with turn limit 2 and game state at turn 1: returns game state at turn 2
+// advance turns with turn limit 2 and no game state: returns game states at turn 1 and 2
+// advance turns with turn limit 50 and game state at turn 30: returns game states at turns 31 to 50
 export function SimulationControlPanel(
   props: SimulationControlPanelProps,
 ): React.JSX.Element {
@@ -27,17 +39,17 @@ export function SimulationControlPanel(
   }
 
   async function simulateTurns(turnsToSimulate?: number): Promise<void> {
+    const { resolvedStartTurn, resolvedTargetTurn } = resolveStartAndTargetTurn(
+      startTurn,
+      targetTurn,
+      props.gameSession.getCurrentTurnUnsafe(),
+      turnsToSimulate,
+    )
+
     // kja replace simulateTurns body with:
     //
     //   await props.gameSession.simulateTurns(startTurn, targetTurn, turnsToSimulate, setLoading, setError)
     //
-    // then ponder how to simplify these 3 synonymous inputs: startTurn, targetTurn, turnsToSimulate
-    // Probably there are two exclusive modes:
-    // - defined start and end turn (used by simulateFromToTurnButton)
-    // - XOR turnsToSimulate from current turn
-    //   (used by simulateFor1TurnButton and conceptually also by advanceTimeButton, but different API route)
-    // invocation of this method should make it clearer. Either two separate method or "turnsToRunDescriptor"
-    // param or similar.
     // kja dedup simulateFor1TurnButton and advanceTimeButton
     //     both these calls advance game session by 1 turn, but they use different API routes: one of them uses
     //     AI player, one doesn't. Probably I should consolidate them into one API route that takes extra param like
@@ -46,9 +58,8 @@ export function SimulationControlPanel(
       gameSession: props.gameSession,
       setLoading,
       setError,
-      startTurn,
-      targetTurn,
-      turnsToSimulate,
+      startTurn: resolvedStartTurn,
+      targetTurn: resolvedTargetTurn,
     })
   }
 
@@ -265,4 +276,71 @@ function wipeSimulationButton(
       {`Wipe simulation`}
     </Button>
   )
+}
+
+/**
+ * This function determines an interval of [resolvedStartTurn, resolvedTargetTurn] based on following inputs:
+ * - [startTurn, targetTurn] interval, selected in UI
+ * - currentTurn of game session in progress, if any
+ * - turnsToAdvance, selected in UI, if any
+ */
+function resolveStartAndTargetTurn(
+  startTurn: number,
+  targetTurn: number,
+  currentTurn?: number,
+  turnsToAdvance?: number,
+): {
+  resolvedStartTurn: number
+  resolvedTargetTurn: number
+} {
+  const turnsToAdvanceDefined = !_.isUndefined(turnsToAdvance)
+  const currentTurnDefined = !_.isUndefined(currentTurn)
+
+  // Case 1: If turnsToAdvance is not defined, then [startTurn, targetTurn] is used.
+  // ---------------------------------------------------------------------------
+
+  // If currentTurn is not defined, then the interval is [startTurn, targetTurn].
+  if (!turnsToAdvanceDefined && !currentTurnDefined) {
+    return {
+      resolvedStartTurn: startTurn,
+      resolvedTargetTurn: targetTurn,
+    }
+  }
+
+  // If startTurn is after currentTurn, then the turns are advanced from current turn,
+  // otherwise there would be gap in the turns.
+  // Hence the actual resolved interval is [min(startTurn, currentTurn), targetTurn].
+  if (!turnsToAdvanceDefined && currentTurnDefined) {
+    return {
+      resolvedStartTurn: _.min([startTurn, currentTurn])!,
+      resolvedTargetTurn: targetTurn,
+    }
+  }
+
+  // Case 2: If turnsToAdvance is defined, then [startTurn, targetTurn] is ignored.
+  // ---------------------------------------------------------------------------
+
+  // If currentTurns is not defined, the turns to advance start from initialTurn until initialTurn + turnsToAdvance -1.
+  // For example, initialTurn is 1 and turnsToAdvance is 3, then the interval is [1, 3].
+  // This is a special case. Because currentTurn is not defined, we assume the game session is not loaded.
+  // As a result, we are not advancing starting from initialTurn, but from "before" initialTurn.
+  // It is assumed here that the downstream code will interpret this special case correctly.
+  // Consider case of turnsToAdvance = 1. Then the interval is [initialTurn, initialTurn], as it should:
+  // we just want to advance to the initialTurn.
+  if (turnsToAdvanceDefined && !currentTurnDefined) {
+    return {
+      resolvedStartTurn: initialTurn,
+      resolvedTargetTurn: initialTurn + turnsToAdvance - 1,
+    }
+  }
+
+  // If currentTurns is defined, the turns to advance start from currentTurn until currentTurn + turnsToAdvance.
+  // For example, if currentTurn is 8 and turnsToAdvance is 3, then the interval is [8, 11].
+  if (turnsToAdvanceDefined && currentTurnDefined) {
+    return {
+      resolvedStartTurn: currentTurn,
+      resolvedTargetTurn: currentTurn + turnsToAdvance,
+    }
+  }
+  throw new Error('Unreachable code')
 }

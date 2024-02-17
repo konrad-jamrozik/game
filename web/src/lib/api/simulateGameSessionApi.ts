@@ -13,19 +13,14 @@ export async function callSimulateGameSessionApi(
   params: FetchCallbacks & {
     startNewSimulation: boolean
     gameSession: GameSession
-    resolvedStartTurn: number
-    resolvedTargetTurn: number
+    startTurn: number
+    targetTurn: number
   },
 ): Promise<GameState[] | undefined> {
   const jsonBody: string = !params.startNewSimulation
-    ? JSON.stringify(
-        params.gameSession.getStateAtTurn(params.resolvedStartTurn),
-      )
+    ? JSON.stringify(params.gameSession.getStateAtTurn(params.startTurn))
     : ''
-  const apiUrl = getSimulateApiUrl(
-    params.resolvedTargetTurn,
-    params.startNewSimulation,
-  )
+  const apiUrl = getSimulateApiUrl(params.targetTurn, params.startNewSimulation)
   const request = !params.startNewSimulation
     ? getPostJsonRequest(apiUrl, jsonBody)
     : getGetRequest(apiUrl)
