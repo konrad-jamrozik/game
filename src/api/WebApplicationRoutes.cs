@@ -10,7 +10,7 @@ using UfoGameLib.State;
 
 namespace UfoGameLib.Api;
 
-using SimulationResponse = Results<
+using AdvanceTurnsResponse = Results<
     JsonHttpResult<GameState[]>,
     JsonHttpResult<GameState>,
     BadRequest<string>>;
@@ -34,15 +34,6 @@ public class WebApplicationRoutes
             .Produces<GameStatePlayerView>()
             .WithTags("API");
 
-        app.MapGet("/simulateGameSession", SimulateGameSession)
-            .Produces<GameState>()
-            .WithTags("API");
-
-        app.MapPost("/simulateGameSessionFromState", SimulateGameSessionFromState)
-            .Accepts<GameState>("application/json")
-            .Produces<GameState>()
-            .WithTags("API");
-
         app.MapPost("/advanceTurns", AdvanceTurns)
             .Accepts<GameState>("application/json")
             .Produces<GameState>()
@@ -60,7 +51,7 @@ public class WebApplicationRoutes
         return $"Hello World! Coin flip: {randomGen.FlipCoin()}";
     }
 
-    private static async Task<SimulationResponse>
+    private static async Task<AdvanceTurnsResponse>
         AdvanceTurns(HttpRequest req, int? turnLimit, bool? includeAllStates, bool? delegateToAi)
     {
         (GameState? gs, string? error) = await ParseGameState(req);
@@ -70,23 +61,7 @@ public class WebApplicationRoutes
         return AdvanceTurnsInternal(turnLimit, includeAllStates, delegateToAi, gs);
     }
 
-    private static async Task<SimulationResponse>
-        SimulateGameSessionFromState(HttpRequest req, int? turnLimit, bool? includeAllStates)
-    {
-        (GameState? gs, string? error) = await ParseGameState(req);
-        if (error != null)
-            return TypedResults.BadRequest(error);
-
-        return AdvanceTurnsInternal(turnLimit, includeAllStates, delegateToAi: true, gs!);
-    }
-
-    private static SimulationResponse
-        SimulateGameSession(int? turnLimit, bool? includeAllStates)
-    {
-        return AdvanceTurnsInternal(turnLimit, includeAllStates, delegateToAi: true);
-    }
-
-    private static SimulationResponse
+    private static AdvanceTurnsResponse
         AdvanceTurnsInternal(
             int? turnLimit,
             bool? includeAllStates,
@@ -111,7 +86,7 @@ public class WebApplicationRoutes
 
         controller.PlayGameSession(turnLimit: parsedTurnLimit, aiPlayer);
 
-        SimulationResponse result = includeAllStates == true
+        AdvanceTurnsResponse result = includeAllStates == true
             ? ApiUtils.ToJsonHttpResult(gameSession.AllGameStatesAtTurnStarts())
             : ApiUtils.ToJsonHttpResult(gameSession.CurrentGameState);
 
