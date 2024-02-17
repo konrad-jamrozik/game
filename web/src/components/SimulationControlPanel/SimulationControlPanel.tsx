@@ -34,8 +34,8 @@ export function SimulationControlPanel(
   const [loading, setLoading] = useState<boolean>(false)
   const [error, setError] = useState<string>()
 
-  function simulationRunMsg(): string {
-    return `Simulation ran until turn ${props.gameSession.getCurrentTurn()}. Result: ${props.gameSession.getGameResult()}`
+  function gameRunMsg(): string {
+    return `Game ran until turn ${props.gameSession.getCurrentTurn()}. Result: ${props.gameSession.getGameResult()}`
   }
 
   async function simulateTurns(turnsToSimulate?: number): Promise<void> {
@@ -81,10 +81,7 @@ export function SimulationControlPanel(
         width: '100%',
       }}
     >
-      <CardHeader
-        title="Simulation control panel"
-        sx={{ paddingBottom: '0px' }}
-      />
+      <CardHeader title="Game Session" sx={{ paddingBottom: '0px' }} />
       <CardContent>
         <Grid container spacing={1}>
           <Grid xs={12}>
@@ -110,9 +107,7 @@ export function SimulationControlPanel(
                 props.gameSession,
               )}
             </Grid>
-            <Grid xsOffset={'auto'}>
-              {wipeSimulationButton(reset, loading)}
-            </Grid>
+            <Grid xsOffset={'auto'}>{wipeGameButton(reset, loading)}</Grid>
           </Grid>
 
           <Grid>
@@ -129,7 +124,7 @@ export function SimulationControlPanel(
           </Grid>
           {props.gameSession.isGameSessionLoaded() && (
             <Grid xs={12}>
-              <Label>{simulationRunMsg()}</Label>
+              <Label>{gameRunMsg()}</Label>
             </Grid>
           )}
           {Boolean(error) && <Grid xs={12}>Error: {error}</Grid>}
@@ -149,9 +144,9 @@ function startTurnInputTextField(
 ): React.JSX.Element {
   return (
     <TextField
-      sx={{ width: 90 }}
+      sx={{ width: 65 }}
       id="textfield-start-turn"
-      label="start turn"
+      label="start"
       type="number"
       value={startTurn}
       onChange={(event: React.ChangeEvent) => {
@@ -176,9 +171,9 @@ function targetTurnInputTextField(
 ): React.JSX.Element {
   return (
     <TextField
-      sx={{ width: 90 }}
+      sx={{ width: 65 }}
       id="textfield-target-turn"
-      label="target turn"
+      label="target"
       type="number"
       value={targetTurn}
       onChange={(event: React.ChangeEvent) => {
@@ -267,13 +262,13 @@ function resetCurrentTurnButton(
   )
 }
 
-function wipeSimulationButton(
+function wipeGameButton(
   reset: () => void,
   loading: boolean,
 ): React.JSX.Element {
   return (
     <Button variant="outlined" onClick={reset} disabled={loading} color="error">
-      {`Wipe simulation`}
+      {`Wipe game`}
     </Button>
   )
 }
