@@ -10,15 +10,6 @@ using UfoGameLib.State;
 
 namespace UfoGameLib.Api;
 
-using AdvanceTurnsResponse = Results<
-    JsonHttpResult<GameState[]>,
-    JsonHttpResult<GameState>,
-    BadRequest<string>>;
-
-using ApplyPlayerActionResponse = Results<
-    JsonHttpResult<GameState>,
-    BadRequest<string>>;
-
 public class WebApplicationRoutes
 {
     public void Register(WebApplication app)
@@ -26,20 +17,22 @@ public class WebApplicationRoutes
         app.MapGet("/helloCoinFlip", HelloCoinFlip)
             .WithTags("API");
 
-        app.MapGet("/initialGameState", () => ApiUtils.GetCurrentStateResponse(NewGameSession()))
+        app.MapGet("/initialGameState", () => ApiUtils.GetCurrentStateResponse(ApiUtils.NewGameSession()))
             .Produces<GameState>()
             .WithTags("API");
 
-        app.MapGet("/initialGameStatePlayerView", () => ApiUtils.GetCurrentStatePlayerViewResponse(NewGameSession()))
+        app.MapGet(
+                "/initialGameStatePlayerView",
+                () => ApiUtils.GetCurrentStatePlayerViewResponse(ApiUtils.NewGameSession()))
             .Produces<GameStatePlayerView>()
             .WithTags("API");
 
-        app.MapPost("/advanceTurns", AdvanceTurns)
+        app.MapPost("/advanceTurns", AdvanceTurnsRoute.AdvanceTurns)
             .Accepts<GameState>("application/json")
             .Produces<GameState>()
             .WithTags("API");
 
-        app.MapPost("/applyPlayerAction", ApplyPlayerAction)
+        app.MapPost("/applyPlayerAction", ApplyPlayerActionRoute.ApplyPlayerAction)
             .Accepts<ApplyPlayerActionRequestBody>("application/json")
             .Produces<GameState>()
             .WithTags("API");
@@ -49,165 +42,5 @@ public class WebApplicationRoutes
     {
         var randomGen = new RandomGen(new Random());
         return $"Hello World! Coin flip: {randomGen.FlipCoin()}";
-    }
-
-    private static async Task<AdvanceTurnsResponse>
-        AdvanceTurns(HttpRequest req, int? turnLimit, bool? includeAllStates, bool? delegateToAi)
-    {
-        (GameState? gs, string? error) = await ParseGameState(req);
-        if (error != null)
-            return TypedResults.BadRequest(error);
-
-        return AdvanceTurnsInternal(turnLimit, includeAllStates, delegateToAi, gs);
-    }
-
-    private static AdvanceTurnsResponse
-        AdvanceTurnsInternal(
-            int? turnLimit,
-            bool? includeAllStates,
-            bool? delegateToAi = false,
-            GameState? initialGameState = null)
-    {
-        var stopwatch = Stopwatch.StartNew();
-
-        (int parsedTurnLimit, string? error) = ParseTurnLimit(turnLimit, initialGameState);
-        if (error != null)
-            return TypedResults.BadRequest(error);
-
-        var config = new Configuration(new SimulatedFileSystem());
-        var log = new Log(config);
-        var gameSession = NewGameSession(initialGameState);
-        var controller = new GameSessionController(config, log, gameSession);
-        var aiPlayer = new AIPlayer(
-            log,
-            delegateToAi == true
-                ? AIPlayer.Intellect.Basic
-                : AIPlayer.Intellect.DoNothing);
-
-        controller.PlayGameSession(turnLimit: parsedTurnLimit, aiPlayer);
-
-        AdvanceTurnsResponse result = includeAllStates == true
-            ? ApiUtils.ToJsonHttpResult(gameSession.AllGameStatesAtTurnStarts())
-            : ApiUtils.ToJsonHttpResult(gameSession.CurrentGameState);
-
-        Console.Out.WriteLine($"AdvanceTurnsInternal runtime: {stopwatch.Elapsed}");
-        return result;
-    }
-
-    private static async Task<ApplyPlayerActionResponse>
-        ApplyPlayerAction(HttpRequest req)
-    {
-        Console.Out.WriteLine("Invoked ApplyPlayerAction!");
-
-        (ApplyPlayerActionRequestBody? body, string? error) = await ParseGameApplyPlayerActionBody(req);
-        if (error != null)
-            return TypedResults.BadRequest(error);
-
-        return ApplyPlayerActionInternal(body!.PlayerAction, body.GameState);
-    }
-
-    private static ApplyPlayerActionResponse
-        ApplyPlayerActionInternal(PlayerActionPayload playerAction, GameState? gameState)
-    {
-        Console.Out.WriteLine(
-            $"Invoked ApplyPlayerActionInternal! " +
-            $"playerAction: {playerAction.ToIndentedUnsafeJsonString()}");
-
-        var config = new Configuration(new SimulatedFileSystem());
-        var log = new Log(config);
-        var gameSession = NewGameSession(gameState);
-        var controller = new GameSessionController(config, log, gameSession);
-
-        if (playerAction.Action != "AdvanceTime" || gameState is not null)
-            playerAction.Apply(controller);
-        else
-        {
-            // kja this will be converted to "advanceTurns" route
-            // If the player action is "AdvanceTime" and the gameState is null,
-            // then we treat this as special case of "initialize game session to initial game state",
-            // hence we just return gameSession.CurrentGameState.
-        }
-
-        ApplyPlayerActionResponse result = ApiUtils.ToJsonHttpResult(gameSession.CurrentGameState);
-        return result;
-    }
-
-    private static (int turnLimitVal, string? error) ParseTurnLimit(int? turnLimit, GameState? initialGameState)
-    {
-        int parsedTurnLimit = turnLimit ?? 30;
-        int turnLimitLowerBound =
-            initialGameState?.Timeline.CurrentTurn ?? Timeline.InitialTurn;
-        int turnLimitUpperBound = 300;
-        string? error;
-
-        if (parsedTurnLimit < turnLimitLowerBound || parsedTurnLimit > turnLimitUpperBound)
-        {
-            error = $"Value of 'turnLimit' is out of accepted range. " +
-                    $"It should be between {turnLimitLowerBound} and {turnLimitUpperBound}. " +
-                    $"Actual value: {parsedTurnLimit}";
-            parsedTurnLimit = -1;
-        }
-        else
-            error = null;
-
-        return (parsedTurnLimit, error);
-    }
-    private static async Task<(GameState? gameState, string? error)> ParseGameState(HttpRequest req)
-    {
-        string? error;
-        GameState? parsedGameState;
-        if (req.HasJsonContentType())
-        {
-            string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-
-            if (string.IsNullOrEmpty(requestBody))
-            {
-                parsedGameState = null;
-                error = null;
-            }
-            else
-            {
-                // Deserialization method invocation and configuration as explained by:
-                // https://learn.microsoft.com/en-us/aspnet/core/fundamentals/minimal-apis/parameter-binding?view=aspnetcore-8.0#configure-json-deserialization-options-for-an-endpoint
-                parsedGameState = (requestBody.FromJsonTo<GameState>(GameState.StateJsonSerializerOptions));
-                error = null;
-            }
-
-        }
-        else
-        {
-            parsedGameState = null;
-            error = "Expected GameState to be passed in the request body";
-        }
-
-        return (parsedGameState, error);
-    }
-
-    private static async Task<(ApplyPlayerActionRequestBody? body, string? error)> ParseGameApplyPlayerActionBody(
-        HttpRequest req)
-    {
-        string? error;
-        ApplyPlayerActionRequestBody? parsedBody;
-        if (req.HasJsonContentType())
-        {
-            // Deserialization method invocation and configuration as explained by:
-            // https://learn.microsoft.com/en-us/aspnet/core/fundamentals/minimal-apis/parameter-binding?view=aspnetcore-8.0#configure-json-deserialization-options-for-an-endpoint
-            parsedBody =
-                (await req.ReadFromJsonAsync<ApplyPlayerActionRequestBody>(GameState.StateJsonSerializerOptions))!;
-            error = null;
-        }
-        else
-        {
-            parsedBody = null;
-            error = "Expected GameState and PlayerActionPayload to be passed in the request body";
-        }
-
-        return (parsedBody, error);
-    }
-
-    private static GameSession NewGameSession(GameState? initialGameState = null)
-    {
-        var gameSession = new GameSession(new RandomGen(new Random()), initialGameState);
-        return gameSession;
     }
 }
