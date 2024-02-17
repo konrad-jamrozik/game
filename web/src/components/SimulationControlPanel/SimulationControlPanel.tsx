@@ -68,6 +68,7 @@ export function SimulationControlPanel(
       setError,
       startTurn: resolvedStartTurn,
       targetTurn: resolvedTargetTurn,
+      delegateToAi: true,
     })
   }
 

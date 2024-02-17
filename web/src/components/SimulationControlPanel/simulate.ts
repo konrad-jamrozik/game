@@ -1,25 +1,20 @@
 import _ from 'lodash'
 import type { GameSession } from '../../lib/GameSession'
-import { callSimulateGameSessionApi } from '../../lib/api/simulateGameSessionApi'
+import { callAdvanceTurnsApi } from '../../lib/api/advanceTurnsApi'
+import type { FetchCallbacks } from '../../lib/api/genericApiUtils'
 
 type SimulateParams = {
   readonly gameSession: GameSession
-  readonly setLoading: React.Dispatch<React.SetStateAction<boolean>>
-  readonly setError: React.Dispatch<React.SetStateAction<string | undefined>>
   readonly startTurn: number
   readonly targetTurn: number
-}
+  readonly delegateToAi: boolean
+} & FetchCallbacks
 
 export async function simulate(params: SimulateParams): Promise<void> {
   params.setLoading(true)
   params.setError('')
 
-  const startNewSimulation = !params.gameSession.isGameSessionLoaded()
-
-  const newGameStates = await callSimulateGameSessionApi({
-    ...params,
-    startNewSimulation,
-  })
+  const newGameStates = await callAdvanceTurnsApi({ ...params })
 
   if (!_.isUndefined(newGameStates)) {
     params.gameSession.upsertGameStates(newGameStates, params.startTurn)

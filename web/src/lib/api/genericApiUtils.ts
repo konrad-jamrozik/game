@@ -15,6 +15,7 @@ export function getPostJsonRequest(apiUrl: URL, jsonBody: string): Request {
     },
   })
 }
+
 export function getApiUrl(path: string, query: string): URL {
   const queryString = query ? `?${query}` : ''
   return new URL(`${getHost()}/${path}${queryString}`)

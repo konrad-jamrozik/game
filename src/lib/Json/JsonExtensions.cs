@@ -49,11 +49,11 @@ public static class JsonExtensions
         DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
     };
 
-    public static T FromJsonTo<T>(this string json) 
-        => JsonSerializer.Deserialize<T>(json, SerializerOptions)!;
+    public static T FromJsonTo<T>(this string json, JsonSerializerOptions? options = null) 
+        => JsonSerializer.Deserialize<T>(json, options ?? SerializerOptions)!;
 
     public static T ReadJsonInto<T>(this File file, JsonSerializerOptions? options = null)
-        => file.FileSystem.ReadJsonInto<T>(file, options);
+        => file.FileSystem.ReadJsonInto<T>(file, options ?? SerializerOptions);
 
     public static T FromJsonTo<T>(this byte[] bytes, JsonSerializerOptions? options = null) 
         => JsonSerializer.Deserialize<T>(bytes, options ?? SerializerOptions)!;

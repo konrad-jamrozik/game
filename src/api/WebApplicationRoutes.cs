@@ -105,8 +105,8 @@ public class WebApplicationRoutes
         var controller = new GameSessionController(config, log, gameSession);
         var aiPlayer = new AIPlayer(
             log,
-            delegateToAi == true 
-                ? AIPlayer.Intellect.Basic 
+            delegateToAi == true
+                ? AIPlayer.Intellect.Basic
                 : AIPlayer.Intellect.DoNothing);
 
         controller.PlayGameSession(turnLimit: parsedTurnLimit, aiPlayer);
@@ -183,10 +183,21 @@ public class WebApplicationRoutes
         GameState? parsedGameState;
         if (req.HasJsonContentType())
         {
-            // Deserialization method invocation and configuration as explained by:
-            // https://learn.microsoft.com/en-us/aspnet/core/fundamentals/minimal-apis/parameter-binding?view=aspnetcore-8.0#configure-json-deserialization-options-for-an-endpoint
-            parsedGameState = (await req.ReadFromJsonAsync<GameState>(GameState.StateJsonSerializerOptions))!;
-            error = null;
+            string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
+
+            if (string.IsNullOrEmpty(requestBody))
+            {
+                parsedGameState = null;
+                error = null;
+            }
+            else
+            {
+                // Deserialization method invocation and configuration as explained by:
+                // https://learn.microsoft.com/en-us/aspnet/core/fundamentals/minimal-apis/parameter-binding?view=aspnetcore-8.0#configure-json-deserialization-options-for-an-endpoint
+                parsedGameState = (requestBody.FromJsonTo<GameState>(GameState.StateJsonSerializerOptions));
+                error = null;
+            }
+
         }
         else
         {

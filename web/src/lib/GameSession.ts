@@ -79,6 +79,8 @@ export class GameSession {
     return newGameStates
   }
 
+  // kja note: the concept of "current turn" and "current turn game state" will
+  // will be split: "the beginning of current turn" and "current turn after all the player actions taken so far"
   public getCurrentGameState(): GameState | undefined {
     return this.data.gameStates.length > 0 ? this.getCurrentState() : undefined
   }
