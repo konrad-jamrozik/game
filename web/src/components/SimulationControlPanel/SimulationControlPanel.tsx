@@ -82,7 +82,7 @@ export function SimulationControlPanel(
       }}
     >
       <CardHeader title="Game Session" sx={{ paddingBottom: '0px' }} />
-      <CardContent>
+      <CardContent sx={{ padding: '14px' }}>
         <Grid container spacing={1}>
           <Grid xs={12}>
             <Label>{currentTurnLabel(props.gameSession)}</Label>
@@ -138,13 +138,15 @@ function currentTurnLabel(gameSession: GameSession): string {
   return `Current turn: ${gameSession.getCurrentTurnUnsafe() ?? 'N/A'}`
 }
 
+const textFieldWidth = 64
+
 function startTurnInputTextField(
   startTurn: number,
   setStartTurn: React.Dispatch<React.SetStateAction<number>>,
 ): React.JSX.Element {
   return (
     <TextField
-      sx={{ width: 65 }}
+      sx={{ width: textFieldWidth }}
       id="textfield-start-turn"
       label="start"
       type="number"
@@ -171,7 +173,7 @@ function targetTurnInputTextField(
 ): React.JSX.Element {
   return (
     <TextField
-      sx={{ width: 65 }}
+      sx={{ width: textFieldWidth }}
       id="textfield-target-turn"
       label="target"
       type="number"
