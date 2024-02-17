@@ -20,6 +20,10 @@ export function getApiUrl(path: string, query: string): URL {
   return new URL(`${getHost()}/${path}${queryString}`)
 }
 
+export type CallApiParams = FetchCallbacks & {
+  readonly request: Request
+}
+
 export async function callApi<T>(
   params: CallApiParams,
 ): Promise<T | undefined> {
@@ -27,7 +31,7 @@ export async function callApi<T>(
   params.setError('')
 
   try {
-    console.log(`callApi(). request: ${await log(params.request)}`)
+    console.log(`callApi(): ${await log(params.request)}`)
 
     const response: Response = await fetch(params.request)
     if (!response.ok) {
@@ -44,10 +48,6 @@ export async function callApi<T>(
   }
 }
 
-export type CallApiParams = FetchCallbacks & {
-  readonly request: Request
-}
-
 export type FetchCallbacks = {
   setLoading: React.Dispatch<React.SetStateAction<boolean>>
   setError: React.Dispatch<React.SetStateAction<string | undefined>>
@@ -60,16 +60,22 @@ function getHost(): string {
 }
 
 export async function log(req: Request, pretty?: boolean): Promise<string> {
-  const text = await req.clone().text()
+  const reqClone = req.clone()
+  const body = await reqClone.text()
+  const { url, method } = reqClone
 
   if (pretty ?? false) {
     // JSON.parse here is to avoid escaping of quotes. See
     // https://chat.openai.com/share/d6abd2a4-0265-4ea2-8bbb-f30eeee0f787
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    const parsed = JSON.parse(text)
+    const parsed = JSON.parse(body)
+    /* eslint-disable @typescript-eslint/no-unsafe-member-access */
+    parsed.url = url
+    parsed.method = method
+    /* eslint-enable @typescript-eslint/no-unsafe-member-access */
     // eslint-disable-next-line sonarjs/prefer-immediate-return
     const stringified = JSON.stringify(parsed, undefined, 2)
     return stringified
   }
-  return text
+  return `${method} ${url} ${body}`
 }
