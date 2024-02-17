@@ -11,7 +11,7 @@ export async function callAdvanceTurnsApi(
   params: FetchCallbacks & {
     startGameState: GameState | undefined
     targetTurn: number
-    delegateToAi?: boolean
+    delegateToAi?: boolean | undefined
   },
 ): Promise<GameState[] | undefined> {
   const { startGameState, targetTurn, delegateToAi } = params
@@ -25,9 +25,16 @@ export async function callAdvanceTurnsApi(
   return callApi<GameState[]>({ ...params, request })
 }
 
-function getAdvanceTurnsApiUrl(targetTurn: number, delegateToAi: boolean): URL {
+function getAdvanceTurnsApiUrl(
+  targetTurn: number,
+  delegateToAi?: boolean,
+): URL {
+  const delegateToAiQueryParam = !_.isUndefined(delegateToAi)
+    ? `&delegateToAi=${delegateToAi}`
+    : ''
+
   return getApiUrl(
     `advanceTurns`,
-    `includeAllStates=true&turnLimit=${targetTurn}${delegateToAi ? '&delegateToAi=true' : ''}`,
+    `includeAllStates=true&turnLimit=${targetTurn}${delegateToAiQueryParam}`,
   )
 }

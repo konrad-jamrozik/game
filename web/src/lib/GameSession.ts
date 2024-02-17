@@ -4,7 +4,6 @@ import { useState } from 'react'
 import { initialTurn, type GameState } from './GameState'
 import type { PlayerActionPayload } from './PlayerActionPayload'
 import { callAdvanceTurnsApi } from './api/advanceTurnsApi'
-import { callApiToAdvanceTimeBy1Turn } from './api/applyPlayerActionApi'
 import type { FetchCallbacks } from './api/genericApiUtils'
 
 export function useGameSession(): GameSession {
@@ -38,26 +37,21 @@ export class GameSession {
     }
   }
 
-  public async advanceTimeBy1Turn(
-    params: FetchCallbacks,
-  ): Promise<GameState[] | undefined> {
-    const newGameState = await callApiToAdvanceTimeBy1Turn({
+  public async advanceTimeBy1Turn(params: FetchCallbacks): Promise<void> {
+    const currentTurn = this.getCurrentTurn()
+    return this.advanceTurns({
       ...params,
-      currentGameState: this.getCurrentGameState(),
+      startTurn: currentTurn,
+      targetTurn: currentTurn + 1,
+      delegateToAi: false,
     })
-    if (!_.isUndefined(newGameState)) {
-      // eslint-disable-next-line sonarjs/prefer-immediate-return
-      const newGameStates = this.appendNextTurnGameState(newGameState)
-      return newGameStates
-    }
-    return undefined
   }
 
   public async advanceTurns(
     params: FetchCallbacks & {
       startTurn: number
       targetTurn: number
-      delegateToAi?: boolean
+      delegateToAi?: boolean | undefined
     },
   ): Promise<void> {
     const startGameState = this.getStateAtTurn(params.startTurn)
@@ -147,7 +141,7 @@ export class GameSession {
 
   public upsertGameStates(
     gameStatesToUpsert: GameState[],
-    resolvedStartTurn: number,
+    upsertStartTurn: number,
   ): void {
     if (_.isEmpty(gameStatesToUpsert)) {
       throw new Error('newGameStates must not be empty')
@@ -158,14 +152,14 @@ export class GameSession {
     const firstTurnInNewGameStates =
       gameStatesToUpsert.at(0)!.Timeline.CurrentTurn
 
-    if (resolvedStartTurn < firstTurnInNewGameStates) {
+    if (upsertStartTurn < firstTurnInNewGameStates) {
       throw new Error(
         'resolvedStartTurn must be at least firstTurnInNewGameStates',
       )
     }
 
     const firstTurnToUpsert = this.isGameSessionLoaded()
-      ? resolvedStartTurn + 1
+      ? upsertStartTurn + 1
       : initialTurn
     const retainedGameStatesSliceStart = 0
     const retainedGameStatesSliceEnd = firstTurnToUpsert - initialTurn
@@ -175,7 +169,7 @@ export class GameSession {
     console.log(
       `Upserting game states. ` +
         `currentTurn: ${this.getCurrentTurnUnsafe()}, ` +
-        `resolvedStartTurn: ${resolvedStartTurn}, ` +
+        `upsertStartTurn: ${upsertStartTurn}, ` +
         `firstTurnToUpsert: ${firstTurnToUpsert}, ` +
         `firstTurnInNewGameStates: ${firstTurnInNewGameStates}, ` +
         `retainedSlice: [ ${retainedGameStatesSliceStart} - ${retainedGameStatesSliceEnd} ` +

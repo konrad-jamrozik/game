@@ -23,11 +23,8 @@ export type GameSessionControlPanelProps = {
 const defaultStartTurn = 1
 const defaultTargetTurn = 120
 
-// kja there should be no route "simulateGameSession" and "SimulateGameSessionFromState" in the backend
-// instead, it should be "advanceTurns" that optionally take as input current state and AI player to use.
-// If no game state is passed, it starts new game. The turns are always advance to max turnLimit.
-// The backend route should only return new states, not the passed in.
-// Some cases:
+// kja The backend route should only return new states, not the passed in.
+// Some cases for the "advanceTurns" route:
 // advanceTurns with turn limit 1 and no game state: returns initialGameState with initialTurn
 // advanceTurns with turn limit 1 and game state at turn 1: throws "cannot advance to turn 1, already there"
 // advance turns with turn limit 2 and game state at turn 1: returns game state at turn 2
@@ -45,29 +42,23 @@ export function GameSessionControlPanel(
     return `Game ran until turn ${props.gameSession.getCurrentTurn()}. Result: ${props.gameSession.getGameResult()}`
   }
 
-  async function simulateTurns(turnsToSimulate?: number): Promise<void> {
+  async function advanceTurns(
+    turnsToAdvance?: number,
+    delegateToAi?: boolean,
+  ): Promise<void> {
     const { resolvedStartTurn, resolvedTargetTurn } = resolveStartAndTargetTurn(
       startTurn,
       targetTurn,
       props.gameSession.getCurrentTurnUnsafe(),
-      turnsToSimulate,
+      turnsToAdvance,
     )
     await props.gameSession.advanceTurns({
       setLoading,
       setError,
       startTurn: resolvedStartTurn,
       targetTurn: resolvedTargetTurn,
-      delegateToAi: true,
+      delegateToAi,
     })
-
-    // kja dedup simulateFor1TurnButton and advanceTimeButton
-    //     both these calls advance game session by 1 turn, but they use different API routes: one of them uses
-    //     AI player, one doesn't. Probably I should consolidate them into one API route that takes extra param like
-    //     "useAI: name_of_the_AI". If AI is used, then before the time is advanced, the backend AI will try to do things first.
-  }
-
-  async function advanceTimeBy1Turn(): Promise<void> {
-    await props.gameSession.advanceTimeBy1Turn({ setLoading, setError })
   }
 
   function reset(): void {
@@ -96,8 +87,8 @@ export function GameSessionControlPanel(
           </Grid>
           <Grid container xs={12} marginBottom={'0px'}>
             <Grid>
-              {advanceTimeButton(
-                advanceTimeBy1Turn,
+              {advanceTimeBy1TurnButton(
+                advanceTurns,
                 loading,
                 props.gameSession,
               )}
@@ -108,8 +99,8 @@ export function GameSessionControlPanel(
           </Grid>
           <Grid container xs={12} marginBottom={'0px'}>
             <Grid>
-              {simulateFor1TurnButton(
-                simulateTurns,
+              {delegate1TurnToAiButton(
+                advanceTurns,
                 loading,
                 props.gameSession,
               )}
@@ -118,8 +109,8 @@ export function GameSessionControlPanel(
           </Grid>
 
           <Grid>
-            {simulateFromToTurnButton(
-              simulateTurns,
+            {delegateTurnsToAiButton(
+              advanceTurns,
               loading,
               startTurn,
               targetTurn,
@@ -209,15 +200,18 @@ function targetTurnInputTextField(
   )
 }
 
-function advanceTimeButton(
-  advanceTimeBy1Turn: () => Promise<void>,
+function advanceTimeBy1TurnButton(
+  advanceTurns: (
+    turnsToAdvance?: number,
+    delegateToAi?: boolean,
+  ) => Promise<void>,
   loading: boolean,
   gameSession: GameSession,
 ): React.JSX.Element {
   return (
     <Button
       variant="contained"
-      onClick={advanceTimeBy1Turn}
+      onClick={async () => advanceTurns(1, false)}
       disabled={loading || (gameSession.isGameOverUnsafe() ?? false)}
     >
       {'Advance 1 turn'}
@@ -225,15 +219,18 @@ function advanceTimeButton(
   )
 }
 
-function simulateFor1TurnButton(
-  simulateTurns: (turnsToSimulate?: number) => Promise<void>,
+function delegate1TurnToAiButton(
+  advanceTurns: (
+    turnsToAdvance?: number,
+    delegateToAi?: boolean,
+  ) => Promise<void>,
   loading: boolean,
   gameSession: GameSession,
 ): React.JSX.Element {
   return (
     <Button
       variant="outlined"
-      onClick={async () => simulateTurns(1)}
+      onClick={async () => advanceTurns(1, true)}
       disabled={loading || (gameSession.isGameOverUnsafe() ?? false)}
     >
       {'Delegate 1 turn to AI'}
@@ -241,8 +238,11 @@ function simulateFor1TurnButton(
   )
 }
 
-function simulateFromToTurnButton(
-  simulateTurns: (turnsToSimulate?: number) => Promise<void>,
+function delegateTurnsToAiButton(
+  advanceTurns: (
+    turnsToAdvance?: number,
+    delegateToAi?: boolean,
+  ) => Promise<void>,
   loading: boolean,
   startTurn: number,
   targetTurn: number,
@@ -250,7 +250,7 @@ function simulateFromToTurnButton(
   return (
     <Button
       variant="outlined"
-      onClick={async () => simulateTurns()}
+      onClick={async () => advanceTurns(undefined, true)}
       disabled={loading || startTurn >= targetTurn}
     >
       {`Delegate turns to AI:`}
