@@ -53,8 +53,9 @@ export const playerActionsPayloadsProviders: {
   buyTransportCap: () => ({ Action: 'BuyTransportCap' }),
   hireAgents: () => ({ Action: 'HireAgents' }),
   sackAgents: (params) => ({ Action: 'SackAgents', Ids: params.ids! }),
-  sendAgentsToIncomeGeneration: () => ({
+  sendAgentsToIncomeGeneration: (params) => ({
     Action: 'SendAgentsToIncomeGeneration',
+    Ids: params.ids!,
   }),
   sendAgentsToIntelGathering: (params) => ({
     Action: 'SendAgentsToIntelGathering',

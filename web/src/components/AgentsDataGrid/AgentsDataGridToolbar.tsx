@@ -1,12 +1,13 @@
 import AddIcon from '@mui/icons-material/Add'
 import ChecklistIcon from '@mui/icons-material/Checklist'
-import { Button } from '@mui/material'
+import { Button, Divider } from '@mui/material'
 import { GridToolbarContainer } from '@mui/x-data-grid'
 import type { GameSession } from '../../lib/GameSession'
 import {
   AgentsActionDropdown,
   type AgentsActionDropdownProps,
 } from './AgentsActionDropdown'
+import { BatchAgentPlayerActionOption } from './batchAgentPlayerActionOptions'
 
 type AgentsDataGridToolbarProps = {
   getSelectedRowsIds: () => number[]
@@ -22,11 +23,13 @@ export function AgentsDataGridToolbar(
     await props.gameSession.applyPlayerAction('hireAgents')
   }
 
-  function handleAct(): void {
+  async function handleBatchAgentPlayerAction(): Promise<void> {
+    const action = props.action as Exclude<BatchAgentPlayerActionOption, 'none'>
     console.log(
       `Act on agents clicked! agents ` +
-        `ids: ${selectedRowIds.toString()} (#${selectedRowIds.length}), action: ${props.action}`,
+        `ids: ${selectedRowIds.toString()} (#${selectedRowIds.length}), action: ${action}`,
     )
+    await props.gameSession.applyPlayerAction(action, selectedRowIds)
   }
 
   const selectedAgentCount = selectedRowIds.length
@@ -44,10 +47,10 @@ export function AgentsDataGridToolbar(
         color="primary"
         startIcon={<ChecklistIcon />}
         style={{ whiteSpace: 'pre' }}
-        onClick={handleAct}
+        onClick={handleBatchAgentPlayerAction}
+        disabled={selectedAgentCount === 0 || props.action === 'none'}
       >
-        Act on <span style={{ width: '30px' }}>{selectedAgentCount}</span>{' '}
-        agents
+        Act on agents
       </Button>
       <AgentsActionDropdown {...props} />
     </GridToolbarContainer>

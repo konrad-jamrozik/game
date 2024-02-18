@@ -5,7 +5,7 @@ import {
   batchAgentPlayerActionOptionLabel,
 } from './batchAgentPlayerActionOptions'
 export type AgentsActionDropdownProps = {
-  readonly action: string
+  readonly action: BatchAgentPlayerActionOption
   readonly setAction: React.Dispatch<
     React.SetStateAction<BatchAgentPlayerActionOption>
   >
