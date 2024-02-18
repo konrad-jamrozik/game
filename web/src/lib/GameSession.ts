@@ -3,7 +3,6 @@ import _ from 'lodash'
 import { useContext, useState } from 'react'
 import { GameSessionContext } from '../components/GameSessionProvider'
 import { initialTurn, type GameState } from './GameState'
-import type { PlayerActionPayload } from './PlayerActionPayload'
 import { callAdvanceTurnsApi } from './api/advanceTurnsApi'
 import {
   type PlayerActionName,

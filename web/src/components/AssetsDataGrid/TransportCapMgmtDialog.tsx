@@ -30,7 +30,6 @@ export default function TransportCapMgmtDialog(
     setOpen(false)
   }
 
-  // eslint-disable-next-line unicorn/consistent-function-scoping
   async function handleBuy1TransportCap(): Promise<void> {
     await gameSession.applyPlayerAction('buyTransportCap')
   }

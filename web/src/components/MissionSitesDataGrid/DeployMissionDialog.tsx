@@ -18,7 +18,6 @@ export type DeployMissionDialogProps = {
 
 // kja need to distinguish between maxTransportCapacity and currentTransportCapacity
 export default function DeployMissionDialog(
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   props: DeployMissionDialogProps,
 ): React.JSX.Element {
   const gameSession: GameSession = useGameSessionContext()
@@ -34,7 +33,6 @@ export default function DeployMissionDialog(
     setOpen(false)
   }
 
-  // eslint-disable-next-line unicorn/consistent-function-scoping
   async function handleLaunchMission(): Promise<void> {
     const selectedAgentsIds: number[] = _.map(
       rowSelectionModel,
