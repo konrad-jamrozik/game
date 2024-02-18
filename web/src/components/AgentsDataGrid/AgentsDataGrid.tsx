@@ -9,6 +9,7 @@ import {
 } from '@mui/x-data-grid'
 import _ from 'lodash'
 import { useState } from 'react'
+import { type GameSession, useGameSessionContext } from '../../lib/GameSession'
 import type { Agent, AgentState } from '../../lib/GameState'
 import { renderAgentStateCell } from '../../lib/rendering'
 import { canBeSentOnMission, getSurvivalSkill } from '../../lib/ruleset'
@@ -19,7 +20,6 @@ import {
 import { AgentsDataGridToolbar } from './AgentsDataGridToolbar'
 
 export type AgentsDataGridProps = {
-  readonly agents: readonly Agent[] | undefined
   readonly deploymentDisplay?: boolean
   readonly rowSelectionModel?: GridRowSelectionModel
   readonly setRowSelectionModel?: React.Dispatch<
@@ -28,12 +28,13 @@ export type AgentsDataGridProps = {
 }
 
 export function AgentsDataGrid(props: AgentsDataGridProps): React.JSX.Element {
+  const gameSession = useGameSessionContext()
   const [action, setAction] = useState<string>('None')
   const deploymentDisplay: boolean = props.deploymentDisplay ?? false
-  const agents = !deploymentDisplay
-    ? props.agents
-    : _.filter(props.agents, canBeSentOnMission)
 
+  const agents: Agent[] = gameSession.isLoaded()
+    ? filterAgents(gameSession, deploymentDisplay)
+    : []
   const rows: AgentRow[] = _.map(agents, getRow)
 
   const apiRef = useGridApiRef()
@@ -109,6 +110,18 @@ export function AgentsDataGrid(props: AgentsDataGridProps): React.JSX.Element {
       />
     </Box>
   )
+}
+
+function filterAgents(
+  gameSession: GameSession,
+  deploymentDisplay: boolean,
+): Agent[] {
+  const gameStateAgents = gameSession.getCurrentState().Assets.Agents
+  // eslint-disable-next-line sonarjs/prefer-immediate-return
+  const agents = deploymentDisplay
+    ? _.filter(gameStateAgents, canBeSentOnMission)
+    : gameStateAgents
+  return agents
 }
 
 export type AgentRow = {

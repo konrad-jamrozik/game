@@ -121,7 +121,7 @@ export function GameSessionControlPanel(
               )}
             </Grid>
           </Grid>
-          {props.gameSession.isGameSessionLoaded() && (
+          {props.gameSession.isLoaded() && (
             <Grid xs={12}>
               <Label>{gameRunMsg()}</Label>
             </Grid>

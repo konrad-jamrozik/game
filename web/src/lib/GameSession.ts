@@ -80,7 +80,7 @@ export class GameSession {
     return this.data.gameStates
   }
 
-  public isGameSessionLoaded(): boolean {
+  public isLoaded(): boolean {
     return !_.isEmpty(this.data.gameStates)
   }
 
