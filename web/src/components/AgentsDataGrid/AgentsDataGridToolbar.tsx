@@ -29,7 +29,6 @@ export function AgentsDataGridToolbar(
     )
   }
 
-  // kja need to disable hireAgent button if not enough money
   const selectedAgentCount = selectedRowIds.length
   return (
     <GridToolbarContainer>

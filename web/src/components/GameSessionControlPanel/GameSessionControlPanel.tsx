@@ -195,7 +195,7 @@ function advanceTimeBy1TurnButton(
       variant="contained"
       onClick={async () => advanceTurns(1, false)}
       disabled={
-        gameSession.loading || (gameSession.isGameOverUnsafe() ?? false) // kja add to game session "disable actions"
+        gameSession.loading || (gameSession.isGameOverUnsafe() ?? false) // kja 2 add to game session "disable actions"
       }
     >
       {'Advance 1 turn'}

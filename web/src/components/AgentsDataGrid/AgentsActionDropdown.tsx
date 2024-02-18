@@ -1,9 +1,14 @@
 import { Box, MenuItem, TextField } from '@mui/material'
 import _ from 'lodash'
-
+import {
+  type BatchAgentPlayerActionOption,
+  batchAgentPlayerActionOptionLabel,
+} from './batchAgentPlayerActionOptions'
 export type AgentsActionDropdownProps = {
   readonly action: string
-  readonly setAction: React.Dispatch<React.SetStateAction<string>>
+  readonly setAction: React.Dispatch<
+    React.SetStateAction<BatchAgentPlayerActionOption>
+  >
 }
 
 export function AgentsActionDropdown(
@@ -13,7 +18,7 @@ export function AgentsActionDropdown(
     const target = event.target as HTMLInputElement
     console.log(`"action" is: ${props.action}`)
     console.log(`Set "action" to ${target.value}`)
-    props.setAction(target.value)
+    props.setAction(target.value as BatchAgentPlayerActionOption)
   }
 
   return (
@@ -28,21 +33,12 @@ export function AgentsActionDropdown(
         value={props.action}
         onChange={handleChange}
       >
-        {_.map(options, (option) => (
-          <MenuItem key={option} value={option}>
-            {option}
+        {_.map(Object.entries(batchAgentPlayerActionOptionLabel), (option) => (
+          <MenuItem key={option[0]} value={option[0]}>
+            {option[1]}
           </MenuItem>
         ))}
       </TextField>
     </Box>
   )
 }
-
-const options = [
-  'None',
-  'Assign to income gen.',
-  'Assign to intel gath.',
-  'Assign to training',
-  'Recall',
-  'Sack',
-]

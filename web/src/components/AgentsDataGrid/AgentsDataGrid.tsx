@@ -18,6 +18,7 @@ import {
   defaultComponentMinWidth,
 } from '../../lib/utils'
 import { AgentsDataGridToolbar } from './AgentsDataGridToolbar'
+import type { BatchAgentPlayerActionOption } from './batchAgentPlayerActionOptions'
 
 export type AgentsDataGridProps = {
   readonly deploymentDisplay?: boolean
@@ -29,7 +30,7 @@ export type AgentsDataGridProps = {
 
 export function AgentsDataGrid(props: AgentsDataGridProps): React.JSX.Element {
   const gameSession = useGameSessionContext()
-  const [action, setAction] = useState<string>('None')
+  const [action, setAction] = useState<BatchAgentPlayerActionOption>('none')
   const deploymentDisplay: boolean = props.deploymentDisplay ?? false
 
   const agents: Agent[] = gameSession.isLoaded()
