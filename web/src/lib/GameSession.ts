@@ -8,7 +8,7 @@ import { callAdvanceTurnsApi } from './api/advanceTurnsApi'
 import {
   type PlayerActionName,
   callApplyPlayerActionApi,
-  playerActionPayloadProviders,
+  playerActionsPayloadsProviders,
 } from './api/applyPlayerActionApi'
 import { agentHireCost } from './ruleset'
 
@@ -84,7 +84,7 @@ export class GameSession {
       setLoading: this.setLoading,
       setError: this.setError,
       currentGameState,
-      playerActionPayload: playerActionPayloadProviders[playerActionName]({
+      playerActionPayload: playerActionsPayloadsProviders[playerActionName]({
         ids,
         targetId,
       }),

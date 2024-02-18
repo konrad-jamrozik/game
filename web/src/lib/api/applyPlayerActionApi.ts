@@ -47,7 +47,7 @@ export type PlayerActionPayloadProvider = (
 // instead of just
 ///
 //   (ids: number[] | undefined, targetId?: number | undefined) => PlayerActionPayload
-export const playerActionPayloadProviders: {
+export const playerActionsPayloadsProviders: {
   [key in PlayerActionName]: PlayerActionPayloadProvider
 } = {
   buyTransportCap: () => ({ Action: 'BuyTransportCap' }),
@@ -77,7 +77,7 @@ export async function callApiToHireAgents(
 ): Promise<GameState | undefined> {
   return callApplyPlayerActionApi({
     ...params,
-    playerActionPayload: playerActionPayloadProviders.hireAgents({}),
+    playerActionPayload: playerActionsPayloadsProviders.hireAgents({}),
   })
 }
 
