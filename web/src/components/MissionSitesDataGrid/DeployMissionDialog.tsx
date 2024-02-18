@@ -15,7 +15,7 @@ export type DeployMissionDialogProps = {
 
 export default function DeployMissionDialog(
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  props: DeployMissionDialogProps,
+  _: DeployMissionDialogProps,
 ): React.JSX.Element {
   const [open, setOpen] = useState<boolean>(false)
   const [rowSelectionModel, setRowSelectionModel] =

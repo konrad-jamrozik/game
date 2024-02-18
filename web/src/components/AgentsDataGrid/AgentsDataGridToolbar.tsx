@@ -2,6 +2,8 @@ import AddIcon from '@mui/icons-material/Add'
 import ChecklistIcon from '@mui/icons-material/Checklist'
 import { Button } from '@mui/material'
 import { GridToolbarContainer } from '@mui/x-data-grid'
+import { useState } from 'react'
+import type { GameSession } from '../../lib/GameSession'
 import {
   AgentsActionDropdown,
   type AgentsActionDropdownProps,
@@ -9,6 +11,7 @@ import {
 
 type AgentsDataGridToolbarProps = {
   getSelectedRowsIds: () => number[]
+  gameSession: GameSession
 } & AgentsActionDropdownProps
 
 export function AgentsDataGridToolbar(
@@ -16,9 +19,17 @@ export function AgentsDataGridToolbar(
 ): React.JSX.Element {
   const selectedRowIds: number[] = props.getSelectedRowsIds()
 
-  function handleHireAgent(): void {
+  const [_, setFakeLoading] = useState<boolean>(false)
+  const [_2, setFakeErr] = useState<string>()
+
+  async function handleHireAgent(): Promise<void> {
     console.log('Hire agent clicked!')
-    console.log('toolbar selectedRowIds:', selectedRowIds)
+    await props.gameSession.applyPlayerAction({
+      setLoading: setFakeLoading,
+      setError: setFakeErr,
+      playerActionName: 'hireAgents',
+    })
+    console.log('Hire agent DONE!')
   }
 
   function handleAct(): void {

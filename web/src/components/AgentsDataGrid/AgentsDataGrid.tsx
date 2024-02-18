@@ -88,7 +88,7 @@ export function AgentsDataGrid(props: AgentsDataGridProps): React.JSX.Element {
             ? {
                 toolbar: () => (
                   <AgentsDataGridToolbar
-                    {...{ getSelectedRowsIds, action, setAction }}
+                    {...{ getSelectedRowsIds, action, setAction, gameSession }}
                   />
                 ),
               }

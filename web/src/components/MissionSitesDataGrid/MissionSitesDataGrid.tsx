@@ -63,12 +63,7 @@ export function MissionSitesDataGrid(
           Id: row.id,
         })!
 
-        return (
-          <DeployMissionDialog
-            missionSite={missionSite}
-            agents={props.agents!}
-          />
-        )
+        return <DeployMissionDialog missionSite={missionSite} />
       },
     },
   ]
