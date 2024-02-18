@@ -5,7 +5,11 @@ import { GameSessionContext } from '../components/GameSessionProvider'
 import { initialTurn, type GameState } from './GameState'
 import type { PlayerActionPayload } from './PlayerActionPayload'
 import { callAdvanceTurnsApi } from './api/advanceTurnsApi'
-import { callApplyPlayerActionApi } from './api/applyPlayerActionApi'
+import {
+  type PlayerActionName,
+  callApplyPlayerActionApi,
+  playerActionPayloadProviders,
+} from './api/applyPlayerActionApi'
 import type { FetchCallbacks } from './api/genericApiUtils'
 
 export function useGameSessionContext(): GameSession {
@@ -62,13 +66,21 @@ export class GameSession {
 
   public async applyPlayerAction(
     params: FetchCallbacks & {
-      playerActionPayload: PlayerActionPayload
+      playerActionName: PlayerActionName
+      ids?: number[] | undefined
+      targetId?: number | undefined
     },
   ): Promise<void> {
     const currentGameState = this.getCurrentState()
     const newGameState = await callApplyPlayerActionApi({
       ...params,
       currentGameState,
+      playerActionPayload: playerActionPayloadProviders[
+        params.playerActionName
+      ]({
+        ids: params.ids,
+        targetId: params.targetId,
+      }),
     })
 
     if (!_.isUndefined(newGameState)) {

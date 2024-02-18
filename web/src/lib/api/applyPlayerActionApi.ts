@@ -7,17 +7,6 @@ import {
   getPostJsonRequest,
 } from './genericApiUtils'
 
-// "AdvanceTime" => controller.AdvanceTime,
-// "BuyTransportCap" => () => controller.TurnController.BuyTransportCapacity(1),
-// "HireAgents" => () => controller.TurnController.HireAgents(1),
-// "SackAgents" => () => controller.TurnController.SackAgents(Ids!),
-// "SendAgentsToIncomeGeneration" => () => controller.TurnController.SendAgentsToGenerateIncome(Ids!),
-// "SendAgentsToIntelGathering" => () => controller.TurnController.SendAgentsToGatherIntel(Ids!),
-// "SendAgentsToTraining" => () => controller.TurnController.SendAgentsToTraining(Ids!),
-// "RecallAgents" => () => controller.TurnController.RecallAgents(Ids!),
-// "LaunchMission" => () => controller.TurnController.LaunchMission(TargetId!.Value, Ids!),
-// _ => () => throw new InvalidOperationException($"Unsupported player action of '{Action}'")
-
 export type PlayerActionName =
   | 'buyTransportCap'
   | 'hireAgents'
@@ -37,23 +26,50 @@ export type PlayerActionPayloadProvider = (
   params: PlayerActionPayloadProviderParams,
 ) => PlayerActionPayload
 
-// kja currently these payload providers have not strongly typed inputs.
-// Instead, introduce a provider type for each action.
-// Like:
+// kja playerActionPayloadProviders currently look over-engineered.
+// Instead of calling this like that:
+//
+//   playerActionPayload: playerActionPayloadProviders[
+//     params.playerActionName
+//   ]({
+//     ids: params.ids,
+//     targetId: params.targetId,
+//   }),
+//
+// One could instead do:
+//
+//   playerActionPayload: getPlayerActionPayload(params.playerActionName)
+//
+// But I am hoping to add stronger typing for each provider signature, like:
+//
 //  export type sackAgents = (ids: number[]) => PlayerActionPayload
-export const playerActions: {
+//
+// instead of just
+///
+//   (ids: number[] | undefined, targetId?: number | undefined) => PlayerActionPayload
+export const playerActionPayloadProviders: {
   [key in PlayerActionName]: PlayerActionPayloadProvider
 } = {
   buyTransportCap: () => ({ Action: 'BuyTransportCap' }),
   hireAgents: () => ({ Action: 'HireAgents' }),
-  sackAgents: () => ({ Action: 'SackAgents' }),
+  sackAgents: (params) => ({ Action: 'SackAgents', Ids: params.ids! }),
   sendAgentsToIncomeGeneration: () => ({
     Action: 'SendAgentsToIncomeGeneration',
   }),
-  sendAgentsToIntelGathering: () => ({ Action: 'SendAgentsToIntelGathering' }),
-  sendAgentsToTraining: () => ({ Action: 'SendAgentsToTraining' }),
-  recallAgents: () => ({ Action: 'RecallAgents' }),
-  launchMission: () => ({ Action: 'LaunchMission' }),
+  sendAgentsToIntelGathering: (params) => ({
+    Action: 'SendAgentsToIntelGathering',
+    Ids: params.ids!,
+  }),
+  sendAgentsToTraining: (params) => ({
+    Action: 'SendAgentsToTraining',
+    Ids: params.ids!,
+  }),
+  recallAgents: (params) => ({ Action: 'RecallAgents', Ids: params.ids! }),
+  launchMission: (params) => ({
+    Action: 'LaunchMission',
+    Ids: params.ids!,
+    TargetId: params.targetId!,
+  }),
 }
 
 export async function callApiToHireAgents(
@@ -61,7 +77,7 @@ export async function callApiToHireAgents(
 ): Promise<GameState | undefined> {
   return callApplyPlayerActionApi({
     ...params,
-    playerActionPayload: playerActions.hireAgents({}),
+    playerActionPayload: playerActionPayloadProviders.hireAgents({}),
   })
 }
 
