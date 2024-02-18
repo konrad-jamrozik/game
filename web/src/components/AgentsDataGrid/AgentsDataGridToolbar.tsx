@@ -1,16 +1,17 @@
 import AddIcon from '@mui/icons-material/Add'
 import ChecklistIcon from '@mui/icons-material/Checklist'
-import { Button, Divider } from '@mui/material'
+import { Button } from '@mui/material'
 import { GridToolbarContainer } from '@mui/x-data-grid'
 import type { GameSession } from '../../lib/GameSession'
 import {
   AgentsActionDropdown,
   type AgentsActionDropdownProps,
 } from './AgentsActionDropdown'
-import { BatchAgentPlayerActionOption } from './batchAgentPlayerActionOptions'
+import type { BatchAgentPlayerActionOption } from './batchAgentPlayerActionOptions'
 
 type AgentsDataGridToolbarProps = {
   getSelectedRowsIds: () => number[]
+  clearSelectedRows: () => void
   gameSession: GameSession
 } & AgentsActionDropdownProps
 
@@ -29,7 +30,14 @@ export function AgentsDataGridToolbar(
       `Act on agents clicked! agents ` +
         `ids: ${selectedRowIds.toString()} (#${selectedRowIds.length}), action: ${action}`,
     )
-    await props.gameSession.applyPlayerAction(action, selectedRowIds)
+    const success = await props.gameSession.applyPlayerAction(
+      action,
+      selectedRowIds,
+    )
+    if (success && action === 'sackAgents') {
+      console.log(`props.clearSelectedRows()`)
+      props.clearSelectedRows()
+    }
   }
 
   const selectedAgentCount = selectedRowIds.length

@@ -41,11 +41,17 @@ export function AgentsDataGrid(props: AgentsDataGridProps): React.JSX.Element {
 
   const apiRef = useGridApiRef()
 
+  // console.log(`agents ids: ${_.map(agents, (agent) => agent.Id).toString()}`)
+
   function getSelectedRowsIds(): number[] {
     const selectedRows: Map<GridRowId, GridValidRowModel> =
       apiRef.current.getSelectedRows()
     const selectedRowIds: GridRowId[] = [...selectedRows.keys()]
     return _.map(selectedRowIds, (gridRowId) => gridRowId as number)
+  }
+
+  function clearSelectedRows(): void {
+    apiRef.current.setRowSelectionModel([])
   }
 
   // https://mui.com/x/react-data-grid/row-selection/#controlled-row-selection
@@ -90,7 +96,13 @@ export function AgentsDataGrid(props: AgentsDataGridProps): React.JSX.Element {
             ? {
                 toolbar: () => (
                   <AgentsDataGridToolbar
-                    {...{ getSelectedRowsIds, action, setAction, gameSession }}
+                    {...{
+                      getSelectedRowsIds,
+                      clearSelectedRows,
+                      action,
+                      setAction,
+                      gameSession,
+                    }}
                   />
                 ),
               }

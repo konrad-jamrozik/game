@@ -78,7 +78,7 @@ export class GameSession {
     playerActionName: PlayerActionName,
     ids?: number[] | undefined,
     targetId?: number | undefined,
-  ): Promise<void> {
+  ): Promise<boolean> {
     const currentGameState = this.getCurrentState()
     const newGameState = await callApplyPlayerActionApi({
       setLoading: this.setLoading,
@@ -92,7 +92,9 @@ export class GameSession {
 
     if (!_.isUndefined(newGameState)) {
       this.upsertGameStates([newGameState])
+      return true
     }
+    return false
   }
 
   public canHire1Agent(): boolean {
