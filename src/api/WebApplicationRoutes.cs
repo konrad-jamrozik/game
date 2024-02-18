@@ -1,11 +1,4 @@
-﻿using System.Diagnostics;
-using Lib.Json;
-using Lib.OS;
-using Microsoft.AspNetCore.Http.HttpResults;
-using UfoGameLib.Controller;
-using UfoGameLib.Lib;
-using UfoGameLib.Model;
-using UfoGameLib.Players;
+﻿using UfoGameLib.Lib;
 using UfoGameLib.State;
 
 namespace UfoGameLib.Api;
@@ -14,6 +7,9 @@ public class WebApplicationRoutes
 {
     public void Register(WebApplication app)
     {
+        // kja need to prevent Debug.Assert from killing the server
+        https://learn.microsoft.com/en-us/dotnet/api/system.diagnostics.debug.assert?view=net-8.0
+
         app.MapGet("/helloCoinFlip", HelloCoinFlip)
             .WithTags("API");
 

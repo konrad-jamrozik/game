@@ -11,6 +11,7 @@ import { useGameSessionContext, type GameSession } from '../../lib/GameSession'
 import type { MissionSite } from '../../lib/GameState'
 import { AgentsDataGrid } from '../AgentsDataGrid/AgentsDataGrid'
 
+// kja rename to launch mission
 export type DeployMissionDialogProps = {
   readonly missionSite: MissionSite
 }
@@ -39,6 +40,8 @@ export default function DeployMissionDialog(
       rowSelectionModel,
       (id: GridRowId) => id as number,
     )
+
+    // kja this will crash server if there are not enough agents to win the mission
     await gameSession.applyPlayerAction(
       'launchMission',
       selectedAgentsIds,
