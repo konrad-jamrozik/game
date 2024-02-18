@@ -6,6 +6,7 @@ import {
   type GridRowId,
   type GridRowSelectionModel,
   type GridValidRowModel,
+  type GridRowParams,
 } from '@mui/x-data-grid'
 import _ from 'lodash'
 import { useState } from 'react'
@@ -97,8 +98,10 @@ export function AgentsDataGrid(props: AgentsDataGridProps): React.JSX.Element {
         }
         pageSizeOptions={[25, 50, 100]}
         checkboxSelection
+        isRowSelectable={(params: GridRowParams<AgentRow>) =>
+          isAgentRowSelectable(params, action, gameSession)
+        }
         hideFooterSelectedRowCount={deploymentDisplay}
-        disableRowSelectionOnClick
         {...(props.rowSelectionModel ?? {})}
         onRowSelectionModelChange={onRowSelectionModelChange}
         rowHeight={30}
@@ -111,6 +114,51 @@ export function AgentsDataGrid(props: AgentsDataGridProps): React.JSX.Element {
       />
     </Box>
   )
+}
+
+// eslint-disable-next-line consistent-return
+function isAgentRowSelectable(
+  params: GridRowParams<AgentRow>,
+  action: BatchAgentPlayerActionOption,
+  gameSession: GameSession,
+): boolean {
+  if (!gameSession.isLoaded()) {
+    return false
+  }
+
+  // kja refactor, dedup: move stuff to ruleset.ts
+
+  const agents = gameSession.getCurrentState().Assets.Agents
+  const rowAgent = _.find(agents, (agent) => agent.Id === params.row.id)!
+  // eslint-disable-next-line default-case
+  switch (action) {
+    case 'sendAgentsToIncomeGeneration':
+    case 'sendAgentsToIntelGathering':
+    case 'sendAgentsToTraining': {
+      return isAgentSelectableForMission(rowAgent)
+    }
+    case 'recallAgents': {
+      return isAgentRecallable(rowAgent)
+    }
+    case 'sackAgents': {
+      return isAgentSackable(rowAgent)
+    }
+    case 'none': {
+      return true
+    }
+  }
+}
+
+function isAgentSelectableForMission(agent: Agent): boolean {
+  return _.includes(['Available', 'Training'], agent.CurrentState)
+}
+
+function isAgentRecallable(agent: Agent): boolean {
+  return _.includes(['GatheringIntel', 'GatheringIncome'], agent.CurrentState)
+}
+
+function isAgentSackable(agent: Agent): boolean {
+  return _.includes(['Available', 'Training'], agent.CurrentState)
 }
 
 function filterAgents(
