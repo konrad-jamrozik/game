@@ -4,8 +4,10 @@ import DialogActions from '@mui/material/DialogActions'
 import DialogContent from '@mui/material/DialogContent'
 import DialogTitle from '@mui/material/DialogTitle'
 import Grid from '@mui/material/Unstable_Grid2'
-import type { GridRowSelectionModel } from '@mui/x-data-grid'
+import type { GridRowId, GridRowSelectionModel } from '@mui/x-data-grid'
+import _ from 'lodash'
 import { Fragment, useState } from 'react'
+import { useGameSessionContext, type GameSession } from '../../lib/GameSession'
 import type { MissionSite } from '../../lib/GameState'
 import { AgentsDataGrid } from '../AgentsDataGrid/AgentsDataGrid'
 
@@ -13,10 +15,12 @@ export type DeployMissionDialogProps = {
   readonly missionSite: MissionSite
 }
 
+// kja need to distinguish between maxTransportCapacity and currentTransportCapacity
 export default function DeployMissionDialog(
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  _: DeployMissionDialogProps,
+  props: DeployMissionDialogProps,
 ): React.JSX.Element {
+  const gameSession: GameSession = useGameSessionContext()
   const [open, setOpen] = useState<boolean>(false)
   const [rowSelectionModel, setRowSelectionModel] =
     useState<GridRowSelectionModel>([])
@@ -30,8 +34,16 @@ export default function DeployMissionDialog(
   }
 
   // eslint-disable-next-line unicorn/consistent-function-scoping
-  function handleLaunchMission(): void {
-    console.log("Clicked 'launch mission'!")
+  async function handleLaunchMission(): Promise<void> {
+    const selectedAgentsIds: number[] = _.map(
+      rowSelectionModel,
+      (id: GridRowId) => id as number,
+    )
+    await gameSession.applyPlayerAction(
+      'launchMission',
+      selectedAgentsIds,
+      props.missionSite.Id,
+    )
   }
 
   return (
@@ -71,11 +83,18 @@ export default function DeployMissionDialog(
               <Button
                 variant="contained"
                 onClick={handleLaunchMission}
-                disabled={rowSelectionModel.length === 0}
+                disabled={
+                  rowSelectionModel.length === 0 ||
+                  rowSelectionModel.length >
+                    gameSession.getCurrentState().Assets.MaxTransportCapacity
+                }
               >
                 {rowSelectionModel.length === 0
                   ? 'Select agents to launch mission'
-                  : `Launch mission with ${rowSelectionModel.length} agents`}
+                  : rowSelectionModel.length >
+                      gameSession.getCurrentState().Assets.MaxTransportCapacity
+                    ? `Too many agents selected`
+                    : `Launch mission with ${rowSelectionModel.length} agents`}
               </Button>
             </Grid>
           </Grid>
