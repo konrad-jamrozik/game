@@ -1,5 +1,4 @@
 /* eslint-disable max-lines */
-/* eslint-disable max-lines-per-function */
 import {
   Button,
   Card,
@@ -50,10 +49,6 @@ export function GameSessionControlPanel(
     )
   }
 
-  function reset(): void {
-    props.gameSession.setGameStates([])
-  }
-
   const theme = useTheme()
   const smallDisplay = useMediaQuery(theme.breakpoints.down('sm'))
   const textFieldWidth = smallDisplay ? 64 : 90
@@ -77,7 +72,7 @@ export function GameSessionControlPanel(
               {advanceTimeBy1TurnButton(advanceTurns, props.gameSession)}
             </Grid>
             <Grid xsOffset={'auto'}>
-              {resetCurrentTurnButton(reset, props.gameSession.loading)}
+              {resetCurrentTurnButton(props.gameSession)}
             </Grid>
           </Grid>
           <Grid container xs={12} marginBottom={'0px'}>
@@ -85,7 +80,7 @@ export function GameSessionControlPanel(
               {delegate1TurnToAiButton(advanceTurns, props.gameSession)}
             </Grid>
             <Grid xsOffset={'auto'}>
-              {wipeGameButton(reset, props.gameSession.loading)}
+              {wipeGameSessionButton(props.gameSession)}
             </Grid>
           </Grid>
 
@@ -243,37 +238,50 @@ function delegateTurnsToAiButton(
   )
 }
 
-function resetCurrentTurnButton(
-  reset: () => void,
-  loading: boolean,
-): React.JSX.Element {
-  // kja implement properly setting this value
-  // - Reset "current turn" game state to last of the historical game states, i.e. beginning of current turn
-  // - Revert to beginning of some previous historical turn, destroying all the follow up states.
-  //   - Special case: revert just by one turn
+function resetCurrentTurnButton(gameSession: GameSession): React.JSX.Element {
+  const playerMadeActions = gameSession.getPlayerMadeActionsInCurrentTurn()
+  const isDisabled =
+    !gameSession.isLoaded() ||
+    gameSession.loading ||
+    (gameSession.getCurrentTurn() === initialTurn && !playerMadeActions)
 
-  const playerMadeActions = true
+  const label =
+    playerMadeActions || !gameSession.isLoaded()
+      ? `Reset current turn`
+      : `Revert to previous turn`
+
+  function reset(): void {
+    if (playerMadeActions) {
+      gameSession.resetCurrentTurn()
+    } else {
+      gameSession.revertToPreviousTurn()
+    }
+  }
+
   return (
     <Button
       variant="outlined"
       onClick={reset}
-      disabled={loading}
+      disabled={isDisabled}
       color="warning"
     >
-      {
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-        playerMadeActions ? `Reset current turn` : `Revert to previous turn`
-      }
+      {label}
     </Button>
   )
 }
 
-function wipeGameButton(
-  reset: () => void,
-  loading: boolean,
-): React.JSX.Element {
+function wipeGameSessionButton(gameSession: GameSession): React.JSX.Element {
+  function wipe(): void {
+    gameSession.wipe()
+  }
+
   return (
-    <Button variant="outlined" onClick={reset} disabled={loading} color="error">
+    <Button
+      variant="outlined"
+      onClick={wipe}
+      disabled={!gameSession.isLoaded() || gameSession.loading}
+      color="error"
+    >
       {`Wipe game`}
     </Button>
   )

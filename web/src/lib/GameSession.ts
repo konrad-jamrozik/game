@@ -42,7 +42,7 @@ export class GameSession {
 
   private static verify(gameStates: readonly GameState[]): void {
     if (_.isEmpty(gameStates)) {
-      return
+      throw new Error('gameStates must not be empty')
     }
     const firstTurn = gameStates.at(0)!.Timeline.CurrentTurn
     // Verify that CurrentTurn increments in all gameStates
@@ -97,6 +97,35 @@ export class GameSession {
     return false
   }
 
+  public revertToPreviousTurn(): void {
+    const previousTurnsGameStates: GameState[] = this.data.gameStates.slice(
+      0,
+      -1,
+    )
+    this.setData({
+      gameStates: previousTurnsGameStates,
+      startOfCurrentTurnGameState: previousTurnsGameStates.at(-1),
+    })
+  }
+
+  public resetCurrentTurn(): void {
+    const previousTurnsGameStates: GameState[] = this.data.gameStates.slice(
+      0,
+      -1,
+    )
+    this.setData({
+      gameStates: [
+        ...previousTurnsGameStates,
+        this.data.startOfCurrentTurnGameState!,
+      ],
+      startOfCurrentTurnGameState: this.data.startOfCurrentTurnGameState,
+    })
+  }
+
+  public wipe(): void {
+    this.setData(initialGameSessionData)
+  }
+
   public canHire1Agent(): boolean {
     // kja need method for (isLoaded && !isGameOver). Like: isInProgress
     return (
@@ -123,16 +152,6 @@ export class GameSession {
     return !_.isEmpty(this.data.gameStates)
   }
 
-  public setGameStates(gameStates: GameState[]): void {
-    GameSession.verify(gameStates)
-    this.setData({
-      ...this.data,
-      gameStates,
-    })
-    this.setLoading(false)
-    this.setError('')
-  }
-
   public getCurrentTurn(): number {
     return this.getCurrentState().Timeline.CurrentTurn
   }
@@ -150,7 +169,6 @@ export class GameSession {
         : 'undecided'
   }
 
-  // kja getStateAtTurn() will require more precision: at the start of the turn, or end of the turn?
   public getStateAtTurn(turn: number): GameState {
     return _.findLast(
       this.data.gameStates,
@@ -161,6 +179,14 @@ export class GameSession {
   public isGameOver(): boolean {
     const lastGameState = this.getCurrentState()
     return lastGameState.IsGameOver
+  }
+
+  public getPlayerMadeActionsInCurrentTurn(): boolean {
+    return (
+      this.isLoaded() &&
+      this.data.gameStates.at(-1)!.UpdateCount >
+        this.data.startOfCurrentTurnGameState!.UpdateCount
+    )
   }
 
   public isGameOverUnsafe(): boolean | undefined {
@@ -207,7 +233,28 @@ export class GameSession {
     )
 
     const gameStatesAfterUpsertion = [...retainedGameStates, ...newGameStates]
-    this.setGameStates(gameStatesAfterUpsertion)
+    this.setGameSessionData(gameStatesAfterUpsertion)
+  }
+
+  private setGameSessionData(gameStates: GameState[]): void {
+    GameSession.verify(gameStates)
+    // set startOfCurrentTurnGameState to the current state from gameStates
+    // only if it has a higher turn number.
+    // If the current state from gameStates has the same current turn number
+    // it means the current turn game state was modified (presumably by player action)
+    // and hence startOfCurrentTurnGameState should remain unchanged.
+    const startOfCurrentTurnGameState =
+      this.data.startOfCurrentTurnGameState?.Timeline.CurrentTurn !==
+      gameStates.at(-1)?.Timeline.CurrentTurn
+        ? gameStates.at(-1)
+        : this.data.startOfCurrentTurnGameState
+    this.setData({
+      ...this.data,
+      gameStates,
+      startOfCurrentTurnGameState,
+    })
+    this.setLoading(false)
+    this.setError('')
   }
 }
 
@@ -215,14 +262,12 @@ export type GameResult = 'won' | 'lost' | 'undecided'
 
 type GameSessionData = {
   readonly gameStates: readonly GameState[]
-  readonly currentTurnGameStates: readonly GameState[]
-  readonly currentTurnPlayerActions: readonly PlayerActionPayload[]
+  readonly startOfCurrentTurnGameState: GameState | undefined
 }
 
 const initialGameSessionData: GameSessionData = {
   gameStates: [],
-  currentTurnGameStates: [],
-  currentTurnPlayerActions: [],
+  startOfCurrentTurnGameState: undefined,
 }
 
 // Consider for later:
