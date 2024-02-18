@@ -248,6 +248,10 @@ function resetCurrentTurnButton(
   loading: boolean,
 ): React.JSX.Element {
   // kja implement properly setting this value
+  // - Reset "current turn" game state to last of the historical game states, i.e. beginning of current turn
+  // - Revert to beginning of some previous historical turn, destroying all the follow up states.
+  //   - Special case: revert just by one turn
+
   const playerMadeActions = true
   return (
     <Button
