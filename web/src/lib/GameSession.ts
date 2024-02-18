@@ -10,6 +10,7 @@ import {
   callApplyPlayerActionApi,
   playerActionPayloadProviders,
 } from './api/applyPlayerActionApi'
+import { agentHireCost } from './ruleset'
 
 export function useGameSessionContext(): GameSession {
   return useContext(GameSessionContext)
@@ -92,6 +93,15 @@ export class GameSession {
     if (!_.isUndefined(newGameState)) {
       this.upsertGameStates([newGameState])
     }
+  }
+
+  public canHire1Agent(): boolean {
+    // kja need method for (isLoaded && !isGameOver). Like: isInProgress
+    return (
+      this.isLoaded() &&
+      !this.isGameOver() &&
+      this.getCurrentState().Assets.Money >= agentHireCost
+    )
   }
 
   public getGameStates(): readonly GameState[] {

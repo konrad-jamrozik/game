@@ -1,4 +1,3 @@
-using System.Data;
 using UfoGameLib.Lib;
 using UfoGameLib.Model;
 using UfoGameLib.State;

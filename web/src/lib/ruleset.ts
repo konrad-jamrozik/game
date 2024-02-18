@@ -5,6 +5,8 @@ import type { Agent, AgentState, Mission, MissionSite } from './GameState'
 export const agentUpkeepCost = 5
 export const incomeGeneratedPerAgent = agentUpkeepCost * 3
 
+export const agentHireCost = 50
+
 export const agentTrainingCoefficient = 1
 
 export function isActive(missionSite: MissionSite): boolean {

@@ -19,9 +19,7 @@ export function AgentsDataGridToolbar(
   const selectedRowIds: number[] = props.getSelectedRowsIds()
 
   async function handleHireAgent(): Promise<void> {
-    console.log('Hire agent clicked!')
     await props.gameSession.applyPlayerAction('hireAgents')
-    console.log('Hire agent DONE!')
   }
 
   function handleAct(): void {
@@ -35,7 +33,12 @@ export function AgentsDataGridToolbar(
   const selectedAgentCount = selectedRowIds.length
   return (
     <GridToolbarContainer>
-      <Button color="primary" startIcon={<AddIcon />} onClick={handleHireAgent}>
+      <Button
+        color="primary"
+        startIcon={<AddIcon />}
+        onClick={handleHireAgent}
+        disabled={!props.gameSession.canHire1Agent()}
+      >
         Hire agent
       </Button>
       <Button
