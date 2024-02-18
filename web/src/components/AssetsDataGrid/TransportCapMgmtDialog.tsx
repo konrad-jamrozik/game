@@ -5,6 +5,7 @@ import DialogContent from '@mui/material/DialogContent'
 import DialogTitle from '@mui/material/DialogTitle'
 import Grid from '@mui/material/Unstable_Grid2'
 import { Fragment, useState } from 'react'
+import { type GameSession, useGameSessionContext } from '../../lib/GameSession'
 import { getSx } from '../../lib/rendering'
 import { transportCapBuyingCost } from '../../lib/ruleset'
 import { Label } from '../Label'
@@ -18,6 +19,7 @@ export type TransportCapMgmtDialogProps = {
 export default function TransportCapMgmtDialog(
   props: TransportCapMgmtDialogProps,
 ): React.JSX.Element {
+  const gameSession: GameSession = useGameSessionContext()
   const [open, setOpen] = useState<boolean>(false)
 
   function handleClickOpen(): void {
@@ -29,8 +31,8 @@ export default function TransportCapMgmtDialog(
   }
 
   // eslint-disable-next-line unicorn/consistent-function-scoping
-  function handleIncreaseTransportCap(): void {
-    console.log("Clicked 'increase transport capacity'!")
+  async function handleBuy1TransportCap(): Promise<void> {
+    await gameSession.applyPlayerAction('buyTransportCap')
   }
 
   return (
@@ -87,8 +89,12 @@ export default function TransportCapMgmtDialog(
               <Label>{transportCapBuyingCost(1)}</Label>
             </Grid>
             <Grid xs={12} display="flex" justifyContent="center">
-              <Button variant="contained" onClick={handleIncreaseTransportCap}>
-                Increase transport capacity
+              <Button
+                variant="contained"
+                onClick={handleBuy1TransportCap}
+                disabled={!gameSession.canBuy1TransportCap()}
+              >
+                Buy transport capacity
               </Button>
             </Grid>
           </Grid>

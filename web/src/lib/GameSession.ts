@@ -10,7 +10,7 @@ import {
   callApplyPlayerActionApi,
   playerActionsPayloadsProviders,
 } from './api/applyPlayerActionApi'
-import { agentHireCost } from './ruleset'
+import { agentHireCost, transportCapBuyingCost } from './ruleset'
 
 export function useGameSessionContext(): GameSession {
   return useContext(GameSessionContext)
@@ -103,6 +103,15 @@ export class GameSession {
       this.isLoaded() &&
       !this.isGameOver() &&
       this.getCurrentState().Assets.Money >= agentHireCost
+    )
+  }
+
+  public canBuy1TransportCap(): boolean {
+    // kja need method for (isLoaded && !isGameOver). Like: isInProgress
+    return (
+      this.isLoaded() &&
+      !this.isGameOver() &&
+      this.getCurrentState().Assets.Money >= transportCapBuyingCost(1)
     )
   }
 
