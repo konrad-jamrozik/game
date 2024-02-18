@@ -37,16 +37,6 @@ export class GameSession {
     }
   }
 
-  public async advanceTimeBy1Turn(params: FetchCallbacks): Promise<void> {
-    const currentTurn = this.getCurrentTurn()
-    return this.advanceTurns({
-      ...params,
-      startTurn: currentTurn,
-      targetTurn: currentTurn + 1,
-      delegateToAi: false,
-    })
-  }
-
   public async advanceTurns(
     params: FetchCallbacks & {
       startTurn: number
@@ -78,16 +68,6 @@ export class GameSession {
       ...this.data,
       gameStates,
     })
-  }
-
-  public appendNextTurnGameState(gameState: GameState): GameState[] {
-    const newGameStates = [...this.data.gameStates, gameState]
-    console.log(`appendNextTurnGameState()`)
-    this.setData({
-      ...this.data,
-      gameStates: newGameStates,
-    })
-    return newGameStates
   }
 
   // kja note: the concept of "current turn" and "current turn game state" will
