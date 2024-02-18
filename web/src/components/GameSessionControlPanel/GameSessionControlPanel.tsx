@@ -247,8 +247,8 @@ function resetCurrentTurnButton(gameSession: GameSession): React.JSX.Element {
 
   const label =
     playerMadeActions || !gameSession.isLoaded()
-      ? `Reset current turn`
-      : `Revert to previous turn`
+      ? `Reset turn`
+      : `Revert 1 turn`
 
   function reset(): void {
     if (playerMadeActions) {
