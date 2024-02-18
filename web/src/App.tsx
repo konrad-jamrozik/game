@@ -4,9 +4,9 @@ import _ from 'lodash'
 import { AgentsDataGrid } from './components/AgentsDataGrid/AgentsDataGrid'
 import { AssetsDataGrid } from './components/AssetsDataGrid/AssetsDataGrid'
 import { GameSessionControlPanel } from './components/GameSessionControlPanel/GameSessionControlPanel'
-import { useGameSessionContext } from './components/GameSessionProvider'
 import { GameStatsLineChart } from './components/GameStatsLineChart'
 import { MissionSitesDataGrid } from './components/MissionSitesDataGrid/MissionSitesDataGrid'
+import { useGameSessionContext } from './lib/GameSession'
 import {
   agentStatsDataSeries,
   intelStatsDataSeries,

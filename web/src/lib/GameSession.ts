@@ -1,10 +1,16 @@
 /* eslint-disable @typescript-eslint/parameter-properties */
 import _ from 'lodash'
-import { useState } from 'react'
+import { useContext, useState } from 'react'
+import { GameSessionContext } from '../components/GameSessionProvider'
 import { initialTurn, type GameState } from './GameState'
 import type { PlayerActionPayload } from './PlayerActionPayload'
 import { callAdvanceTurnsApi } from './api/advanceTurnsApi'
+import { callApplyPlayerActionApi } from './api/applyPlayerActionApi'
 import type { FetchCallbacks } from './api/genericApiUtils'
+
+export function useGameSessionContext(): GameSession {
+  return useContext(GameSessionContext)
+}
 
 export function useGameSession(): GameSession {
   const [data, setData] = useState<GameSessionData>(initialGameSessionData)
@@ -54,6 +60,22 @@ export class GameSession {
     }
   }
 
+  public async applyPlayerAction(
+    params: FetchCallbacks & {
+      playerActionPayload: PlayerActionPayload
+    },
+  ): Promise<void> {
+    const currentGameState = this.getCurrentState()
+    const newGameState = await callApplyPlayerActionApi({
+      ...params,
+      currentGameState,
+    })
+
+    if (!_.isUndefined(newGameState)) {
+      this.upsertGameStates([newGameState])
+    }
+  }
+
   public getGameStates(): readonly GameState[] {
     return this.data.gameStates
   }
@@ -68,12 +90,6 @@ export class GameSession {
       ...this.data,
       gameStates,
     })
-  }
-
-  // kja note: the concept of "current turn" and "current turn game state" will
-  // will be split: "the beginning of current turn" and "current turn after all the player actions taken so far"
-  public getCurrentGameState(): GameState | undefined {
-    return this.data.gameStates.length > 0 ? this.getCurrentState() : undefined
   }
 
   public getCurrentTurn(): number {
@@ -111,12 +127,14 @@ export class GameSession {
     return lastGameState?.IsGameOver
   }
 
+  // kja rename to getCurrentGameState
   public getCurrentState(): GameState {
     return this.data.gameStates.at(-1)!
   }
 
+  // kja rename to getCurrentGameStateUnsafe
   public getCurrentStateUnsafe(): GameState | undefined {
-    return this.data.gameStates.at(-1)!
+    return this.data.gameStates.at(-1)
   }
 
   public upsertGameStates(newGameStates: GameState[]): void {
