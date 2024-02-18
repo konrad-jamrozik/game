@@ -7,6 +7,7 @@ import CssBaseline from '@mui/material/CssBaseline'
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App.tsx'
+import { GameSessionProvider } from './components/GameSessionProvider.tsx'
 import theme from './theme.tsx'
 
 const rootElement = document.querySelector('#root')
@@ -15,7 +16,9 @@ if (rootElement) {
     <React.StrictMode>
       <ThemeProvider theme={theme}>
         <CssBaseline enableColorScheme />
-        <App />
+        <GameSessionProvider>
+          <App />
+        </GameSessionProvider>
       </ThemeProvider>
     </React.StrictMode>,
   )

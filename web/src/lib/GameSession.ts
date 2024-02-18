@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/parameter-properties */
-import _, { first } from 'lodash'
+import _ from 'lodash'
 import { useState } from 'react'
 import { initialTurn, type GameState } from './GameState'
 import type { PlayerActionPayload } from './PlayerActionPayload'

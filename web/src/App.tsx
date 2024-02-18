@@ -4,9 +4,9 @@ import _ from 'lodash'
 import { AgentsDataGrid } from './components/AgentsDataGrid/AgentsDataGrid'
 import { AssetsDataGrid } from './components/AssetsDataGrid/AssetsDataGrid'
 import { GameSessionControlPanel } from './components/GameSessionControlPanel/GameSessionControlPanel'
+import { useGameSessionContext } from './components/GameSessionProvider'
 import { GameStatsLineChart } from './components/GameStatsLineChart'
 import { MissionSitesDataGrid } from './components/MissionSitesDataGrid/MissionSitesDataGrid'
-import { useGameSession } from './lib/GameSession'
 import {
   agentStatsDataSeries,
   intelStatsDataSeries,
@@ -14,7 +14,6 @@ import {
   missionsStatsDataSeries,
   moneyStatsDataSeries,
 } from './lib/GameStateDataSeries'
-
 function Footer(): React.JSX.Element {
   return (
     <Typography variant="body2" color="text.secondary" align="center">
@@ -32,7 +31,7 @@ const lineChartMaxWidth = '700px'
 
 // eslint-disable-next-line max-lines-per-function
 export default function App(): React.JSX.Element {
-  const gameSession = useGameSession()
+  const gameSession = useGameSessionContext()
   const gameStates = gameSession.getGameStates()
   const currentGameState = gameSession.getCurrentStateUnsafe()
   const agents = currentGameState?.Assets.Agents
