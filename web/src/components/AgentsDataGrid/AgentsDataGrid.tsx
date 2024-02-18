@@ -145,9 +145,14 @@ function isAgentRowSelectable(
   // eslint-disable-next-line default-case
   switch (action) {
     case 'sendAgentsToIncomeGeneration':
-    case 'sendAgentsToIntelGathering':
-    case 'sendAgentsToTraining': {
+    case 'sendAgentsToIntelGathering': {
       return isAgentSelectableForMission(rowAgent)
+    }
+    case 'sendAgentsToTraining': {
+      return (
+        isAgentSelectableForMission(rowAgent) &&
+        rowAgent.CurrentState !== 'Training'
+      )
     }
     case 'recallAgents': {
       return isAgentRecallable(rowAgent)
