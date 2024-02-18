@@ -28,8 +28,6 @@ export function GameSessionControlPanel(
 ): React.JSX.Element {
   const [startTurn, setStartTurn] = useState<number>(defaultStartTurn)
   const [targetTurn, setTargetTurn] = useState<number>(defaultTargetTurn)
-  const [loading, setLoading] = useState<boolean>(false)
-  const [error, setError] = useState<string>()
 
   function gameRunMsg(): string {
     return `Game ran until turn ${props.gameSession.getCurrentTurn()}. Result: ${props.gameSession.getGameResult()}`
@@ -45,18 +43,14 @@ export function GameSessionControlPanel(
       props.gameSession.getCurrentTurnUnsafe(),
       turnsToAdvance,
     )
-    await props.gameSession.advanceTurns({
-      setLoading,
-      setError,
-      startTurn: resolvedStartTurn,
-      targetTurn: resolvedTargetTurn,
+    await props.gameSession.advanceTurns(
+      resolvedStartTurn,
+      resolvedTargetTurn,
       delegateToAi,
-    })
+    )
   }
 
   function reset(): void {
-    setLoading(false)
-    setError('')
     props.gameSession.setGameStates([])
   }
 
@@ -80,31 +74,25 @@ export function GameSessionControlPanel(
           </Grid>
           <Grid container xs={12} marginBottom={'0px'}>
             <Grid>
-              {advanceTimeBy1TurnButton(
-                advanceTurns,
-                loading,
-                props.gameSession,
-              )}
+              {advanceTimeBy1TurnButton(advanceTurns, props.gameSession)}
             </Grid>
             <Grid xsOffset={'auto'}>
-              {resetCurrentTurnButton(reset, loading)}
+              {resetCurrentTurnButton(reset, props.gameSession.loading)}
             </Grid>
           </Grid>
           <Grid container xs={12} marginBottom={'0px'}>
             <Grid>
-              {delegate1TurnToAiButton(
-                advanceTurns,
-                loading,
-                props.gameSession,
-              )}
+              {delegate1TurnToAiButton(advanceTurns, props.gameSession)}
             </Grid>
-            <Grid xsOffset={'auto'}>{wipeGameButton(reset, loading)}</Grid>
+            <Grid xsOffset={'auto'}>
+              {wipeGameButton(reset, props.gameSession.loading)}
+            </Grid>
           </Grid>
 
           <Grid>
             {delegateTurnsToAiButton(
               advanceTurns,
-              loading,
+              props.gameSession.loading,
               startTurn,
               targetTurn,
             )}
@@ -126,7 +114,9 @@ export function GameSessionControlPanel(
               <Label>{gameRunMsg()}</Label>
             </Grid>
           )}
-          {Boolean(error) && <Grid xs={12}>Error: {error}</Grid>}
+          {Boolean(props.gameSession.error) && (
+            <Grid xs={12}>Error: {props.gameSession.error}</Grid>
+          )}
         </Grid>
       </CardContent>
     </Card>
@@ -198,14 +188,15 @@ function advanceTimeBy1TurnButton(
     turnsToAdvance?: number,
     delegateToAi?: boolean,
   ) => Promise<void>,
-  loading: boolean,
   gameSession: GameSession,
 ): React.JSX.Element {
   return (
     <Button
       variant="contained"
       onClick={async () => advanceTurns(1, false)}
-      disabled={loading || (gameSession.isGameOverUnsafe() ?? false)}
+      disabled={
+        gameSession.loading || (gameSession.isGameOverUnsafe() ?? false) // kja add to game session "disable actions"
+      }
     >
       {'Advance 1 turn'}
     </Button>
@@ -217,14 +208,15 @@ function delegate1TurnToAiButton(
     turnsToAdvance?: number,
     delegateToAi?: boolean,
   ) => Promise<void>,
-  loading: boolean,
   gameSession: GameSession,
 ): React.JSX.Element {
   return (
     <Button
       variant="outlined"
       onClick={async () => advanceTurns(1, true)}
-      disabled={loading || (gameSession.isGameOverUnsafe() ?? false)}
+      disabled={
+        gameSession.loading || (gameSession.isGameOverUnsafe() ?? false)
+      }
     >
       {'Delegate 1 turn to AI'}
     </Button>

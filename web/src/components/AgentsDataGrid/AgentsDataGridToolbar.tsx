@@ -2,7 +2,6 @@ import AddIcon from '@mui/icons-material/Add'
 import ChecklistIcon from '@mui/icons-material/Checklist'
 import { Button } from '@mui/material'
 import { GridToolbarContainer } from '@mui/x-data-grid'
-import { useState } from 'react'
 import type { GameSession } from '../../lib/GameSession'
 import {
   AgentsActionDropdown,
@@ -19,16 +18,9 @@ export function AgentsDataGridToolbar(
 ): React.JSX.Element {
   const selectedRowIds: number[] = props.getSelectedRowsIds()
 
-  const [_, setFakeLoading] = useState<boolean>(false)
-  const [_2, setFakeErr] = useState<string>()
-
   async function handleHireAgent(): Promise<void> {
     console.log('Hire agent clicked!')
-    await props.gameSession.applyPlayerAction({
-      setLoading: setFakeLoading,
-      setError: setFakeErr,
-      playerActionName: 'hireAgents',
-    })
+    await props.gameSession.applyPlayerAction('hireAgents')
     console.log('Hire agent DONE!')
   }
 
@@ -39,6 +31,7 @@ export function AgentsDataGridToolbar(
     )
   }
 
+  // kja need to disable hireAgent button if not enough money
   const selectedAgentCount = selectedRowIds.length
   return (
     <GridToolbarContainer>

@@ -54,11 +54,10 @@ export function MissionSitesDataGrid(
       ): React.JSX.Element | undefined => {
         const row: MissionSiteRow = params.row
 
-        // Note: we can assume here that missionSite and props.agents are defined
+        // Note: we can assume here that missionSite is defined
         // because if we are able to display this dialog, it means the button for it
         // was available to click, which means there is at least one game state which
         // has these values defined.
-
         const missionSite: MissionSite = _.find(props.missionSites, {
           Id: row.id,
         })!

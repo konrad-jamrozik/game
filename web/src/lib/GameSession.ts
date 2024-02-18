@@ -10,7 +10,6 @@ import {
   callApplyPlayerActionApi,
   playerActionPayloadProviders,
 } from './api/applyPlayerActionApi'
-import type { FetchCallbacks } from './api/genericApiUtils'
 
 export function useGameSessionContext(): GameSession {
   return useContext(GameSessionContext)
@@ -18,14 +17,23 @@ export function useGameSessionContext(): GameSession {
 
 export function useGameSession(): GameSession {
   const [data, setData] = useState<GameSessionData>(initialGameSessionData)
-  return new GameSession(data, setData)
+  const [loading, setLoading] = useState<boolean>(false)
+  const [error, setError] = useState<string>()
+  return new GameSession(data, setData, loading, setLoading, error, setError)
 }
 
 export class GameSession {
+  // eslint-disable-next-line @typescript-eslint/max-params
   public constructor(
     private readonly data: GameSessionData,
     private readonly setData: React.Dispatch<
       React.SetStateAction<GameSessionData>
+    >,
+    public readonly loading: boolean,
+    private readonly setLoading: React.Dispatch<React.SetStateAction<boolean>>,
+    public readonly error: string | undefined,
+    private readonly setError: React.Dispatch<
+      React.SetStateAction<string | undefined>
     >,
   ) {
     this.data = data
@@ -48,16 +56,17 @@ export class GameSession {
   }
 
   public async advanceTurns(
-    params: FetchCallbacks & {
-      startTurn: number
-      targetTurn: number
-      delegateToAi?: boolean | undefined
-    },
+    startTurn: number,
+    targetTurn: number,
+    delegateToAi?: boolean | undefined,
   ): Promise<void> {
-    const startGameState = this.getStateAtTurn(params.startTurn)
+    const startGameState = this.getStateAtTurn(startTurn)
     const newGameStates = await callAdvanceTurnsApi({
-      ...params,
+      setLoading: this.setLoading,
+      setError: this.setError,
       startGameState,
+      targetTurn,
+      delegateToAi,
     })
     if (!_.isUndefined(newGameStates)) {
       this.upsertGameStates(newGameStates)
@@ -65,21 +74,18 @@ export class GameSession {
   }
 
   public async applyPlayerAction(
-    params: FetchCallbacks & {
-      playerActionName: PlayerActionName
-      ids?: number[] | undefined
-      targetId?: number | undefined
-    },
+    playerActionName: PlayerActionName,
+    ids?: number[] | undefined,
+    targetId?: number | undefined,
   ): Promise<void> {
     const currentGameState = this.getCurrentState()
     const newGameState = await callApplyPlayerActionApi({
-      ...params,
+      setLoading: this.setLoading,
+      setError: this.setError,
       currentGameState,
-      playerActionPayload: playerActionPayloadProviders[
-        params.playerActionName
-      ]({
-        ids: params.ids,
-        targetId: params.targetId,
+      playerActionPayload: playerActionPayloadProviders[playerActionName]({
+        ids,
+        targetId,
       }),
     })
 
@@ -102,6 +108,8 @@ export class GameSession {
       ...this.data,
       gameStates,
     })
+    this.setLoading(false)
+    this.setError('')
   }
 
   public getCurrentTurn(): number {
