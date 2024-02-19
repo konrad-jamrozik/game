@@ -18,7 +18,6 @@ export type DeployMissionDialogProps = {
   readonly missionSite: MissionSite
 }
 
-// kja need to distinguish between maxTransportCapacity and currentTransportCapacity
 export default function DeployMissionDialog(
   props: DeployMissionDialogProps,
 ): React.JSX.Element {
@@ -42,7 +41,8 @@ export default function DeployMissionDialog(
       (id: GridRowId) => id as number,
     )
 
-    // kja this will crash server if there are not enough agents to win the mission
+    // kja check if enough agents to win mission
+    // kja prevent from selection any agent that cannot survive the mission
     await gameSession.applyPlayerAction(
       'launchMission',
       selectedAgentsIds,
@@ -68,7 +68,7 @@ export default function DeployMissionDialog(
         <DialogContent
           sx={{
             // bgcolor: '#205050',
-            width: '440px',
+            width: '530px',
             padding: '10px',
           }}
         >
@@ -108,7 +108,7 @@ export default function DeployMissionDialog(
 
             <Grid xs={12} display="flex" justifyContent="center">
               <AgentsDataGrid
-                deploymentDisplay={true}
+                missionSiteToDeploy={props.missionSite}
                 {...{ rowSelectionModel, setRowSelectionModel }}
               />
             </Grid>

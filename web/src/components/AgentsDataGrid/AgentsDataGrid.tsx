@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import { Box } from '@mui/material'
 import {
   DataGrid,
@@ -11,9 +12,13 @@ import {
 import _ from 'lodash'
 import { useState } from 'react'
 import { type GameSession, useGameSessionContext } from '../../lib/GameSession'
-import type { Agent, AgentState } from '../../lib/GameState'
+import type { Agent, AgentState, MissionSite } from '../../lib/GameState'
 import { renderAgentStateCell } from '../../lib/rendering'
-import { canBeSentOnMission, getSurvivalSkill } from '../../lib/ruleset'
+import {
+  canBeSentOnMission,
+  getSurvivalChanceNonNegative,
+  getSurvivalSkill,
+} from '../../lib/ruleset'
 import {
   defaultComponentHeight,
   defaultComponentMinWidth,
@@ -22,7 +27,7 @@ import { AgentsDataGridToolbar } from './AgentsDataGridToolbar'
 import type { BatchAgentPlayerActionOption } from './batchAgentPlayerActionOptions'
 
 export type AgentsDataGridProps = {
-  readonly deploymentDisplay?: boolean
+  readonly missionSiteToDeploy?: MissionSite | undefined
   readonly rowSelectionModel?: GridRowSelectionModel
   readonly setRowSelectionModel?: React.Dispatch<
     React.SetStateAction<GridRowSelectionModel>
@@ -32,12 +37,15 @@ export type AgentsDataGridProps = {
 export function AgentsDataGrid(props: AgentsDataGridProps): React.JSX.Element {
   const gameSession = useGameSessionContext()
   const [action, setAction] = useState<BatchAgentPlayerActionOption>('none')
-  const deploymentDisplay: boolean = props.deploymentDisplay ?? false
+  const deploymentDisplay = !_.isUndefined(props.missionSiteToDeploy)
 
   const agents: Agent[] = gameSession.isLoaded()
     ? filterAgents(gameSession, deploymentDisplay)
     : []
-  const rows: AgentRow[] = _.map(agents, getRow)
+
+  const rows: AgentRow[] = _.map(agents, (agent) =>
+    getRow(agent, deploymentDisplay ? props.missionSiteToDeploy : undefined),
+  )
 
   const apiRef = useGridApiRef()
 
@@ -68,7 +76,7 @@ export function AgentsDataGrid(props: AgentsDataGridProps): React.JSX.Element {
       sx={{
         height: !deploymentDisplay ? defaultComponentHeight : 460,
         minWidth: defaultComponentMinWidth,
-        maxWidth: !deploymentDisplay ? 550 : 400,
+        maxWidth: deploymentDisplay ? 468 : 550,
         width: '100%',
       }}
     >
@@ -84,6 +92,7 @@ export function AgentsDataGrid(props: AgentsDataGridProps): React.JSX.Element {
           },
           columns: {
             columnVisibilityModel: {
+              survivalChance: deploymentDisplay,
               recoversIn: !deploymentDisplay,
               missionsSurvived: false,
               turnHired: false,
@@ -194,6 +203,7 @@ export type AgentRow = {
   id: number
   state: AgentState
   survivalSkill: number
+  survivalChance: number | undefined
   recoversIn: number
   missionsSurvived: number
   turnHired: number
@@ -201,7 +211,7 @@ export type AgentRow = {
 }
 
 const columns: GridColDef[] = [
-  { field: 'id', headerName: 'ID', width: 90 },
+  { field: 'id', headerName: 'ID', width: 82 },
   {
     field: 'state',
     headerName: 'State',
@@ -212,6 +222,11 @@ const columns: GridColDef[] = [
     field: 'survivalSkill',
     headerName: 'Skill',
     width: 100,
+  },
+  {
+    field: 'survivalChance',
+    headerName: 'Surv. %',
+    width: 114,
   },
   {
     field: 'recoversIn',
@@ -235,7 +250,7 @@ const columns: GridColDef[] = [
   },
 ]
 
-function getRow(agent: Agent): AgentRow {
+function getRow(agent: Agent, missionSite?: MissionSite | undefined): AgentRow {
   return {
     id: agent.Id,
     state: agent.CurrentState,
@@ -244,5 +259,8 @@ function getRow(agent: Agent): AgentRow {
     recoversIn: agent.RecoversIn,
     missionsSurvived: agent.MissionsSurvived,
     survivalSkill: getSurvivalSkill(agent),
+    survivalChance: !_.isUndefined(missionSite)
+      ? getSurvivalChanceNonNegative(agent, missionSite)
+      : undefined,
   }
 }

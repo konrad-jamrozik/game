@@ -72,10 +72,23 @@ export function agentSurvivalThreshold(
   return _.max([difficulty - getSurvivalSkill(agent), minSurvivalThreshold])!
 }
 
-export function agentSurvivalChance(agent: Agent, difficulty: number): number {
-  return agentSurvivalRollUpperBound - agentSurvivalThreshold(agent, difficulty)
+export function getSurvivalChanceNonNegative(
+  agent: Agent,
+  missionSite: MissionSite,
+): number {
+  return _.max([getSurvivalChance(agent, missionSite), 0])!
+}
+
+export function getSurvivalChance(
+  agent: Agent,
+  missionSite: MissionSite,
+): number {
+  return (
+    agentSurvivalRollUpperBound -
+    agentSurvivalThreshold(agent, missionSite.Difficulty)
+  )
 }
 
 export function canSurvive(agent: Agent, missionSite: MissionSite): boolean {
-  return agentSurvivalChance(agent, missionSite.Difficulty) > 0
+  return getSurvivalChance(agent, missionSite) > 0
 }
