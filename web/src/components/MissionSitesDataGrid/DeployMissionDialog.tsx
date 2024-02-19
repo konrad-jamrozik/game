@@ -70,7 +70,10 @@ export default function DeployMissionDialog(
     } else if (selectedAgents === 0) {
       return [false, 'Select agents to launch mission']
     } else if (selectedAgents > assets!.CurrentTransportCapacity) {
-      return [false, `Not enough available transport capacity`]
+      return [
+        false,
+        `Not enough capacity: ${selectedAgents} / ${assets!.CurrentTransportCapacity}`,
+      ]
     } else if (selectedAgents < requiredAgents) {
       return [
         false,
