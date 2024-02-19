@@ -22,6 +22,7 @@ const tableHeight = 310
 export function MissionSitesDataGrid(
   props: MissionSitesDataGridProps,
 ): React.JSX.Element {
+  // kja fix this to use gameSession instead. This fill fix a bug with undefined MissionSite.
   const rows: MissionSiteRow[] = getRows(props.missionSites)
 
   const columns: GridColDef[] = [
