@@ -117,7 +117,9 @@ export default function DeployMissionDialog(
               <Label>{props.missionSite.Difficulty}</Label>
             </Grid>
             <Grid xs={8}>
-              <Label>Required agents</Label>
+              <Label sx={getSx('Difficulty')}>
+                Required surviving agents for success
+              </Label>
             </Grid>
             <Grid xs={4}>
               <Label>
