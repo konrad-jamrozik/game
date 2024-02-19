@@ -36,6 +36,13 @@ const lineChartMaxWidth = '700px'
 // https://mui.com/material-ui/react-snackbar/#use-with-alerts
 // should not autohide by default: see autoHideDuration:
 // https://mui.com/material-ui/api/snackbar/
+// - add "Missions" data grid:
+//   shows all the missions, with info like:
+//   - when it as launched
+//   - what was the result: Success, Failure, InProgress
+//   - "Report" button that shows agent rolls and mission outcome
+//     This report probably should come from backend, in addition to the new game state.
+//     The report would not be a part of the game state; it would be returned alongside it.
 
 // eslint-disable-next-line max-lines-per-function
 export default function App(): React.JSX.Element {
