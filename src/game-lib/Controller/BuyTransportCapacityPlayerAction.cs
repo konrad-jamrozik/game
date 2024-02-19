@@ -1,3 +1,4 @@
+using Lib.Contracts;
 using UfoGameLib.Lib;
 using UfoGameLib.Model;
 using UfoGameLib.State;
@@ -18,7 +19,7 @@ public class BuyTransportCapacityPlayerAction : PlayerAction
     public override void Apply(GameState state)
     {
         int buyingCost = Ruleset.TransportCapacityBuyingCost(_capacity);
-        Debug.Assert(state.Assets.Money >= buyingCost);
+        Contract.Assert(state.Assets.Money >= buyingCost);
         _log.Info($"Buy transport capacity. Count: {_capacity}. Cost: {buyingCost}");
         state.Assets.Money -= buyingCost;
         state.Assets.MaxTransportCapacity += _capacity;

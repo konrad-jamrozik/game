@@ -1,3 +1,4 @@
+using Lib.Contracts;
 using UfoGameLib.Lib;
 using UfoGameLib.Model;
 using UfoGameLib.State;
@@ -77,7 +78,7 @@ public class AdvanceTimePlayerAction : PlayerAction
 
     private bool EvaluateMission(GameState state, Mission mission)
     {
-        Debug.Assert(mission.CurrentState == Mission.MissionState.Active);
+        Contract.Assert(mission.CurrentState == Mission.MissionState.Active);
 
         Agents agentsOnMission = state.Assets.Agents.OnSpecificMission(mission);
 
@@ -129,7 +130,7 @@ public class AdvanceTimePlayerAction : PlayerAction
         Agents agentsOnMission)
     {
         int agentsSent = agentsOnMission.Count;
-        Debug.Assert(agentsSent == mission.AgentsSent);
+        Contract.Assert(agentsSent == mission.AgentsSent);
         int agentsSurvived = 0;
         int agentsTerminated = 0;
 

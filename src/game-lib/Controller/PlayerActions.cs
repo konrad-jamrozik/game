@@ -1,3 +1,4 @@
+using Lib.Contracts;
 using UfoGameLib.State;
 
 namespace UfoGameLib.Controller;
@@ -13,7 +14,7 @@ public class PlayerActions : List<PlayerAction>
 
     public GameStateUpdateLog Apply(GameState state)
     {
-        Debug.Assert(!state.IsGameOver, 
+        Contract.Assert(!state.IsGameOver, 
             $"money: {state.Assets.Money} " +
             $"funding: {state.Assets.Funding} " +
             $"support: {state.Assets.Support}");
@@ -26,7 +27,7 @@ public class PlayerActions : List<PlayerAction>
             state.UpdateCount += 1;
             if (action is not AdvanceTimePlayerAction)
             {
-                Debug.Assert(!state.IsGameOver, 
+                Contract.Assert(!state.IsGameOver, 
                     $"money: {state.Assets.Money} " +
                     $"funding: {state.Assets.Funding} " +
                     $"support: {state.Assets.Support}");

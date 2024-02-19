@@ -1,3 +1,4 @@
+using Lib.Contracts;
 using Lib.Data;
 using Lib.Primitives;
 using UfoGameLib.Lib;
@@ -51,7 +52,7 @@ public class AgentStatsReport : CsvFileReport
         
         object[][] dataRows = DataRows(_gameState);
         
-        Debug.Assert(!dataRows.Any() || headerRow.Length == dataRows[0].Length);
+        Contract.Assert(!dataRows.Any() || headerRow.Length == dataRows[0].Length);
 
         SaveToCsvFile(_log, dataDescription: "agent", new TabularData(headerRow, dataRows), _csvFile);
     }
@@ -99,7 +100,7 @@ public class AgentStatsReport : CsvFileReport
     private static string AgentLogString(Agent agent, int lastTurn)
     {
         int turnsSurvived = agent.TurnsSurvived(lastTurn);
-        Debug.Assert(turnsSurvived >= 0);
+        Contract.Assert(turnsSurvived >= 0);
 
         return $"{agent.LogString}" +
                $" | Skill: {agent.SurvivalSkill,3}" +

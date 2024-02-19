@@ -1,3 +1,4 @@
+using Lib.Contracts;
 using Lib.Json;
 using UfoGameLib.State;
 using Timeline = UfoGameLib.Model.Timeline;
@@ -68,9 +69,9 @@ public class GameSessionController
         // Assert:
         // IF the GameSession was ctored with null initialGameState,
         // THEN CurrentGameStatePlayerView.CurrentTurn == Timeline.InitialTurn
-        Debug.Assert(CurrentGameStatePlayerView.CurrentTurn >= Timeline.InitialTurn);
-        Debug.Assert(turnLimit <= GameState.MaxTurnLimit);
-        Debug.Assert(turnLimit >= CurrentGameStatePlayerView.CurrentTurn);
+        Contract.Assert(CurrentGameStatePlayerView.CurrentTurn >= Timeline.InitialTurn);
+        Contract.Assert(turnLimit <= GameState.MaxTurnLimit);
+        Contract.Assert(turnLimit >= CurrentGameStatePlayerView.CurrentTurn);
 
         GameState state = GameSession.CurrentGameState;
 
@@ -92,7 +93,7 @@ public class GameSessionController
 
             player.PlayGameTurn(CurrentGameStatePlayerView, TurnController);
 
-            Debug.Assert(!state.IsGameOver);
+            Contract.Assert(!state.IsGameOver);
 
             // This state diff shows what actions the player took.
             DiffPreviousAndCurrentGameState();
@@ -174,16 +175,16 @@ public class GameSessionController
     /// </summary>
     private static int LastTurn(GameState state, int turnLimit)
     {
-        Debug.Assert(GameSessionOver(state, turnLimit));
+        Contract.Assert(GameSessionOver(state, turnLimit));
         return state.Timeline.CurrentTurn - 1;
     }
 
     private void DiffPreviousAndCurrentGameState()
     {
-        Debug.Assert(GameSession.PreviousGameState != null);
+        Contract.Assert(GameSession.PreviousGameState != null);
         // Note we do here !ReferenceEquals, not !Equals, because if the player did absolutely nothing
         // (see e.g. DoNothingAIPlayer), then these states will be the same.
-        Debug.Assert(!ReferenceEquals(GameSession.PreviousGameState, GameSession.CurrentGameState));
+        Contract.Assert(!ReferenceEquals(GameSession.PreviousGameState, GameSession.CurrentGameState));
         GameState prev = GameSession.PreviousGameState;
         GameState curr = GameSession.CurrentGameState;
         new GameStateDiff(prev, curr).PrintTo(_log);

@@ -1,4 +1,5 @@
 using System.Text.Json.Serialization;
+using Lib.Contracts;
 using Lib.Primitives;
 
 namespace UfoGameLib.Model;
@@ -65,10 +66,10 @@ public class Agents : List<Agent>
         => this.Where(agent => agent.IsOnMission && agent.CurrentMission == mission).ToAgents();
 
     public void AssertCanBeSentOnMission()
-        => Debug.Assert(this.All(agent => agent.CanBeSentOnMission));
+        => Contract.Assert(this.All(agent => agent.CanBeSentOnMission));
 
     public void AssertCanBeSacked()
-        => Debug.Assert(this.All(agent => agent.CanBeSacked));
+        => Contract.Assert(this.All(agent => agent.CanBeSacked));
 
     public Agent AgentAtPercentile(int percentile, Func<Agent, int> orderBy)
         => this.OrderBy(orderBy).TakePercent(percentile).Last();
@@ -104,8 +105,8 @@ public class Agents : List<Agent>
     }
 
     private void AssertTerminated(IEnumerable<Agent> agents)
-        => Debug.Assert(agents.All(agent => agent.IsTerminated));
+        => Contract.Assert(agents.All(agent => agent.IsTerminated));
 
     private void AssertAlive(IEnumerable<Agent> agents)
-        => Debug.Assert(agents.All(agent => agent.IsAlive));
+        => Contract.Assert(agents.All(agent => agent.IsAlive));
 }

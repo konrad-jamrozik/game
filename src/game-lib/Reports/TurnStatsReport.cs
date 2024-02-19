@@ -1,3 +1,4 @@
+using Lib.Contracts;
 using Lib.Data;
 using UfoGameLib.Lib;
 using UfoGameLib.Model;
@@ -25,7 +26,7 @@ public class TurnStatsReport : CsvFileReport
 
         object[][] dataRows = DataRows(_gameStates);
 
-        Debug.Assert(headerRow.Length == dataRows[0].Length);
+        Contract.Assert(headerRow.Length == dataRows[0].Length);
 
         SaveToCsvFile(_log, dataDescription: "turns", new TabularData(headerRow, dataRows), _csvFile);
     }

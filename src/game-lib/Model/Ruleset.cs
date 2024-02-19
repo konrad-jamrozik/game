@@ -1,3 +1,4 @@
+using Lib.Contracts;
 using UfoGameLib.Lib;
 
 namespace UfoGameLib.Model;
@@ -52,7 +53,7 @@ public static class Ruleset
             return 0;
 
         int aboveThreshold = survivalRoll - survivalThreshold;
-        Debug.Assert(aboveThreshold  >= 1);
+        Contract.Assert(aboveThreshold  >= 1);
 
         // Doing  "(aboveThreshold - 1)" instead of just "aboveThreshold"
         // because "aboveThreshold" is always at least 1, so without
@@ -123,7 +124,7 @@ public static class Ruleset
         // a mission they are currently on, then agent.MissionsSurvived does not include
         // that mission yet. Otherwise, consider border case of first mission: the agent would
         // immediately get the huge boost for surviving first mission, which is not intended.
-        Debug.Assert(agent.MissionsSurvived >= 0);
+        Contract.Assert(agent.MissionsSurvived >= 0);
         int skillFromFirstMissions = SkillFromEachFirstMission.Take(agent.MissionsSurvived).Sum();
         int missionsBeyondFirstMissions = Math.Max(agent.MissionsSurvived - SkillFromEachFirstMission.Length, 0);
         return skillFromFirstMissions + missionsBeyondFirstMissions * SkillFromEachMissionBeyondFirstMissions;
@@ -147,7 +148,7 @@ public static class Ruleset
     public static int RequiredSurvivingAgentsForSuccess(MissionSite site)
     {
         int result = 1 + (site.Difficulty - BaseMissionSiteDifficulty) / 30;
-        Debug.Assert(result >= 1);
+        Contract.Assert(result >= 1);
         return result;
     }
 

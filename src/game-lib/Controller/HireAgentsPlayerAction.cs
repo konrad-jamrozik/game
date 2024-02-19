@@ -1,3 +1,4 @@
+using Lib.Contracts;
 using UfoGameLib.Lib;
 using UfoGameLib.Model;
 using UfoGameLib.State;
@@ -19,7 +20,7 @@ public class HireAgentsPlayerAction : PlayerAction
     {
         _log.Info($"Hire agents. Count: {_count}");
         int totalHireCost = Ruleset.AgentHireCost * _count;
-        Debug.Assert(state.Assets.Money >= totalHireCost);
+        Contract.Assert(state.Assets.Money >= totalHireCost);
         state.Assets.Money -= totalHireCost;
         for (int i = 0; i < _count; i++)
         {

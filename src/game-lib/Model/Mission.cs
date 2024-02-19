@@ -1,4 +1,5 @@
 using System.Text.Json.Serialization;
+using Lib.Contracts;
 using Lib.Json;
 
 namespace UfoGameLib.Model;
@@ -36,7 +37,7 @@ public class Mission : IIdentifiable
         AgentsSent = agentsSent;
         AgentsSurvived = agentsSurvived;
         AgentsTerminated = agentsTerminated;
-        Debug.Assert(
+        Contract.Assert(
             (IsActive && AgentsSurvived == null && AgentsTerminated == null)
             || (!IsActive && AgentsSurvived >= 0 && AgentsTerminated >= 0
                 && (AgentsSent == AgentsSurvived + AgentsTerminated)));
@@ -47,7 +48,7 @@ public class Mission : IIdentifiable
         site,
         agentsSent)
     {
-        Debug.Assert(site.IsActive);
+        Contract.Assert(site.IsActive);
         site.LaunchMission(turn);
     }
 
@@ -70,9 +71,9 @@ public class Mission : IIdentifiable
 
     public void ApplyAgentsResults(int agentsSurvived, int agentsTerminated)
     {
-        Debug.Assert(IsActive);
-        Debug.Assert(AgentsSurvived == null);
-        Debug.Assert(AgentsTerminated == null);
+        Contract.Assert(IsActive);
+        Contract.Assert(AgentsSurvived == null);
+        Contract.Assert(AgentsTerminated == null);
         AgentsSurvived = agentsSurvived;
         AgentsTerminated = agentsTerminated;
     }

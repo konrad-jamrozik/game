@@ -1,4 +1,5 @@
 using System.Text.Json.Serialization;
+using Lib.Contracts;
 
 namespace UfoGameLib.Model;
 
@@ -68,12 +69,12 @@ public class Agent
         TurnsGeneratingIncome = turnsGeneratingIncome;
         TurnsGatheringIntel = turnsGatheringIntel;
         TurnsInRecovery = turnsInRecovery;
-        Debug.Assert(TurnHired >= 1);
-        Debug.Assert(TurnTerminated == null || TurnHired <= TurnTerminated);
+        Contract.Assert(TurnHired >= 1);
+        Contract.Assert(TurnTerminated == null || TurnHired <= TurnTerminated);
         AssertMissionInvariants();
-        Debug.Assert(!sacked || turnTerminated != null);
-        Debug.Assert(!IsRecovering || RecoversIn >= 1);
-        Debug.Assert(IsRecovering || RecoversIn == null);
+        Contract.Assert(!sacked || turnTerminated != null);
+        Contract.Assert(!IsRecovering || RecoversIn >= 1);
+        Contract.Assert(IsRecovering || RecoversIn == null);
     }
 
     [JsonIgnore]
@@ -143,29 +144,29 @@ public class Agent
 
     public void SendToTraining()
     {
-        Debug.Assert(CanBeSentOnMission);
-        Debug.Assert(!IsTraining);
+        Contract.Assert(CanBeSentOnMission);
+        Contract.Assert(!IsTraining);
         CurrentState = AgentState.Training;
     }
 
     public void GatherIntel()
     {
-        Debug.Assert(CanBeSentOnMission);
-        Debug.Assert(!IsGatheringIntel);
+        Contract.Assert(CanBeSentOnMission);
+        Contract.Assert(!IsGatheringIntel);
         CurrentState = AgentState.GatheringIntel;
     }
 
     public void GenerateIncome()
     {
-        Debug.Assert(CanBeSentOnMission);
-        Debug.Assert(!IsGeneratingIncome);
+        Contract.Assert(CanBeSentOnMission);
+        Contract.Assert(!IsGeneratingIncome);
         CurrentState = AgentState.GeneratingIncome;
     }
 
     public void SendOnMission(Mission mission)
     {
-        Debug.Assert(CanBeSentOnMission);
-        Debug.Assert(!IsOnMission);
+        Contract.Assert(CanBeSentOnMission);
+        Contract.Assert(!IsOnMission);
         CurrentState = AgentState.OnMission;
         CurrentMission = mission;
         // Note:
@@ -182,7 +183,7 @@ public class Agent
 
     public void MakeAvailable()
     {
-        Debug.Assert(!IsAvailable);
+        Contract.Assert(!IsAvailable);
         // kja2 for better assertions, make special method for making agent available from mission
         // Think about this as a different edge in the state transition diagram, originating from different
         // node but targeting the same node.
@@ -194,7 +195,7 @@ public class Agent
 
     public void SetRecoversIn(int recoversIn)
     {
-        Debug.Assert(recoversIn >= 1);
+        Contract.Assert(recoversIn >= 1);
         
         if (IsOnMission)
             CurrentMission = null;
@@ -207,8 +208,8 @@ public class Agent
 
     public void TickRecovery()
     {
-        Debug.Assert(IsRecovering);
-        Debug.Assert(RecoversIn >=1 );
+        Contract.Assert(IsRecovering);
+        Contract.Assert(RecoversIn >=1 );
 
         RecoversIn--;
         TurnsInRecovery++;
@@ -222,15 +223,15 @@ public class Agent
 
     public void Recall()
     {
-        Debug.Assert(IsRecallable);
+        Contract.Assert(IsRecallable);
         CurrentState = AgentState.InTransit;
     }
 
     public void Terminate(int turnTerminated, bool sack = false)
     {
-        Debug.Assert(IsAlive);
-        Debug.Assert(sack ? CanBeSacked : IsOnMission);
-        Debug.Assert(turnTerminated >= TurnHired);
+        Contract.Assert(IsAlive);
+        Contract.Assert(sack ? CanBeSacked : IsOnMission);
+        Contract.Assert(turnTerminated >= TurnHired);
         CurrentState = AgentState.Terminated;
         TurnTerminated = turnTerminated;
         CurrentMission = null;
@@ -250,17 +251,17 @@ public class Agent
 
     private void AssertMissionInvariants()
     {
-        Debug.Assert(
+        Contract.Assert(
             IsOnMission == (CurrentMission != null),
             $"IsOnMission: {IsOnMission} == (CurrentMission != null): {CurrentMission != null}");
         
-        Debug.Assert(MissionsSurvived >= 0);
-        Debug.Assert(MissionsSucceeded >= 0);
-        Debug.Assert(MissionsFailed >= 0);
+        Contract.Assert(MissionsSurvived >= 0);
+        Contract.Assert(MissionsSucceeded >= 0);
+        Contract.Assert(MissionsFailed >= 0);
         // If agent didn't survive their last mission, its outcome still counts towards their
         // missions succeeded or failed, that's why this comparison allows the difference of 1.
-        Debug.Assert(MissionsSucceeded + MissionsFailed >= MissionsSurvived);
-        Debug.Assert(MissionsSucceeded + MissionsFailed <= MissionsSurvived + 1);
+        Contract.Assert(MissionsSucceeded + MissionsFailed >= MissionsSurvived);
+        Contract.Assert(MissionsSucceeded + MissionsFailed <= MissionsSurvived + 1);
         // kja2 add invariant that terminated agent is not on a mission
     }
 

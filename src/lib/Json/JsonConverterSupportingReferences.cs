@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
+using Lib.Contracts;
 
 namespace Lib.Json;
 
@@ -19,7 +20,7 @@ public abstract class JsonConverterSupportingReferences<T> : JsonConverter<T>
     protected JsonConverterSupportingReferences(JsonSerializerOptions serializationOptions)
     {
         SerializationOptions = serializationOptions;
-        Debug.Assert(SerializationOptions.ReferenceHandler != ReferenceHandler.Preserve);
+        Contract.Assert(SerializationOptions.ReferenceHandler != ReferenceHandler.Preserve);
     }
 
     protected static List<TObj> DeserializeObjArrayWithDepRefProps<TObj, TDep>(

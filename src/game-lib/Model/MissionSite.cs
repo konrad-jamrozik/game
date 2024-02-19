@@ -1,4 +1,5 @@
 using System.Text.Json.Serialization;
+using Lib.Contracts;
 using Lib.Json;
 
 namespace UfoGameLib.Model;
@@ -21,8 +22,8 @@ public class MissionSite : IIdentifiable
         int? turnDeactivated = null,
         bool expired = false)
     {
-        Debug.Assert(Difficulty >= 0);
-        Debug.Assert(ExpiresIn == null || ExpiresIn >= 0);
+        Contract.Assert(Difficulty >= 0);
+        Contract.Assert(ExpiresIn == null || ExpiresIn >= 0);
         Id = id;
         Difficulty = difficulty;
         TurnAppeared = turnAppeared;
@@ -51,7 +52,7 @@ public class MissionSite : IIdentifiable
 
     public bool TickExpiration(int turn)
     {
-        Debug.Assert(IsActive);
+        Contract.Assert(IsActive);
         bool expired = false;
         if (ExpiresIn > 0)
             ExpiresIn--;
@@ -67,7 +68,7 @@ public class MissionSite : IIdentifiable
 
     public void LaunchMission(int turnLaunched)
     {
-        Debug.Assert(IsActive);
+        Contract.Assert(IsActive);
         ExpiresIn = null;
         TurnDeactivated = turnLaunched;
         AssertStatusInvariant();
@@ -75,7 +76,7 @@ public class MissionSite : IIdentifiable
 
     private void Expire(int turnExpired)
     {
-        Debug.Assert(IsActive);
+        Contract.Assert(IsActive);
         TurnDeactivated = turnExpired;
         ExpiresIn = null;
         Expired = true;
@@ -83,7 +84,7 @@ public class MissionSite : IIdentifiable
     }
 
     private void AssertStatusInvariant()
-        => Debug.Assert(IsActive ^ IsExpired ^ WasLaunched);
+        => Contract.Assert(IsActive ^ IsExpired ^ WasLaunched);
 
     public MissionSite DeepClone()
     {

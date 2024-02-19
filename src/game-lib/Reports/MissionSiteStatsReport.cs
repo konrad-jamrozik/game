@@ -1,3 +1,4 @@
+using Lib.Contracts;
 using Lib.Data;
 using UfoGameLib.Lib;
 using UfoGameLib.Model;
@@ -25,7 +26,7 @@ public class MissionSiteStatsReport : CsvFileReport
         
         object[][] dataRows = DataRows(_gameState);
         
-        Debug.Assert(!dataRows.Any() || headerRow.Length == dataRows[0].Length);
+        Contract.Assert(!dataRows.Any() || headerRow.Length == dataRows[0].Length);
 
         SaveToCsvFile(_log, "mission site", new TabularData(headerRow, dataRows), _csvFile);
     }
@@ -43,7 +44,7 @@ public class MissionSiteStatsReport : CsvFileReport
             site =>
             {
                 Mission ? mission = gameState.Missions.SingleOrDefault(mission => mission.Site == site);
-                Debug.Assert(mission == null || mission.WasLaunched);
+                Contract.Assert(mission == null || mission.WasLaunched);
 
                 int outcome = mission is { IsSuccessful: true } ? 1 : 0;
                 double? survivalRatio = mission != null

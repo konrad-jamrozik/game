@@ -1,3 +1,4 @@
+using Lib.Contracts;
 using UfoGameLib.Lib;
 using UfoGameLib.Model;
 using UfoGameLib.State;
@@ -64,7 +65,7 @@ public class GameTurnController
             .Take(agentCount)
             .ToAgents();
 
-        Debug.Assert(agents.Count == agentCount);
+        Contract.Assert(agents.Count == agentCount);
 
         LaunchMission(site, agents);
     }

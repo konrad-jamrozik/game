@@ -1,3 +1,4 @@
+using Lib.Contracts;
 using UfoGameLib.Controller;
 using UfoGameLib.Lib;
 using UfoGameLib.Model;
@@ -94,7 +95,7 @@ public class BasicAIPlayerIntellect : IPlayer
 
         // Here we assume that we get determine agents to recall in given turn before 
         // any agents have been sent on a mission.
-        Debug.Assert(agents.OnMission.Count == 0);
+        Contract.Assert(agents.OnMission.Count == 0);
 
         int predictedAgents = agents.CanBeSentOnMissionNextTurnMaybe.Count;
         int desiredReserve = DesiredAgentMinimalReserve(state);
@@ -122,7 +123,7 @@ public class BasicAIPlayerIntellect : IPlayer
 
     private Agents ChooseAgents(MissionSite site, GameStatePlayerView state)
     {
-        Debug.Assert(state.Assets.CurrentTransportCapacity > 0);
+        Contract.Assert(state.Assets.CurrentTransportCapacity > 0);
 
         Agents candidateAgents = state.Assets.Agents.CanBeSentOnMission
             // kja2-ai-feat this leaves only few most elite agents. Should try to give chance to mid-tier agents, 
@@ -247,7 +248,7 @@ public class BasicAIPlayerIntellect : IPlayer
             else
                 agentsToSendToGatherIntel++;
         }
-        Debug.Assert(agentsToSendToGenerateIncome + agentsToSendToGatherIntel == agentsToSendToOps);
+        Contract.Assert(agentsToSendToGenerateIncome + agentsToSendToGatherIntel == agentsToSendToOps);
 
         controller.SendAgentsToGenerateIncome(
             controller.RandomGen.Pick(agents.Available, agentsToSendToGenerateIncome).ToAgents());
@@ -269,11 +270,11 @@ public class BasicAIPlayerIntellect : IPlayer
             $"desiredAgentReserve: {desiredAgentReserve}, " +
             $"availableAgents: {initialAvailableAgents}.");
 
-        Debug.Assert(
+        Contract.Assert(
             state.Assets.Agents.GeneratingIncome.Count == initialAgentsGeneratingIncome + agentsToSendToGenerateIncome);
-        Debug.Assert(
+        Contract.Assert(
             state.Assets.Agents.GatheringIntel.Count == initialAgentsGatheringIntel + agentsToSendToGatherIntel);
-        Debug.Assert(state.Assets.Agents.InTraining.Count == initialAgentsInTraining + agentsSentToTraining);
-        Debug.Assert(state.Assets.Agents.Available.Count == 0);
+        Contract.Assert(state.Assets.Agents.InTraining.Count == initialAgentsInTraining + agentsSentToTraining);
+        Contract.Assert(state.Assets.Agents.Available.Count == 0);
     }
 }

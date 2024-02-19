@@ -1,3 +1,4 @@
+using Lib.Contracts;
 using UfoGameLib.Lib;
 using UfoGameLib.Model;
 using UfoGameLib.State;
@@ -20,12 +21,12 @@ public class LaunchMissionPlayerAction : PlayerAction
 
     public override void Apply(GameState state)
     {
-        Debug.Assert(state.MissionSites.Contains(_site));
-        Debug.Assert(_site.IsActive);
-        Debug.Assert(_agents.Count > 0);
-        _agents.ForEach(agent => Debug.Assert(agent.CanBeSentOnMission));
-        Debug.Assert(state.Assets.CurrentTransportCapacity >= _agents.Count);
-        Debug.Assert(_agents.Count >= _site.RequiredSurvivingAgentsForSuccess, 
+        Contract.Assert(state.MissionSites.Contains(_site));
+        Contract.Assert(_site.IsActive);
+        Contract.Assert(_agents.Count > 0);
+        _agents.ForEach(agent => Contract.Assert(agent.CanBeSentOnMission));
+        Contract.Assert(state.Assets.CurrentTransportCapacity >= _agents.Count);
+        Contract.Assert(_agents.Count >= _site.RequiredSurvivingAgentsForSuccess, 
             $"Cannot launch a mission with not enough agents to win it! " +
             $"_agents.Count: {_agents.Count} " +
             $">= _site.RequiredSurvivingAgentsForSuccess: {_site.RequiredSurvivingAgentsForSuccess}");
@@ -34,7 +35,7 @@ public class LaunchMissionPlayerAction : PlayerAction
         var mission = new Mission(missionId, _site, state.Timeline.CurrentTurn, _agents.Count);
 
         // kja needs to be checked in frontend too
-        Debug.Assert(_agents.All(agent => Ruleset.AgentCanSurvive(agent, mission)));
+        Contract.Assert(_agents.All(agent => Ruleset.AgentCanSurvive(agent, mission)));
 
         state.Missions.Add(mission);
 

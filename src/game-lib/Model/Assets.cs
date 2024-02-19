@@ -1,3 +1,4 @@
+using Lib.Contracts;
 using System.Text.Json.Serialization;
 
 namespace UfoGameLib.Model;
@@ -32,11 +33,11 @@ public class Assets
         int maxTransportCapacity,
         Agents agents)
     {
-        Debug.Assert(money >= 0);
-        Debug.Assert(intel >= 0);
-        Debug.Assert(funding >= 0);
-        Debug.Assert(support >= 0);
-        Debug.Assert(currentTransportCapacity >= 0 && currentTransportCapacity <= maxTransportCapacity);
+        Contract.Assert(money >= 0);
+        Contract.Assert(intel >= 0);
+        Contract.Assert(funding >= 0);
+        Contract.Assert(support >= 0);
+        Contract.Assert(currentTransportCapacity >= 0 && currentTransportCapacity <= maxTransportCapacity);
         Money = money;
         Intel = intel;
         Funding = funding;
