@@ -13,9 +13,11 @@ using ApplyPlayerActionResponse = Results<
 
 public static class ApplyPlayerActionRoute
 {
-    public static async Task<ApplyPlayerActionResponse>
+    public static Task<ApplyPlayerActionResponse>
         ApplyPlayerAction(HttpRequest req)
     {
+        return ApiUtils.TryProcessRoute(RouteFunc);
+
         async Task<JsonHttpResult<GameState>> RouteFunc()
         {
             await Console.Out.WriteLineAsync("Invoked ApplyPlayerAction!");
@@ -26,8 +28,6 @@ public static class ApplyPlayerActionRoute
 
             return ApplyPlayerActionInternal(body!.PlayerAction, body.GameState);
         }
-
-        return await ApiUtils.TryProcessRoute(RouteFunc);
     }
 
     private static JsonHttpResult<GameState> ApplyPlayerActionInternal(

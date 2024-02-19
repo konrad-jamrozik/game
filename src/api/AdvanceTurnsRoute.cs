@@ -8,9 +8,13 @@ using UfoGameLib.State;
 
 namespace UfoGameLib.Api;
 
-using AdvanceTurnsResponse = Results<
+using AdvanceTurnsSuccessResponse = Results<
     JsonHttpResult<List<GameState>>,
-    JsonHttpResult<GameState>,
+    JsonHttpResult<GameState>>;
+
+using AdvanceTurnsResponse = Results<
+    Results<JsonHttpResult<List<GameState>>,
+        JsonHttpResult<GameState>>,
     BadRequest<string>>;
 
 public static class AdvanceTurnsRoute
@@ -18,27 +22,32 @@ public static class AdvanceTurnsRoute
     /// <summary>
     /// Some cases for the "advanceTurns" route:
     /// advanceTurns with turn limit 1 and no game state: returns initialGameState having currentTurn of Timeline.InitialTurn
-    /// advanceTurns with turn limit 1 and game state at turn 1: throws errors saying cannot advance to turn 1, already there
+    /// advanceTurns with turn limit 1 and game state at turn 1: throws error saying cannot advance to turn 1, already there
     /// advanceTurns with turn limit 2 and game state at turn 1: returns game state at turn 2
     /// advanceTurns with turn limit 2 and no game state: returns game states at turn 1 and 2
     /// advanceTurns with turn limit 50 and game state at turn 30: returns game states at turns 31 to 50
     /// </summary>
-    public static async Task<AdvanceTurnsResponse>
+    public static Task<AdvanceTurnsResponse>
         AdvanceTurns(HttpRequest req, int? turnLimit, bool? includeAllStates, bool? delegateToAi)
     {
-        (GameState? gs, string? error) = await ApiUtils.ParseGameState(req);
-        if (error != null)
-            return TypedResults.BadRequest(error);
+        return ApiUtils.TryProcessRoute(RouteFunc);
 
-        if (turnLimit is not null && gs is not null && turnLimit <= gs.Timeline.CurrentTurn)
-            return TypedResults.BadRequest(
-                $"Cannot advance turns with turnLimit: {turnLimit}. " +
-                $"Input game state turn is {gs.Timeline.CurrentTurn}. turnLimit must be higher than that.");
+        async Task<AdvanceTurnsSuccessResponse> RouteFunc()
+        {
+            (GameState? gs, string? error) = await ApiUtils.ParseGameState(req);
+            if (error != null)
+                throw new ArgumentException(error);
 
-        return AdvanceTurnsInternal(turnLimit, includeAllStates, delegateToAi, gs);
+            if (turnLimit is not null && gs is not null && turnLimit <= gs.Timeline.CurrentTurn)
+                throw new ArgumentException(
+                    $"Cannot advance turns with turnLimit: {turnLimit}. " +
+                    $"Input game state turn is {gs.Timeline.CurrentTurn}. turnLimit must be higher than that.");
+
+            return AdvanceTurnsInternal(turnLimit, includeAllStates, delegateToAi, gs);
+        }
     }
 
-    private static AdvanceTurnsResponse AdvanceTurnsInternal(
+    private static AdvanceTurnsSuccessResponse AdvanceTurnsInternal(
         int? turnLimit,
         bool? includeAllStates,
         bool? delegateToAi = false,
@@ -48,7 +57,7 @@ public static class AdvanceTurnsRoute
 
         (int parsedTurnLimit, string? error) = ApiUtils.ParseTurnLimit(turnLimit, initialGameState);
         if (error != null)
-            return TypedResults.BadRequest(error);
+            throw new ArgumentException(error);
 
         var config = new Configuration(new SimulatedFileSystem());
         var log = new Log(config);
@@ -62,7 +71,7 @@ public static class AdvanceTurnsRoute
 
         controller.PlayGameSession(turnLimit: parsedTurnLimit, aiPlayer);
 
-        AdvanceTurnsResponse result = includeAllStates == true
+        AdvanceTurnsSuccessResponse result = includeAllStates == true
             ? ApiUtils.ToJsonHttpResult(
                 SkipFirstTurn(gameSession.AllGameStatesAtTurnStarts(), newGameSession: initialGameState is null))
             : ApiUtils.ToJsonHttpResult(gameSession.CurrentGameState);
