@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Runtime.CompilerServices;
 
@@ -18,7 +19,9 @@ public static class Contract
                 $"Reason: {upperBoundReason}");
     }
 
-    public static void Assert(bool condition, [CallerArgumentExpression("condition")] string? message=null)
+    public static void Assert(
+        [DoesNotReturnIf(false)] bool condition,
+        [CallerArgumentExpression("condition")] string? message = null)
     {
         if (!condition)
             throw message != null ? new InvariantException(message) : new InvariantException();
