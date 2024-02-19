@@ -88,7 +88,7 @@ export function AgentsDataGrid(props: AgentsDataGridProps): React.JSX.Element {
         initialState={{
           pagination: {
             paginationModel: {
-              pageSize: 100,
+              pageSize: 25,
             },
           },
           columns: {
