@@ -55,7 +55,7 @@ public static class Ruleset
         int aboveThreshold = survivalRoll - survivalThreshold;
         Contract.Assert(aboveThreshold  >= 1);
 
-        // Doing  "(aboveThreshold - 1)" instead of just "aboveThreshold"
+        // Subtracting "(aboveThreshold - 1)" instead of just "aboveThreshold"
         // because "aboveThreshold" is always at least 1, so without
         // "-1" the max value of "recoversIn" would be "MaxRecoversIn - 1"
         // not "MaxRecoversIn".
@@ -65,9 +65,23 @@ public static class Ruleset
     }
 
     // kja2 there is no need to have both a formula and a roll.
-    // Instead, I need an abstraction that rolls and logs based on formula.
-    // The implementation of this method is a formula describing 
-    // the implementation of RollForAgentSurvival.
+    // Instead, I need an abstraction like:
+    //
+    //   Chance agentSurvivalChance = AgentSurvivalChance(agent, difficulty)
+    //   RollResult rollResult = randomGen.Roll1To100();
+    //   bool survived = agentSurvivalChance.Result(rollResult)
+    //
+    // Currently, the implementation of this method (AgentSurvivalChance) is a formula describing 
+    // the math behind the implementation of RollForAgentSurvival.
+    // Complication: looks like I might be doing a roll separate of the formula because
+    // I need exact value of roll to compute recoversIn.
+    // Perhaps I will need two formulas, like:
+    //
+    //   Chance agentSurvivalChance = AgentSurvivalChance(agent, difficulty)
+    //   RollResult rollResult = randomGen.Roll1To100();
+    //   bool survived = agentSurvivalChance.Result(rollResult)
+    //   Interval agentRecoveryInterval = AgentRecoveryInterval()
+    //   int recoversIn = agentRecoveryInterval(rollResult);
     /**
      * As of 2/7/2024 the formula is:
      * 100%  + agent survival skill - mission difficulty
