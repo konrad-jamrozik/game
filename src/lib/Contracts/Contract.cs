@@ -16,6 +16,7 @@ public static class Contract
                 $"Reason: {upperBoundReason}");
     }
 
+    // kja include in the exception the name of the caller
     public static void Assert(
         [DoesNotReturnIf(false)] bool condition,
         [CallerArgumentExpression("condition")] string? message = null)
