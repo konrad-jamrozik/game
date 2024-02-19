@@ -149,8 +149,14 @@ function isAgentRowSelectable(
 
   // kja refactor, dedup: move stuff to ruleset.ts
 
+  const { survivalChance, id } = params.row
+  if (!_.isUndefined(survivalChance) && survivalChance <= 0) {
+    return false
+  }
+
   const agents = gameSession.getCurrentState().Assets.Agents
-  const rowAgent = _.find(agents, (agent) => agent.Id === params.row.id)!
+  const rowAgent = _.find(agents, (agent) => agent.Id === id)!
+
   // eslint-disable-next-line default-case
   switch (action) {
     case 'sendAgentsToIncomeGeneration':
