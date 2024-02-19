@@ -62,11 +62,14 @@ export default function DeployMissionDialog(
   function getLaunchMissionButtonText(): [boolean, string] {
     const selectedAgents = rowSelectionModel.length
     const requiredAgents = requiredSurvivingAgentsForSuccess(props.missionSite)
-    if (_.isUndefined(assets)) {
-      return [false, `ERROR: Assets not loaded`]
+
+    if (!gameSession.isLoaded()) {
+      return [false, `Game is not loaded`]
+    } else if (gameSession.isGameOver()) {
+      return [false, `Game is over`]
     } else if (selectedAgents === 0) {
       return [false, 'Select agents to launch mission']
-    } else if (selectedAgents > assets.CurrentTransportCapacity) {
+    } else if (selectedAgents > assets!.CurrentTransportCapacity) {
       return [false, `Not enough available transport capacity`]
     } else if (selectedAgents < requiredAgents) {
       return [
