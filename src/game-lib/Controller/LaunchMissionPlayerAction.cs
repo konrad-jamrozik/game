@@ -34,7 +34,6 @@ public class LaunchMissionPlayerAction : PlayerAction
         int missionId = state.NextMissionId;
         var mission = new Mission(missionId, _site, state.Timeline.CurrentTurn, _agents.Count);
 
-        // kja needs to be checked in frontend too
         Contract.Assert(_agents.All(agent => Ruleset.AgentCanSurvive(agent, mission)));
 
         state.Missions.Add(mission);
