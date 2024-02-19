@@ -9,6 +9,23 @@ namespace UfoGameLib.Api;
 
 public static class ApiUtils
 {
+    public static async Task<Results<T, BadRequest<string>>> TryProcessRoute<T>(
+        Func<Task<T>> routeFunc) where T: IResult
+    {
+        try
+        {
+            return await routeFunc();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            Results<T, BadRequest<string>> badRequest =
+                TypedResults.BadRequest(e.Message);
+
+            return badRequest;
+        }
+    }
+
     public static (int turnLimitVal, string? error) ParseTurnLimit(int? turnLimit, GameState? initialGameState)
     {
         int parsedTurnLimit = turnLimit ?? 30;

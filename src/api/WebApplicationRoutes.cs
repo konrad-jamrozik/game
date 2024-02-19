@@ -8,7 +8,7 @@ public class WebApplicationRoutes
     public void Register(WebApplication app)
     {
         // kja need to prevent Debug.Assert from killing the server
-        https://learn.microsoft.com/en-us/dotnet/api/system.diagnostics.debug.assert?view=net-8.0
+        // https://learn.microsoft.com/en-us/dotnet/api/system.diagnostics.debug.assert?view=net-8.0
 
         app.MapGet("/helloCoinFlip", HelloCoinFlip)
             .WithTags("API");

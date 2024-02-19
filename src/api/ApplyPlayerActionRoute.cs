@@ -13,16 +13,21 @@ using ApplyPlayerActionResponse = Results<
 
 public static class ApplyPlayerActionRoute
 {
-    public static async Task<ApplyPlayerActionResponse>
+    public static async Task<IResult>
         ApplyPlayerAction(HttpRequest req)
     {
-        Console.Out.WriteLine("Invoked ApplyPlayerAction!");
+        async Task<ApplyPlayerActionResponse> RouteFunc()
+        {
+            await Console.Out.WriteLineAsync("Invoked ApplyPlayerAction!");
 
-        (ApplyPlayerActionRequestBody? body, string? error) = await ParseGameApplyPlayerActionBody(req);
-        if (error != null)
-            return TypedResults.BadRequest(error);
+            (ApplyPlayerActionRequestBody? body, string? error) = await ParseGameApplyPlayerActionBody(req);
+            if (error != null)
+                return TypedResults.BadRequest(error);
 
-        return ApplyPlayerActionInternal(body!.PlayerAction, body.GameState);
+            return ApplyPlayerActionInternal(body!.PlayerAction, body.GameState);
+        }
+
+        return await ApiUtils.TryProcessRoute(RouteFunc);
     }
 
     private static ApplyPlayerActionResponse ApplyPlayerActionInternal(
