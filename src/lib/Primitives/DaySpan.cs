@@ -1,5 +1,4 @@
-﻿using System;
-using Lib.Contracts;
+﻿using Lib.Contracts;
 
 namespace Lib.Primitives;
 

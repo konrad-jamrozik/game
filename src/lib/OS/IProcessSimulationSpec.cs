@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace Lib.OS;
+﻿namespace Lib.OS;
 
 public interface IProcessSimulationSpec
 {

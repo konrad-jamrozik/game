@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Lib.Primitives;
+﻿namespace Lib.Primitives;
 
 public class SimulatedTimeline : ITimeline
 {

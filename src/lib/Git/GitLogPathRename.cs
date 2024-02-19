@@ -1,6 +1,4 @@
-﻿using System.Linq;
-
-namespace Lib.Git;
+﻿namespace Lib.Git;
 
 public partial record GitLogPath
 {

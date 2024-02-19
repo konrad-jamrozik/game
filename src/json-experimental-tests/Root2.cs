@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 namespace JsonExperimental.Tests;
 
 internal class Root2 : IRoot

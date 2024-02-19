@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-
-namespace Lib.OS;
+﻿namespace Lib.OS;
 
 public record SimulatedOS(params IProcessSimulationSpec[] ProcessesSimulationsSpecs) : IOperatingSystem
 {

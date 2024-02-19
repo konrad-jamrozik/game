@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace Lib.Primitives;
+﻿namespace Lib.Primitives;
 
 public static class ListExtensions
 {

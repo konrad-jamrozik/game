@@ -1,5 +1,4 @@
-﻿using System;
-using System.Text.Json;
+﻿using System.Text.Json;
 // For explanation of this alias, please see comment on Wikitools.Lib.Json.JsonElementDiff.Value.
 using DiffObject = System.Object;
 

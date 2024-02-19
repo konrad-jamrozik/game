@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using Lib.Git;
+﻿using Lib.Git;
 using Lib.OS;
 using Lib.Primitives;
 using Xunit;

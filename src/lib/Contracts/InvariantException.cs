@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Lib.Contracts;
+﻿namespace Lib.Contracts;
 
 public class InvariantException : Exception
 {

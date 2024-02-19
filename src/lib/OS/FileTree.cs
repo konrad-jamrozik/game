@@ -1,8 +1,4 @@
-﻿using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-
-namespace Lib.OS;
+﻿namespace Lib.OS;
 
 public record FileTree(IFileSystem FileSystem, string Path)
 {

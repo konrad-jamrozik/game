@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-
-namespace Lib.Primitives;
+﻿namespace Lib.Primitives;
 
 public class TextLines
 {
