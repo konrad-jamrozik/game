@@ -11,6 +11,7 @@ import { Fragment, useState } from 'react'
 import { useGameSessionContext, type GameSession } from '../../lib/GameSession'
 import type { MissionSite } from '../../lib/GameState'
 import { getSx } from '../../lib/rendering'
+import { requiredSurvivingAgentsForSuccess } from '../../lib/ruleset'
 import { AgentsDataGrid } from '../AgentsDataGrid/AgentsDataGrid'
 import { Label } from '../Label'
 
@@ -28,6 +29,16 @@ export default function DeployMissionDialog(
     useState<GridRowSelectionModel>([])
 
   function handleClickOpen(): void {
+    if (gameSession.isLoaded()) {
+      const stillAvailableAgents: GridRowId[] = _.filter(
+        rowSelectionModel,
+        (id: GridRowId) => _.some(assets.Agents, (agent) => agent.Id === id),
+      )
+      if (stillAvailableAgents.length < rowSelectionModel.length) {
+        setRowSelectionModel(stillAvailableAgents)
+      }
+    }
+
     setOpen(true)
   }
 
@@ -41,13 +52,29 @@ export default function DeployMissionDialog(
       (id: GridRowId) => id as number,
     )
 
-    // kja check if enough agents to win mission
-    // kja prevent from selection any agent that cannot survive the mission
     await gameSession.applyPlayerAction(
       'launchMission',
       selectedAgentsIds,
       props.missionSite.Id,
     )
+  }
+
+  function getLaunchMissionButtonText(): [boolean, string] {
+    const selectedAgents = rowSelectionModel.length
+    const requiredAgents = requiredSurvivingAgentsForSuccess(props.missionSite)
+    if (selectedAgents === 0) {
+      return [false, 'Select agents to launch mission']
+    } else if (selectedAgents > assets.CurrentTransportCapacity) {
+      return [false, `Not enough available transport capacity`]
+    } else if (selectedAgents < requiredAgents) {
+      return [
+        false,
+        `Not enough agents to succeed. Need at least ${requiredAgents}`,
+      ]
+      // eslint-disable-next-line no-else-return
+    } else {
+      return [true, `Launch mission with ${selectedAgents} agents`]
+    }
   }
 
   return (
@@ -90,6 +117,14 @@ export default function DeployMissionDialog(
               <Label>{props.missionSite.Difficulty}</Label>
             </Grid>
             <Grid xs={8}>
+              <Label>Required agents</Label>
+            </Grid>
+            <Grid xs={4}>
+              <Label>
+                {requiredSurvivingAgentsForSuccess(props.missionSite)}
+              </Label>
+            </Grid>
+            <Grid xs={8}>
               <Label sx={getSx('MaxTransportCapacity')}>
                 Max transport capacity
               </Label>
@@ -116,16 +151,9 @@ export default function DeployMissionDialog(
               <Button
                 variant="contained"
                 onClick={handleLaunchMission}
-                disabled={
-                  rowSelectionModel.length === 0 ||
-                  rowSelectionModel.length > assets.CurrentTransportCapacity
-                }
+                disabled={!getLaunchMissionButtonText()[0]}
               >
-                {rowSelectionModel.length === 0
-                  ? 'Select agents to launch mission'
-                  : rowSelectionModel.length > assets.CurrentTransportCapacity
-                    ? `Not enough available transport capacity`
-                    : `Launch mission with ${rowSelectionModel.length} agents`}
+                {getLaunchMissionButtonText()[1]}
               </Button>
             </Grid>
           </Grid>

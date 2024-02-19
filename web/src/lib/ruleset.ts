@@ -92,3 +92,12 @@ export function getSurvivalChance(
 export function canSurvive(agent: Agent, missionSite: MissionSite): boolean {
   return getSurvivalChance(agent, missionSite) > 0
 }
+
+export const baseMissionSiteDifficulty = 30
+
+export function requiredSurvivingAgentsForSuccess(site: MissionSite): number {
+  const reqAgentsForSuccess =
+    1 + Math.floor((site.Difficulty - baseMissionSiteDifficulty) / 30)
+  console.assert(reqAgentsForSuccess >= 1)
+  return reqAgentsForSuccess
+}

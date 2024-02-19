@@ -149,9 +149,9 @@ public static class Ruleset
 
     public static int RequiredSurvivingAgentsForSuccess(MissionSite site)
     {
-        int result = 1 + (site.Difficulty - BaseMissionSiteDifficulty) / 30;
-        Contract.Assert(result >= 1);
-        return result;
+        int reqAgentsForSuccess = 1 + (site.Difficulty - BaseMissionSiteDifficulty) / 30;
+        Contract.Assert(reqAgentsForSuccess >= 1);
+        return reqAgentsForSuccess;
     }
 
     public static int ComputeFundingChange(int successfulMissions, int failedMissions, int expiredMissionSites)

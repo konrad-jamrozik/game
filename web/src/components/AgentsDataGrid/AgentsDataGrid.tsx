@@ -84,6 +84,7 @@ export function AgentsDataGrid(props: AgentsDataGridProps): React.JSX.Element {
         apiRef={apiRef}
         rows={rows}
         columns={columns}
+        rowSelectionModel={props.rowSelectionModel!}
         initialState={{
           pagination: {
             paginationModel: {
