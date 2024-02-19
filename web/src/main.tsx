@@ -13,14 +13,15 @@ import type { GameSessionData } from './lib/GameSession.ts'
 import theme from './theme.tsx'
 
 const rootElement = document.querySelector('#root')
-export const storedGameSessionData: GameSessionData | undefined =
-  loadDataFromLocalStorage()
+
 if (rootElement) {
   ReactDOM.createRoot(rootElement).render(
     <React.StrictMode>
       <ThemeProvider theme={theme}>
         <CssBaseline enableColorScheme />
-        <GameSessionProvider>
+        <GameSessionProvider
+          storedGameSessionData={loadStoredSessionDataFromLocalStorage()}
+        >
           <App />
         </GameSessionProvider>
       </ThemeProvider>
@@ -32,7 +33,7 @@ if (rootElement) {
   )
 }
 
-function loadDataFromLocalStorage(): GameSessionData | undefined {
+function loadStoredSessionDataFromLocalStorage(): GameSessionData | undefined {
   const storedGameSessionDataString: string | null =
     localStorage.getItem('gameSessionData')
   if (!_.isNil(storedGameSessionDataString)) {

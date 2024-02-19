@@ -30,8 +30,8 @@ const lineChartAspectRatio = '1.5'
 const lineChartMaxWidth = '700px'
 
 // kja 2 next frontend feature work:
-// - add local storage to retain game state between tab closings
-//   - then add intro popup and game won popup
+// - add intro popup and game end popup
+//   - intro: when local storage has no data and the browser window is loaded.
 // - snackbar + alert with mission results on next turn:
 // https://mui.com/material-ui/react-snackbar/#use-with-alerts
 // should not autohide by default: see autoHideDuration:

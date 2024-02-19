@@ -1,18 +1,24 @@
 import { createContext } from 'react'
-import { type GameSession, useGameSession } from '../lib/GameSession'
+import {
+  type GameSession,
+  useGameSession,
+  type GameSessionData,
+} from '../lib/GameSession'
 
 // https://react-typescript-cheatsheet.netlify.app/docs/basic/getting-started/context
 export const GameSessionContext = createContext<GameSession>(undefined!)
 
-export function GameSessionProvider({
-  children,
-}: {
+export type GameSessionProviderProps = {
   children: React.ReactNode
-}): React.JSX.Element {
-  const gameSession = useGameSession()
+  storedGameSessionData: GameSessionData | undefined
+}
+export function GameSessionProvider(
+  props: GameSessionProviderProps,
+): React.JSX.Element {
+  const gameSession = useGameSession(props.storedGameSessionData)
   return (
     <GameSessionContext.Provider value={gameSession}>
-      {children}
+      {props.children}
     </GameSessionContext.Provider>
   )
 }

@@ -3,7 +3,6 @@
 import _ from 'lodash'
 import { useContext, useState } from 'react'
 import { GameSessionContext } from '../components/GameSessionProvider'
-import { storedGameSessionData } from '../main'
 import { initialTurn, type GameState } from './GameState'
 import { callAdvanceTurnsApi } from './api/advanceTurnsApi'
 import {
@@ -17,7 +16,9 @@ export function useGameSessionContext(): GameSession {
   return useContext(GameSessionContext)
 }
 
-export function useGameSession(): GameSession {
+export function useGameSession(
+  storedGameSessionData?: GameSessionData | undefined,
+): GameSession {
   const [data, setData] = useState<GameSessionData>(
     storedGameSessionData ?? initialGameSessionData,
   )
