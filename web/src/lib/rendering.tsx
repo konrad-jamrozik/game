@@ -27,7 +27,10 @@ export function renderAssetNameCell(
   let displayedValue: string = assetName
 
   if (params.value === 'MaxTransportCapacity') {
-    displayedValue = 'Transp. cap.'
+    displayedValue = 'Max Tr. cap.'
+  }
+  if (params.value === 'CurrentTransportCapacity') {
+    displayedValue = 'Curr. Tr. cap.'
   }
 
   return <Typography sx={getSx(assetName)}>{displayedValue}</Typography>
@@ -53,16 +56,18 @@ export const assetsColors: { [key in keyof Assets]: string } = {
   Funding: 'GoldenRod',
   Intel: agentStateColors.GatheringIntel,
   Support: 'YellowGreen',
+  CurrentTransportCapacity: agentStateColors.InTransit,
   MaxTransportCapacity: agentStateColors.InTransit,
   Agents: agentStateColors.Available,
 }
 
-type MiscValues = 'Cost'
+type MiscValues = 'Cost' | 'Difficulty'
 
 type AllStylableValues = keyof Assets | AgentState | MiscValues
 
 export const miscColors: { [key in MiscValues]: string } = {
   Cost: 'red',
+  Difficulty: 'red',
 }
 
 const allColors: { [key in AllStylableValues]: string } = {

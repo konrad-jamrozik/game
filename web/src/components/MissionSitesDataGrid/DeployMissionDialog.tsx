@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import Button from '@mui/material/Button'
 import Dialog from '@mui/material/Dialog'
 import DialogActions from '@mui/material/DialogActions'
@@ -9,9 +10,10 @@ import _ from 'lodash'
 import { Fragment, useState } from 'react'
 import { useGameSessionContext, type GameSession } from '../../lib/GameSession'
 import type { MissionSite } from '../../lib/GameState'
+import { getSx } from '../../lib/rendering'
 import { AgentsDataGrid } from '../AgentsDataGrid/AgentsDataGrid'
+import { Label } from '../Label'
 
-// kja rename to launch mission
 export type DeployMissionDialogProps = {
   readonly missionSite: MissionSite
 }
@@ -21,6 +23,7 @@ export default function DeployMissionDialog(
   props: DeployMissionDialogProps,
 ): React.JSX.Element {
   const gameSession: GameSession = useGameSessionContext()
+  const assets = gameSession.getCurrentState().Assets
   const [open, setOpen] = useState<boolean>(false)
   const [rowSelectionModel, setRowSelectionModel] =
     useState<GridRowSelectionModel>([])
@@ -74,6 +77,35 @@ export default function DeployMissionDialog(
             spacing={1}
             // bgcolor="rgba(100,100,100,0.5)"
           >
+            <Grid xs={8}>
+              <Label>Mission site ID</Label>
+            </Grid>
+            <Grid xs={4}>
+              <Label>{props.missionSite.Id}</Label>
+            </Grid>
+            <Grid xs={8}>
+              <Label sx={getSx('Difficulty')}>Mission site difficulty</Label>
+            </Grid>
+            <Grid xs={4}>
+              <Label>{props.missionSite.Difficulty}</Label>
+            </Grid>
+            <Grid xs={8}>
+              <Label sx={getSx('MaxTransportCapacity')}>
+                Max transport capacity
+              </Label>
+            </Grid>
+            <Grid xs={4}>
+              <Label>{assets.MaxTransportCapacity}</Label>
+            </Grid>
+            <Grid xs={8}>
+              <Label sx={getSx('CurrentTransportCapacity')}>
+                Current transport capacity
+              </Label>
+            </Grid>
+            <Grid xs={4}>
+              <Label>{assets.CurrentTransportCapacity}</Label>
+            </Grid>
+
             <Grid xs={12} display="flex" justifyContent="center">
               <AgentsDataGrid
                 deploymentDisplay={true}
@@ -86,15 +118,13 @@ export default function DeployMissionDialog(
                 onClick={handleLaunchMission}
                 disabled={
                   rowSelectionModel.length === 0 ||
-                  rowSelectionModel.length >
-                    gameSession.getCurrentState().Assets.MaxTransportCapacity
+                  rowSelectionModel.length > assets.CurrentTransportCapacity
                 }
               >
                 {rowSelectionModel.length === 0
                   ? 'Select agents to launch mission'
-                  : rowSelectionModel.length >
-                      gameSession.getCurrentState().Assets.MaxTransportCapacity
-                    ? `Too many agents selected`
+                  : rowSelectionModel.length > assets.CurrentTransportCapacity
+                    ? `Not enough available transport capacity`
                     : `Launch mission with ${rowSelectionModel.length} agents`}
               </Button>
             </Grid>

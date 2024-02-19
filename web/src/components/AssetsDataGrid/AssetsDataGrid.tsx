@@ -16,7 +16,7 @@ export type AssetsDataGridProps = {
   readonly assets: Assets | undefined
 }
 
-const tableHeight = 310
+const tableHeight = 330
 
 export function AssetsDataGrid(props: AssetsDataGridProps): React.JSX.Element {
   const rows: AssetRow[] = getRows(props.assets)
@@ -26,17 +26,14 @@ export function AssetsDataGrid(props: AssetsDataGridProps): React.JSX.Element {
       sx={{
         height: tableHeight,
         minWidth: defaultComponentMinWidth,
-        maxWidth: 292,
+        maxWidth: 302,
         width: '100%',
       }}
     >
       <DataGrid
         rows={rows}
         getRowId={(row: AssetRow) => row.name}
-        columns={columns(
-          props.assets?.Money,
-          props.assets?.MaxTransportCapacity,
-        )}
+        columns={columns}
         disableRowSelectionOnClick
         onRowSelectionModelChange={onRowSelectionModelChange}
         rowHeight={30}
@@ -62,49 +59,39 @@ export type AssetRow = {
   isManageable?: boolean
 }
 
-function columns(money?: number, maxTransportCapacity?: number): GridColDef[] {
-  return [
-    {
-      field: 'name',
-      headerName: 'Asset',
-      disableColumnMenu: true,
-      sortable: false,
-      width: 100,
-      renderCell: renderAssetNameCell,
-    },
-    {
-      field: 'value',
-      headerName: 'Value',
-      disableColumnMenu: true,
-      width: 90,
-    },
-    {
-      field: 'isManageable',
-      disableColumnMenu: true,
-      sortable: false,
-      headerName: '',
-      width: 100,
-      renderCell: (
-        params: GridRenderCellParams<AssetRow, boolean | undefined>,
-      ): React.JSX.Element | undefined => {
-        const isManageable = Boolean(params.value)
-        const row: AssetRow = params.row
+const columns: GridColDef[] = [
+  {
+    field: 'name',
+    headerName: 'Asset',
+    disableColumnMenu: true,
+    sortable: false,
+    width: 110,
+    renderCell: renderAssetNameCell,
+  },
+  {
+    field: 'value',
+    headerName: 'Value',
+    disableColumnMenu: true,
+    width: 90,
+  },
+  {
+    field: 'isManageable',
+    disableColumnMenu: true,
+    sortable: false,
+    headerName: '',
+    width: 100,
+    renderCell: (
+      params: GridRenderCellParams<AssetRow, boolean | undefined>,
+    ): React.JSX.Element | undefined => {
+      const isManageable = Boolean(params.value)
+      const row: AssetRow = params.row
 
-        // Note: we can assume here that money and maxTransportCapacity are defined
-        // because if we are able to display this dialog, it means the button for it
-        // was available to click, which means there is at least one game state which
-        // has these values defined.
-        return isManageable ? (
-          <TransportCapMgmtDialog
-            rowName={row.name}
-            money={money!}
-            maxTransportCapacity={maxTransportCapacity!}
-          />
-        ) : undefined
-      },
+      return isManageable ? (
+        <TransportCapMgmtDialog rowName={row.name} />
+      ) : undefined
     },
-  ]
-}
+  },
+]
 
 function getRows(assets?: Assets): AssetRow[] {
   return !_.isUndefined(assets)
@@ -117,6 +104,10 @@ function getRows(assets?: Assets): AssetRow[] {
           name: 'MaxTransportCapacity',
           value: assets.MaxTransportCapacity,
           isManageable: true,
+        },
+        {
+          name: 'CurrentTransportCapacity',
+          value: assets.CurrentTransportCapacity,
         },
         { name: 'Agents', value: assets.Agents.length },
       ]

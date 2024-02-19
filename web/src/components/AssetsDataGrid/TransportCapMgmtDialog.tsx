@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import Button from '@mui/material/Button'
 import Dialog from '@mui/material/Dialog'
 import DialogActions from '@mui/material/DialogActions'
@@ -12,14 +13,13 @@ import { Label } from '../Label'
 
 export type TransportCapMgmtDialogProps = {
   readonly rowName: string
-  readonly money: number
-  readonly maxTransportCapacity: number
 }
 
 export default function TransportCapMgmtDialog(
   props: TransportCapMgmtDialogProps,
 ): React.JSX.Element {
   const gameSession: GameSession = useGameSessionContext()
+  const assets = gameSession.getCurrentState().Assets
   const [open, setOpen] = useState<boolean>(false)
 
   function handleClickOpen(): void {
@@ -73,13 +73,21 @@ export default function TransportCapMgmtDialog(
               <Label sx={getSx('Money')}>Money</Label>
             </Grid>
             <Grid xs={4}>
-              <Label>{props.money}</Label>
+              <Label>{assets.Money}</Label>
             </Grid>
             <Grid xs={8}>
-              <Label sx={getSx('MaxTransportCapacity')}>Current capacity</Label>
+              <Label sx={getSx('MaxTransportCapacity')}>Max capacity</Label>
             </Grid>
             <Grid xs={4}>
-              <Label>{props.maxTransportCapacity}</Label>
+              <Label>{assets.MaxTransportCapacity}</Label>
+            </Grid>
+            <Grid xs={8}>
+              <Label sx={getSx('CurrentTransportCapacity')}>
+                Current capacity
+              </Label>
+            </Grid>
+            <Grid xs={4}>
+              <Label>{assets.CurrentTransportCapacity}</Label>
             </Grid>
             <Grid xs={8}>
               <Label sx={getSx('Cost')}>Capacity increase cost</Label>

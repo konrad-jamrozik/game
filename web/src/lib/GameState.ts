@@ -26,6 +26,7 @@ export type Assets = {
   readonly Funding: number
   readonly Intel: number
   readonly Support: number
+  readonly CurrentTransportCapacity: number
   readonly MaxTransportCapacity: number
   readonly Agents: Agent[]
 }
