@@ -13,11 +13,10 @@ namespace UfoGameLib.Api;
 public class PlayerActionPayload(string action, int[]? ids, int? targetId)
 {
     // ReSharper disable MemberCanBePrivate.Global
-    // Reason for ReSharper disable: these fields are used by the deserializer.
+    // Reason for 'ReSharper disable MemberCanBePrivate.Global': these fields are used by the deserializer.
     public readonly string Action = action;
     public readonly int[]? Ids = ids;
     public readonly int? TargetId = targetId;
-    // ReSharper restore MemberCanBePrivate.Global
 
     /// <summary>
     /// This method translates the PlayerActionPayload to appropriate player action
@@ -29,15 +28,13 @@ public class PlayerActionPayload(string action, int[]? ids, int? targetId)
     /// </returns>
     public void Apply(GameSessionController controller)
     {
-        // https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/operators/patterns#property-pattern
-        // https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/operators/patterns#positional-pattern
-
-        Console.Out.WriteLine($"Called PlayerActionsPayload.Apply(). Action: {Action}");
         Action apply = TranslatePlayerActionToControllerAction(controller);
         apply();
     }
 
     private Action TranslatePlayerActionToControllerAction(GameSessionController controller)
+        // https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/operators/patterns#property-pattern
+        // https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/operators/patterns#positional-pattern
         => Action switch
         {
             "AdvanceTime" => controller.AdvanceTime,
@@ -49,6 +46,6 @@ public class PlayerActionPayload(string action, int[]? ids, int? targetId)
             "SendAgentsToTraining" => () => controller.TurnController.SendAgentsToTraining(Ids!),
             "RecallAgents" => () => controller.TurnController.RecallAgents(Ids!),
             "LaunchMission" => () => controller.TurnController.LaunchMission(TargetId!.Value, Ids!),
-            _ => () => throw new InvalidOperationException($"Unsupported player action of '{Action}'")
+            _ => () => throw new ArgumentException($"Unsupported player action of '{Action}'")
         };
 }
