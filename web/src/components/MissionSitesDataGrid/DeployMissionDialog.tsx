@@ -16,7 +16,7 @@ import { AgentsDataGrid } from '../AgentsDataGrid/AgentsDataGrid'
 import { Label } from '../Label'
 
 export type DeployMissionDialogProps = {
-  readonly missionSite: MissionSite
+  readonly missionSite: MissionSite | undefined
 }
 
 export default function DeployMissionDialog(
@@ -55,34 +55,41 @@ export default function DeployMissionDialog(
     await gameSession.applyPlayerAction(
       'launchMission',
       selectedAgentsIds,
-      props.missionSite.Id,
+      props.missionSite!.Id,
     )
   }
 
   function getLaunchMissionButtonText(): [boolean, string] {
+    if (_.isUndefined(props.missionSite)) {
+      return [false, `ERROR: missionSite is undefined`]
+    }
+    if (!gameSession.isLoaded()) {
+      return [false, `Game is not loaded`]
+    }
+    if (gameSession.isGameOver()) {
+      return [false, `Game is over`]
+    }
+
     const selectedAgents = rowSelectionModel.length
     const requiredAgents = requiredSurvivingAgentsForSuccess(props.missionSite)
 
-    if (!gameSession.isLoaded()) {
-      return [false, `Game is not loaded`]
-    } else if (gameSession.isGameOver()) {
-      return [false, `Game is over`]
-    } else if (selectedAgents === 0) {
+    if (selectedAgents === 0) {
       return [false, 'Select agents to launch mission']
-    } else if (selectedAgents > assets!.CurrentTransportCapacity) {
+    }
+    if (selectedAgents > assets!.CurrentTransportCapacity) {
       return [
         false,
         `Not enough capacity: ${selectedAgents} / ${assets!.CurrentTransportCapacity}`,
       ]
-    } else if (selectedAgents < requiredAgents) {
+    }
+    if (selectedAgents < requiredAgents) {
       return [
         false,
         `Not enough agents to succeed. Need at least ${requiredAgents}`,
       ]
-      // eslint-disable-next-line no-else-return
-    } else {
-      return [true, `Launch mission with ${selectedAgents} agents`]
     }
+
+    return [true, `Launch mission with ${selectedAgents} agents`]
   }
 
   return (
