@@ -1,7 +1,9 @@
+/* eslint-disable max-lines */
 /* eslint-disable @typescript-eslint/parameter-properties */
 import _ from 'lodash'
 import { useContext, useState } from 'react'
 import { GameSessionContext } from '../components/GameSessionProvider'
+import { storedGameSessionData } from '../main'
 import { initialTurn, type GameState } from './GameState'
 import { callAdvanceTurnsApi } from './api/advanceTurnsApi'
 import {
@@ -16,9 +18,12 @@ export function useGameSessionContext(): GameSession {
 }
 
 export function useGameSession(): GameSession {
-  const [data, setData] = useState<GameSessionData>(initialGameSessionData)
+  const [data, setData] = useState<GameSessionData>(
+    storedGameSessionData ?? initialGameSessionData,
+  )
   const [loading, setLoading] = useState<boolean>(false)
   const [error, setError] = useState<string>()
+
   return new GameSession(data, setData, loading, setLoading, error, setError)
 }
 
@@ -101,10 +106,13 @@ export class GameSession {
       0,
       -1,
     )
-    this.setData({
+    const newGameSessionData = {
       gameStates: previousTurnsGameStates,
       startOfCurrentTurnGameState: previousTurnsGameStates.at(-1),
-    })
+    }
+    // kja add abstraction fro always setting local storage together with setData
+    localStorage.setItem('gameSessionData', JSON.stringify(newGameSessionData))
+    this.setData(newGameSessionData)
   }
 
   public resetCurrentTurn(): void {
@@ -112,16 +120,19 @@ export class GameSession {
       0,
       -1,
     )
-    this.setData({
+    const newGameSessionData = {
       gameStates: [
         ...previousTurnsGameStates,
         this.data.startOfCurrentTurnGameState!,
       ],
       startOfCurrentTurnGameState: this.data.startOfCurrentTurnGameState,
-    })
+    }
+    localStorage.setItem('gameSessionData', JSON.stringify(newGameSessionData))
+    this.setData(newGameSessionData)
   }
 
   public wipe(): void {
+    localStorage.removeItem('gameSessionData')
     this.setData(initialGameSessionData)
   }
 
@@ -247,11 +258,14 @@ export class GameSession {
       gameStates.at(-1)?.Timeline.CurrentTurn
         ? gameStates.at(-1)
         : this.data.startOfCurrentTurnGameState
-    this.setData({
+    const newData: GameSessionData = {
       ...this.data,
       gameStates,
       startOfCurrentTurnGameState,
-    })
+    }
+
+    localStorage.setItem('gameSessionData', JSON.stringify(newData))
+    this.setData(newData)
     this.setLoading(false)
     this.setError('')
   }
@@ -259,7 +273,7 @@ export class GameSession {
 
 export type GameResult = 'won' | 'lost' | 'undecided'
 
-type GameSessionData = {
+export type GameSessionData = {
   readonly gameStates: readonly GameState[]
   readonly startOfCurrentTurnGameState: GameState | undefined
 }

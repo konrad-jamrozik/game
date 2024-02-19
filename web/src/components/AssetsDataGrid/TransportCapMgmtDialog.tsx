@@ -18,7 +18,7 @@ export default function TransportCapMgmtDialog(
   props: TransportCapMgmtDialogProps,
 ): React.JSX.Element {
   const gameSession: GameSession = useGameSessionContext()
-  const assets = gameSession.getCurrentState().Assets
+  const assets = gameSession.getCurrentStateUnsafe()?.Assets
   const [open, setOpen] = useState<boolean>(false)
 
   function handleClickOpen(): void {
@@ -72,13 +72,13 @@ export default function TransportCapMgmtDialog(
               <Label sx={getSx('Money')}>Money</Label>
             </Grid>
             <Grid xs={4}>
-              <Label>{assets.Money}</Label>
+              <Label>{assets?.Money}</Label>
             </Grid>
             <Grid xs={8}>
               <Label sx={getSx('MaxTransportCapacity')}>Max capacity</Label>
             </Grid>
             <Grid xs={4}>
-              <Label>{assets.MaxTransportCapacity}</Label>
+              <Label>{assets?.MaxTransportCapacity}</Label>
             </Grid>
             <Grid xs={8}>
               <Label sx={getSx('CurrentTransportCapacity')}>
@@ -86,7 +86,7 @@ export default function TransportCapMgmtDialog(
               </Label>
             </Grid>
             <Grid xs={4}>
-              <Label>{assets.CurrentTransportCapacity}</Label>
+              <Label>{assets?.CurrentTransportCapacity}</Label>
             </Grid>
             <Grid xs={8}>
               <Label sx={getSx('Cost')}>Capacity increase cost</Label>

@@ -23,7 +23,7 @@ export default function DeployMissionDialog(
   props: DeployMissionDialogProps,
 ): React.JSX.Element {
   const gameSession: GameSession = useGameSessionContext()
-  const assets = gameSession.getCurrentState().Assets
+  const assets = gameSession.getCurrentStateUnsafe()?.Assets
   const [open, setOpen] = useState<boolean>(false)
   const [rowSelectionModel, setRowSelectionModel] =
     useState<GridRowSelectionModel>([])
@@ -32,7 +32,7 @@ export default function DeployMissionDialog(
     if (gameSession.isLoaded()) {
       const stillAvailableAgents: GridRowId[] = _.filter(
         rowSelectionModel,
-        (id: GridRowId) => _.some(assets.Agents, (agent) => agent.Id === id),
+        (id: GridRowId) => _.some(assets?.Agents, (agent) => agent.Id === id),
       )
       if (stillAvailableAgents.length < rowSelectionModel.length) {
         setRowSelectionModel(stillAvailableAgents)
@@ -62,7 +62,9 @@ export default function DeployMissionDialog(
   function getLaunchMissionButtonText(): [boolean, string] {
     const selectedAgents = rowSelectionModel.length
     const requiredAgents = requiredSurvivingAgentsForSuccess(props.missionSite)
-    if (selectedAgents === 0) {
+    if (_.isUndefined(assets)) {
+      return [false, `ERROR: Assets not loaded`]
+    } else if (selectedAgents === 0) {
       return [false, 'Select agents to launch mission']
     } else if (selectedAgents > assets.CurrentTransportCapacity) {
       return [false, `Not enough available transport capacity`]
@@ -132,7 +134,7 @@ export default function DeployMissionDialog(
               </Label>
             </Grid>
             <Grid xs={4}>
-              <Label>{assets.MaxTransportCapacity}</Label>
+              <Label>{assets?.MaxTransportCapacity}</Label>
             </Grid>
             <Grid xs={8}>
               <Label sx={getSx('CurrentTransportCapacity')}>
@@ -140,7 +142,7 @@ export default function DeployMissionDialog(
               </Label>
             </Grid>
             <Grid xs={4}>
-              <Label>{assets.CurrentTransportCapacity}</Label>
+              <Label>{assets?.CurrentTransportCapacity}</Label>
             </Grid>
 
             <Grid xs={12} display="flex" justifyContent="center">
