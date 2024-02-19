@@ -118,12 +118,11 @@ export function AgentsDataGrid(props: AgentsDataGridProps): React.JSX.Element {
               }
             : {}
         }
-        pageSizeOptions={[25, 50, 100]}
+        pageSizeOptions={[25]}
         checkboxSelection
         isRowSelectable={(params: GridRowParams<AgentRow>) =>
           isAgentRowSelectable(params, action, gameSession)
         }
-        hideFooterSelectedRowCount={deploymentDisplay}
         {...(props.rowSelectionModel ?? {})}
         onRowSelectionModelChange={onRowSelectionModelChange}
         rowHeight={30}
