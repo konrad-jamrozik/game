@@ -19,10 +19,7 @@ public static class ApiUtils
         catch (Exception e)
         {
             Console.WriteLine(e);
-            Results<T, BadRequest<string>> badRequest =
-                TypedResults.BadRequest(e.Message);
-
-            return badRequest;
+            return TypedResults.BadRequest(e.Message);
         }
     }
 

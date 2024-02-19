@@ -13,16 +13,16 @@ using ApplyPlayerActionResponse = Results<
 
 public static class ApplyPlayerActionRoute
 {
-    public static async Task<IResult>
+    public static async Task<ApplyPlayerActionResponse>
         ApplyPlayerAction(HttpRequest req)
     {
-        async Task<ApplyPlayerActionResponse> RouteFunc()
+        async Task<JsonHttpResult<GameState>> RouteFunc()
         {
             await Console.Out.WriteLineAsync("Invoked ApplyPlayerAction!");
 
             (ApplyPlayerActionRequestBody? body, string? error) = await ParseGameApplyPlayerActionBody(req);
             if (error != null)
-                return TypedResults.BadRequest(error);
+                throw new ArgumentException(error);
 
             return ApplyPlayerActionInternal(body!.PlayerAction, body.GameState);
         }
@@ -30,7 +30,7 @@ public static class ApplyPlayerActionRoute
         return await ApiUtils.TryProcessRoute(RouteFunc);
     }
 
-    private static ApplyPlayerActionResponse ApplyPlayerActionInternal(
+    private static JsonHttpResult<GameState> ApplyPlayerActionInternal(
         PlayerActionPayload playerAction,
         GameState? gameState)
     {
@@ -53,7 +53,7 @@ public static class ApplyPlayerActionRoute
             // hence we just return gameSession.CurrentGameState.
         }
 
-        ApplyPlayerActionResponse result =
+        JsonHttpResult<GameState> result =
             ApiUtils.ToJsonHttpResult(gameSession.CurrentGameState);
         return result;
     }
