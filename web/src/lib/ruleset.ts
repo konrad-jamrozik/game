@@ -61,3 +61,21 @@ export function canBeSentOnMission(agent: Agent): boolean {
   const validAgentStates: AgentState[] = ['Available', 'Training']
   return _.includes(validAgentStates, agent.CurrentState)
 }
+
+export const minSurvivalThreshold = 1
+export const agentSurvivalRollUpperBound = 100
+
+export function agentSurvivalThreshold(
+  agent: Agent,
+  difficulty: number,
+): number {
+  return _.max([difficulty - getSurvivalSkill(agent), minSurvivalThreshold])!
+}
+
+export function agentSurvivalChance(agent: Agent, difficulty: number): number {
+  return agentSurvivalRollUpperBound - agentSurvivalThreshold(agent, difficulty)
+}
+
+export function canSurvive(agent: Agent, missionSite: MissionSite): boolean {
+  return agentSurvivalChance(agent, missionSite.Difficulty) > 0
+}

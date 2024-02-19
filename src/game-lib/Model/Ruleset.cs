@@ -71,8 +71,8 @@ public static class Ruleset
     /**
      * As of 2/7/2024 the formula is:
      * 100%  + agent survival skill - mission difficulty
-     * AND no more than 100%
-     * AND no less than 1%
+     * AND no more than 99%
+     * AND no less than 0%
      *
      * BaseMissionSiteDifficulty is 30.
      *
@@ -80,9 +80,11 @@ public static class Ruleset
      * - An agent having the same survival skill as mission difficulty will always survive it.
      *   E.g. difficulty of 30 and skill of 30 will result in 100% + 30 - 30 = 100%
      * - Each point of survival skill below mission difficulty is 1% less chance of survival.
-     *   E.g. difficulty of 150 and skill of 135 will result in 100% + 135 - 150 = 235 - 150 = 85%
+     *   E.g. difficulty of 150 and skill of 135 will result in 100% + 135 - 150 = 100 - 15 = 85%
      * - A completely rookie agent has a 70% chance to survive the easiest mission.
-     *   100% + 0 - 30 + 0 = 70%.
+     *   100% + 0 - 30 = 70%.
+     * - A mission with difficulty of 100 will always kill a 0 skill agent:
+     *   100% + 0 - 100 = 0%.
      * - An agent, to "naturally" achieve at least 1% chance of surviving a mission, must have at least
      *   ((mission difficulty - 100) + 1) survival skill.
      *   E.g. a mission with difficulty of 125 will give only 1% chance of survival to any agent
@@ -101,7 +103,7 @@ public static class Ruleset
         => AgentCanSurvive(agent, mission.Site.Difficulty);
 
     public static bool AgentCanSurvive(Agent agent, int difficulty)
-        => AgentSurvivalThreshold(agent, difficulty) < AgentSurvivalRollUpperBound;
+        => AgentSurvivalChance(agent, difficulty) > 0;
 
     public static int AgentSurvivalThreshold(Agent agent, Mission mission)
         => AgentSurvivalThreshold(agent, mission.Site.Difficulty);
@@ -114,7 +116,7 @@ public static class Ruleset
     public static int AgentSurvivalSkill(Agent agent)
         => agent.TurnsInTraining * AgentTrainingCoefficient + SkillFromMissions(agent);
 
-    private static readonly int[] SkillFromEachFirstMission = { 18, 15, 12, 9, 6 };
+    private static readonly int[] SkillFromEachFirstMission = [18, 15, 12, 9, 6];
 
     private static readonly int SkillFromEachMissionBeyondFirstMissions = SkillFromEachFirstMission[^1];
 
