@@ -87,7 +87,7 @@ export function GameSessionControlPanel(
           <Grid>
             {delegateTurnsToAiButton(
               advanceTurns,
-              props.gameSession.loading,
+              props.gameSession,
               startTurn,
               targetTurn,
             )}
@@ -189,9 +189,7 @@ function advanceTimeBy1TurnButton(
     <Button
       variant="contained"
       onClick={async () => advanceTurns(1, false)}
-      disabled={
-        gameSession.loading || (gameSession.isGameOverUnsafe() ?? false) // kja 2 add to game session "disable actions"
-      }
+      disabled={!gameSession.canAdvanceTime()}
     >
       {'Advance 1 turn'}
     </Button>
@@ -209,9 +207,7 @@ function delegate1TurnToAiButton(
     <Button
       variant="outlined"
       onClick={async () => advanceTurns(1, true)}
-      disabled={
-        gameSession.loading || (gameSession.isGameOverUnsafe() ?? false)
-      }
+      disabled={!gameSession.canDelegateTurnsToAi()}
     >
       {'Delegate 1 turn to AI'}
     </Button>
@@ -223,7 +219,7 @@ function delegateTurnsToAiButton(
     turnsToAdvance?: number,
     delegateToAi?: boolean,
   ) => Promise<void>,
-  loading: boolean,
+  gameSession: GameSession,
   startTurn: number,
   targetTurn: number,
 ): React.JSX.Element {
@@ -231,7 +227,7 @@ function delegateTurnsToAiButton(
     <Button
       variant="outlined"
       onClick={async () => advanceTurns(undefined, true)}
-      disabled={loading || startTurn >= targetTurn}
+      disabled={!gameSession.canDelegateTurnsToAi() || startTurn >= targetTurn}
     >
       {`Delegate turns to AI:`}
     </Button>

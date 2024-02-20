@@ -137,19 +137,17 @@ export class GameSession {
   }
 
   public canHire1Agent(): boolean {
-    // kja need method for (isLoaded && !isGameOver). Like: isInProgress
     return (
-      this.isLoaded() &&
-      !this.isGameOver() &&
+      this.isInProgress() &&
+      !this.loading &&
       this.getCurrentState().Assets.Money >= agentHireCost
     )
   }
 
   public canBuy1TransportCap(): boolean {
-    // kja need method for (isLoaded && !isGameOver). Like: isInProgress
     return (
-      this.isLoaded() &&
-      !this.isGameOver() &&
+      this.isInProgress() &&
+      !this.loading &&
       this.getCurrentState().Assets.Money >= transportCapBuyingCost(1)
     )
   }
@@ -199,9 +197,21 @@ export class GameSession {
     )
   }
 
-  public isGameOverUnsafe(): boolean | undefined {
-    const lastGameState = this.getCurrentStateUnsafe()
-    return lastGameState?.IsGameOver
+  public canAdvanceTime(): boolean {
+    return !this.isLoaded() || (!this.isGameOver() && !this.loading)
+  }
+
+  public canDelegateTurnsToAi(): boolean {
+    return (
+      !this.isLoaded() ||
+      (!this.isGameOver() &&
+        !this.loading &&
+        !this.getPlayerMadeActionsInCurrentTurn())
+    )
+  }
+
+  public isInProgress(): boolean {
+    return this.isLoaded() && !this.isGameOver()
   }
 
   // kja rename to getCurrentGameState
