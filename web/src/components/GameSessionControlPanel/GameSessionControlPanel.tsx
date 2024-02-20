@@ -80,7 +80,7 @@ export function GameSessionControlPanel(
               {delegate1TurnToAiButton(advanceTurns, props.gameSession)}
             </Grid>
             <Grid xsOffset={'auto'}>
-              {wipeGameSessionButton(props.gameSession)}
+              {resetGameSessionButton(props.gameSession)}
             </Grid>
           </Grid>
 
@@ -266,19 +266,19 @@ function resetCurrentTurnButton(gameSession: GameSession): React.JSX.Element {
   )
 }
 
-function wipeGameSessionButton(gameSession: GameSession): React.JSX.Element {
-  function wipe(): void {
-    gameSession.wipe()
+function resetGameSessionButton(gameSession: GameSession): React.JSX.Element {
+  function resetGame(): void {
+    gameSession.resetGame()
   }
 
   return (
     <Button
       variant="outlined"
-      onClick={wipe}
+      onClick={resetGame}
       disabled={!gameSession.isLoaded() || gameSession.loading}
       color="error"
     >
-      {`Wipe game`}
+      {`Reset game`}
     </Button>
   )
 }

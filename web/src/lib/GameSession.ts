@@ -132,7 +132,7 @@ export class GameSession {
     this.setData(newGameSessionData)
   }
 
-  public wipe(): void {
+  public resetGame(): void {
     localStorage.removeItem('gameSessionData')
     this.setData(initialGameSessionData)
   }
