@@ -104,15 +104,18 @@ export function requiredSurvivingAgentsForSuccess(site: MissionSite): number {
 }
 
 export function canBeRecalled(agent: Agent): boolean {
-  return _.includes(['GatheringIntel', 'GatheringIncome'], agent.CurrentState)
+  const validStates: AgentState[] = ['GatheringIntel', 'GeneratingIncome']
+  return _.includes(validStates, agent.CurrentState)
 }
 
 export function canBeSacked(agent: Agent): boolean {
-  return _.includes(['Available', 'Training'], agent.CurrentState)
+  const validStates: AgentState[] = ['Available', 'Training']
+  return _.includes(validStates, agent.CurrentState)
 }
 
 export function canBeSentToTraining(agent: Agent): boolean {
-  return _.includes(['Available'], agent.CurrentState)
+  const validStates: AgentState[] = ['Available']
+  return _.includes(validStates, agent.CurrentState)
 }
 
 export const agentPlayerActionConditionMap: {
