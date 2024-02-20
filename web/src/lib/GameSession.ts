@@ -107,9 +107,9 @@ export class GameSession {
       0,
       -1,
     )
-    const newGameSessionData = {
+    const newGameSessionData: GameSessionData = {
       gameStates: previousTurnsGameStates,
-      startOfCurrentTurnGameState: previousTurnsGameStates.at(-1),
+      resetGameState: previousTurnsGameStates.at(-1),
     }
     // kja add abstraction fro always setting local storage together with setData
     localStorage.setItem('gameSessionData', JSON.stringify(newGameSessionData))
@@ -121,12 +121,9 @@ export class GameSession {
       0,
       -1,
     )
-    const newGameSessionData = {
-      gameStates: [
-        ...previousTurnsGameStates,
-        this.data.startOfCurrentTurnGameState!,
-      ],
-      startOfCurrentTurnGameState: this.data.startOfCurrentTurnGameState,
+    const newGameSessionData: GameSessionData = {
+      gameStates: [...previousTurnsGameStates, this.data.resetGameState!],
+      resetGameState: this.data.resetGameState,
     }
     localStorage.setItem('gameSessionData', JSON.stringify(newGameSessionData))
     this.setData(newGameSessionData)
@@ -193,7 +190,7 @@ export class GameSession {
     return (
       this.isLoaded() &&
       this.data.gameStates.at(-1)!.UpdateCount >
-        this.data.startOfCurrentTurnGameState!.UpdateCount
+        this.data.resetGameState!.UpdateCount
     )
   }
 
@@ -264,20 +261,20 @@ export class GameSession {
 
   private setGameSessionData(gameStates: GameState[]): void {
     GameSession.verify(gameStates)
-    // set startOfCurrentTurnGameState to the current state from gameStates
+    // set resetGameState to the current state from gameStates
     // only if it has a higher turn number.
     // If the current state from gameStates has the same current turn number
     // it means the current turn game state was modified (presumably by player action)
-    // and hence startOfCurrentTurnGameState should remain unchanged.
-    const startOfCurrentTurnGameState =
-      this.data.startOfCurrentTurnGameState?.Timeline.CurrentTurn !==
+    // and hence resetGameState should remain unchanged.
+    const resetGameState =
+      this.data.resetGameState?.Timeline.CurrentTurn !==
       gameStates.at(-1)?.Timeline.CurrentTurn
         ? gameStates.at(-1)
-        : this.data.startOfCurrentTurnGameState
+        : this.data.resetGameState
     const newData: GameSessionData = {
       ...this.data,
       gameStates,
-      startOfCurrentTurnGameState,
+      resetGameState,
     }
 
     localStorage.setItem('gameSessionData', JSON.stringify(newData))
@@ -291,12 +288,38 @@ export type GameResult = 'won' | 'lost' | 'undecided'
 
 export type GameSessionData = {
   readonly gameStates: readonly GameState[]
-  readonly startOfCurrentTurnGameState: GameState | undefined
+  readonly resetGameState: GameState | undefined
 }
 
 const initialGameSessionData: GameSessionData = {
   gameStates: [],
-  startOfCurrentTurnGameState: undefined,
+  /**
+   * The game state to which the current turn game state should be reset when
+   * the 'reset turn' button is clicked.
+   *
+   * When the game session is not loaded, reset game state is undefined.
+   * When the game session is loaded and the player never reverted or reset
+   * current turn, then resetGameState points to the game state at the beginning
+   * of current turn. This way resetting current turn will revert to the beginning
+   * of current turn, before the player made any player actions.
+   *
+   * After player reverts the turn, resetGameState points to the game state
+   * as it was at the end of the turn before the reverted turn, after all player actions.
+   *
+   * If one desires to reset the game to a the beginning of one of the previous turns,
+   * one could revert to the turn before that and advance turn.
+   *
+   * Example:
+   * Player is at turn 9. Player made player action of 'hire agent'; and then advanced time by 1 turn to turn 10.
+   * Now resetGameState is at the beginning of turn 10. If now player makes a player action, like 'launch mission',
+   * then resetting the turn to resetGameState will effectively move time backwards to the beginning of turn 10,
+   * before 'launch mission' player action was made.
+   *
+   * If now player reverts the turn to turn 9, then resetGameState will point to the game state at the end of turn 9,
+   * meaning after the player action of 'hire agent'. If the player would want to go back to the beginning of turn 9,
+   * then the player can revert to turn 8 and advance turn, to effectively end up at the beginning of turn 9.
+   */
+  resetGameState: undefined,
 }
 // Consider for later:
 // using a reducer to manage game sates:
