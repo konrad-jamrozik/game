@@ -62,21 +62,3 @@ export type Agent = {
   readonly TurnsInTraining: number
   readonly RecoversIn: number
 }
-
-// kja3: if I would like to have a list of GameState type keys
-// (recursively over all its children, including Assets keys etc.)
-// for compile-time exhaustiveness checking, I could leverage 'keyof' and 'Uncapitalize':
-// https://www.typescriptlang.org/docs/handbook/2/keyof-types.html
-// https://www.typescriptlang.org/docs/handbook/2/template-literal-types.html
-// https://www.typescriptlang.org/docs/handbook/2/mapped-types.html
-// And if I want to pick a subset:
-// https://www.typescriptlang.org/docs/handbook/2/indexed-access-types.html
-// One idea is to have a function that takes as input GameState
-// schema and requires defining a type for each each key.
-// Like "GameStateRenderData" or similar.
-// In pseudocode:
-// For each key in GameState, recursively, define a function
-// that takes as input an array of its value type (so for Money key it is going to be number[])
-// and returns RenderData type, which says how to compute it and metadata like label and color.
-// Note I said "array of its value type" because it is going to be an array of all its occurrences
-// over time.
