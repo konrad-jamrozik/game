@@ -123,13 +123,13 @@ export default function DeployMissionDialog(
               <Label>Mission site ID</Label>
             </Grid>
             <Grid xs={4}>
-              <Label>{props.missionSite.Id}</Label>
+              <Label>{props.missionSite?.Id}</Label>
             </Grid>
             <Grid xs={8}>
               <Label sx={getSx('Difficulty')}>Mission site difficulty</Label>
             </Grid>
             <Grid xs={4}>
-              <Label>{props.missionSite.Difficulty}</Label>
+              <Label>{props.missionSite?.Difficulty}</Label>
             </Grid>
             <Grid xs={8}>
               <Label sx={getSx('Difficulty')}>
@@ -138,7 +138,9 @@ export default function DeployMissionDialog(
             </Grid>
             <Grid xs={4}>
               <Label>
-                {requiredSurvivingAgentsForSuccess(props.missionSite)}
+                {!_.isUndefined(props.missionSite)
+                  ? requiredSurvivingAgentsForSuccess(props.missionSite)
+                  : undefined}
               </Label>
             </Grid>
             <Grid xs={8}>
