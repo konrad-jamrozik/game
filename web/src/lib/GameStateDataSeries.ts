@@ -23,7 +23,7 @@ export type GameStatsDataSeriesKey =
   | 'upkeep'
   | 'intel'
   | 'agents'
-  | 'inTraining'
+  | 'training'
   | 'generatingIncome'
   | 'gatheringIntel'
   | 'recovering'
@@ -100,7 +100,7 @@ export const allGameStatsDataSeriesByKey: AllStatsDataSeries = {
     label: 'Terminated agents',
     color: agentStateColors.Terminated,
   },
-  inTraining: {
+  training: {
     dataFunc: (gs) =>
       _.size(
         _.filter(
@@ -108,7 +108,7 @@ export const allGameStatsDataSeriesByKey: AllStatsDataSeries = {
           (agent) => agent.CurrentState === 'Training',
         ),
       ),
-    label: 'InTraining',
+    label: 'Training',
     color: agentStateColors.Training,
   },
   generatingIncome: {
@@ -241,7 +241,7 @@ export const intelStatsDataSeries: GameStateDataSeries[] = getDataSeries([
 
 export const agentStatsDataSeries: GameStateDataSeries[] = getDataSeries([
   'agents',
-  'inTraining',
+  'training',
   'generatingIncome',
   'gatheringIntel',
   'recovering',
