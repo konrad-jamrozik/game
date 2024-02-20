@@ -151,13 +151,14 @@ function isAgentRowSelectable(
   if (!gameSession.isLoaded()) {
     return false
   }
-  if (action === 'None') {
-    return true
-  }
 
   const { survivalChance, id } = params.row
   if (!_.isUndefined(survivalChance) && survivalChance <= 0) {
     return false
+  }
+
+  if (action === 'None') {
+    return true
   }
 
   const agents = gameSession.getAssets().Agents
