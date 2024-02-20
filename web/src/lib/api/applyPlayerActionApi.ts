@@ -1,21 +1,14 @@
-import type { GameState } from '../GameState'
-import type { PlayerActionPayload } from '../PlayerActionPayload'
+import type { GameState } from '../codesync/GameState'
+import type {
+  PlayerActionName,
+  PlayerActionPayload,
+} from '../codesync/PlayerActionPayload'
 import {
   type FetchCallbacks,
   callApi,
   getApiUrl,
   getPostJsonRequest,
 } from './genericApiUtils'
-
-export type PlayerActionName =
-  | 'buyTransportCap'
-  | 'hireAgents'
-  | 'sackAgents'
-  | 'sendAgentsToIncomeGeneration'
-  | 'sendAgentsToIntelGathering'
-  | 'sendAgentsToTraining'
-  | 'recallAgents'
-  | 'launchMission'
 
 export type PlayerActionPayloadProviderParams = {
   ids?: number[] | undefined

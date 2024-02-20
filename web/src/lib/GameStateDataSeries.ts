@@ -1,12 +1,12 @@
 import _ from 'lodash'
-import type { GameState } from './GameState'
-import { agentStateColors, assetsColors } from './rendering'
+import type { GameState } from './codesync/GameState'
 import {
   agentUpkeepCost,
   getSurvivalSkill,
   incomeGeneratedPerAgent,
   missionLaunched,
-} from './ruleset'
+} from './codesync/ruleset'
+import { agentStateColors, assetsColors } from './rendering'
 import { median } from './utils'
 
 export type GameStateDataSeries = {

@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import type { GameState } from '../GameState'
+import type { GameState } from '../codesync/GameState'
 import {
   callApi,
   getPostJsonRequest,

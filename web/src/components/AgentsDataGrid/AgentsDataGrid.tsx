@@ -12,13 +12,17 @@ import {
 import _ from 'lodash'
 import { useState } from 'react'
 import { type GameSession, useGameSessionContext } from '../../lib/GameSession'
-import type { Agent, AgentState, MissionSite } from '../../lib/GameState'
-import { renderAgentStateCell } from '../../lib/rendering'
+import type {
+  Agent,
+  AgentState,
+  MissionSite,
+} from '../../lib/codesync/GameState'
 import {
   canBeSentOnMission,
   getSurvivalChanceNonNegative,
   getSurvivalSkill,
-} from '../../lib/ruleset'
+} from '../../lib/codesync/ruleset'
+import { renderAgentStateCell } from '../../lib/rendering'
 import {
   defaultComponentHeight,
   defaultComponentMinWidth,

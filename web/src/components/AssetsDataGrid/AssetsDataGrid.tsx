@@ -7,7 +7,7 @@ import {
   type GridRowSelectionModel,
 } from '@mui/x-data-grid'
 import _ from 'lodash'
-import type { Assets } from '../../lib/GameState'
+import type { Assets } from '../../lib/codesync/GameState'
 import { renderAssetNameCell } from '../../lib/rendering'
 import { defaultComponentMinWidth } from '../../lib/utils'
 import TransportCapMgmtDialog from './TransportCapMgmtDialog'

@@ -2,7 +2,7 @@ import { Typography, type SxProps, type Theme } from '@mui/material'
 import type { GridRenderCellParams } from '@mui/x-data-grid'
 import type { AgentRow } from '../components/AgentsDataGrid/AgentsDataGrid'
 import type { AssetRow } from '../components/AssetsDataGrid/AssetsDataGrid'
-import type { AgentState, Assets } from './GameState'
+import type { AgentState, Assets } from './codesync/GameState'
 
 export function renderAgentStateCell(
   params: GridRenderCellParams<AgentRow, AgentState>,

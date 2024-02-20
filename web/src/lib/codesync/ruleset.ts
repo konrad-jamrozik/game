@@ -1,4 +1,7 @@
 // codesync UfoGameLib.Model.Ruleset
+// kja3: instead of replicating this logic from backend here,
+// make backend expose this property in the returned json. Applies to all such
+// properties in ruleset.ts.
 import _ from 'lodash'
 import type { Agent, AgentState, Mission, MissionSite } from './GameState'
 
@@ -17,9 +20,6 @@ export function isActive(missionSite: MissionSite): boolean {
   )
 }
 
-// kja3: instead of replicating this logic from backend here,
-// make backend expose this property in the returned json. Applies to all such
-// properties in ruleset.ts.
 export function missionLaunched(mission: Mission): boolean {
   return (
     mission.CurrentState === 'Failed' || mission.CurrentState === 'Successful'

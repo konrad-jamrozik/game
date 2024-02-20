@@ -8,14 +8,14 @@ import {
   GameSessionDataWrapper,
   initialGameSessionData,
 } from './GameSessionData'
-import { initialTurn, type GameState, type Assets } from './GameState'
 import { callAdvanceTurnsApi } from './api/advanceTurnsApi'
 import {
-  type PlayerActionName,
   callApplyPlayerActionApi,
   playerActionsPayloadsProviders,
 } from './api/applyPlayerActionApi'
-import { agentHireCost, transportCapBuyingCost } from './ruleset'
+import { initialTurn, type GameState, type Assets } from './codesync/GameState'
+import type { PlayerActionName } from './codesync/PlayerActionPayload'
+import { agentHireCost, transportCapBuyingCost } from './codesync/ruleset'
 
 export function useGameSessionContext(): GameSession {
   return useContext(GameSessionContext)

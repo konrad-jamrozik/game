@@ -8,8 +8,8 @@ import {
 } from '@mui/x-data-grid'
 import _ from 'lodash'
 import { useGameSessionContext } from '../../lib/GameSession'
-import type { MissionSite } from '../../lib/GameState'
-import { isActive } from '../../lib/ruleset'
+import type { MissionSite } from '../../lib/codesync/GameState'
+import { isActive } from '../../lib/codesync/ruleset'
 import { defaultComponentMinWidth } from '../../lib/utils'
 import DeployMissionDialog from './DeployMissionDialog'
 

@@ -12,7 +12,7 @@ import Grid from '@mui/material/Unstable_Grid2'
 import _ from 'lodash'
 import { useState } from 'react'
 import type { GameSession } from '../../lib/GameSession'
-import { initialTurn } from '../../lib/GameState'
+import { initialTurn } from '../../lib/codesync/GameState'
 import { Label } from '../Label'
 
 export type GameSessionControlPanelProps = {

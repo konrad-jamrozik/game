@@ -1,4 +1,4 @@
-import type { PlayerActionName } from '../../lib/api/applyPlayerActionApi'
+import type { PlayerActionName } from '../../lib/codesync/PlayerActionPayload'
 
 // kja 2 instead of these weird exclusions here, I probably should have 'AgentPlayerActionName' union-member of PlayerActionName
 export type BatchAgentPlayerActionOption = Exclude<
