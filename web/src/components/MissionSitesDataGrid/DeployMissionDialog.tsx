@@ -51,12 +51,7 @@ export default function DeployMissionDialog(
       rowSelectionModel,
       (id: GridRowId) => id as number,
     )
-
-    await gameSession.applyPlayerAction(
-      'LaunchMission',
-      selectedAgentsIds,
-      props.missionSite!.Id,
-    )
+    await gameSession.launchMission(selectedAgentsIds, props.missionSite!.Id)
   }
 
   function getLaunchMissionButtonText(): [boolean, string] {

@@ -9,9 +9,12 @@ import {
 } from './GameSessionData'
 import { callAdvanceTurnsApi } from './api/advanceTurnsApi'
 import { callApplyPlayerActionApi } from './api/applyPlayerActionApi'
-import { getPlayerActionPayload } from './api/getPlayerActionPayload'
+import { playerActionsPayloadsProviders } from './api/playerActionsPayloadsProviders'
 import { initialTurn, type GameState, type Assets } from './codesync/GameState'
-import type { PlayerActionName } from './codesync/PlayerActionPayload'
+import type {
+  AgentPlayerActionName,
+  PlayerActionPayload,
+} from './codesync/PlayerActionPayload'
 import { agentHireCost, transportCapBuyingCost } from './codesync/ruleset'
 
 export function useGameSessionContext(): GameSession {
@@ -68,28 +71,44 @@ export class GameSession {
     }
   }
 
-  public async applyPlayerAction(
-    playerActionName: PlayerActionName,
-    ids?: number[] | undefined,
-    targetId?: number | undefined,
-  ): Promise<boolean> {
-    const currentGameState = this.getCurrentGameState()
-    const newGameState = await callApplyPlayerActionApi({
-      setLoading: this.setLoading,
-      setError: this.setError,
-      currentGameState,
-      playerActionPayload: getPlayerActionPayload(
-        playerActionName,
-        ids,
-        targetId,
-      ),
-    })
-
-    if (!_.isUndefined(newGameState)) {
-      this.upsertGameStates([newGameState])
-      return true
+  public async hireAgents(count: number): Promise<boolean> {
+    if (count !== 1) {
+      throw new Error(
+        'Currently hiring of only exactly 1 agent at a time is supported. See playerActionsPayloadsProviders for details.',
+      )
     }
-    return false
+    const payloadProvider = playerActionsPayloadsProviders.HireAgents
+    const payload = payloadProvider()
+    return this.applyPlayerAction(payload)
+  }
+
+  public async buyTransportCap(count: number): Promise<boolean> {
+    if (count !== 1) {
+      throw new Error(
+        'Currently buying exactly 1 transport cap. at a time is supported. See playerActionsPayloadsProviders for details.',
+      )
+    }
+    const payloadProvider = playerActionsPayloadsProviders.BuyTransportCap
+    const payload = payloadProvider()
+    return this.applyPlayerAction(payload)
+  }
+
+  public async launchMission(
+    agentsIds: number[],
+    missionSiteId: number,
+  ): Promise<boolean> {
+    const payloadProvider = playerActionsPayloadsProviders.LaunchMission
+    const payload = payloadProvider(agentsIds, missionSiteId)
+    return this.applyPlayerAction(payload)
+  }
+
+  public async applyBatchAgentPlayerAction(
+    playerActionName: AgentPlayerActionName,
+    agentsIds: number[],
+  ): Promise<boolean> {
+    const payloadProvider = playerActionsPayloadsProviders[playerActionName]
+    const payload = payloadProvider(agentsIds)
+    return this.applyPlayerAction(payload)
   }
 
   public revertToPreviousTurn(): void {
@@ -229,6 +248,24 @@ export class GameSession {
     this.data.setDataStates(gameStatesAfterUpsertion)
     this.setLoading(false)
     this.setError('')
+  }
+
+  private async applyPlayerAction(
+    playerActionPayload: PlayerActionPayload,
+  ): Promise<boolean> {
+    const currentGameState = this.getCurrentGameState()
+    const newGameState = await callApplyPlayerActionApi({
+      setLoading: this.setLoading,
+      setError: this.setError,
+      currentGameState,
+      playerActionPayload,
+    })
+
+    if (!_.isUndefined(newGameState)) {
+      this.upsertGameStates([newGameState])
+      return true
+    }
+    return false
   }
 }
 

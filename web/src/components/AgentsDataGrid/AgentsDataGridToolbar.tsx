@@ -21,7 +21,7 @@ export function AgentsDataGridToolbar(
   const selectedRowIds: number[] = props.getSelectedRowsIds()
 
   async function handleHireAgent(): Promise<void> {
-    await props.gameSession.applyPlayerAction('HireAgents')
+    await props.gameSession.hireAgents(1)
   }
 
   async function handleBatchAgentPlayerAction(): Promise<void> {
@@ -30,7 +30,7 @@ export function AgentsDataGridToolbar(
       `Act on agents clicked! agents ` +
         `ids: ${selectedRowIds.toString()} (#${selectedRowIds.length}), action: ${action}`,
     )
-    const success = await props.gameSession.applyPlayerAction(
+    const success = await props.gameSession.applyBatchAgentPlayerAction(
       action,
       selectedRowIds,
     )
