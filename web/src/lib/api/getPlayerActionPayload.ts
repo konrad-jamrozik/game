@@ -7,8 +7,13 @@ import type {
   PlayerActionPayload,
 } from '../codesync/PlayerActionPayload'
 
+// kja 2 Note: currently getPlayerActionPayload causes loss of type safety:
+// it accepts arbitrary triple of [playerActionName, ids, targetId] and
+// constructs appropriate player action payload based on the playerActionName,
+// assuming the ids and targetId values are correct, without checking them at
+// compile time.
 export function getPlayerActionPayload(
-  playerActionName: Uncapitalize<PlayerActionName>,
+  playerActionName: PlayerActionName,
   ids: number[] | undefined,
   targetId: number | undefined,
 ): PlayerActionPayload {
@@ -59,32 +64,32 @@ type PayloadFromIdsAndTargetId = (
 ) => PlayerActionPayload
 
 const playerActionsPayloadsProviders: {
-  [actionName in Uncapitalize<PlayerActionName>]: PayloadProviderMap[actionName]
+  [actionName in PlayerActionName]: PayloadProviderMap[actionName]
 } = {
-  advanceTime: () => ({ Action: 'AdvanceTime' as PlayerActionName }),
-  buyTransportCap: () => ({ Action: 'BuyTransportCap' as PlayerActionName }),
-  hireAgents: () => ({ Action: 'HireAgents' as PlayerActionName }),
-  sackAgents: (Ids: number[]) => ({
+  AdvanceTime: () => ({ Action: 'AdvanceTime' as PlayerActionName }),
+  BuyTransportCap: () => ({ Action: 'BuyTransportCap' as PlayerActionName }),
+  HireAgents: () => ({ Action: 'HireAgents' as PlayerActionName }),
+  SackAgents: (Ids: number[]) => ({
     Action: 'SackAgents' as PlayerActionName,
     Ids,
   }),
-  sendAgentsToIncomeGeneration: (Ids: number[]) => ({
+  SendAgentsToIncomeGeneration: (Ids: number[]) => ({
     Action: 'SendAgentsToIncomeGeneration' as PlayerActionName,
     Ids,
   }),
-  sendAgentsToIntelGathering: (Ids: number[]) => ({
+  SendAgentsToIntelGathering: (Ids: number[]) => ({
     Action: 'SendAgentsToIntelGathering' as PlayerActionName,
     Ids,
   }),
-  sendAgentsToTraining: (Ids: number[]) => ({
+  SendAgentsToTraining: (Ids: number[]) => ({
     Action: 'SendAgentsToTraining' as PlayerActionName,
     Ids,
   }),
-  recallAgents: (Ids: number[]) => ({
+  RecallAgents: (Ids: number[]) => ({
     Action: 'RecallAgents' as PlayerActionName,
     Ids,
   }),
-  launchMission: (Ids: number[], TargetId: number) => ({
+  LaunchMission: (Ids: number[], TargetId: number) => ({
     Action: 'LaunchMission' as PlayerActionName,
     Ids,
     TargetId,
@@ -92,18 +97,18 @@ const playerActionsPayloadsProviders: {
 }
 
 type PayloadProviderMap = {
-  [key in Uncapitalize<PlayerActionName>]:
+  [key in PlayerActionName]:
     | PayloadFromIdsAndTargetId
     | PayloadFromIds
     | PayloadFromNothing
 } & {
-  advanceTime: PayloadFromNothing
-  buyTransportCap: PayloadFromNothing
-  hireAgents: PayloadFromNothing
-  sackAgents: PayloadFromIds
-  sendAgentsToIncomeGeneration: PayloadFromIds
-  sendAgentsToIntelGathering: PayloadFromIds
-  sendAgentsToTraining: PayloadFromIds
-  recallAgents: PayloadFromIds
-  launchMission: PayloadFromIdsAndTargetId
+  AdvanceTime: PayloadFromNothing
+  BuyTransportCap: PayloadFromNothing
+  HireAgents: PayloadFromNothing
+  SackAgents: PayloadFromIds
+  SendAgentsToIncomeGeneration: PayloadFromIds
+  SendAgentsToIntelGathering: PayloadFromIds
+  SendAgentsToTraining: PayloadFromIds
+  RecallAgents: PayloadFromIds
+  LaunchMission: PayloadFromIdsAndTargetId
 }

@@ -21,11 +21,11 @@ export function AgentsDataGridToolbar(
   const selectedRowIds: number[] = props.getSelectedRowsIds()
 
   async function handleHireAgent(): Promise<void> {
-    await props.gameSession.applyPlayerAction('hireAgents')
+    await props.gameSession.applyPlayerAction('HireAgents')
   }
 
   async function handleBatchAgentPlayerAction(): Promise<void> {
-    const action = props.action as Exclude<BatchAgentPlayerActionOption, 'none'>
+    const action = props.action as Exclude<BatchAgentPlayerActionOption, 'None'>
     console.log(
       `Act on agents clicked! agents ` +
         `ids: ${selectedRowIds.toString()} (#${selectedRowIds.length}), action: ${action}`,
@@ -34,7 +34,7 @@ export function AgentsDataGridToolbar(
       action,
       selectedRowIds,
     )
-    if (success && action === 'sackAgents') {
+    if (success && action === 'SackAgents') {
       console.log(`props.clearSelectedRows()`)
       props.clearSelectedRows()
     }
@@ -56,7 +56,7 @@ export function AgentsDataGridToolbar(
         startIcon={<ChecklistIcon />}
         style={{ whiteSpace: 'pre' }}
         onClick={handleBatchAgentPlayerAction}
-        disabled={selectedAgentCount === 0 || props.action === 'none'}
+        disabled={selectedAgentCount === 0 || props.action === 'None'}
       >
         Act on agents
       </Button>

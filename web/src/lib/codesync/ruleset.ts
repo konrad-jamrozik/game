@@ -4,6 +4,7 @@
 // properties in ruleset.ts.
 import _ from 'lodash'
 import type { Agent, AgentState, Mission, MissionSite } from './GameState'
+import type { AgentPlayerActionName } from './PlayerActionPayload'
 
 export const agentUpkeepCost = 5
 export const incomeGeneratedPerAgent = agentUpkeepCost * 3
@@ -100,4 +101,26 @@ export function requiredSurvivingAgentsForSuccess(site: MissionSite): number {
     1 + Math.floor((site.Difficulty - baseMissionSiteDifficulty) / 30)
   console.assert(reqAgentsForSuccess >= 1)
   return reqAgentsForSuccess
+}
+
+export function canBeRecalled(agent: Agent): boolean {
+  return _.includes(['GatheringIntel', 'GatheringIncome'], agent.CurrentState)
+}
+
+export function canBeSacked(agent: Agent): boolean {
+  return _.includes(['Available', 'Training'], agent.CurrentState)
+}
+
+export function canBeSentToTraining(agent: Agent): boolean {
+  return _.includes(['Available'], agent.CurrentState)
+}
+
+export const agentPlayerActionConditionMap: {
+  [action in AgentPlayerActionName]: (agent: Agent) => boolean
+} = {
+  SendAgentsToIncomeGeneration: canBeSentOnMission,
+  SendAgentsToIntelGathering: canBeSentOnMission,
+  SendAgentsToTraining: canBeSentToTraining,
+  RecallAgents: canBeRecalled,
+  SackAgents: canBeSacked,
 }

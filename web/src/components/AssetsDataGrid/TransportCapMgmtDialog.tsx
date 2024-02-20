@@ -30,7 +30,7 @@ export default function TransportCapMgmtDialog(
   }
 
   async function handleBuy1TransportCap(): Promise<void> {
-    await gameSession.applyPlayerAction('buyTransportCap')
+    await gameSession.applyPlayerAction('BuyTransportCap')
   }
 
   return (

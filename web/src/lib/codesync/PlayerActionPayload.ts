@@ -10,9 +10,12 @@ export type PlayerActionName =
   | 'AdvanceTime'
   | 'BuyTransportCap'
   | 'HireAgents'
+  | 'LaunchMission'
+  | AgentPlayerActionName
+
+export type AgentPlayerActionName =
   | 'SackAgents'
   | 'SendAgentsToIncomeGeneration'
   | 'SendAgentsToIntelGathering'
   | 'SendAgentsToTraining'
   | 'RecallAgents'
-  | 'LaunchMission'

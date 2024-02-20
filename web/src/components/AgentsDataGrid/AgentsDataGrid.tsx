@@ -18,6 +18,7 @@ import type {
   MissionSite,
 } from '../../lib/codesync/GameState'
 import {
+  agentPlayerActionConditionMap,
   canBeSentOnMission,
   getSurvivalChanceNonNegative,
   getSurvivalSkill,
@@ -40,7 +41,7 @@ export type AgentsDataGridProps = {
 
 export function AgentsDataGrid(props: AgentsDataGridProps): React.JSX.Element {
   const gameSession = useGameSessionContext()
-  const [action, setAction] = useState<BatchAgentPlayerActionOption>('none')
+  const [action, setAction] = useState<BatchAgentPlayerActionOption>('None')
   const deploymentDisplay = !_.isUndefined(props.missionSiteToDeploy)
 
   const agents: Agent[] = gameSession.isLoaded()
@@ -150,8 +151,9 @@ function isAgentRowSelectable(
   if (!gameSession.isLoaded()) {
     return false
   }
-
-  // kja refactor, dedup: move stuff to ruleset.ts
+  if (action === 'None') {
+    return true
+  }
 
   const { survivalChance, id } = params.row
   if (!_.isUndefined(survivalChance) && survivalChance <= 0) {
@@ -159,42 +161,9 @@ function isAgentRowSelectable(
   }
 
   const agents = gameSession.getAssets().Agents
-  const rowAgent = _.find(agents, (agent) => agent.Id === id)!
+  const rowAgent: Agent = _.find(agents, (agent) => agent.Id === id)!
 
-  // eslint-disable-next-line default-case
-  switch (action) {
-    case 'sendAgentsToIncomeGeneration':
-    case 'sendAgentsToIntelGathering': {
-      return isAgentSelectableForMission(rowAgent)
-    }
-    case 'sendAgentsToTraining': {
-      return (
-        isAgentSelectableForMission(rowAgent) &&
-        rowAgent.CurrentState !== 'Training'
-      )
-    }
-    case 'recallAgents': {
-      return isAgentRecallable(rowAgent)
-    }
-    case 'sackAgents': {
-      return isAgentSackable(rowAgent)
-    }
-    case 'none': {
-      return true
-    }
-  }
-}
-
-function isAgentSelectableForMission(agent: Agent): boolean {
-  return _.includes(['Available', 'Training'], agent.CurrentState)
-}
-
-function isAgentRecallable(agent: Agent): boolean {
-  return _.includes(['GatheringIntel', 'GatheringIncome'], agent.CurrentState)
-}
-
-function isAgentSackable(agent: Agent): boolean {
-  return _.includes(['Available', 'Training'], agent.CurrentState)
+  return agentPlayerActionConditionMap[action](rowAgent)
 }
 
 function filterAgents(

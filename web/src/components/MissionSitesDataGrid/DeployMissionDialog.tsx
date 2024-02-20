@@ -53,7 +53,7 @@ export default function DeployMissionDialog(
     )
 
     await gameSession.applyPlayerAction(
-      'launchMission',
+      'LaunchMission',
       selectedAgentsIds,
       props.missionSite!.Id,
     )
