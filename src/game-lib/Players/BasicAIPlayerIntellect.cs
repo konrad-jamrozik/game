@@ -101,11 +101,11 @@ public class BasicAIPlayerIntellect : IPlayer
         int desiredReserve = DesiredAgentMinimalReserve(state);
         int desiredAgentsToRecallCount = Math.Max(desiredReserve - predictedAgents, 0);
 
-        int recallableAgentsCount = agents.Recallable.Count;
+        int recallableAgentsCount = agents.CanBeRecalled.Count;
 
         int agentsToRecallCount = Math.Min(desiredAgentsToRecallCount, recallableAgentsCount);
 
-        Agents agentsToRecall = controller.RandomGen.Pick(agents.Recallable, agentsToRecallCount).ToAgents();
+        Agents agentsToRecall = controller.RandomGen.Pick(agents.CanBeRecalled, agentsToRecallCount).ToAgents();
         int recalledGeneratingIncome = agentsToRecall.GeneratingIncome.Count;
         int recalledGatheringIntel = agentsToRecall.GatheringIntel.Count;
         controller.RecallAgents(agentsToRecall);

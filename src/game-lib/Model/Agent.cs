@@ -113,6 +113,9 @@ public class Agent
     public bool CanBeSentOnMission => IsAvailable || IsTraining;
 
     [JsonIgnore]
+    public bool CanBeSentToTraining => CanBeSentOnMission && !IsTraining;
+
+    [JsonIgnore]
     public bool CanBeSacked => IsAvailable || IsTraining;
 
     [JsonIgnore]
@@ -134,7 +137,7 @@ public class Agent
     public bool IsDoingOps => IsGatheringIntel || IsGeneratingIncome;
 
     [JsonIgnore]
-    public bool IsRecallable => IsDoingOps;
+    public bool CanBeRecalled => IsDoingOps;
 
     [JsonIgnore]
     public bool IsAway => IsInTransit || IsDoingOps || IsOnMission;
@@ -144,8 +147,7 @@ public class Agent
 
     public void SendToTraining()
     {
-        Contract.Assert(CanBeSentOnMission);
-        Contract.Assert(!IsTraining);
+        Contract.Assert(CanBeSentToTraining);
         CurrentState = AgentState.Training;
     }
 
@@ -223,7 +225,7 @@ public class Agent
 
     public void Recall()
     {
-        Contract.Assert(IsRecallable);
+        Contract.Assert(CanBeRecalled);
         CurrentState = AgentState.InTransit;
     }
 

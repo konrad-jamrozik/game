@@ -59,8 +59,8 @@ public class Agents : List<Agent>
 
     public Agents CanBeSentOnMissionNextTurnMaybe => this.Where(agent => agent.CanBeSentOnMissionNextTurnMaybe).ToAgents();
 
-    public Agents Recallable
-        => this.Where(agent => agent.IsRecallable).ToAgents();
+    public Agents CanBeRecalled
+        => this.Where(agent => agent.CanBeRecalled).ToAgents();
 
     public Agents OnSpecificMission(Mission mission)
         => this.Where(agent => agent.IsOnMission && agent.CurrentMission == mission).ToAgents();
