@@ -41,8 +41,9 @@ export type PlayerActionPayloadProvider = (
 ///
 //   (ids: number[] | undefined, targetId?: number | undefined) => PlayerActionPayload
 export const playerActionsPayloadsProviders: {
-  [key in PlayerActionName]: PlayerActionPayloadProvider
+  [key in Uncapitalize<PlayerActionName>]: PlayerActionPayloadProvider
 } = {
+  advanceTime: () => ({ Action: 'AdvanceTime' }),
   buyTransportCap: () => ({ Action: 'BuyTransportCap' }),
   hireAgents: () => ({ Action: 'HireAgents' }),
   sackAgents: (params) => ({ Action: 'SackAgents', Ids: params.ids! }),

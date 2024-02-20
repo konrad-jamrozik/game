@@ -72,7 +72,7 @@ export class GameSession {
   }
 
   public async applyPlayerAction(
-    playerActionName: PlayerActionName,
+    playerActionName: Uncapitalize<PlayerActionName>,
     ids?: number[] | undefined,
     targetId?: number | undefined,
   ): Promise<boolean> {

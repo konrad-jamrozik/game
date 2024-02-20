@@ -1,9 +1,8 @@
 import type { PlayerActionName } from '../../lib/codesync/PlayerActionPayload'
 
-// kja 2 instead of these weird exclusions here, I probably should have 'AgentPlayerActionName' union-member of PlayerActionName
 export type BatchAgentPlayerActionOption = Exclude<
-  PlayerActionName | 'none',
-  'hireAgents' | 'buyTransportCap' | 'launchMission'
+  Uncapitalize<PlayerActionName> | 'none',
+  'hireAgents' | 'buyTransportCap' | 'launchMission' | 'advanceTime'
 >
 
 // kja 2 inconsistency between keys and values. E.g. "send agents" vs "assign to"
