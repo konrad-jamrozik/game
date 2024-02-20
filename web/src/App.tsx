@@ -34,8 +34,6 @@ export default function App(): React.JSX.Element {
   const gameSession = useGameSessionContext()
   const gameStates = gameSession.getGameStates()
   const currentGameState = gameSession.getCurrentGameStateUnsafe()
-  // kja remove agents -> the dependents should pull agents from game session context
-  const agents = currentGameState?.Assets.Agents
 
   return (
     <Grid
@@ -53,10 +51,7 @@ export default function App(): React.JSX.Element {
         <AssetsDataGrid assets={currentGameState?.Assets} />
       </Grid>
       <Grid sx={{ bgcolor: '#302000' }}>
-        <MissionSitesDataGrid
-          missionSites={currentGameState?.MissionSites}
-          agents={agents}
-        />
+        <MissionSitesDataGrid />
       </Grid>
       <Grid sx={{ bgcolor: '#002040' }}>
         <AgentsDataGrid />

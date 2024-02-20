@@ -7,23 +7,18 @@ import {
   type GridRowSelectionModel,
 } from '@mui/x-data-grid'
 import _ from 'lodash'
-import type { Agent, MissionSite } from '../../lib/GameState'
+import { useGameSessionContext } from '../../lib/GameSession'
+import type { MissionSite } from '../../lib/GameState'
 import { isActive } from '../../lib/ruleset'
 import { defaultComponentMinWidth } from '../../lib/utils'
 import DeployMissionDialog from './DeployMissionDialog'
 
-export type MissionSitesDataGridProps = {
-  readonly missionSites: MissionSite[] | undefined
-  readonly agents: Agent[] | undefined
-}
-
 const tableHeight = 310
 
-export function MissionSitesDataGrid(
-  props: MissionSitesDataGridProps,
-): React.JSX.Element {
-  // kja fix this to use gameSession instead. This fill fix a bug with undefined MissionSite.
-  const rows: MissionSiteRow[] = getRows(props.missionSites)
+export function MissionSitesDataGrid(): React.JSX.Element {
+  const gameSession = useGameSessionContext()
+  const missionSites = gameSession.getCurrentGameStateUnsafe()?.MissionSites
+  const rows: MissionSiteRow[] = getRows(missionSites)
 
   const columns: GridColDef[] = [
     {
@@ -55,12 +50,9 @@ export function MissionSitesDataGrid(
       ): React.JSX.Element | undefined => {
         const row: MissionSiteRow = params.row
 
-        const missionSite: MissionSite | undefined = _.find(
-          props.missionSites,
-          {
-            Id: row.id,
-          },
-        )
+        const missionSite: MissionSite | undefined = _.find(missionSites, {
+          Id: row.id,
+        })
 
         return <DeployMissionDialog missionSite={missionSite} />
       },
