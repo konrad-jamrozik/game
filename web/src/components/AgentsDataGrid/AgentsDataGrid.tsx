@@ -154,7 +154,7 @@ function isAgentRowSelectable(
     return false
   }
 
-  const agents = gameSession.getCurrentState().Assets.Agents
+  const agents = gameSession.getAssets().Agents
   const rowAgent = _.find(agents, (agent) => agent.Id === id)!
 
   // eslint-disable-next-line default-case
@@ -197,7 +197,7 @@ function filterAgents(
   gameSession: GameSession,
   deploymentDisplay: boolean,
 ): Agent[] {
-  const gameStateAgents = gameSession.getCurrentState().Assets.Agents
+  const gameStateAgents = gameSession.getAssets().Agents
   // eslint-disable-next-line sonarjs/prefer-immediate-return
   const agents = deploymentDisplay
     ? _.filter(gameStateAgents, canBeSentOnMission)

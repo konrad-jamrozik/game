@@ -1,8 +1,9 @@
+/* eslint-disable max-lines */
 /* eslint-disable @typescript-eslint/parameter-properties */
 import _ from 'lodash'
 import { useContext, useState } from 'react'
 import { GameSessionContext } from '../components/GameSessionProvider'
-import { initialTurn, type GameState } from './GameState'
+import { initialTurn, type GameState, type Assets } from './GameState'
 import { callAdvanceTurnsApi } from './api/advanceTurnsApi'
 import {
   type PlayerActionName,
@@ -65,7 +66,7 @@ export class GameSession {
     targetTurn: number,
     delegateToAi?: boolean | undefined,
   ): Promise<void> {
-    const startGameState = this.getStateAtTurn(startTurn)
+    const startGameState = this.getGameStateAtTurn(startTurn)
     const newGameStates = await callAdvanceTurnsApi({
       setLoading: this.setLoading,
       setError: this.setError,
@@ -83,7 +84,7 @@ export class GameSession {
     ids?: number[] | undefined,
     targetId?: number | undefined,
   ): Promise<boolean> {
-    const currentGameState = this.getCurrentState()
+    const currentGameState = this.getCurrentGameState()
     const newGameState = await callApplyPlayerActionApi({
       setLoading: this.setLoading,
       setError: this.setError,
@@ -140,7 +141,7 @@ export class GameSession {
     return (
       this.isInProgress() &&
       !this.loading &&
-      this.getCurrentState().Assets.Money >= agentHireCost
+      this.getAssets().Money >= agentHireCost
     )
   }
 
@@ -148,7 +149,7 @@ export class GameSession {
     return (
       this.isInProgress() &&
       !this.loading &&
-      this.getCurrentState().Assets.Money >= transportCapBuyingCost(1)
+      this.getAssets().Money >= transportCapBuyingCost(1)
     )
   }
 
@@ -161,15 +162,15 @@ export class GameSession {
   }
 
   public getCurrentTurn(): number {
-    return this.getCurrentState().Timeline.CurrentTurn
+    return this.getCurrentGameState().Timeline.CurrentTurn
   }
 
   public getCurrentTurnUnsafe(): number | undefined {
-    return this.getCurrentStateUnsafe()?.Timeline.CurrentTurn
+    return this.getCurrentGameStateUnsafe()?.Timeline.CurrentTurn
   }
 
   public getGameResult(): GameResult {
-    const lastGameState = this.getCurrentState()
+    const lastGameState = this.getCurrentGameState()
     return lastGameState.IsGameWon
       ? 'won'
       : lastGameState.IsGameLost
@@ -177,7 +178,7 @@ export class GameSession {
         : 'undecided'
   }
 
-  public getStateAtTurn(turn: number): GameState {
+  public getGameStateAtTurn(turn: number): GameState {
     return _.findLast(
       this.data.gameStates,
       (gs) => gs.Timeline.CurrentTurn === turn,
@@ -185,8 +186,7 @@ export class GameSession {
   }
 
   public isGameOver(): boolean {
-    const lastGameState = this.getCurrentState()
-    return lastGameState.IsGameOver
+    return this.getCurrentGameState().IsGameOver
   }
 
   public getPlayerMadeActionsInCurrentTurn(): boolean {
@@ -214,13 +214,19 @@ export class GameSession {
     return this.isLoaded() && !this.isGameOver()
   }
 
-  // kja rename to getCurrentGameState
-  public getCurrentState(): GameState {
+  public getCurrentGameState(): GameState {
     return this.data.gameStates.at(-1)!
   }
 
-  // kja rename to getCurrentGameStateUnsafe
-  public getCurrentStateUnsafe(): GameState | undefined {
+  public getAssets(): Assets {
+    return this.getCurrentGameState().Assets
+  }
+
+  public getAssetsUnsafe(): Assets | undefined {
+    return this.getCurrentGameStateUnsafe()?.Assets
+  }
+
+  public getCurrentGameStateUnsafe(): GameState | undefined {
     return this.data.gameStates.at(-1)
   }
 
@@ -292,7 +298,6 @@ const initialGameSessionData: GameSessionData = {
   gameStates: [],
   startOfCurrentTurnGameState: undefined,
 }
-
 // Consider for later:
 // using a reducer to manage game sates:
 // https://react.dev/learn/extracting-state-logic-into-a-reducer

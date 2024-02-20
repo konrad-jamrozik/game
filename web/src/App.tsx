@@ -33,7 +33,7 @@ const lineChartMaxWidth = '700px'
 export default function App(): React.JSX.Element {
   const gameSession = useGameSessionContext()
   const gameStates = gameSession.getGameStates()
-  const currentGameState = gameSession.getCurrentStateUnsafe()
+  const currentGameState = gameSession.getCurrentGameStateUnsafe()
   // kja remove agents -> the dependents should pull agents from game session context
   const agents = currentGameState?.Assets.Agents
 

@@ -23,7 +23,7 @@ export default function DeployMissionDialog(
   props: DeployMissionDialogProps,
 ): React.JSX.Element {
   const gameSession: GameSession = useGameSessionContext()
-  const assets = gameSession.getCurrentStateUnsafe()?.Assets
+  const assets = gameSession.getAssetsUnsafe()
   const [open, setOpen] = useState<boolean>(false)
   const [rowSelectionModel, setRowSelectionModel] =
     useState<GridRowSelectionModel>([])
