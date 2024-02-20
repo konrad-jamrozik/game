@@ -1,4 +1,3 @@
-/* eslint-disable max-lines */
 /* eslint-disable @typescript-eslint/parameter-properties */
 import _ from 'lodash'
 import { useContext, useState } from 'react'
@@ -9,10 +8,8 @@ import {
   initialGameSessionData,
 } from './GameSessionData'
 import { callAdvanceTurnsApi } from './api/advanceTurnsApi'
-import {
-  callApplyPlayerActionApi,
-  playerActionsPayloadsProviders,
-} from './api/applyPlayerActionApi'
+import { callApplyPlayerActionApi } from './api/applyPlayerActionApi'
+import { getPlayerActionPayload } from './api/playerActionsPayloadsProviders'
 import { initialTurn, type GameState, type Assets } from './codesync/GameState'
 import type { PlayerActionName } from './codesync/PlayerActionPayload'
 import { agentHireCost, transportCapBuyingCost } from './codesync/ruleset'
@@ -81,10 +78,11 @@ export class GameSession {
       setLoading: this.setLoading,
       setError: this.setError,
       currentGameState,
-      playerActionPayload: playerActionsPayloadsProviders[playerActionName]({
+      playerActionPayload: getPlayerActionPayload(
+        playerActionName,
         ids,
         targetId,
-      }),
+      ),
     })
 
     if (!_.isUndefined(newGameState)) {

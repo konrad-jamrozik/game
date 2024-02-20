@@ -1,3 +1,4 @@
+/* eslint-disable no-else-return */
 import type { GameState } from '../codesync/GameState'
 import type {
   PlayerActionName,
@@ -9,6 +10,7 @@ import {
   getApiUrl,
   getPostJsonRequest,
 } from './genericApiUtils'
+import { playerActionsPayloadsProviders2 } from './playerActionsPayloadsProviders'
 
 export type PlayerActionPayloadProviderParams = {
   ids?: number[] | undefined
@@ -19,19 +21,17 @@ export type PlayerActionPayloadProvider = (
   params: PlayerActionPayloadProviderParams,
 ) => PlayerActionPayload
 
-// kja 2 playerActionPayloadProviders currently look over-engineered.
+// Note: playerActionPayloadProviders currently look over-engineered.
 // Instead of calling this like that:
 //
-//   playerActionPayload: playerActionPayloadProviders[
-//     params.playerActionName
-//   ]({
+//   playerActionPayload: playerActionPayloadProviders[params.playerActionName]({
 //     ids: params.ids,
 //     targetId: params.targetId,
 //   }),
 //
 // One could instead do:
 //
-//   playerActionPayload: getPlayerActionPayload(params.playerActionName)
+//   playerActionPayload: getPlayerActionPayload(params.playerActionName, params.ids, params.targetId)
 //
 // But I am hoping to add stronger typing for each provider signature, like:
 //
@@ -72,7 +72,7 @@ export async function callApiToHireAgents(
 ): Promise<GameState | undefined> {
   return callApplyPlayerActionApi({
     ...params,
-    playerActionPayload: playerActionsPayloadsProviders.hireAgents({}),
+    playerActionPayload: playerActionsPayloadsProviders2.hireAgents(),
   })
 }
 
