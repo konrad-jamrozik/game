@@ -142,7 +142,6 @@ export function AgentsDataGrid(props: AgentsDataGridProps): React.JSX.Element {
   )
 }
 
-// eslint-disable-next-line consistent-return
 function isAgentRowSelectable(
   params: GridRowParams<AgentRow>,
   action: BatchAgentPlayerActionOption,

@@ -1,4 +1,3 @@
-/* eslint-disable no-else-return */
 import type { GameState } from '../codesync/GameState'
 import type { PlayerActionPayload } from '../codesync/PlayerActionPayload'
 import {

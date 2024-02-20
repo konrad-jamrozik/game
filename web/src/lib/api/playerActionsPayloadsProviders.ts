@@ -1,7 +1,5 @@
 // The a bit more advanced typing done in this file was figured out with the help of ChatGPT:
 // https://chat.openai.com/share/af4ac2cb-c221-4c7f-a5c6-e3cac23916c0
-/* eslint-disable no-else-return */
-
 import type {
   PlayerActionName,
   PlayerActionPayload,
