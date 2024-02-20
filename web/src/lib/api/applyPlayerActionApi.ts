@@ -1,80 +1,12 @@
 /* eslint-disable no-else-return */
 import type { GameState } from '../codesync/GameState'
-import type {
-  PlayerActionName,
-  PlayerActionPayload,
-} from '../codesync/PlayerActionPayload'
+import type { PlayerActionPayload } from '../codesync/PlayerActionPayload'
 import {
   type FetchCallbacks,
   callApi,
   getApiUrl,
   getPostJsonRequest,
 } from './genericApiUtils'
-import { playerActionsPayloadsProviders2 } from './playerActionsPayloadsProviders'
-
-export type PlayerActionPayloadProviderParams = {
-  ids?: number[] | undefined
-  targetId?: number | undefined
-}
-
-export type PlayerActionPayloadProvider = (
-  params: PlayerActionPayloadProviderParams,
-) => PlayerActionPayload
-
-// Note: playerActionPayloadProviders currently look over-engineered.
-// Instead of calling this like that:
-//
-//   playerActionPayload: playerActionPayloadProviders[params.playerActionName]({
-//     ids: params.ids,
-//     targetId: params.targetId,
-//   }),
-//
-// One could instead do:
-//
-//   playerActionPayload: getPlayerActionPayload(params.playerActionName, params.ids, params.targetId)
-//
-// But I am hoping to add stronger typing for each provider signature, like:
-//
-//  export type sackAgents = (ids: number[]) => PlayerActionPayload
-//
-// instead of just
-///
-//   (ids: number[] | undefined, targetId?: number | undefined) => PlayerActionPayload
-export const playerActionsPayloadsProviders: {
-  [key in Uncapitalize<PlayerActionName>]: PlayerActionPayloadProvider
-} = {
-  advanceTime: () => ({ Action: 'AdvanceTime' }),
-  buyTransportCap: () => ({ Action: 'BuyTransportCap' }),
-  hireAgents: () => ({ Action: 'HireAgents' }),
-  sackAgents: (params) => ({ Action: 'SackAgents', Ids: params.ids! }),
-  sendAgentsToIncomeGeneration: (params) => ({
-    Action: 'SendAgentsToIncomeGeneration',
-    Ids: params.ids!,
-  }),
-  sendAgentsToIntelGathering: (params) => ({
-    Action: 'SendAgentsToIntelGathering',
-    Ids: params.ids!,
-  }),
-  sendAgentsToTraining: (params) => ({
-    Action: 'SendAgentsToTraining',
-    Ids: params.ids!,
-  }),
-  recallAgents: (params) => ({ Action: 'RecallAgents', Ids: params.ids! }),
-  launchMission: (params) => ({
-    Action: 'LaunchMission',
-    Ids: params.ids!,
-    TargetId: params.targetId!,
-  }),
-}
-
-export async function callApiToHireAgents(
-  params: FetchCallbacks & { currentGameState: GameState | undefined },
-): Promise<GameState | undefined> {
-  return callApplyPlayerActionApi({
-    ...params,
-    playerActionPayload: playerActionsPayloadsProviders2.hireAgents(),
-  })
-}
 
 export async function callApplyPlayerActionApi(
   params: FetchCallbacks & {

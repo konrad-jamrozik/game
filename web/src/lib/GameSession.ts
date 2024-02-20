@@ -9,7 +9,7 @@ import {
 } from './GameSessionData'
 import { callAdvanceTurnsApi } from './api/advanceTurnsApi'
 import { callApplyPlayerActionApi } from './api/applyPlayerActionApi'
-import { getPlayerActionPayload } from './api/playerActionsPayloadsProviders'
+import { getPlayerActionPayload } from './api/getPlayerActionPayload'
 import { initialTurn, type GameState, type Assets } from './codesync/GameState'
 import type { PlayerActionName } from './codesync/PlayerActionPayload'
 import { agentHireCost, transportCapBuyingCost } from './codesync/ruleset'
