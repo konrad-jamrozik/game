@@ -9,7 +9,7 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App.tsx'
 import { GameSessionProvider } from './components/GameSessionProvider.tsx'
-import type { GameSessionData } from './lib/GameSession.ts'
+import type { GameSessionData } from './lib/GameSessionData.ts'
 import theme from './theme.tsx'
 
 const rootElement = document.querySelector('#root')
@@ -19,9 +19,7 @@ if (rootElement) {
     <React.StrictMode>
       <ThemeProvider theme={theme}>
         <CssBaseline enableColorScheme />
-        <GameSessionProvider
-          storedGameSessionData={loadStoredSessionDataFromLocalStorage()}
-        >
+        <GameSessionProvider storedGameSessionData={loadDataFromLocalStorage()}>
           <App />
         </GameSessionProvider>
       </ThemeProvider>
@@ -33,7 +31,7 @@ if (rootElement) {
   )
 }
 
-function loadStoredSessionDataFromLocalStorage(): GameSessionData | undefined {
+function loadDataFromLocalStorage(): GameSessionData | undefined {
   const storedGameSessionDataString: string | null =
     localStorage.getItem('gameSessionData')
   if (!_.isNil(storedGameSessionDataString)) {
