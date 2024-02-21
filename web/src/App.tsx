@@ -6,6 +6,7 @@ import { AssetsDataGrid } from './components/AssetsDataGrid/AssetsDataGrid'
 import { GameSessionControlPanel } from './components/GameSessionControlPanel/GameSessionControlPanel'
 import { GameStatsLineChart } from './components/GameStatsLineChart'
 import { MissionSitesDataGrid } from './components/MissionSitesDataGrid/MissionSitesDataGrid'
+import { SettingsPanel } from './components/SettingsPanel/SettingsPanel'
 import { useGameSessionContext } from './lib/GameSession'
 import {
   agentStatsDataSeries,
@@ -46,6 +47,9 @@ export default function App(): React.JSX.Element {
     >
       <Grid sx={{ bgcolor: '#200000' }}>
         <GameSessionControlPanel gameSession={gameSession} />
+      </Grid>
+      <Grid sx={{ bgcolor: '#002110' }}>
+        <SettingsPanel />
       </Grid>
       <Grid sx={{ bgcolor: '#300030' }}>
         <AssetsDataGrid assets={currentGameState?.Assets} />
