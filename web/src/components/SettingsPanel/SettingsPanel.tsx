@@ -1,4 +1,4 @@
-import { Card, CardContent, CardHeader, Switch } from '@mui/material'
+import { Button, Card, CardContent, CardHeader, Switch } from '@mui/material'
 import Grid from '@mui/material/Unstable_Grid2'
 import _ from 'lodash'
 import { useState } from 'react'
@@ -29,19 +29,44 @@ export function SettingsPanel(props: SettingsPanelProps): React.JSX.Element {
   return (
     <Card variant="outlined">
       <CardHeader title="Settings" sx={{ paddingBottom: '0px' }} />
-      <CardContent sx={{ padding: '14px' }}>
+      <CardContent sx={{ padding: '14px', maxWidth: '250px' }}>
         <Grid container spacing={1}>
           <Grid
+            xs={12}
             sx={{
               display: 'flex',
               alignItems: 'center',
-              // width: '100%',
-              // justifyContent: 'space-around',
-              // backgroundColor: 'rgb(64, 0, 0)',
+              width: '100%',
+              justifyContent: 'space-between',
+              //backgroundColor: 'rgb(64, 0, 0)',
             }}
           >
             <Label typographyVariant="body1">Show intro</Label>
             <Switch checked={checked} onChange={handleChange} />
+          </Grid>
+          <Grid
+            xs={12}
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              width: '100%',
+              justifyContent: 'space-between',
+              //backgroundColor: 'rgb(64, 0, 0)',
+            }}
+          >
+            <Label typographyVariant="body1">Placeholder label</Label>
+            <Switch checked={false} />
+          </Grid>
+          <Grid xs={12} sx={{ display: 'flex', justifyContent: 'center' }}>
+            <Button
+              variant="outlined"
+              color="error"
+              onClick={() => {
+                localStorage.clear()
+              }}
+            >
+              Clear local storage
+            </Button>
           </Grid>
         </Grid>
       </CardContent>
