@@ -21,7 +21,7 @@ export default function TransportCapMgmtDialog(
   const assets = gameSession.getAssetsUnsafe()
   const [open, setOpen] = useState<boolean>(false)
 
-  function handleClickOpen(): void {
+  function handleOpen(): void {
     setOpen(true)
   }
 
@@ -40,7 +40,7 @@ export default function TransportCapMgmtDialog(
         color="primary"
         onClick={() => {
           console.log(`Clicked! ${JSON.stringify(props.rowName, undefined, 2)}`)
-          handleClickOpen()
+          handleOpen()
         }}
       >
         Manage

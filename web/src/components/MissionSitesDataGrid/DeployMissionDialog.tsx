@@ -28,7 +28,7 @@ export default function DeployMissionDialog(
   const [rowSelectionModel, setRowSelectionModel] =
     useState<GridRowSelectionModel>([])
 
-  function handleClickOpen(): void {
+  function handleOpen(): void {
     if (gameSession.isLoaded()) {
       const stillAvailableAgents: GridRowId[] = _.filter(
         rowSelectionModel,
@@ -89,7 +89,7 @@ export default function DeployMissionDialog(
 
   return (
     <Fragment>
-      <Button variant="text" color="primary" onClick={handleClickOpen}>
+      <Button variant="text" color="primary" onClick={handleOpen}>
         Deploy
       </Button>
       <Dialog open={open} onClose={handleClose}>

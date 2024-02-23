@@ -15,12 +15,13 @@ import theme from './theme.tsx'
 const rootElement = document.querySelector('#root')
 
 if (rootElement) {
+  const storedData = loadDataFromLocalStorage()
   ReactDOM.createRoot(rootElement).render(
     <React.StrictMode>
       <ThemeProvider theme={theme}>
         <CssBaseline enableColorScheme />
-        <GameSessionProvider storedGameSessionData={loadDataFromLocalStorage()}>
-          <App />
+        <GameSessionProvider storedGameSessionData={storedData.gameSessionData}>
+          <App settings={storedData.settings} />
         </GameSessionProvider>
       </ThemeProvider>
     </React.StrictMode>,
@@ -31,7 +32,14 @@ if (rootElement) {
   )
 }
 
-function loadDataFromLocalStorage(): GameSessionData | undefined {
+// kja move this data loading logic to its own class + load by iterating keys of StoredData type
+function loadDataFromLocalStorage(): StoredData {
+  const gameSessionData = loadGameSessionData()
+  const settings = loadSettings()
+  return { gameSessionData, settings }
+}
+
+function loadGameSessionData(): GameSessionData | undefined {
   const storedGameSessionDataString: string | null =
     localStorage.getItem('gameSessionData')
   if (!_.isNil(storedGameSessionDataString)) {
@@ -45,4 +53,24 @@ function loadDataFromLocalStorage(): GameSessionData | undefined {
     console.log('No game session data found in local storage')
     return undefined
   }
+}
+
+function loadSettings(): Settings {
+  const storedSettingsString: string | null = localStorage.getItem('settings')
+  if (!_.isNil(storedSettingsString)) {
+    const settings: Settings = JSON.parse(storedSettingsString) as Settings
+    console.log('Loaded settings from local storage', settings)
+    return settings
+    // eslint-disable-next-line no-else-return
+  } else {
+    console.log('No settings found in local storage. Using default settings.')
+
+    return { introEnabled: true }
+  }
+}
+
+export type Settings = { readonly introEnabled: boolean }
+type StoredData = {
+  readonly settings: Settings
+  readonly gameSessionData?: GameSessionData | undefined
 }

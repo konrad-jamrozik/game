@@ -1,10 +1,12 @@
 import { Link, Typography } from '@mui/material'
 import Grid from '@mui/material/Unstable_Grid2'
 import _ from 'lodash'
+import { Fragment, useState } from 'react'
 import { AgentsDataGrid } from './components/AgentsDataGrid/AgentsDataGrid'
 import { AssetsDataGrid } from './components/AssetsDataGrid/AssetsDataGrid'
 import { GameSessionControlPanel } from './components/GameSessionControlPanel/GameSessionControlPanel'
 import { GameStatsLineChart } from './components/GameStatsLineChart'
+import IntroDialog from './components/IntroDialog'
 import { MissionSitesDataGrid } from './components/MissionSitesDataGrid/MissionSitesDataGrid'
 import { SettingsPanel } from './components/SettingsPanel/SettingsPanel'
 import { useGameSessionContext } from './lib/GameSession'
@@ -15,6 +17,7 @@ import {
   missionsStatsDataSeries,
   moneyStatsDataSeries,
 } from './lib/GameStateDataSeries'
+import type { Settings } from './main'
 function Footer(): React.JSX.Element {
   return (
     <Typography variant="body2" color="text.secondary" align="center">
@@ -31,108 +34,126 @@ const lineChartAspectRatio = '1.5'
 const lineChartMaxWidth = '700px'
 
 // eslint-disable-next-line max-lines-per-function
-export default function App(): React.JSX.Element {
+export default function App({
+  settings,
+}: {
+  settings: Settings
+}): React.JSX.Element {
   const gameSession = useGameSessionContext()
+  // For explanation of introEnabled and showIntro states, see comment on IntroDialog() component.
+  const [introEnabled, setIntroEnabled] = useState<boolean>(
+    settings.introEnabled,
+  )
+  const [showIntro, setShowIntro] = useState<boolean>(
+    introEnabled && !gameSession.isLoaded(),
+  )
   const gameStates = gameSession.getGameStates()
   const currentGameState = gameSession.getCurrentGameStateUnsafe()
 
   return (
-    <Grid
-      container
-      justifyContent={'center'}
-      spacing={2}
-      marginTop={2}
-      marginX={0}
-      bgcolor={'#303030'}
-    >
-      <Grid sx={{ bgcolor: '#200000' }}>
-        <GameSessionControlPanel gameSession={gameSession} />
-      </Grid>
-      <Grid sx={{ bgcolor: '#002110' }}>
-        <SettingsPanel />
-      </Grid>
-      <Grid sx={{ bgcolor: '#300030' }}>
-        <AssetsDataGrid assets={currentGameState?.Assets} />
-      </Grid>
-      <Grid sx={{ bgcolor: '#302000' }}>
-        <MissionSitesDataGrid />
-      </Grid>
-      <Grid sx={{ bgcolor: '#002040' }}>
-        <AgentsDataGrid />
-      </Grid>
+    <Fragment>
+      <IntroDialog {...{ showIntro, setShowIntro }} />
       <Grid
-        xs={12}
-        lg={6}
-        sx={{
-          bgcolor: '#003000',
-          aspectRatio: lineChartAspectRatio,
-          maxWidth: lineChartMaxWidth,
-        }}
+        container
+        justifyContent={'center'}
+        spacing={2}
+        marginTop={2}
+        marginX={0}
+        bgcolor={'#303030'}
       >
-        <GameStatsLineChart
-          gameStates={gameStates}
-          dataSeries={moneyStatsDataSeries}
-        />
+        <Grid sx={{ bgcolor: '#200000' }}>
+          <GameSessionControlPanel
+            gameSession={gameSession}
+            introEnabled={introEnabled}
+            setShowIntro={setShowIntro}
+          />
+        </Grid>
+        <Grid sx={{ bgcolor: '#002110' }}>
+          <SettingsPanel {...{ introEnabled, setIntroEnabled }} />
+        </Grid>
+        <Grid sx={{ bgcolor: '#300030' }}>
+          <AssetsDataGrid assets={currentGameState?.Assets} />
+        </Grid>
+        <Grid sx={{ bgcolor: '#302000' }}>
+          <MissionSitesDataGrid />
+        </Grid>
+        <Grid sx={{ bgcolor: '#002040' }}>
+          <AgentsDataGrid />
+        </Grid>
+        <Grid
+          xs={12}
+          lg={6}
+          sx={{
+            bgcolor: '#003000',
+            aspectRatio: lineChartAspectRatio,
+            maxWidth: lineChartMaxWidth,
+          }}
+        >
+          <GameStatsLineChart
+            gameStates={gameStates}
+            dataSeries={moneyStatsDataSeries}
+          />
+        </Grid>
+        <Grid
+          xs={12}
+          lg={6}
+          sx={{
+            bgcolor: '#303000',
+            aspectRatio: lineChartAspectRatio,
+            maxWidth: lineChartMaxWidth,
+          }}
+        >
+          <GameStatsLineChart
+            gameStates={gameStates}
+            dataSeries={agentStatsDataSeries}
+          />
+        </Grid>
+        <Grid
+          xs={12}
+          lg={6}
+          sx={{
+            bgcolor: '#402000',
+            aspectRatio: lineChartAspectRatio,
+            maxWidth: lineChartMaxWidth,
+          }}
+        >
+          <GameStatsLineChart
+            gameStates={gameStates}
+            dataSeries={intelStatsDataSeries}
+          />
+        </Grid>
+        <Grid
+          xs={12}
+          lg={6}
+          sx={{
+            bgcolor: '#002040',
+            aspectRatio: lineChartAspectRatio,
+            maxWidth: lineChartMaxWidth,
+          }}
+        >
+          <GameStatsLineChart
+            gameStates={gameStates}
+            dataSeries={miscStatsDataSeries}
+          />
+        </Grid>
+        <Grid
+          xs={12}
+          lg={6}
+          sx={{
+            bgcolor: '#003030',
+            aspectRatio: lineChartAspectRatio,
+            maxWidth: lineChartMaxWidth,
+          }}
+        >
+          <GameStatsLineChart
+            gameStates={gameStates}
+            dataSeries={missionsStatsDataSeries}
+          />
+        </Grid>
+        <Grid xs={12} sx={{ bgcolor: '#300020' }}>
+          <Footer />
+        </Grid>
       </Grid>
-      <Grid
-        xs={12}
-        lg={6}
-        sx={{
-          bgcolor: '#303000',
-          aspectRatio: lineChartAspectRatio,
-          maxWidth: lineChartMaxWidth,
-        }}
-      >
-        <GameStatsLineChart
-          gameStates={gameStates}
-          dataSeries={agentStatsDataSeries}
-        />
-      </Grid>
-      <Grid
-        xs={12}
-        lg={6}
-        sx={{
-          bgcolor: '#402000',
-          aspectRatio: lineChartAspectRatio,
-          maxWidth: lineChartMaxWidth,
-        }}
-      >
-        <GameStatsLineChart
-          gameStates={gameStates}
-          dataSeries={intelStatsDataSeries}
-        />
-      </Grid>
-      <Grid
-        xs={12}
-        lg={6}
-        sx={{
-          bgcolor: '#002040',
-          aspectRatio: lineChartAspectRatio,
-          maxWidth: lineChartMaxWidth,
-        }}
-      >
-        <GameStatsLineChart
-          gameStates={gameStates}
-          dataSeries={miscStatsDataSeries}
-        />
-      </Grid>
-      <Grid
-        xs={12}
-        lg={6}
-        sx={{
-          bgcolor: '#003030',
-          aspectRatio: lineChartAspectRatio,
-          maxWidth: lineChartMaxWidth,
-        }}
-      >
-        <GameStatsLineChart
-          gameStates={gameStates}
-          dataSeries={missionsStatsDataSeries}
-        />
-      </Grid>
-      <Grid xs={12} sx={{ bgcolor: '#300020' }}>
-        <Footer />
-      </Grid>
-    </Grid>
+    </Fragment>
   )
 }

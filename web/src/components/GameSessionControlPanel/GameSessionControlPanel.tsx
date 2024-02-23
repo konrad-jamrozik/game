@@ -17,6 +17,8 @@ import { Label } from '../Label'
 
 export type GameSessionControlPanelProps = {
   readonly gameSession: GameSession
+  readonly introEnabled: boolean
+  readonly setShowIntro: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 const defaultStartTurn = 1
@@ -80,7 +82,11 @@ export function GameSessionControlPanel(
               {delegate1TurnToAiButton(advanceTurns, props.gameSession)}
             </Grid>
             <Grid xsOffset={'auto'}>
-              {resetGameSessionButton(props.gameSession)}
+              {resetGameSessionButton(
+                props.gameSession,
+                props.introEnabled,
+                props.setShowIntro,
+              )}
             </Grid>
           </Grid>
 
@@ -266,9 +272,16 @@ function resetCurrentTurnButton(gameSession: GameSession): React.JSX.Element {
   )
 }
 
-function resetGameSessionButton(gameSession: GameSession): React.JSX.Element {
+function resetGameSessionButton(
+  gameSession: GameSession,
+  introEnabled: boolean,
+  setShowIntro: React.Dispatch<React.SetStateAction<boolean>>,
+): React.JSX.Element {
   function resetGame(): void {
     gameSession.resetGame()
+    if (introEnabled) {
+      setShowIntro(true)
+    }
   }
 
   return (
