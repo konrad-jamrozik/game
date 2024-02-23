@@ -42,9 +42,10 @@ export default function IntroDialog(
           // bgcolor: '#603050',
           display: 'flex',
           justifyContent: 'center',
+          typography: 'h5',
         }}
       >
-        <Typography variant="h5">{'Situation Report'}</Typography>
+        {'Situation Report'}
       </DialogTitle>
       <DialogContent sx={{ maxWidth: '550px', paddingBottom: '0px' }}>
         {contentTypographies()}
