@@ -44,12 +44,12 @@ export default function IntroDialog(
           justifyContent: 'center',
         }}
       >
-        {'Situation Report'}
+        <Typography variant="h5">{'Situation Report'}</Typography>
       </DialogTitle>
-      <DialogContent sx={{ maxWidth: '500px' }}>
+      <DialogContent sx={{ maxWidth: '550px', paddingBottom: '0px' }}>
         {contentTypographies()}
       </DialogContent>
-      <DialogActions sx={{ justifyContent: 'center' }}>
+      <DialogActions sx={{ justifyContent: 'center', paddingBottom: '20px' }}>
         <Button
           variant={'contained'}
           onClick={handleClose}
@@ -62,13 +62,13 @@ export default function IntroDialog(
 const content: string[] = [
   `The year is 2030. Humanity is waging a secret war against enemies numerous and unknown.
 You take the helm of a clandestine organization known as "The Solemn Participants", or "Solpar".`,
-  `Your mission is to discover, infiltrate, prioritize and neutralize the gravest threats to the human race.`,
+  `Your mission is to discover, infiltrate, and neutralize gravest threats to the human race.`,
   `Your mission is to participate in the secret war.`,
 ]
 
 function contentTypographies(): React.JSX.Element[] {
   return _.map(content, (paragraph: string, index: number) => (
-    <Typography key={index} textAlign={'center'} gutterBottom={true}>
+    <Typography key={index} textAlign={'center'} paddingBottom={'20px'}>
       {paragraph}
     </Typography>
   ))
