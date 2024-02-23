@@ -13,7 +13,7 @@ import { isActive } from '../../lib/codesync/ruleset'
 import { defaultComponentMinWidth } from '../../lib/utils'
 import DeployMissionDialog from './DeployMissionDialog'
 
-const tableHeight = 310
+const tableHeight = 330
 
 export function MissionSitesDataGrid(): React.JSX.Element {
   const gameSession = useGameSessionContext()

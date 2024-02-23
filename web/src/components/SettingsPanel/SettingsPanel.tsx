@@ -51,7 +51,7 @@ export function SettingsPanel(props: SettingsPanelProps): React.JSX.Element {
               alignItems: 'center',
               width: '100%',
               justifyContent: 'space-between',
-              //backgroundColor: 'rgb(64, 0, 0)',
+              //backgroundColor: 'rgb(64, 32, 0)',
             }}
           >
             <Label typographyVariant="body1">Placeholder label</Label>
@@ -63,6 +63,7 @@ export function SettingsPanel(props: SettingsPanelProps): React.JSX.Element {
               color="error"
               onClick={() => {
                 localStorage.clear()
+                console.log('Cleared local storage')
               }}
             >
               Clear local storage
