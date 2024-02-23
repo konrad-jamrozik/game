@@ -31,25 +31,17 @@ export function SettingsPanel(props: SettingsPanelProps): React.JSX.Element {
       <CardHeader title="Settings" sx={{ paddingBottom: '0px' }} />
       <CardContent sx={{ padding: '14px' }}>
         <Grid container spacing={1}>
-          <Grid container sx={{ minWidth: '0px' }}>
-            <Grid
-              xs={9}
-              sx={{
-                display: 'flex',
-                alignItems: 'center',
-              }}
-            >
-              <Label typographyVariant="body1">Show situation report</Label>
-            </Grid>
-            <Grid
-              xs={3}
-              sx={{
-                display: 'flex',
-                justifyContent: 'center',
-              }}
-            >
-              <Switch checked={checked} onChange={handleChange} />
-            </Grid>
+          <Grid
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              // width: '100%',
+              // justifyContent: 'space-around',
+              // backgroundColor: 'rgb(64, 0, 0)',
+            }}
+          >
+            <Label typographyVariant="body1">Show intro</Label>
+            <Switch checked={checked} onChange={handleChange} />
           </Grid>
         </Grid>
       </CardContent>
