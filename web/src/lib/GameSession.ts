@@ -176,49 +176,27 @@ export class GameSession {
     return this.getCurrentGameState().IsGameOver
   }
 
-  public getPlayerMadeActionsInCurrentTurn(): boolean {
+  public hasPlayerMadeActionsInCurrentTurn(): boolean {
     if (!this.isInitialized()) {
       return false
     }
-    const lastGameState = this.data.getGameStates().at(-1)
+
+    const currentGameState = this.data.getGameStates().at(-1)
     const resetGameState = this.data.getResetGameState()
-
-    console.log(
-      `getPlayerMadeActionsInCurrentTurn: lastGameState.UpdateCount: ${lastGameState!.UpdateCount}, resetGameState.UpdateCount: ${resetGameState!.UpdateCount}`,
-    )
-
-    return (
-      this.isInitialized() &&
-      lastGameState!.UpdateCount > resetGameState!.UpdateCount
-    )
+    return currentGameState!.UpdateCount > resetGameState.UpdateCount
   }
 
   public canAdvanceTime(): boolean {
-    if (!this.isInitialized()) {
-      console.log(`canAdvanceTime: not loaded`)
-      return true
-    }
     const canAdvanceTime =
-      !this.isInitialized() || (!this.isGameOver() && !this.loading)
-    console.log(
-      `canAdvanceTime: ${this.isInitialized()} ${!this.isGameOver()} ${!this.loading} canAdvanceTime: ${canAdvanceTime}`,
-    )
+      !this.loading && (!this.isInitialized() || !this.isGameOver())
     return canAdvanceTime
   }
 
   public canDelegateTurnsToAi(): boolean {
-    if (!this.isInitialized()) {
-      console.log(`canDelegateTurnsToAi: not loaded`)
-      return true
-    }
     const canDelegateTurnsToAi =
-      !this.isInitialized() ||
-      (!this.isGameOver() &&
-        !this.loading &&
-        !this.getPlayerMadeActionsInCurrentTurn())
-    console.log(
-      `canDelegateTurnsToAi: ${canDelegateTurnsToAi}, ${this.isInitialized()}, ${!this.isGameOver()}, ${!this.loading}, ${!this.getPlayerMadeActionsInCurrentTurn()}`,
-    )
+      !this.loading &&
+      (!this.isInitialized() ||
+        (!this.isGameOver() && !this.hasPlayerMadeActionsInCurrentTurn()))
     return canDelegateTurnsToAi
   }
 

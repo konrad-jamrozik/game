@@ -241,7 +241,7 @@ function delegateTurnsToAiButton(
 }
 
 function resetCurrentTurnButton(gameSession: GameSession): React.JSX.Element {
-  const playerMadeActions = gameSession.getPlayerMadeActionsInCurrentTurn()
+  const playerMadeActions = gameSession.hasPlayerMadeActionsInCurrentTurn()
   const isDisabled =
     !gameSession.isInitialized() ||
     gameSession.loading ||

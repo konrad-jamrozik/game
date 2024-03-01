@@ -37,8 +37,8 @@ export class GameSessionDataWrapper {
     return this._data.gameStates
   }
 
-  public getResetGameState(): GameState | undefined {
-    return this._data.resetGameState
+  public getResetGameState(): GameState {
+    return this._data.resetGameState!
   }
 
   public revertToPreviousTurn(): void {
