@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 /* eslint-disable @typescript-eslint/parameter-properties */
 import _ from 'lodash'
 import { useContext, useState } from 'react'
@@ -241,7 +242,10 @@ export class GameSession {
     return this.data.getGameStates().at(-1)
   }
 
-  public upsertGameStates(newGameStates: GameState[]): void {
+  public upsertGameStates(
+    newGameStates: GameState[],
+    resultOfPlayerAction?: boolean,
+  ): void {
     if (_.isEmpty(newGameStates)) {
       throw new Error('newGameStates must not be empty')
     }
@@ -270,7 +274,10 @@ export class GameSession {
     )
 
     const gameStatesAfterUpsertion = [...retainedGameStates, ...newGameStates]
-    this.data.setDataStates(gameStatesAfterUpsertion)
+    this.data.setDataStates(
+      gameStatesAfterUpsertion,
+      Boolean(resultOfPlayerAction),
+    )
     this.setLoading(false)
     this.setError('')
   }
@@ -287,7 +294,7 @@ export class GameSession {
     })
 
     if (!_.isUndefined(newGameState)) {
-      this.upsertGameStates([newGameState])
+      this.upsertGameStates([newGameState], true)
       return true
     }
     return false

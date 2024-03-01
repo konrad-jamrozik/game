@@ -65,24 +65,14 @@ export class GameSessionDataWrapper {
     this.setData(newGameSessionData)
   }
 
-  public setDataStates(gameStates: GameState[]): void {
+  public setDataStates(
+    gameStates: GameState[],
+    resultOfPlayerAction: boolean,
+  ): void {
     GameSessionDataWrapper.verify(gameStates)
-    // set resetGameState to the current state from gameStates
-    // only if it has a higher turn number.
-    // If the current state from gameStates has the same current turn number
-    // it means the current turn game state was modified (presumably by player action)
-    // and hence resetGameState should remain unchanged.
-    // kja there is a case where the current state has the same current turn number
-    // as the resetGameState and should be changed: when the game was re-simulated
-    // to exactly the same turn. In this case the resetGameState should be updated
-
-    const currentTurnChangedAsComparedToResetGameState =
-      this._data.resetGameState?.Timeline.CurrentTurn !==
-      gameStates.at(-1)?.Timeline.CurrentTurn
-
-    const resetGameState = currentTurnChangedAsComparedToResetGameState
-      ? gameStates.at(-1)
-      : this._data.resetGameState
+    const resetGameState = resultOfPlayerAction
+      ? this._data.resetGameState
+      : gameStates.at(-1)
     const newData: GameSessionData = {
       ...this._data,
       gameStates,
