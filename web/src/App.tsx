@@ -45,7 +45,7 @@ export default function App({
     settings.introEnabled,
   )
   const [showIntro, setShowIntro] = useState<boolean>(
-    introEnabled && !gameSession.isLoaded(),
+    introEnabled && !gameSession.isInitialized(),
   )
   const gameStates = gameSession.getGameStates()
   const currentGameState = gameSession.getCurrentGameStateUnsafe()

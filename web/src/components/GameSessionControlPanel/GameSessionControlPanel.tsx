@@ -110,7 +110,7 @@ export function GameSessionControlPanel(
               )}
             </Grid>
           </Grid>
-          {props.gameSession.isLoaded() && (
+          {props.gameSession.isInitialized() && (
             <Grid xs={12}>
               <Label>{gameRunMsg()}</Label>
             </Grid>
@@ -243,12 +243,12 @@ function delegateTurnsToAiButton(
 function resetCurrentTurnButton(gameSession: GameSession): React.JSX.Element {
   const playerMadeActions = gameSession.getPlayerMadeActionsInCurrentTurn()
   const isDisabled =
-    !gameSession.isLoaded() ||
+    !gameSession.isInitialized() ||
     gameSession.loading ||
     (gameSession.getCurrentTurn() === initialTurn && !playerMadeActions)
 
   const label =
-    playerMadeActions || !gameSession.isLoaded()
+    playerMadeActions || !gameSession.isInitialized()
       ? `Reset turn`
       : `Revert 1 turn`
 
@@ -288,7 +288,7 @@ function resetGameSessionButton(
     <Button
       variant="outlined"
       onClick={resetGame}
-      disabled={!gameSession.isLoaded() || gameSession.loading}
+      disabled={!gameSession.isInitialized() || gameSession.loading}
       color="error"
     >
       {`Reset game`}

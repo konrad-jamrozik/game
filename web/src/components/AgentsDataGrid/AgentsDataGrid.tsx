@@ -44,7 +44,7 @@ export function AgentsDataGrid(props: AgentsDataGridProps): React.JSX.Element {
   const [action, setAction] = useState<BatchAgentPlayerActionOption>('None')
   const deploymentDisplay = !_.isUndefined(props.missionSiteToDeploy)
 
-  const agents: Agent[] = gameSession.isLoaded()
+  const agents: Agent[] = gameSession.isInitialized()
     ? filterAgents(gameSession, deploymentDisplay)
     : []
 
@@ -147,7 +147,7 @@ function isAgentRowSelectable(
   action: BatchAgentPlayerActionOption,
   gameSession: GameSession,
 ): boolean {
-  if (!gameSession.isLoaded()) {
+  if (!gameSession.isInitialized()) {
     return false
   }
 

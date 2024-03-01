@@ -29,7 +29,7 @@ export default function DeployMissionDialog(
     useState<GridRowSelectionModel>([])
 
   function handleOpen(): void {
-    if (gameSession.isLoaded()) {
+    if (gameSession.isInitialized()) {
       const stillAvailableAgents: GridRowId[] = _.filter(
         rowSelectionModel,
         (id: GridRowId) => _.some(assets?.Agents, (agent) => agent.Id === id),
@@ -58,7 +58,7 @@ export default function DeployMissionDialog(
     if (_.isUndefined(props.missionSite)) {
       return [false, `ERROR: missionSite is undefined`]
     }
-    if (!gameSession.isLoaded()) {
+    if (!gameSession.isInitialized()) {
       return [false, `Game is not loaded`]
     }
     if (gameSession.isGameOver()) {

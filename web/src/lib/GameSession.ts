@@ -144,7 +144,7 @@ export class GameSession {
     return this.data.getGameStates()
   }
 
-  public isLoaded(): boolean {
+  public isInitialized(): boolean {
     return !_.isEmpty(this.data.getGameStates())
   }
 
@@ -177,7 +177,7 @@ export class GameSession {
   }
 
   public getPlayerMadeActionsInCurrentTurn(): boolean {
-    if (!this.isLoaded()) {
+    if (!this.isInitialized()) {
       return false
     }
     const lastGameState = this.data.getGameStates().at(-1)
@@ -188,42 +188,42 @@ export class GameSession {
     )
 
     return (
-      this.isLoaded() &&
+      this.isInitialized() &&
       lastGameState!.UpdateCount > resetGameState!.UpdateCount
     )
   }
 
   public canAdvanceTime(): boolean {
-    if (!this.isLoaded()) {
+    if (!this.isInitialized()) {
       console.log(`canAdvanceTime: not loaded`)
       return true
     }
     const canAdvanceTime =
-      !this.isLoaded() || (!this.isGameOver() && !this.loading)
+      !this.isInitialized() || (!this.isGameOver() && !this.loading)
     console.log(
-      `canAdvanceTime: ${this.isLoaded()} ${!this.isGameOver()} ${!this.loading} canAdvanceTime: ${canAdvanceTime}`,
+      `canAdvanceTime: ${this.isInitialized()} ${!this.isGameOver()} ${!this.loading} canAdvanceTime: ${canAdvanceTime}`,
     )
     return canAdvanceTime
   }
 
   public canDelegateTurnsToAi(): boolean {
-    if (!this.isLoaded()) {
+    if (!this.isInitialized()) {
       console.log(`canDelegateTurnsToAi: not loaded`)
       return true
     }
     const canDelegateTurnsToAi =
-      !this.isLoaded() ||
+      !this.isInitialized() ||
       (!this.isGameOver() &&
         !this.loading &&
         !this.getPlayerMadeActionsInCurrentTurn())
     console.log(
-      `canDelegateTurnsToAi: ${canDelegateTurnsToAi}, ${this.isLoaded()}, ${!this.isGameOver()}, ${!this.loading}, ${!this.getPlayerMadeActionsInCurrentTurn()}`,
+      `canDelegateTurnsToAi: ${canDelegateTurnsToAi}, ${this.isInitialized()}, ${!this.isGameOver()}, ${!this.loading}, ${!this.getPlayerMadeActionsInCurrentTurn()}`,
     )
     return canDelegateTurnsToAi
   }
 
   public isInProgress(): boolean {
-    return this.isLoaded() && !this.isGameOver()
+    return this.isInitialized() && !this.isGameOver()
   }
 
   public getCurrentGameState(): GameState {
