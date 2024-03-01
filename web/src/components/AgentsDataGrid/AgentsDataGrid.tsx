@@ -171,7 +171,6 @@ function filterAgents(
   deploymentDisplay: boolean,
 ): Agent[] {
   const gameStateAgents = gameSession.getAssets().Agents
-  // eslint-disable-next-line sonarjs/prefer-immediate-return
   const agents = deploymentDisplay
     ? _.filter(gameStateAgents, canBeSentOnMission)
     : gameStateAgents

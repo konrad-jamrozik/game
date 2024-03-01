@@ -176,24 +176,49 @@ export class GameSession {
   }
 
   public getPlayerMadeActionsInCurrentTurn(): boolean {
+    if (!this.isLoaded()) {
+      return false
+    }
+    const lastGameState = this.data.getGameStates().at(-1)
+    const resetGameState = this.data.getResetGameState()
+
+    console.log(
+      `getPlayerMadeActionsInCurrentTurn: lastGameState.UpdateCount: ${lastGameState!.UpdateCount}, resetGameState.UpdateCount: ${resetGameState!.UpdateCount}`,
+    )
+
     return (
       this.isLoaded() &&
-      this.data.getGameStates().at(-1)!.UpdateCount >
-        this.data.getResetGameState()!.UpdateCount
+      lastGameState!.UpdateCount > resetGameState!.UpdateCount
     )
   }
 
   public canAdvanceTime(): boolean {
-    return !this.isLoaded() || (!this.isGameOver() && !this.loading)
+    if (!this.isLoaded()) {
+      console.log(`canAdvanceTime: not loaded`)
+      return true
+    }
+    const canAdvanceTime =
+      !this.isLoaded() || (!this.isGameOver() && !this.loading)
+    console.log(
+      `canAdvanceTime: ${this.isLoaded()} ${!this.isGameOver()} ${!this.loading} canAdvanceTime: ${canAdvanceTime}`,
+    )
+    return canAdvanceTime
   }
 
   public canDelegateTurnsToAi(): boolean {
-    return (
+    if (!this.isLoaded()) {
+      console.log(`canDelegateTurnsToAi: not loaded`)
+      return true
+    }
+    const canDelegateTurnsToAi =
       !this.isLoaded() ||
       (!this.isGameOver() &&
         !this.loading &&
         !this.getPlayerMadeActionsInCurrentTurn())
+    console.log(
+      `canDelegateTurnsToAi: ${canDelegateTurnsToAi}, ${this.isLoaded()}, ${!this.isGameOver()}, ${!this.loading}, ${!this.getPlayerMadeActionsInCurrentTurn()}`,
     )
+    return canDelegateTurnsToAi
   }
 
   public isInProgress(): boolean {

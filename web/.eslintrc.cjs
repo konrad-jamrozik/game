@@ -189,6 +189,10 @@ module.exports = {
       'warn', // [vite template][plugin: react-refresh]
       { allowConstantExport: true }, // [vite template][plugin: react-refresh]
     ],
+
+    // https://github.com/SonarSource/eslint-plugin-sonarjs/blob/master/docs/rules/prefer-immediate-return.md
+    'sonarjs/prefer-immediate-return': 'off',
+
     // Rules copy-pasted from:
     // https://github.com/github/eslint-plugin-github/blob/73c236f83045314104556b2be515865f4b6c38d3/lib/index.js#L9C1-L26C73
     // Because [eslint-plugin-github] is not nice enough to provide relevant config.

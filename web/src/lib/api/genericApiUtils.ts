@@ -31,8 +31,9 @@ export async function callApi<T>(
   params.setLoading(true)
   params.setError('')
 
+  const logRequest = await log(params.request)
   try {
-    console.log(`callApi(): ${await log(params.request)}`)
+    console.log(`callApi() TRY: ${logRequest}`)
 
     const response: Response = await fetch(params.request)
     if (!response.ok) {
@@ -46,6 +47,7 @@ export async function callApi<T>(
     return undefined
   } finally {
     params.setLoading(false)
+    console.log(`callApi() FINALLY: ${logRequest}`)
   }
 }
 
@@ -74,7 +76,6 @@ export async function log(req: Request, pretty?: boolean): Promise<string> {
     parsed.url = url
     parsed.method = method
     /* eslint-enable @typescript-eslint/no-unsafe-member-access */
-    // eslint-disable-next-line sonarjs/prefer-immediate-return
     const stringified = JSON.stringify(parsed, undefined, 2)
     return stringified
   }
