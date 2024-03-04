@@ -57,20 +57,24 @@ export default function App({
     introEnabled && !gameSession.isInitialized(),
   )
 
-  const shouldShowOutro = outroEnabled && isGameOver === true
-  const [showOutro, setShowOutro] = useState<boolean>(shouldShowOutro)
-  // kja this currently doesn't work as expected
+  const [showOutro, setShowOutro] = useState<boolean>(
+    outroEnabled && isGameOver === true,
+  )
+
+  // kja should this instead be an useEffect that depends on the current state update count,
+  // or something like that?
+  // This effect would set show outro as appropriate.
   // See https://stackoverflow.com/questions/58818727/react-usestate-not-setting-initial-value
   // See https://react.dev/learn/you-might-not-need-an-effect
   // See https://react.dev/learn/synchronizing-with-effects
   // See https://react.dev/learn/separating-events-from-effects
-  // I am trying to make this effect run only after turn has been advanced, i.e. after gameSession.advanceTurns() has been called.
-  // The difference to intro is that in case of intro as soon player clicks a button like 'reset', we
-  // immediately know if to show the intro or not, based on state.
-  // But for outro, we may or may not show it, depending on how the game session internal state has been updated.
-  useEffect(() => {
-    setShowOutro(shouldShowOutro)
-  }, [shouldShowOutro])
+  const [gameStateUpdated, setGameStateUpdated] = useState<boolean>(false)
+  if (outroEnabled && !showOutro && gameStateUpdated && isGameOver === true) {
+    setShowOutro(true)
+  }
+  if (gameStateUpdated) {
+    setGameStateUpdated(false)
+  }
 
   return (
     <Fragment>
@@ -89,8 +93,7 @@ export default function App({
             gameSession={gameSession}
             introEnabled={introEnabled}
             setShowIntro={setShowIntro}
-            outroEnabled={outroEnabled}
-            setShowOutro={setShowOutro}
+            setGameStateUpdated={setGameStateUpdated}
           />
         </Grid>
         <Grid sx={{ bgcolor: '#002110' }}>

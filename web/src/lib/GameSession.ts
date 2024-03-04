@@ -58,7 +58,7 @@ export class GameSession {
     startTurn: number,
     targetTurn: number,
     delegateToAi?: boolean | undefined,
-  ): Promise<void> {
+  ): Promise<boolean> {
     const startGameState = this.getGameStateAtTurn(startTurn)
     const newGameStates = await callAdvanceTurnsApi({
       setLoading: this.setLoading,
@@ -69,7 +69,9 @@ export class GameSession {
     })
     if (!_.isUndefined(newGameStates)) {
       this.upsertGameStates(newGameStates)
+      return true
     }
+    return false
   }
 
   public async hireAgents(count: number): Promise<boolean> {

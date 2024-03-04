@@ -20,8 +20,7 @@ export type GameSessionControlPanelProps = {
   readonly gameSession: GameSession
   readonly introEnabled: boolean
   readonly setShowIntro: React.Dispatch<React.SetStateAction<boolean>>
-  readonly outroEnabled: boolean
-  readonly setShowOutro: React.Dispatch<React.SetStateAction<boolean>>
+  readonly setGameStateUpdated: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 const defaultStartTurn = 1
@@ -47,16 +46,17 @@ export function GameSessionControlPanel(
       props.gameSession.getCurrentTurnUnsafe(),
       turnsToAdvance,
     )
-    await props.gameSession.advanceTurns(
+    const gameStateUpdated = await props.gameSession.advanceTurns(
       resolvedStartTurn,
       resolvedTargetTurn,
       delegateToAi,
     )
-    if ((props.gameSession.isGameOverUnsafe() ?? false) && props.outroEnabled) {
-      // kja this currently doesn't work as expected
-      // See duplicate of this todo.
-      console.log(`setShowOutro!!`)
-      props.setShowOutro(true)
+    // kja this logic should be encapsulated inside game session, similar to 'loading' and 'error' states.
+    // Then the client code could do on re-render: gameSession.hasGameStateUpdated().
+    // It needs to apply all cases of game state update, not just advanceTurns.
+    // Notably, also all player actions.
+    if (gameStateUpdated) {
+      props.setGameStateUpdated(true)
     }
   }
 
