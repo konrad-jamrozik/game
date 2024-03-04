@@ -56,7 +56,7 @@ export default function OutroDialog(
 
 const contentGameWon: string[] = [
   `Thanks to your efforts "Solpar" has successfully secured and contained all the major threats to humankind, protecting the world.`,
-  `The Secret War for now is over. You can take your well-deserved rest... for now.`,
+  `The Secret War is over. You can take your well-deserved rest... for now.`,
 ]
 
 const contentGameLost: string[] = [
