@@ -54,6 +54,7 @@ export function GameSessionControlPanel(
     )
     if ((props.gameSession.isGameOverUnsafe() ?? false) && props.outroEnabled) {
       // kja this currently doesn't work as expected
+      // See duplicate of this todo.
       console.log(`setShowOutro!!`)
       props.setShowOutro(true)
     }

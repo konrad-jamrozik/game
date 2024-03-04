@@ -1,7 +1,7 @@
 import { Link, Typography } from '@mui/material'
 import Grid from '@mui/material/Unstable_Grid2'
 import _ from 'lodash'
-import { Fragment, useState } from 'react'
+import { Fragment, useEffect, useState } from 'react'
 import { AgentsDataGrid } from './components/AgentsDataGrid/AgentsDataGrid'
 import { AssetsDataGrid } from './components/AssetsDataGrid/AssetsDataGrid'
 import { GameSessionControlPanel } from './components/GameSessionControlPanel/GameSessionControlPanel'
@@ -56,18 +56,21 @@ export default function App({
   const [showIntro, setShowIntro] = useState<boolean>(
     introEnabled && !gameSession.isInitialized(),
   )
+
+  const shouldShowOutro = outroEnabled && isGameOver === true
+  const [showOutro, setShowOutro] = useState<boolean>(shouldShowOutro)
   // kja this currently doesn't work as expected
   // See https://stackoverflow.com/questions/58818727/react-usestate-not-setting-initial-value
-  const [showOutro, setShowOutro] = useState<boolean>(
-    outroEnabled && isGameOver === true,
-  )
-  console.log('outroEnabled', outroEnabled)
-  console.log('isGameOver', isGameOver)
-  console.log(
-    'outroEnabled && isGameOver === true',
-    outroEnabled && isGameOver === true,
-  )
-  console.log('showOutro', showOutro)
+  // See https://react.dev/learn/you-might-not-need-an-effect
+  // See https://react.dev/learn/synchronizing-with-effects
+  // See https://react.dev/learn/separating-events-from-effects
+  // I am trying to make this effect run only after turn has been advanced, i.e. after gameSession.advanceTurns() has been called.
+  // The difference to intro is that in case of intro as soon player clicks a button like 'reset', we
+  // immediately know if to show the intro or not, based on state.
+  // But for outro, we may or may not show it, depending on how the game session internal state has been updated.
+  useEffect(() => {
+    setShowOutro(shouldShowOutro)
+  }, [shouldShowOutro])
 
   return (
     <Fragment>
@@ -86,8 +89,6 @@ export default function App({
             gameSession={gameSession}
             introEnabled={introEnabled}
             setShowIntro={setShowIntro}
-            outroEnabled={outroEnabled}
-            setShowOutro={setShowOutro}
           />
         </Grid>
         <Grid sx={{ bgcolor: '#002110' }}>
