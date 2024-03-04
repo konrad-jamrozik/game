@@ -44,9 +44,9 @@ export default function OutroDialog(
       <DialogActions sx={{ justifyContent: 'center', paddingBottom: '20px' }}>
         <Button variant={'contained'} onClick={handleClose}>
           {props.gameResult === 'won'
-            ? 'Let me rest.'
+            ? 'I shall rest'
             : props.gameResult === 'lost'
-              ? 'I am sorry.'
+              ? 'I am sorry'
               : 'N/A'}
         </Button>
       </DialogActions>
