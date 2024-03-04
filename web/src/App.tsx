@@ -89,6 +89,8 @@ export default function App({
             gameSession={gameSession}
             introEnabled={introEnabled}
             setShowIntro={setShowIntro}
+            outroEnabled={outroEnabled}
+            setShowOutro={setShowOutro}
           />
         </Grid>
         <Grid sx={{ bgcolor: '#002110' }}>
