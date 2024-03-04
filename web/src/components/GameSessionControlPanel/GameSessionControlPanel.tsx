@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 /* eslint-disable max-lines */
 import {
   Button,
@@ -19,6 +20,8 @@ export type GameSessionControlPanelProps = {
   readonly gameSession: GameSession
   readonly introEnabled: boolean
   readonly setShowIntro: React.Dispatch<React.SetStateAction<boolean>>
+  readonly outroEnabled: boolean
+  readonly setShowOutro: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 const defaultStartTurn = 1
@@ -49,6 +52,11 @@ export function GameSessionControlPanel(
       resolvedTargetTurn,
       delegateToAi,
     )
+    if ((props.gameSession.isGameOverUnsafe() ?? false) && props.outroEnabled) {
+      // kja this currently doesn't work as expected
+      console.log(`setShowOutro!!`)
+      props.setShowOutro(true)
+    }
   }
 
   const theme = useTheme()
@@ -279,6 +287,8 @@ function resetGameSessionButton(
 ): React.JSX.Element {
   function resetGame(): void {
     gameSession.resetGame()
+    // kja this 'introEnabled' check should not be necessary here. Only the IntroDialog itself
+    // should check if it is enabled and if not, not show anything, even if show intro is set.
     if (introEnabled) {
       setShowIntro(true)
     }

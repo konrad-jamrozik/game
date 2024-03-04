@@ -156,6 +156,13 @@ export class GameSession {
     return this.getCurrentGameStateUnsafe()?.Timeline.CurrentTurn
   }
 
+  public getGameResultUnsafe(): GameResult | undefined {
+    if (!this.isInitialized()) {
+      return undefined
+    }
+    return this.getGameResult()
+  }
+
   public getGameResult(): GameResult {
     const lastGameState = this.getCurrentGameState()
     return lastGameState.IsGameWon
@@ -170,6 +177,13 @@ export class GameSession {
       this.data.getGameStates(),
       (gs) => gs.Timeline.CurrentTurn === turn,
     )!
+  }
+
+  public isGameOverUnsafe(): boolean | undefined {
+    if (!this.isInitialized()) {
+      return undefined
+    }
+    return this.isGameOver()
   }
 
   public isGameOver(): boolean {

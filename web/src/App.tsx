@@ -8,6 +8,7 @@ import { GameSessionControlPanel } from './components/GameSessionControlPanel/Ga
 import { GameStatsLineChart } from './components/GameStatsLineChart'
 import IntroDialog from './components/IntroDialog'
 import { MissionSitesDataGrid } from './components/MissionSitesDataGrid/MissionSitesDataGrid'
+import OutroDialog from './components/OutroDialog'
 import { SettingsPanel } from './components/SettingsPanel/SettingsPanel'
 import { useGameSessionContext } from './lib/GameSession'
 import {
@@ -40,19 +41,38 @@ export default function App({
   settings: Settings
 }): React.JSX.Element {
   const gameSession = useGameSessionContext()
+  const gameStates = gameSession.getGameStates()
+  const currentGameState = gameSession.getCurrentGameStateUnsafe()
+  const isGameOver = gameSession.isGameOverUnsafe()
+  const gameResult = gameSession.getGameResultUnsafe()
+
   // For explanation of introEnabled and showIntro states, see comment on IntroDialog() component.
   const [introEnabled, setIntroEnabled] = useState<boolean>(
     settings.introEnabled,
   )
+  const [outroEnabled, setOutroEnabled] = useState<boolean>(
+    settings.outroEnabled,
+  )
   const [showIntro, setShowIntro] = useState<boolean>(
     introEnabled && !gameSession.isInitialized(),
   )
-  const gameStates = gameSession.getGameStates()
-  const currentGameState = gameSession.getCurrentGameStateUnsafe()
+  // kja this currently doesn't work as expected
+  // See https://stackoverflow.com/questions/58818727/react-usestate-not-setting-initial-value
+  const [showOutro, setShowOutro] = useState<boolean>(
+    outroEnabled && isGameOver === true,
+  )
+  console.log('outroEnabled', outroEnabled)
+  console.log('isGameOver', isGameOver)
+  console.log(
+    'outroEnabled && isGameOver === true',
+    outroEnabled && isGameOver === true,
+  )
+  console.log('showOutro', showOutro)
 
   return (
     <Fragment>
       <IntroDialog {...{ showIntro, setShowIntro }} />
+      <OutroDialog {...{ gameResult, showOutro, setShowOutro }} />
       <Grid
         container
         justifyContent={'center'}
@@ -66,10 +86,19 @@ export default function App({
             gameSession={gameSession}
             introEnabled={introEnabled}
             setShowIntro={setShowIntro}
+            outroEnabled={outroEnabled}
+            setShowOutro={setShowOutro}
           />
         </Grid>
         <Grid sx={{ bgcolor: '#002110' }}>
-          <SettingsPanel {...{ introEnabled, setIntroEnabled }} />
+          <SettingsPanel
+            {...{
+              introEnabled,
+              setIntroEnabled,
+              outroEnabled,
+              setOutroEnabled,
+            }}
+          />
         </Grid>
         <Grid sx={{ bgcolor: '#300030' }}>
           <AssetsDataGrid assets={currentGameState?.Assets} />
