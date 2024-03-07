@@ -3,7 +3,7 @@
 PowerShell module with aliases faciliating local development.
 
 .INPUTS
-This scrpt assumes that:
+This script assumes that:
 - $kjgameDir is defined and points to the root of the local clone of the game (i.e. this) repository.
 #>
 Set-StrictMode -Version Latest
