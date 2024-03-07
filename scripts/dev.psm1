@@ -58,14 +58,6 @@ function Remove-FrontendPortUsage {
 }
 New-Alias game-clear-frontend-port Remove-FrontendPortUsage
 
-function Start-GameLocalDevTwoTabs {
-    Write-Host "Starting Game local dev with two tabs"
-
-    wt --window 0 new-tab --profile "PowerShell" --tabColor $steel_blue --title "Frontend" --startingDirectory $frontendDir
-    wt --window 0 new-tab --profile "PowerShell" --tabColor $crimson --title "Backend" --startingDirectory $backendDir
-}
-New-Alias game-start-localdev-twotabs Start-GameLocalDevTwoTabs
-
 # Docs researched while writing this script:
 # https://stackoverflow.com/questions/67166275/how-to-open-new-tab-with-running-specific-command-in-powershell-windows-termina
 # https://github.com/microsoft/terminal/issues/9895#issuecomment-823199630
