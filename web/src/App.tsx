@@ -64,6 +64,16 @@ export default function App({
   // kja should this instead be an useEffect that depends on the current state update count,
   // or something like that?
   // This effect would set show outro as appropriate.
+  //
+  // Going further, perhaps all methods on GameSession that can update the game states should accept
+  // as input a callback that is called if the game state has been updated.
+  // This would be equivalent to the conditional here with gameStateUpdated set to true.
+  // So the callback would be:
+  //   if (outroEnabled && !showOutro && isGameOver === true) {
+  //     setShowOutro(true)
+  //   }
+  // Note there would be no need to for setting gameStateUpdated immediately to false if it is true,
+  // because gameStateUpdated would be gone: we would instead leverage useEffect.
   // See https://stackoverflow.com/questions/58818727/react-usestate-not-setting-initial-value
   // See https://react.dev/learn/you-might-not-need-an-effect
   // See https://react.dev/learn/synchronizing-with-effects
