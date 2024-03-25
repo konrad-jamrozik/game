@@ -77,6 +77,6 @@ type StoredData = {
   readonly settings: Settings
   readonly gameSessionData?: GameSessionData | undefined
 }
-// kja issue when trying to stor 300 turns:
+// kja issue when trying to store 300 turns:
 // Uncaught (in promise) DOMException: Failed to execute 'setItem' on 'Storage': Setting the value of 'gameSessionData' exceeded the quota.
 // https://stackoverflow.com/questions/23977690/setting-the-value-of-dataurl-exceeded-the-quota

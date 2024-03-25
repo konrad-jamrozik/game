@@ -78,6 +78,7 @@ export default function App({
   // See https://react.dev/learn/you-might-not-need-an-effect
   // See https://react.dev/learn/synchronizing-with-effects
   // See https://react.dev/learn/separating-events-from-effects
+  // See https://chat.openai.com/g/g-AVrfRPzod-react-ai/c/b1bffd24-2aa1-4899-80a3-855c1b6c2843
   const [gameStateUpdated, setGameStateUpdated] = useState<boolean>(false)
   if (outroEnabled && !showOutro && gameStateUpdated && isGameOver === true) {
     setShowOutro(true)
