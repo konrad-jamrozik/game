@@ -10,6 +10,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
+    "preview": "vite preview",
     "test": "vitest",
     "test:ui": "vitest --ui",
     "test:run": "vitest run",
@@ -18,8 +19,7 @@
     "lint:fix": "eslint . --ext ts,tsx,yml,yaml,json --fix",
     "prettier": "prettier . --check --end-of-line auto",
     "prettier:debug": "prettier . --check --end-of-line auto --log-level debug",
-    "prettier:write": "prettier . --end-of-line auto --write",
-    "preview": "vite preview"
+    "prettier:write": "prettier . --end-of-line auto --write"
   },
   "dependencies": {
     "@emotion/react": "^11.11.3",
