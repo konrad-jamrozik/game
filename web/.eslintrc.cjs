@@ -6,7 +6,6 @@ module.exports = {
     browser: true, // [vite template]
     es2022: true, // [vite template][customized: es2022]
     node: true, // [ts-eslint][customized: node]
-    'jest/globals': true,
   },
   extends: [
     'eslint:all', // [eslint all]
@@ -20,9 +19,6 @@ module.exports = {
     'plugin:unicorn/all', // [unicorn]
     'plugin:sonarjs/recommended',
     'plugin:lodash/recommended',
-    'plugin:testing-library/react',
-    'plugin:jest-dom/recommended',
-    'plugin:vitest/legacy-all',
   ],
   ignorePatterns: [
     'dist', // [vite template]
@@ -37,15 +33,23 @@ module.exports = {
     'sonarjs',
     'github',
     'lodash',
-    'testing-library',
-    'jest-dom',
-    'vitest',
   ],
   overrides: [
     {
-      files: ['**.test.**'],
-      plugins: ['jest'],
-      extends: ['plugin:jest/all'],
+      files: ['**.test.tsx'],
+      plugins: ['vitest', 'testing-library', 'jest-dom', 'vitest'],
+      extends: [
+        'plugin:testing-library/react',
+        'plugin:jest-dom/recommended',
+        'plugin:vitest/legacy-all',
+      ],
+      rules: {
+        // https://github.com/veritem/eslint-plugin-vitest/blob/main/docs/rules/consistent-test-it.md
+        'vitest/consistent-test-it': [
+          'error',
+          { fn: 'test', withinDescribe: 'test' },
+        ],
+      },
     },
   ],
   // [vite template README][eslint parser options]
