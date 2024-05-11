@@ -22,6 +22,7 @@ module.exports = {
     'plugin:lodash/recommended',
     'plugin:testing-library/react',
     'plugin:jest-dom/recommended',
+    'plugin:vitest/legacy-all',
   ],
   ignorePatterns: [
     'dist', // [vite template]
@@ -38,10 +39,11 @@ module.exports = {
     'lodash',
     'testing-library',
     'jest-dom',
+    'vitest',
   ],
   overrides: [
     {
-      files: ['test/**'],
+      files: ['**.test.**'],
       plugins: ['jest'],
       extends: ['plugin:jest/all'],
     },
