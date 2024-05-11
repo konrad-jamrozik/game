@@ -21,6 +21,7 @@ module.exports = {
     'plugin:sonarjs/recommended',
     'plugin:lodash/recommended',
     'plugin:testing-library/react',
+    'plugin:jest-dom/recommended',
   ],
   ignorePatterns: [
     'dist', // [vite template]
@@ -36,6 +37,7 @@ module.exports = {
     'github',
     'lodash',
     'testing-library',
+    'jest-dom',
   ],
   overrides: [
     {

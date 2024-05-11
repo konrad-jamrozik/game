@@ -11,5 +11,5 @@ test('Label', () => {
 
   const labelElement = screen.getByText('Test Label')
   expect(labelElement).toBeInTheDocument()
-  expect(labelElement.textContent).toBe('Test Label')
+  expect(labelElement.textContent).toHaveTextContent('Test Label')
 })
