@@ -17,7 +17,7 @@ module.exports = {
     'plugin:import/react', // [ts import configs][ts import perf.]
     'plugin:import/typescript', // [ts import configs][ts import perf.]
     'plugin:unicorn/all', // [unicorn]
-    'plugin:sonarjs/recommended',
+    'plugin:sonarjs/recommended-legacy',
     'plugin:lodash/recommended',
   ],
   ignorePatterns: [
