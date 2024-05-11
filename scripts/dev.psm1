@@ -24,8 +24,8 @@ $blue_violet = '#8A2BE2' # https://www.color-hex.com/color/8a2be2
 function Start-GameLocalDevTwoPanes {
     Write-Host "Starting Game local dev with two panes"
     wt --window 0 new-tab --profile "PowerShell" --startingDirectory $kjgameDir --tabColor $blue_violet --title "Game dev localhost" `; `
-    split-pane --profile "PowerShell" --horizontal --tabColor $steel_blue --title "Frontend" --startingDirectory $frontendDir PowerShell -Command "npm run dev" `; `
-    split-pane --profile "PowerShell" --tabColor $crimson --title "Backend" --startingDirectory $backendDir PowerShell -Command "dotnet watch --project api --launch-profile https" `; `
+    split-pane --profile "PowerShell" --horizontal --tabColor $steel_blue --title "Frontend" --startingDirectory $frontendDir PowerShell -ExecutionPolicy RemoteSigned -Command "npm run dev" `; `
+    split-pane --profile "PowerShell" --tabColor $crimson --title "Backend" --startingDirectory $backendDir PowerShell -ExecutionPolicy RemoteSigned -Command "dotnet watch --project api --launch-profile https" `; `
     move-focus up
     
 }
