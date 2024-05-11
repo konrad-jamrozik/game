@@ -37,7 +37,7 @@ module.exports = {
   overrides: [
     {
       files: ['**.test.tsx'],
-      plugins: ['vitest', 'testing-library', 'jest-dom', 'vitest'],
+      plugins: ['vitest', 'testing-library', 'jest-dom'],
       extends: [
         'plugin:testing-library/react',
         'plugin:jest-dom/recommended',
@@ -229,9 +229,6 @@ module.exports = {
     react: {
       version: 'detect', // [SO react ver][react legacy config]
     },
-    jest: {
-      version: require('jest/package.json').version, // [jest version]
-    },
     import: {
       // [ts resolver]
       resolver: {
@@ -310,7 +307,6 @@ module.exports = {
 // [eslint parser options]: https://eslint.org/docs/latest/use/configure/language-options#specifying-parser-options
 // [eslint rules]: https://eslint.org/docs/latest/use/configure/rules
 // [eslint-plugin-github]: https://github.com/github/eslint-plugin-github/tree/73c236f83045314104556b2be515865f4b6c38d3
-// [jest version]: https://www.npmjs.com/package/eslint-plugin-jest#jest-version-setting
 // [plugin: react-hooks]: https://www.npmjs.com/package/eslint-plugin-react-hooks
 // [plugin: react-refresh]: https://github.com/ArnaudBarre/eslint-plugin-react-refresh
 // [plugin: react]: https://github.com/jsx-eslint/eslint-plugin-react
