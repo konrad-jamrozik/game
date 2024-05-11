@@ -3,6 +3,8 @@ import { defineConfig } from 'vite'
 
 // https://vitejs.dev/config/
 /** @type {import('vite').UserConfig} */
+// https://vitest.dev/guide/#configuring-vitest
+/// <reference types="vitest" />
 export default defineConfig({
   plugins: [react()],
   optimizeDeps: {
