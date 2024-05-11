@@ -10,6 +10,6 @@ test('Label', () => {
   render(<Label>Test Label</Label>)
 
   const labelElement = screen.getByText('Test Label')
-  expect(labelElement).toBeDefined()
+  expect(labelElement).toBeInTheDocument()
   expect(labelElement.textContent).toBe('Test Label')
 })
