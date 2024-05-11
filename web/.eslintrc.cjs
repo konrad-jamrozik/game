@@ -20,6 +20,7 @@ module.exports = {
     'plugin:unicorn/all', // [unicorn]
     'plugin:sonarjs/recommended',
     'plugin:lodash/recommended',
+    'plugin:testing-library/react',
   ],
   ignorePatterns: [
     'dist', // [vite template]
@@ -34,6 +35,7 @@ module.exports = {
     'sonarjs',
     'github',
     'lodash',
+    'testing-library',
   ],
   overrides: [
     {
