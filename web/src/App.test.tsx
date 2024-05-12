@@ -42,24 +42,6 @@ describe('describe App', () => {
     // kja https://stackoverflow.com/questions/60986519/jest-react-testing-library-wait-for-a-mocked-async-function-to-complete
     // await wait(2000);
 
-    // kja https://stackoverflow.com/questions/52478069/node-fetch-disable-ssl-verification
-    // IntroEnabled: true, showIntro: false
-    // callApi() TRY: POST https://localhost:7128/advanceTurns?includeAllStates=true&turnLimit=1&delegateToAi=false
-    // TypeError: fetch failed
-    //     at node:internal/deps/undici/undici:12442:11
-    //     at processTicksAndRejections (node:internal/process/task_queues:95:5)
-    //     at Module.callApi (C:\Users\spawa\repos\game\web\src\lib\api\genericApiUtils.ts:38:32)
-    //     at GameSession.advanceTurns (C:\Users\spawa\repos\game\web\src\lib\GameSession.ts:62:27)
-    //     at advanceTurns (C:\Users\spawa\repos\game\web\src\components\GameSessionControlPanel\GameSessionControlPanel.tsx:49:30) {
-    //   cause: Error: self-signed certificate
-    //       at TLSSocket.onConnectSecure (node:_tls_wrap:1674:34)
-    //       at TLSSocket.emit (node:events:519:28)
-    //       at TLSSocket._finishInit (node:_tls_wrap:1085:8)
-    //       at TLSWrap.ssl.onhandshakedone (node:_tls_wrap:871:12) {
-    //     code: 'DEPTH_ZERO_SELF_SIGNED_CERT'
-    //   }
-    // }
-    // callApi() FINALLY: POST https://localhost:7128/advanceTurns?includeAllStates=true&turnLimit=1&delegateToAi=false
     // introEnabled: true, showIntro: false
 
     await screen.findByText('Current turn: 1', undefined, { timeout: 3000 })
