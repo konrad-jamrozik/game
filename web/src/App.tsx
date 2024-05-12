@@ -62,6 +62,9 @@ export default function App({
   )
 
   // kja temp debug
+  console.log(
+    `import.meta.env.PROD: ${import.meta.env.PROD}, import.meta.env.MODE: ${import.meta.env.MODE}, process.env.NODE_ENV: ${process.env['NODE_ENV']}`,
+  )
   console.log(`introEnabled: ${introEnabled}, showIntro: ${showIntro}`)
 
   // kja should this instead be an useEffect that depends on the current state update count,

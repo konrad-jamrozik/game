@@ -56,8 +56,18 @@ export type FetchCallbacks = {
   setError: React.Dispatch<React.SetStateAction<string | undefined>>
 }
 
+// get backend API host
 function getHost(): string {
-  return import.meta.env.PROD
+  // Future work: this should probably be done using environment files:
+  // - https://vitejs.dev/guide/env-and-mode.html#env-variables
+  // - https://vitest.dev/advanced/api.html#mode
+  //
+  // For 'vitest' the values appear to be:
+  //
+  //   import.meta.env.PROD: false, import.meta.env.MODE: test, process.env.NODE_ENV: test
+  //
+  // kja I want to add here new value for CI. Test should use localhost by default, but CI should use the Azure deployment.
+  return _.includes(['production', 'test'], import.meta.env.MODE)
     ? 'https://game-api1.azurewebsites.net'
     : 'https://localhost:7128'
 }
