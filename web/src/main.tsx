@@ -15,7 +15,7 @@ import theme from './theme.tsx'
 const rootElement = document.querySelector('#root')
 
 if (rootElement) {
-  const storedData = loadDataFromLocalStorage()
+  const storedData: StoredData = loadDataFromLocalStorage()
   ReactDOM.createRoot(rootElement).render(
     <React.StrictMode>
       <ThemeProvider theme={theme}>

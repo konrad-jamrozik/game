@@ -128,7 +128,7 @@ export const initialGameSessionData: GameSessionData = {
    */
   resetGameState: undefined,
 }
-// Consider for later:
+// Future work: Consider for later:
 // using a reducer to manage game sates:
 // https://react.dev/learn/extracting-state-logic-into-a-reducer
 // using immer:
