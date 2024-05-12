@@ -7,5 +7,6 @@ import { defineConfig } from 'vite'
 export default defineConfig({
   test: {
     setupFiles: ['./src/VitestSetup.ts'],
+    environment: 'jsdom',
   },
 })

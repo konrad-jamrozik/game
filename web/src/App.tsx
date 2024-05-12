@@ -61,6 +61,9 @@ export default function App({
     outroEnabled && isGameOver === true,
   )
 
+  // kja temp debug
+  console.log(`introEnabled: ${introEnabled}, showIntro: ${showIntro}`)
+
   // kja should this instead be an useEffect that depends on the current state update count,
   // or something like that?
   // This effect would set show outro as appropriate.
