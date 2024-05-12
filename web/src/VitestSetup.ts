@@ -34,6 +34,11 @@ import { vi } from 'vitest'
 //     'self-signed-certificates-guide#with-dotnet-dev-certs'.
 process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = '0'
 
+// This snippet mocks window.matchMedia. This is necessary as vitest tests simulate browser
+// API using jsdom which doesn't implement window.matchMedia.
+// I observed from the error stack trace that MUI charts call into this API.
+//
+// Docs used for research:
 // https://jestjs.io/docs/manual-mocks#mocking-methods-which-are-not-implemented-in-jsdom
 // https://vitest.dev/guide/mocking.html
 // https://developer.mozilla.org/en-US/docs/Web/API/Window/matchMedia
