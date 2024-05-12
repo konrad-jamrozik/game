@@ -12,12 +12,10 @@ describe('describe App', () => {
     // https://vitest.dev/guide/mocking.html
     Object.defineProperty(window, 'matchMedia', {
       writable: true,
-      value: vi.fn().mockImplementation((query) => ({
+      value: vi.fn().mockImplementation((query: unknown) => ({
         matches: false,
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         media: query,
-        // eslint-disable-next-line unicorn/no-null
-        onchange: null,
+        onchange: undefined,
         addListener: vi.fn(), // deprecated
         removeListener: vi.fn(), // deprecated
         addEventListener: vi.fn(),
