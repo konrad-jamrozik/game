@@ -5,6 +5,8 @@
 Once dev server is running with `npm run dev`, you can use Chrome DevTools to open the sources and set breakpoints.
 The sources should be mapped to original TypeScript source files.
 
+See also https://react.dev/learn/react-developer-tools
+
 ## How to debug localhost Vite dev server in VS Code
 
 1. From VS Code, using `Run and Debug` tab, create `launch.json` at `game\.vscode\launch.json`

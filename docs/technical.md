@@ -12,3 +12,9 @@ See e.g. [this commit](https://github.com/konrad-jamrozik/game/commit/5950149545
 Also consider checking for unused dependencies:
 
 - https://stackoverflow.com/questions/22675725/how-to-find-unused-packages-in-package-json
+
+## About React context
+
+- https://react.dev/learn/passing-data-deeply-with-context
+- https://react.dev/learn/scaling-up-with-reducer-and-context
+- https://react-typescript-cheatsheet.netlify.app/docs/basic/getting-started/context/
