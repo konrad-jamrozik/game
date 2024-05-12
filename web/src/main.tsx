@@ -33,7 +33,7 @@ if (rootElement) {
 }
 
 // kja move this data loading logic to its own class + load by iterating keys of StoredData type
-function loadDataFromLocalStorage(): StoredData {
+export function loadDataFromLocalStorage(): StoredData {
   const gameSessionData = loadGameSessionData()
   const settings = loadSettings()
   return { gameSessionData, settings }
@@ -73,7 +73,7 @@ export type Settings = {
   readonly introEnabled: boolean
   readonly outroEnabled: boolean
 }
-type StoredData = {
+export type StoredData = {
   readonly settings: Settings
   readonly gameSessionData?: GameSessionData | undefined
 }

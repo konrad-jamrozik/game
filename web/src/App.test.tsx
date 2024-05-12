@@ -3,14 +3,25 @@
 /* eslint-disable vitest/max-expects */
 import { render, screen } from '@testing-library/react'
 import { type UserEvent, userEvent } from '@testing-library/user-event'
-import { describe, expect, test } from 'vitest'
+import _ from 'lodash'
+import { describe, expect, assert, test } from 'vitest'
 import App from './App'
 import { GameSessionProvider } from './components/GameSessionProvider'
+import { type StoredData, loadDataFromLocalStorage } from './main'
 
 describe('describe App', () => {
+  test('load data from local storage', () => {
+    const storedData: StoredData = loadDataFromLocalStorage()
+    assert.isNotEmpty(storedData)
+    console.log('storedData', JSON.stringify(storedData, undefined, 2))
+  })
+
+  test.todo('intro dialog', () => {
+    _.noop()
+  })
+
   test('test App', async () => {
     expect.hasAssertions()
-
     const user: UserEvent = userEvent.setup()
 
     render(

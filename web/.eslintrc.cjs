@@ -224,6 +224,12 @@ module.exports = {
     'github/prefer-observers': 'error',
     'github/require-passive-events': 'error',
     'github/unescaped-html-literal': 'error',
+
+    // https://github.com/veritem/eslint-plugin-vitest/blob/main/docs/rules/prefer-expect-assertions.md
+    'vitest/prefer-expect-assertions': [
+      'error',
+      { onlyFunctionsWithAsyncKeyword: true },
+    ],
   },
   settings: {
     react: {
