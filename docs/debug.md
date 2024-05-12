@@ -43,3 +43,5 @@ See also https://react.dev/learn/react-developer-tools
   https://stackoverflow.com/questions/52377756/what-is-webroot-in-the-vscode-chrome-debugger-launch-launch-config
 - `${workspaceFolder}` explained:  
   https://code.visualstudio.com/docs/editor/variables-reference
+- Vitest article on debugging  
+  https://vitest.dev/guide/debugging.html

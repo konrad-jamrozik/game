@@ -32,13 +32,15 @@ import { vi } from 'vitest'
 //   https://learn.microsoft.com/en-us/aspnet/web-api/overview/security/working-with-ssl-in-web-api#enabling-ssl-on-the-server
 //   - Note the section 'Creating a Client Certificate for Testing' is probably worse than the guide linked above:
 //     'self-signed-certificates-guide#with-dotnet-dev-certs'.
+// - Notes on SSL from Mock Service Worker (MSW)
+//   https://mswjs.io/docs/recipes/using-local-https
 process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = '0'
 
 // This snippet mocks window.matchMedia. This is necessary as vitest tests simulate browser
 // API using jsdom which doesn't implement window.matchMedia.
 // I observed from the error stack trace that MUI charts call into this API.
 //
-// Docs used for research:
+// Researched docs:
 // https://jestjs.io/docs/manual-mocks#mocking-methods-which-are-not-implemented-in-jsdom
 // https://vitest.dev/guide/mocking.html
 // https://developer.mozilla.org/en-US/docs/Web/API/Window/matchMedia
