@@ -49,6 +49,7 @@ import { type StoredData, loadDataFromLocalStorage } from './main'
 // Then (from turn 5): start 5, target 6
 // Then (from turn 6): start 3, target 4
 // Then (from turn 4): start 6, target 7
+// But also just read and cover: resolveStartAndTargetTurn
 
 describe('describe App', () => {
   test('load data from local storage', () => {
