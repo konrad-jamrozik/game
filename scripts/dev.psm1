@@ -22,7 +22,7 @@ $blue_violet = '#8A2BE2' # https://www.color-hex.com/color/8a2be2
 # $medium_violet_red = '#C71585' # https://www.color-hex.com/color/c71585
 
 function Start-GameLocalDevTwoPanes {
-    Write-Host "Starting Game local dev with two panes"
+    Write-Host "Starting game local dev with two panes"
     wt --window 0 new-tab --profile "PowerShell" --startingDirectory $kjgameDir --tabColor $blue_violet --title "Game dev localhost" `; `
     split-pane --profile "PowerShell" --horizontal --tabColor $steel_blue --title "Frontend" --startingDirectory $frontendDir PowerShell -ExecutionPolicy RemoteSigned -Command "npm run dev" `; `
     split-pane --profile "PowerShell" --tabColor $crimson --title "Backend" --startingDirectory $backendDir PowerShell -ExecutionPolicy RemoteSigned -Command "dotnet watch --project api --launch-profile https" `; `
@@ -30,6 +30,25 @@ function Start-GameLocalDevTwoPanes {
     
 }
 New-Alias game-start-localdev Start-GameLocalDevTwoPanes
+
+function Start-GameVSCode {
+    Write-Host "Starting game VS Code"
+    Set-Location $kjgameDir
+    code .
+}
+New-Alias game-start-code Start-GameVSCode
+
+function Start-GameFrontend {
+    Write-Host "Starting game localhost frontend"
+    wt --window 0 new-tab --profile "PowerShell" --horizontal --tabColor $steel_blue --title "Frontend" --startingDirectory $frontendDir PowerShell -ExecutionPolicy RemoteSigned -Command "npm run dev"
+}
+New-Alias game-start-frontend Start-GameFrontend
+
+function Start-GameBackend {
+    Write-Host "Starting game localhost backend"
+    wt --window 0 new-tab --profile "PowerShell" --tabColor $crimson --title "Backend" --startingDirectory $backendDir PowerShell -ExecutionPolicy RemoteSigned -Command "dotnet watch --project api --launch-profile https"
+}
+New-Alias game-start-backend Start-GameBackend
 
 function Remove-FrontendPortUsage {
     # Ideally I should leverage Invoke-AsAdmin from kj-invoke.psm1 after I figured out
