@@ -69,7 +69,7 @@ function getHost(): string {
   //
   //   import.meta.env.PROD: false, import.meta.env.MODE: test, process.env.NODE_ENV: test
   //
-  return import.meta.env.PROD || process.env['GITHUB_ACTIONS'] === 'true'
+  return import.meta.env.PROD || import.meta.env['GITHUB_ACTIONS'] === 'true'
     ? 'https://game-api1.azurewebsites.net'
     : 'https://localhost:7128'
 }
