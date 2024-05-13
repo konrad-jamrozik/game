@@ -95,11 +95,6 @@ export class GameSessionDataWrapper {
 
 export type GameSessionData = {
   readonly gameStates: readonly GameState[]
-  readonly resetGameState: GameState | undefined
-}
-
-export const initialGameSessionData: GameSessionData = {
-  gameStates: [],
   /**
    * The game state to which the current turn game state should be reset when
    * the 'reset turn' button is clicked.
@@ -126,6 +121,11 @@ export const initialGameSessionData: GameSessionData = {
    * meaning after the player action of 'hire agent'. If the player would want to go back to the beginning of turn 9,
    * then the player can revert to turn 8 and advance turn, to effectively end up at the beginning of turn 9.
    */
+  readonly resetGameState: GameState | undefined
+}
+
+export const initialGameSessionData: GameSessionData = {
+  gameStates: [],
   resetGameState: undefined,
 }
 // Future work: Consider for later:

@@ -9,6 +9,44 @@ import App from './App'
 import { GameSessionProvider } from './components/GameSessionProvider'
 import { type StoredData, loadDataFromLocalStorage } from './main'
 
+// kja tests:
+
+// Build abstractions like:
+// "DoPlayerAction(count)" which hires agents
+// "EndGameInOneTurn" which hires agents to the max and advances to force game over
+
+// Test: Testing basic game session controls: advance turn, Reset game and Revert 1 turn
+// Assume: "Show intro" and "Show outro" are disabled in settings
+// - Closing the intro dialog hides it.
+// - Game turn is "N/A"
+// - "Reset Game" button is disabled and "Reset turn" button is disabled.
+// - Clicking "Advance 1 turn" increments the turn to 1 and makes "Reset Game" enabled, but "Reset turn" is still disabled.
+
+// Test: Testing intro/outro
+// Assume: "Show intro" and "Show outro" are enabled in settings and this is the default state.
+// When the game is loaded for the first time, the intro dialog is displayed.
+// When the game is reset, the intro dialog is displayed.
+
+// Test: Reset turn
+// show that 'revert turn' changes to 'reset turn' when agent gets hired.
+// show that 'revert turn' reverts to the END of previous turn (after all player actions), not beginning. See also below:
+// test for the corner cases described in GameSessionData.resetGameState
+// I.e. how to get back to previous turn end (just by revert) and beginning (by revert, revert, advance)
+
+// Test: Clear local storage
+// question: do tests have isolated local storage?
+// question: if I disable test isolation, how much it will speed up things?
+
+// Test: delegate turn to AI:
+// Always need to assert Result is undecided until I get seeds in
+// From turn N/A: start 1 target 5
+// From turn 1: start 1 target 5
+// Then (from turn 5): start 1, target 5
+// Then (from turn 5): start 4, target 5
+// Then (from turn 5): start 5, target 6
+// Then (from turn 6): start 3, target 4
+// Then (from turn 4): start 6, target 7
+
 describe('describe App', () => {
   test('load data from local storage', () => {
     const storedData: StoredData = loadDataFromLocalStorage()
