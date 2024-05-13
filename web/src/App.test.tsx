@@ -11,6 +11,9 @@ import { type StoredData, loadDataFromLocalStorage } from './main'
 
 // kja tests:
 
+// kja: CI tests fail sometimes due to relying on cloud backend and slow cold boot:
+// they hit a timeout. Re-running works as the API is booted and replies within timeout.
+
 // Build abstractions like:
 // "DoPlayerAction(count)" which hires agents
 // "EndGameInOneTurn" which hires agents to the max and advances to force game over
