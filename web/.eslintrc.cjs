@@ -50,6 +50,15 @@ module.exports = {
           'error',
           { fn: 'test', withinDescribe: 'test' },
         ],
+
+        // https://github.com/veritem/eslint-plugin-vitest/blob/main/docs/rules/prefer-expect-assertions.md
+        'vitest/prefer-expect-assertions': [
+          'error',
+          { onlyFunctionsWithAsyncKeyword: true },
+        ],
+
+        // https://github.com/veritem/eslint-plugin-vitest/blob/main/docs/rules/prefer-lowercase-title.md
+        'vitest/prefer-lowercase-title': 'off',
       },
     },
   ],
@@ -225,12 +234,6 @@ module.exports = {
     'github/prefer-observers': 'error',
     'github/require-passive-events': 'error',
     'github/unescaped-html-literal': 'error',
-
-    // https://github.com/veritem/eslint-plugin-vitest/blob/main/docs/rules/prefer-expect-assertions.md
-    'vitest/prefer-expect-assertions': [
-      'error',
-      { onlyFunctionsWithAsyncKeyword: true },
-    ],
 
     // https://tsdoc.org/pages/packages/eslint-plugin-tsdoc/
     'tsdoc/syntax': 'error',
