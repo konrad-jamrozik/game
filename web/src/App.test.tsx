@@ -1,7 +1,7 @@
 /* eslint-disable sonarjs/no-duplicate-string */
 /* eslint-disable max-statements */
 /* eslint-disable vitest/max-expects */
-import { render, screen } from '@testing-library/react'
+import { render, screen, waitFor } from '@testing-library/react'
 import { type UserEvent, userEvent } from '@testing-library/user-event'
 import _ from 'lodash'
 import { describe, expect, assert, test } from 'vitest'
@@ -18,17 +18,11 @@ import { type StoredData, loadDataFromLocalStorage } from './main'
 // "DoPlayerAction(count)" which hires agents
 // "EndGameInOneTurn" which hires agents to the max and advances to force game over
 
-// Test: Testing basic game session controls: advance turn, Reset game and Revert 1 turn
-// Assume: "Show intro" and "Show outro" are disabled in settings
-// - Closing the intro dialog hides it.
-// - Game turn is "N/A"
-// - "Reset Game" button is disabled and "Reset turn" button is disabled.
-// - Clicking "Advance 1 turn" increments the turn to 1 and makes "Reset Game" enabled, but "Reset turn" is still disabled.
-
 // Test: Testing intro/outro
 // Assume: "Show intro" and "Show outro" are enabled in settings and this is the default state.
 // When the game is loaded for the first time, the intro dialog is displayed.
 // When the game is reset, the intro dialog is displayed.
+// Closing the intro dialog hides it.
 
 // Test: Reset turn
 // show that 'revert turn' changes to 'reset turn' when agent gets hired.
@@ -51,7 +45,50 @@ import { type StoredData, loadDataFromLocalStorage } from './main'
 // Then (from turn 4): start 6, target 7
 // But also just read and cover: resolveStartAndTargetTurn
 
-describe('describe App', () => {
+describe('Test suite for App.tsx', () => {
+  /**
+   * Given:
+   * - Render of App.tsx
+   *   - with setting denoting to not show intro dialog
+   * When:
+   * - the following buttons are exercised, in variety of combinations:
+   *   - "Advance 1 turn"
+   *   - "Revert 1 turn"
+   *   - "Reset game",
+   * Then:
+   * - The game behaves correctly.
+   */
+  test('Game boot with no intro: Advance 1 turn, Revert 1 turn, Reset game', async () => {
+    expect.hasAssertions()
+
+    renderApp(false)
+
+    expectLabel('Current turn: N/A')
+    expectButtonsToBeDisabled('Reset game', 'Reset turn')
+
+    await clickButton('Advance 1 turn')
+
+    expectLabel('Current turn: 1')
+    expectButtonToBeEnabled('Reset game')
+    expectButtonToBeDisabled('Revert 1 turn')
+
+    await clickButton('Advance 1 turn')
+
+    expectLabel('Current turn: 2')
+    expectButtonsToBeEnabled('Reset game', 'Revert 1 turn')
+
+    await clickButton('Revert 1 turn', 'Advance 1 turn')
+
+    expectLabel('Current turn: 1')
+    expectButtonToBeDisabled('Revert 1 turn')
+
+    await clickButton('Reset game', 'Advance 1 turn')
+
+    expectLabel('Current turn: N/A')
+    expectButtonToBeEnabled('Advance 1 turn')
+    expectButtonsToBeDisabled('Reset game', 'Reset turn')
+  })
+
   test('load data from local storage', () => {
     const storedData: StoredData = loadDataFromLocalStorage()
     assert.isNotEmpty(storedData)
@@ -62,15 +99,16 @@ describe('describe App', () => {
     _.noop()
   })
 
+  // kja getting test interference:
+  // FAIL  src/App.test.tsx > Test suite for App.tsx > test App
+  // TestingLibraryElementError: Found multiple elements with the text: Game Session
+  // See https://stackoverflow.com/a/50800473/986533
+  // Also the quick doc on jsdom "render" says it needs cleanu
   test('test App', async () => {
     expect.hasAssertions()
     const user: UserEvent = userEvent.setup()
 
-    render(
-      <GameSessionProvider storedGameSessionData={undefined}>
-        <App settings={{ introEnabled: true, outroEnabled: true }} />
-      </GameSessionProvider>,
-    )
+    renderApp(true)
 
     const introDialogHeader: HTMLElement = screen.getByText('Situation Report')
     expect(introDialogHeader).toBeVisible()
@@ -110,3 +148,66 @@ describe('describe App', () => {
 //   expect(element).toBeInTheDocument()
 //   element.click()
 // }
+
+function renderApp(introEnabled: boolean): void {
+  render(
+    <GameSessionProvider storedGameSessionData={undefined}>
+      <App settings={{ introEnabled, outroEnabled: true }} />
+    </GameSessionProvider>,
+  )
+}
+
+function expectLabel(text: string): void {
+  const htmlElement: HTMLElement = screen.getByText(text)
+  expect(htmlElement.tagName).toBe('P')
+  expect(htmlElement).toBeInTheDocument()
+}
+
+function expectButtonToBeEnabled(text: string): void {
+  expectButtonsToBeEnabled(text)
+}
+
+function expectButtonsToBeEnabled(...texts: string[]): void {
+  expectButtonsToBe(texts, true)
+}
+
+function expectButtonToBeDisabled(text: string): void {
+  expectButtonsToBeDisabled(text)
+}
+
+function expectButtonsToBeDisabled(...texts: string[]): void {
+  expectButtonsToBe(texts, false)
+}
+
+function expectButtonsToBe(texts: string[], enabled: boolean): void {
+  for (const text of texts) {
+    const htmlElement: HTMLElement = screen.getByText(text)
+    expect(htmlElement.tagName).toBe('BUTTON')
+    if (enabled) {
+      expect(htmlElement).toBeEnabled()
+    } else {
+      expect(htmlElement).toBeDisabled()
+    }
+  }
+}
+
+async function clickButton(text: string, waitForText?: string): Promise<void> {
+  expectButtonToBeEnabled(text)
+
+  console.log(`----- CLICK BUTTON: '${text}'`)
+  const user: UserEvent = userEvent.setup()
+  await user.click(screen.getByText(text))
+  await waitForButtonToBeEnabled(waitForText ?? text)
+  console.log(`----- CLICK BUTTON: '${text}' DONE`)
+}
+
+async function waitForButtonToBeEnabled(text: string): Promise<void> {
+  await waitFor(
+    () => {
+      expectButtonToBeEnabled(text)
+    },
+    {
+      timeout: 5000,
+    },
+  )
+}
