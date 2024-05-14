@@ -28,6 +28,7 @@ module.exports = {
   parser: '@typescript-eslint/parser', // [vite template][ts-eslint]
   plugins: [
     '@typescript-eslint', // [ts-eslint]
+    'eslint-plugin-tsdoc',
     'import',
     'react-refresh', // [vite template][plugin: react-refresh]
     'sonarjs',
@@ -230,6 +231,9 @@ module.exports = {
       'error',
       { onlyFunctionsWithAsyncKeyword: true },
     ],
+
+    // https://tsdoc.org/pages/packages/eslint-plugin-tsdoc/
+    'tsdoc/syntax': 'error',
   },
   settings: {
     react: {
