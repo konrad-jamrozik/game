@@ -1,3 +1,4 @@
+/* eslint-disable tsdoc/syntax */
 /// <reference types="vitest" />
 import { defineConfig } from 'vite'
 
