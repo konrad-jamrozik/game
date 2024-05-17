@@ -59,6 +59,15 @@ module.exports = {
 
         // https://github.com/veritem/eslint-plugin-vitest/blob/main/docs/rules/prefer-lowercase-title.md
         'vitest/prefer-lowercase-title': 'off',
+
+        // https://github.com/veritem/eslint-plugin-vitest/blob/main/docs/rules/no-hooks.md
+        // Hooks are OK, plus required for manual cleanup. See rule for 'testing-library/no-manual-cleanup'.
+        'vitest/no-hooks': 'off',
+
+        // https://github.com/testing-library/eslint-plugin-testing-library/blob/main/docs/rules/no-manual-cleanup.md
+        // vitest doesn't hook up to the cleanup function, so manual cleanup is necessary.
+        // Details here: https://stackoverflow.com/a/78494069/986533
+        'testing-library/no-manual-cleanup': 'off',
       },
     },
   ],

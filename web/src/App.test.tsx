@@ -2,10 +2,10 @@
 /* eslint-disable sonarjs/no-duplicate-string */
 /* eslint-disable max-statements */
 /* eslint-disable vitest/max-expects */
-import { render, screen, waitFor } from '@testing-library/react'
+import { render, screen, waitFor, cleanup } from '@testing-library/react'
 import { type UserEvent, userEvent } from '@testing-library/user-event'
 import _ from 'lodash'
-import { describe, expect, assert, test } from 'vitest'
+import { describe, expect, assert, test, beforeEach } from 'vitest'
 import App from './App'
 import { GameSessionProvider } from './components/GameSessionProvider'
 import { type StoredData, loadDataFromLocalStorage } from './main'
@@ -47,6 +47,12 @@ import { type StoredData, loadDataFromLocalStorage } from './main'
 // But also just read and cover: resolveStartAndTargetTurn
 
 describe('Test suite for App.tsx', () => {
+  beforeEach(() => {
+    // Needed per:
+    // https://stackoverflow.com/questions/78493555/how-can-i-run-tests-in-a-single-file-in-parallel-when-using-screen-from-testin
+    cleanup()
+  })
+
   /**
    * Given:
    * - Render of App.tsx
@@ -100,11 +106,6 @@ describe('Test suite for App.tsx', () => {
     _.noop()
   })
 
-  // kja getting test interference:
-  // FAIL  src/App.test.tsx > Test suite for App.tsx > test App
-  // TestingLibraryElementError: Found multiple elements with the text: Game Session
-  // See https://stackoverflow.com/a/50800473/986533
-  // Also the quick doc on jsdom "render" says it needs cleanup
   test.todo('test App', async () => {
     expect.hasAssertions()
     const user: UserEvent = userEvent.setup()
