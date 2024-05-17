@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 /* eslint-disable sonarjs/no-duplicate-string */
 /* eslint-disable max-statements */
 /* eslint-disable vitest/max-expects */
@@ -103,7 +104,7 @@ describe('Test suite for App.tsx', () => {
   // FAIL  src/App.test.tsx > Test suite for App.tsx > test App
   // TestingLibraryElementError: Found multiple elements with the text: Game Session
   // See https://stackoverflow.com/a/50800473/986533
-  // Also the quick doc on jsdom "render" says it needs cleanu
+  // Also the quick doc on jsdom "render" says it needs cleanup
   test.todo('test App', async () => {
     expect.hasAssertions()
     const user: UserEvent = userEvent.setup()
