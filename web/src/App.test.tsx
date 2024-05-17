@@ -1,12 +1,14 @@
+/* eslint-disable max-lines-per-function */
 /* eslint-disable sonarjs/no-duplicate-string */
 /* eslint-disable max-statements */
 /* eslint-disable vitest/max-expects */
 import { render, screen, waitFor, cleanup } from '@testing-library/react'
 import { type UserEvent, userEvent } from '@testing-library/user-event'
 import _ from 'lodash'
-import { describe, expect, assert, test, beforeEach } from 'vitest'
+import { describe, expect, assert, test, beforeAll, beforeEach } from 'vitest'
 import App from './App'
 import { GameSessionProvider } from './components/GameSessionProvider'
+import { getHost } from './lib/api/genericApiUtils'
 import { type StoredData, loadDataFromLocalStorage } from './main'
 
 // kja tests:
@@ -46,6 +48,10 @@ import { type StoredData, loadDataFromLocalStorage } from './main'
 // But also just read and cover: resolveStartAndTargetTurn
 
 describe('Test suite for App.tsx', () => {
+  beforeAll(async () => {
+    await verifyBackendApiIsReachable()
+  })
+
   beforeEach(() => {
     // Needed per:
     // https://stackoverflow.com/questions/78493555/how-can-i-run-tests-in-a-single-file-in-parallel-when-using-screen-from-testin
@@ -205,4 +211,17 @@ async function waitForButtonToBeEnabled(text: string): Promise<void> {
       timeout: 5000,
     },
   )
+}
+
+async function verifyBackendApiIsReachable(): Promise<void> {
+  const host: string = getHost()
+  try {
+    const response: Response = await fetch(getHost())
+    assert.include([200, 404], response.status)
+    console.log(
+      `Backend API host '${host}' is reachable (status: ${response.status})`,
+    )
+  } catch {
+    assert.fail(`Backend API host '${host}' is not reachable`)
+  }
 }

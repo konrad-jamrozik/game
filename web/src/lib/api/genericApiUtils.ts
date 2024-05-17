@@ -57,7 +57,7 @@ export type FetchCallbacks = {
 }
 
 // Get backend API host
-function getHost(): string {
+export function getHost(): string {
   // Future work: this should probably be done using environment files:
   // - https://vitejs.dev/guide/env-and-mode.html#env-variables
   // - https://vitest.dev/advanced/api.html#mode
