@@ -10,7 +10,7 @@
     "target": "ES2022",
     "lib": ["ES2022", "DOM", "DOM.Iterable"]
   },
-  "include": ["src", "vitest.setup.ts"],
+  "include": ["src", "test", "test/vitest.setup.ts"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }
 

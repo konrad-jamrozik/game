@@ -2,14 +2,20 @@
 /* eslint-disable sonarjs/no-duplicate-string */
 /* eslint-disable max-statements */
 /* eslint-disable vitest/max-expects */
-import { render, screen, waitFor, cleanup } from '@testing-library/react'
+import { render, screen, cleanup } from '@testing-library/react'
 import { type UserEvent, userEvent } from '@testing-library/user-event'
 import _ from 'lodash'
 import { describe, expect, assert, test, beforeAll, beforeEach } from 'vitest'
-import App from './App'
-import { GameSessionProvider } from './components/GameSessionProvider'
-import { getHost } from './lib/api/genericApiUtils'
-import { type StoredData, loadDataFromLocalStorage } from './main'
+import App from '../src/App'
+import { GameSessionProvider } from '../src/components/GameSessionProvider'
+import { type StoredData, loadDataFromLocalStorage } from '../src/main'
+import { verifyBackendApiIsReachable } from './testUtils'
+import { clickButton } from './testUtils'
+import { expectButtonsToBeDisabled } from './testUtils'
+import { expectButtonToBeDisabled } from './testUtils'
+import { expectButtonsToBeEnabled } from './testUtils'
+import { expectButtonToBeEnabled } from './testUtils'
+import { expectLabel } from './testUtils'
 
 // kja tests:
 
@@ -156,72 +162,4 @@ function renderApp(introEnabled: boolean): void {
       <App settings={{ introEnabled, outroEnabled: true }} />
     </GameSessionProvider>,
   )
-}
-
-function expectLabel(text: string): void {
-  const htmlElement: HTMLElement = screen.getByText(text)
-  expect(htmlElement.tagName).toBe('P')
-  expect(htmlElement).toBeInTheDocument()
-}
-
-function expectButtonToBeEnabled(text: string): void {
-  expectButtonsToBeEnabled(text)
-}
-
-function expectButtonsToBeEnabled(...texts: string[]): void {
-  expectButtonsToBe(texts, true)
-}
-
-function expectButtonToBeDisabled(text: string): void {
-  expectButtonsToBeDisabled(text)
-}
-
-function expectButtonsToBeDisabled(...texts: string[]): void {
-  expectButtonsToBe(texts, false)
-}
-
-function expectButtonsToBe(texts: string[], enabled: boolean): void {
-  for (const text of texts) {
-    const htmlElement: HTMLElement = screen.getByText(text)
-    expect(htmlElement.tagName).toBe('BUTTON')
-    if (enabled) {
-      expect(htmlElement).toBeEnabled()
-    } else {
-      expect(htmlElement).toBeDisabled()
-    }
-  }
-}
-
-async function clickButton(text: string, waitForText?: string): Promise<void> {
-  expectButtonToBeEnabled(text)
-
-  console.log(`----- CLICK BUTTON: '${text}'`)
-  const user: UserEvent = userEvent.setup()
-  await user.click(screen.getByText(text))
-  await waitForButtonToBeEnabled(waitForText ?? text)
-  console.log(`----- CLICK BUTTON: '${text}' DONE`)
-}
-
-async function waitForButtonToBeEnabled(text: string): Promise<void> {
-  await waitFor(
-    () => {
-      expectButtonToBeEnabled(text)
-    },
-    {
-      timeout: 5000,
-    },
-  )
-}
-
-async function verifyBackendApiIsReachable(): Promise<void> {
-  const host: string = getHost()
-  try {
-    const response: Response = await fetch(getHost())
-    assert.include([200, 404], response.status)
-    console.log(
-      `Backend API host '${host}' is reachable (status: ${response.status})`,
-    )
-  } catch {
-    assert.fail(`Backend API host '${host}' is not reachable`)
-  }
 }

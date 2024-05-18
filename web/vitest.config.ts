@@ -7,7 +7,7 @@ import { defineConfig } from 'vite'
 // https://vitest.dev/guide/#configuring-vitest
 export default defineConfig({
   test: {
-    setupFiles: ['./vitest.setup.ts'],
+    setupFiles: ['./test/vitest.setup.ts'],
     environment: 'jsdom',
   },
 })
