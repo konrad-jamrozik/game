@@ -1,15 +1,17 @@
 /* eslint-disable @typescript-eslint/class-methods-use-this */
 import _ from 'lodash'
+import {
+  type HTMLElementVisibility,
+  expectHeader2,
+  clickButton,
+} from '../testUtils'
 
 export class IntroDialogFixture {
   public async close(): Promise<void> {
-    await new Promise<void>((resolve) => {
-      console.log('IntroDialogFixture.close')
-      resolve()
-    })
+    await clickButton('I accept the responsibility', 'Advance 1 turn')
   }
 
-  public assertVisible(isVisible: boolean): void {
-    console.log(`IntroDialogFixture.assertVisible(${isVisible})`)
+  public assertVisibility(htmlElementVisibility?: HTMLElementVisibility): void {
+    expectHeader2('Situation Report', htmlElementVisibility)
   }
 }

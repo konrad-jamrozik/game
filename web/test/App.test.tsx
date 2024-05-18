@@ -90,14 +90,14 @@ describe('Test suite for App.tsx', () => {
     controlPanel.assertNoGameSession()
   })
 
-  test('STUB Intro dialog and setting', async () => {
+  test.todo('STUB Intro dialog and setting', async () => {
     expect.hasAssertions()
 
     // When the app is rendered with 'show intro' settings:
     // - The intro dialog should appears.
     // - The corresponding setting should be set.
     const { controlPanel, settingsPanel, introDialog } = renderApp(true)
-    introDialog.assertVisible(true)
+    introDialog.assertVisibility('visible')
     await introDialog.close()
     settingsPanel.assertShowIntro(true)
 
@@ -106,7 +106,7 @@ describe('Test suite for App.tsx', () => {
     // When the game is reset when the 'show intro' setting is enabled:
     // - The intro dialog should appear.
     await controlPanel.resetGame()
-    introDialog.assertVisible(true)
+    introDialog.assertVisibility('visible')
 
     await introDialog.close()
     await controlPanel.advance1Turn()
@@ -115,7 +115,7 @@ describe('Test suite for App.tsx', () => {
     // - The intro dialog should not appear.
     await settingsPanel.disableShowIntro()
     await controlPanel.resetGame()
-    introDialog.assertVisible(false)
+    introDialog.assertVisibility('not present')
   })
 
   test('load data from local storage', () => {

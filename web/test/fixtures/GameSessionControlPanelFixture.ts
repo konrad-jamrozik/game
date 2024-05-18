@@ -6,7 +6,7 @@ import {
   expectButtonToBeEnabled,
   expectButtonsToBeDisabled,
   expectButtonsToBeEnabled,
-  expectLabel,
+  expectParagraph,
 } from '../testUtils'
 
 export class GameSessionControlPanelFixture {
@@ -23,18 +23,18 @@ export class GameSessionControlPanelFixture {
   }
 
   public assertNoGameSession(): void {
-    expectLabel('Current turn: N/A')
+    expectParagraph('Current turn: N/A')
     expectButtonsToBeDisabled('Reset game', 'Reset turn')
   }
 
   public assertTurn1(): void {
-    expectLabel('Current turn: 1')
+    expectParagraph('Current turn: 1')
     expectButtonToBeEnabled('Reset game')
     expectButtonToBeDisabled('Revert 1 turn')
   }
 
   public assertTurn2(): void {
-    expectLabel('Current turn: 2')
+    expectParagraph('Current turn: 2')
     expectButtonsToBeEnabled('Reset game', 'Revert 1 turn')
   }
 }

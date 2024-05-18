@@ -1,8 +1,21 @@
 import { screen, waitFor } from '@testing-library/react'
 import { userEvent, type UserEvent } from '@testing-library/user-event'
 import { assert } from 'chai'
+import _ from 'lodash'
 import { expect } from 'vitest'
 import { getHost } from '../src/lib/api/genericApiUtils'
+
+export type HTMLElementVisibility =
+  | 'visible'
+  | 'not visible'
+  | 'present'
+  | 'not present'
+
+const presentStates: HTMLElementVisibility[] = [
+  'present',
+  'visible',
+  'not visible',
+]
 
 export async function verifyBackendApiIsReachable(): Promise<void> {
   const host: string = getHost()
@@ -17,10 +30,37 @@ export async function verifyBackendApiIsReachable(): Promise<void> {
   }
 }
 
-export function expectLabel(text: string): void {
-  const htmlElement: HTMLElement = screen.getByText(text)
-  expect(htmlElement.tagName).toBe('P')
-  expect(htmlElement).toBeInTheDocument()
+export function expectParagraph(
+  text: string,
+  htmlElementVisibility?: HTMLElementVisibility,
+): void {
+  expectHtmlTagWithText(text, 'P', htmlElementVisibility ?? 'present')
+}
+
+export function expectHeader2(
+  text: string,
+  htmlElementVisibility?: HTMLElementVisibility,
+): void {
+  expectHtmlTagWithText(text, 'H2', htmlElementVisibility ?? 'present')
+}
+
+export function expectHtmlTagWithText(
+  text: string,
+  htmlTagName: string,
+  htmlElementVisibility: HTMLElementVisibility,
+): void {
+  if (_.includes(presentStates, htmlElementVisibility)) {
+    const htmlElement: HTMLElement = screen.getByText(text)
+    expect(htmlElement.tagName).toBe(htmlTagName)
+    expect(htmlElement).toBeInTheDocument()
+    if (htmlElementVisibility === 'visible') {
+      expect(htmlElement).toBeVisible()
+    } else if (htmlElementVisibility === 'not visible') {
+      expect(htmlElement).not.toBeVisible()
+    }
+  } else {
+    expect(screen.queryByText(text)).not.toBeInTheDocument()
+  }
 }
 
 export function expectButtonToBeEnabled(text: string): void {
