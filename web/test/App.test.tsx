@@ -16,6 +16,7 @@ import { expectButtonToBeDisabled } from './testUtils'
 import { expectButtonsToBeEnabled } from './testUtils'
 import { expectButtonToBeEnabled } from './testUtils'
 import { expectLabel } from './testUtils'
+import { GameSessionControlPanelFixture } from './GameSessionControlPanelFixture'
 
 // kja tests:
 
@@ -69,42 +70,28 @@ describe('Test suite for App.tsx', () => {
    * - Render of App.tsx
    *   - with setting denoting to not show intro dialog
    * When:
-   * - the following buttons are exercised, in variety of combinations:
+   * - the following buttons are exercised, in this order:
+   *   - "Advance 1 turn"
    *   - "Advance 1 turn"
    *   - "Revert 1 turn"
-   *   - "Reset game",
+   *   - "Reset game"
    * Then:
    * - The game behaves correctly.
    */
   test('Game boot with no intro: Advance 1 turn, Revert 1 turn, Reset game', async () => {
     expect.hasAssertions()
 
-    renderApp(false)
+    const { controlPanel } = renderApp(false)
 
-    expectLabel('Current turn: N/A')
-    expectButtonsToBeDisabled('Reset game', 'Reset turn')
-
-    await clickButton('Advance 1 turn')
-
-    expectLabel('Current turn: 1')
-    expectButtonToBeEnabled('Reset game')
-    expectButtonToBeDisabled('Revert 1 turn')
-
-    await clickButton('Advance 1 turn')
-
-    expectLabel('Current turn: 2')
-    expectButtonsToBeEnabled('Reset game', 'Revert 1 turn')
-
-    await clickButton('Revert 1 turn', 'Advance 1 turn')
-
-    expectLabel('Current turn: 1')
-    expectButtonToBeDisabled('Revert 1 turn')
-
-    await clickButton('Reset game', 'Advance 1 turn')
-
-    expectLabel('Current turn: N/A')
-    expectButtonToBeEnabled('Advance 1 turn')
-    expectButtonsToBeDisabled('Reset game', 'Reset turn')
+    controlPanel.assertNoGameSession()
+    await controlPanel.advance1Turn()
+    controlPanel.assertTurn1()
+    await controlPanel.advance1Turn()
+    controlPanel.assertTurn2()
+    await controlPanel.revert1Turn()
+    controlPanel.assertTurn1()
+    await controlPanel.resetGame()
+    controlPanel.assertNoGameSession()
   })
 
   test('load data from local storage', () => {
@@ -156,10 +143,13 @@ describe('Test suite for App.tsx', () => {
   })
 })
 
-function renderApp(introEnabled: boolean): void {
+function renderApp(introEnabled: boolean): {
+  controlPanel: GameSessionControlPanelFixture
+} {
   render(
     <GameSessionProvider storedGameSessionData={undefined}>
       <App settings={{ introEnabled, outroEnabled: true }} />
     </GameSessionProvider>,
   )
+  return { controlPanel: new GameSessionControlPanelFixture() }
 }
