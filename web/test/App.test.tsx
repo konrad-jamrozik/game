@@ -9,14 +9,10 @@ import { describe, expect, assert, test, beforeAll, beforeEach } from 'vitest'
 import App from '../src/App'
 import { GameSessionProvider } from '../src/components/GameSessionProvider'
 import { type StoredData, loadDataFromLocalStorage } from '../src/main'
+import { GameSessionControlPanelFixture } from './fixtures/GameSessionControlPanelFixture'
+import { IntroDialogFixture } from './fixtures/IntroDialogFixture'
+import { SettingsPanelFixture } from './fixtures/SettingsPanelFixture'
 import { verifyBackendApiIsReachable } from './testUtils'
-import { clickButton } from './testUtils'
-import { expectButtonsToBeDisabled } from './testUtils'
-import { expectButtonToBeDisabled } from './testUtils'
-import { expectButtonsToBeEnabled } from './testUtils'
-import { expectButtonToBeEnabled } from './testUtils'
-import { expectLabel } from './testUtils'
-import { GameSessionControlPanelFixture } from './GameSessionControlPanelFixture'
 
 // kja tests:
 
@@ -76,7 +72,7 @@ describe('Test suite for App.tsx', () => {
    *   - "Revert 1 turn"
    *   - "Reset game"
    * Then:
-   * - The game behaves correctly.
+   * - The game should behave correctly.
    */
   test('Game boot with no intro: Advance 1 turn, Revert 1 turn, Reset game', async () => {
     expect.hasAssertions()
@@ -94,14 +90,38 @@ describe('Test suite for App.tsx', () => {
     controlPanel.assertNoGameSession()
   })
 
+  test('STUB Intro dialog and setting', async () => {
+    expect.hasAssertions()
+
+    // When the app is rendered with 'show intro' settings:
+    // - The intro dialog should appears.
+    // - The corresponding setting should be set.
+    const { controlPanel, settingsPanel, introDialog } = renderApp(true)
+    introDialog.assertVisible(true)
+    await introDialog.close()
+    settingsPanel.assertShowIntro(true)
+
+    await controlPanel.advance1Turn()
+
+    // When the game is reset when the 'show intro' setting is enabled:
+    // - The intro dialog should appear.
+    await controlPanel.resetGame()
+    introDialog.assertVisible(true)
+
+    await introDialog.close()
+    await controlPanel.advance1Turn()
+
+    // When the 'show intro' setting is disabled and then the game is reset:
+    // - The intro dialog should not appear.
+    await settingsPanel.disableShowIntro()
+    await controlPanel.resetGame()
+    introDialog.assertVisible(false)
+  })
+
   test('load data from local storage', () => {
     const storedData: StoredData = loadDataFromLocalStorage()
     assert.isNotEmpty(storedData)
     console.log('storedData', JSON.stringify(storedData, undefined, 2))
-  })
-
-  test.todo('intro dialog', () => {
-    _.noop()
   })
 
   test.todo('test App', async () => {
@@ -145,11 +165,17 @@ describe('Test suite for App.tsx', () => {
 
 function renderApp(introEnabled: boolean): {
   controlPanel: GameSessionControlPanelFixture
+  settingsPanel: SettingsPanelFixture
+  introDialog: IntroDialogFixture
 } {
   render(
     <GameSessionProvider storedGameSessionData={undefined}>
       <App settings={{ introEnabled, outroEnabled: true }} />
     </GameSessionProvider>,
   )
-  return { controlPanel: new GameSessionControlPanelFixture() }
+  return {
+    controlPanel: new GameSessionControlPanelFixture(),
+    settingsPanel: new SettingsPanelFixture(),
+    introDialog: new IntroDialogFixture(),
+  }
 }
