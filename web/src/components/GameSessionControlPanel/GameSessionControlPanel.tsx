@@ -55,6 +55,7 @@ export function GameSessionControlPanel(
     // Then the client code could do on re-render: gameSession.hasGameStateUpdated().
     // It needs to apply all cases of game state update, not just advanceTurns.
     // Notably, also all player actions.
+    // But see also note at the bottom of App.tsx
     if (gameStateUpdated) {
       props.setGameStateUpdated(true)
     }
