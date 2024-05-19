@@ -228,20 +228,31 @@ export default function App({
 //
 //  In "advance time" button click handler:
 //    newGameState = await backendApiCall()
-//    // ❗VIOLATES REACT RULES ❗Trying to immediately access the new state instead of letting react first save it and then read on re-render
+//    // ❗Trying to immediately access the new state instead of letting react first save it and then read on re-render.
+//    //   Albeit this may be OK per this recommendation: https://react.dev/learn/you-might-not-need-an-effect#chains-of-computations
 //    updatedGameState = gameState.update(newGameState)
-//    // ❗CONCEPTUAL COUPLING ❗ This code should not know about outro dialog. Perhaps pass as input callback argument?
+//    // ❗CONCEPTUAL COUPLING ❗ This code should not know about outro dialog.
+//    // Perhaps pass as input callback argument? See also https://react.dev/learn/you-might-not-need-an-effect#sharing-logic-between-event-handlers
 //    if (showOutroDialog(updatedGameState)) { showOutroDialog = true }
 //
 // I had a chat with ChatGPT about this here:
 // https://chatgpt.com/g/g-AVrfRPzod-react-ai/c/b1bffd24-2aa1-4899-80a3-855c1b6c2843?oai-dm=1
 // It recommended 'useEffect' but I think this is the wrong approach.
-// What convinced me is the discussion about 'chain of computations' [2] and the fact
-// this scenario is a one-time response to a user-trigger API call returning,
-// instead of some kind of synchronization that needs to be updated independently of user actions. [3][4]
+// What convinced me is the discussion about 'chain of computations' [2]
+// and the fact this scenario is a one-time response to a user-trigger API call returning,
+// instead of some kind of synchronization that needs to be updated independently of user actions.
+// Money quote from [3] denoting this is definitely not an effect:
+//
+//   When you choose whether to put some logic into an event handler or an Effect, the main question you need to answer is
+//   what kind of logic it is from the user’s perspective. If this logic is caused by a particular interaction, keep it in the event handler.
+//   If it’s caused by the user seeing the component on the screen, keep it in the Effect.
 //
 // [2] https://react.dev/learn/you-might-not-need-an-effect#chains-of-computations
-// [3] https://react.dev/learn/synchronizing-with-effects
-// [4] https://react.dev/learn/separating-events-from-effects
-// Bonus:
-// https://stackoverflow.com/questions/58818727/react-usestate-not-setting-initial-value
+// [3] https://react.dev/learn/you-might-not-need-an-effect#sending-a-post-request
+// More links:
+// - https://react.dev/learn/synchronizing-with-effects
+// - https://react.dev/learn/separating-events-from-effects
+// - https://react.dev/learn/you-might-not-need-an-effect#adjusting-some-state-when-a-prop-changes
+// - https://react.dev/reference/react/useState#storing-information-from-previous-renders
+// - https://react.dev/learn/you-might-not-need-an-effect#sharing-logic-between-event-handlers
+// - https://stackoverflow.com/questions/58818727/react-usestate-not-setting-initial-value
