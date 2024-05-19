@@ -235,6 +235,9 @@ export default function App({
 //    // Perhaps pass as input callback argument? See also https://react.dev/learn/you-might-not-need-an-effect#sharing-logic-between-event-handlers
 //    if (showOutroDialog(updatedGameState)) { showOutroDialog = true }
 //
+// Another possible approach is 'trend' variable, maybe over 'isGameOver':
+// https://react.dev/reference/react/useState#storing-information-from-previous-renders
+//
 // I had a chat with ChatGPT about this here:
 // https://chatgpt.com/g/g-AVrfRPzod-react-ai/c/b1bffd24-2aa1-4899-80a3-855c1b6c2843?oai-dm=1
 // It recommended 'useEffect' but I think this is the wrong approach.
