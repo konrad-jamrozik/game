@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/class-methods-use-this */
 import _ from 'lodash'
-import { clickElement, getElementCheckState } from '../testUtils'
+import { clickElement, getElementCheckState } from '../test_lib/testUtils'
 
 export class SettingsPanelFixture {
   public async disableShowIntro(): Promise<void> {

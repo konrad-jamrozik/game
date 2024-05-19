@@ -7,7 +7,7 @@ import {
   expectButtonsToBeDisabled,
   expectButtonsToBeEnabled,
   expectParagraph,
-} from '../testUtils'
+} from '../test_lib/testUtils'
 
 export class GameSessionControlPanelFixture {
   public async advance1Turn(expectGameOver = false): Promise<void> {

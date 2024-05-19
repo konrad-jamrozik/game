@@ -4,7 +4,7 @@ import {
   type HTMLElementVisibility,
   expectHeader2,
   clickButtonAndWaitForItToDisappear,
-} from '../testUtils'
+} from '../test_lib/testUtils'
 
 export class OutroDialogFixture {
   public async close(): Promise<void> {

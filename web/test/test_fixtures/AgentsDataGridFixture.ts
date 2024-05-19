@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/class-methods-use-this */
-import { clickButton } from '../testUtils'
+import { clickButton } from '../test_lib/testUtils'
 
 export class AgentsDataGridFixture {
   public async hireAgent(): Promise<void> {

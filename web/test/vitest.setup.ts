@@ -58,12 +58,12 @@ Object.defineProperty(window, 'matchMedia', {
   })),
 })
 
-// This file content is based on:
+// https://testing-library.com/docs/dom-testing-library/api-debugging/#automatic-logging
+import.meta.env['DEBUG_PRINT_LIMIT'] = '0'
+
+// Some of this file content is based on:
 // https://github.com/testing-library/jest-dom#with-vitest
 // https://mayashavin.com/articles/test-react-components-with-vitest#extending-vitests-expect-method
 // Future work:
 // https://vitest.dev/guide/extending-matchers.html#extending-matchers
 // https://www.geeksforgeeks.org/typescript-ambients-declaration/
-
-// https://testing-library.com/docs/dom-testing-library/api-debugging/#automatic-logging
-import.meta.env['DEBUG_PRINT_LIMIT'] = '0'

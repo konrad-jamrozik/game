@@ -7,7 +7,7 @@ import { userEvent, type UserEvent } from '@testing-library/user-event'
 import { assert } from 'chai'
 import _ from 'lodash'
 import { expect } from 'vitest'
-import { getHost } from '../src/lib/api/genericApiUtils'
+import { getHost } from '../../src/lib/api/genericApiUtils'
 
 export type HTMLElementVisibility =
   | 'visible'
