@@ -3,14 +3,15 @@
 /* eslint-disable max-statements */
 /* eslint-disable vitest/max-expects */
 import { render, screen, cleanup } from '@testing-library/react'
-import { type UserEvent, userEvent } from '@testing-library/user-event'
 import _ from 'lodash'
 import { describe, expect, assert, test, beforeAll, beforeEach } from 'vitest'
 import App from '../src/App'
 import { GameSessionProvider } from '../src/components/GameSessionProvider'
 import { type StoredData, loadDataFromLocalStorage } from '../src/main'
+import { AgentsDataGridFixture } from './fixtures/AgentsDataGridFixture'
 import { GameSessionControlPanelFixture } from './fixtures/GameSessionControlPanelFixture'
 import { IntroDialogFixture } from './fixtures/IntroDialogFixture'
+import { OutroDialogFixture } from './fixtures/OutroDialogFixture'
 import { SettingsPanelFixture } from './fixtures/SettingsPanelFixture'
 import { verifyBackendApiIsReachable } from './testUtils'
 
@@ -118,6 +119,28 @@ describe('Test suite for App.tsx', () => {
     introDialog.assertVisibility('not present')
   })
 
+  test.todo('WIP Outro dialog and setting', async () => {
+    expect.hasAssertions()
+
+    const { controlPanel, settingsPanel, agentsDataGrid, outroDialog } =
+      renderApp(false)
+    settingsPanel.assertShowOutro(true)
+
+    await controlPanel.advance1Turn()
+
+    await agentsDataGrid.hireAgent()
+    await agentsDataGrid.hireAgent()
+
+    // _.forIn(_.range(1, 11), async () => {
+    //   await agentsDataGrid.hireAgent()
+    // })
+
+    await controlPanel.advance1Turn()
+    controlPanel.assertTurn2()
+    await screen.findByText('Situation Report')
+    outroDialog.assertVisibility('visible')
+  })
+
   test('load data from local storage', () => {
     const storedData: StoredData = loadDataFromLocalStorage()
     assert.isNotEmpty(storedData)
@@ -141,7 +164,9 @@ describe('Test suite for App.tsx', () => {
 function renderApp(introEnabled: boolean): {
   controlPanel: GameSessionControlPanelFixture
   settingsPanel: SettingsPanelFixture
+  agentsDataGrid: AgentsDataGridFixture
   introDialog: IntroDialogFixture
+  outroDialog: OutroDialogFixture
 } {
   render(
     <GameSessionProvider storedGameSessionData={undefined}>
@@ -151,6 +176,8 @@ function renderApp(introEnabled: boolean): {
   return {
     controlPanel: new GameSessionControlPanelFixture(),
     settingsPanel: new SettingsPanelFixture(),
+    agentsDataGrid: new AgentsDataGridFixture(),
     introDialog: new IntroDialogFixture(),
+    outroDialog: new OutroDialogFixture(),
   }
 }
