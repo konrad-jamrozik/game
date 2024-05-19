@@ -3,12 +3,12 @@ import _ from 'lodash'
 import {
   type HTMLElementVisibility,
   expectHeader2,
-  clickButton,
+  clickButtonAndWaitForItToDisappear,
 } from '../testUtils'
 
 export class IntroDialogFixture {
   public async close(): Promise<void> {
-    await clickButton('I accept the responsibility', 'Advance 1 turn')
+    await clickButtonAndWaitForItToDisappear('I accept the responsibility')
   }
 
   public assertVisibility(htmlElementVisibility?: HTMLElementVisibility): void {

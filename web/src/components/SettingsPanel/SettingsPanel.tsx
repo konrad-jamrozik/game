@@ -65,6 +65,7 @@ export function SettingsPanel(props: SettingsPanelProps): React.JSX.Element {
             <Switch
               checked={introChecked}
               onChange={handleIntroEnabledChange}
+              inputProps={{ 'aria-label': 'Show Intro' }}
             />
           </Grid>
           <Grid
@@ -81,6 +82,7 @@ export function SettingsPanel(props: SettingsPanelProps): React.JSX.Element {
             <Switch
               checked={outroChecked}
               onChange={handleOutroEnabledChange}
+              inputProps={{ 'aria-label': 'Show Outro' }}
             />
           </Grid>
           <Grid xs={12} sx={{ display: 'flex', justifyContent: 'center' }}>

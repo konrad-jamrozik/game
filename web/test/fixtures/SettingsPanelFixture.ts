@@ -1,15 +1,13 @@
 /* eslint-disable @typescript-eslint/class-methods-use-this */
 import _ from 'lodash'
+import { clickElement, getElementCheckState } from '../testUtils'
 
 export class SettingsPanelFixture {
   public async disableShowIntro(): Promise<void> {
-    await new Promise<void>((resolve) => {
-      console.log('SettingsPanelFixture.disableShowIntro')
-      resolve()
-    })
+    await clickElement('checkbox', 'Show Intro')
   }
 
-  public assertShowIntro(enabled: boolean): void {
-    console.log(`SettingsPanelFixture.assertShowIntro(${enabled})`)
+  public assertShowIntro(isChecked: boolean): void {
+    getElementCheckState('checkbox', 'Show Intro', isChecked)
   }
 }

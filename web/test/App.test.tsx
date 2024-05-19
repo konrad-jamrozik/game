@@ -90,7 +90,7 @@ describe('Test suite for App.tsx', () => {
     controlPanel.assertNoGameSession()
   })
 
-  test.todo('STUB Intro dialog and setting', async () => {
+  test('Intro dialog and setting', async () => {
     expect.hasAssertions()
 
     // When the app is rendered with 'show intro' settings:
@@ -160,6 +160,19 @@ describe('Test suite for App.tsx', () => {
     await screen.findByText('Situation Report', undefined, { timeout: 3000 })
     console.log('asserting')
     expect(screen.getByText('Situation Report')).toBeVisible()
+  })
+
+  // eslint-disable-next-line vitest/no-disabled-tests
+  test.skip('screen debug', () => {
+    import.meta.env['DEBUG_PRINT_LIMIT'] = '1000'
+    console.log('DEBUG_PRINT_LIMIT:', import.meta.env['DEBUG_PRINT_LIMIT'])
+    renderApp(false)
+    // eslint-disable-next-line github/array-foreach, lodash/prefer-lodash-method
+    for (const checkbox of screen.getAllByRole('checkbox', {
+      name: 'Show Intro',
+    })) {
+      console.log('checkbox', checkbox)
+    }
   })
 })
 

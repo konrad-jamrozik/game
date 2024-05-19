@@ -1,4 +1,8 @@
-import { screen, waitFor } from '@testing-library/react'
+import {
+  screen,
+  waitFor,
+  waitForElementToBeRemoved,
+} from '@testing-library/react'
 import { userEvent, type UserEvent } from '@testing-library/user-event'
 import { assert } from 'chai'
 import _ from 'lodash'
@@ -34,17 +38,17 @@ export function expectParagraph(
   text: string,
   htmlElementVisibility?: HTMLElementVisibility,
 ): void {
-  expectHtmlTagWithText(text, 'P', htmlElementVisibility ?? 'present')
+  expectElementWithText(text, 'P', htmlElementVisibility ?? 'present')
 }
 
 export function expectHeader2(
   text: string,
   htmlElementVisibility?: HTMLElementVisibility,
 ): void {
-  expectHtmlTagWithText(text, 'H2', htmlElementVisibility ?? 'present')
+  expectElementWithText(text, 'H2', htmlElementVisibility ?? 'present')
 }
 
-export function expectHtmlTagWithText(
+export function expectElementWithText(
   text: string,
   htmlTagName: string,
   htmlElementVisibility: HTMLElementVisibility,
@@ -60,6 +64,19 @@ export function expectHtmlTagWithText(
     }
   } else {
     expect(screen.queryByText(text)).not.toBeInTheDocument()
+  }
+}
+
+export function getElementCheckState(
+  role: string,
+  name: string,
+  isChecked: boolean,
+): void {
+  const htmlElement: HTMLElement = screen.getByRole(role, { name })
+  if (isChecked) {
+    expect(htmlElement).toBeChecked()
+  } else {
+    expect(htmlElement).not.toBeChecked()
   }
 }
 
@@ -113,4 +130,20 @@ export async function waitForButtonToBeEnabled(text: string): Promise<void> {
       timeout: 5000,
     },
   )
+}
+
+export async function clickButtonAndWaitForItToDisappear(
+  text: string,
+): Promise<void> {
+  const user: UserEvent = userEvent.setup()
+  await user.click(screen.getByText(text))
+  // https://testing-library.com/docs/guide-disappearance/#waiting-for-disappearance
+  await waitForElementToBeRemoved(() => screen.queryByText(text))
+}
+
+export async function clickElement(role: string, name: string): Promise<void> {
+  console.log(`----- CLICK ELEMENT: '${role}' '${name}'`)
+  const user: UserEvent = userEvent.setup()
+  await user.click(screen.getByRole(role, { name }))
+  console.log(`----- CLICK ELEMENT: '${role}' '${name}' DONE`)
 }
