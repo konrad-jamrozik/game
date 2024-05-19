@@ -171,7 +171,7 @@ describe('Test suite for App.tsx', () => {
     await settingsPanel.disableShowOutro()
     await controlPanel.revert1Turn()
     controlPanel.assertTurn1()
-    await controlPanel.advance1Turn()
+    await controlPanel.advance1Turn(true)
     controlPanel.assertTurn2()
     outroDialog.assertVisibility('not present')
   }, 20_000)
