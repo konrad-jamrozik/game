@@ -64,3 +64,6 @@ Object.defineProperty(window, 'matchMedia', {
 // Future work:
 // https://vitest.dev/guide/extending-matchers.html#extending-matchers
 // https://www.geeksforgeeks.org/typescript-ambients-declaration/
+
+// https://testing-library.com/docs/dom-testing-library/api-debugging/#automatic-logging
+import.meta.env['DEBUG_PRINT_LIMIT'] = '0'

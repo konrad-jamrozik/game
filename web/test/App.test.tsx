@@ -11,7 +11,12 @@ import { GameSessionControlPanelFixture } from './fixtures/GameSessionControlPan
 import { IntroDialogFixture } from './fixtures/IntroDialogFixture'
 import { OutroDialogFixture } from './fixtures/OutroDialogFixture'
 import { SettingsPanelFixture } from './fixtures/SettingsPanelFixture'
-import { verifyBackendApiIsReachable } from './testUtils'
+import {
+  clickButton,
+  expectButtonToBeEnabled,
+  expectButtonsToBeEnabled,
+  verifyBackendApiIsReachable,
+} from './testUtils'
 
 // kja tests:
 
@@ -118,67 +123,72 @@ describe('Test suite for App.tsx', () => {
     introDialog.assertVisibility('not present')
   })
 
-  test.todo(
-    'WIP Outro dialog and setting',
-    async () => {
-      expect.hasAssertions()
+  test('Outro dialog and setting', async () => {
+    expect.hasAssertions()
 
-      // Given:
-      // - The game is about to be lost when turn is advanced
-      // - The 'show outro' is enabled
-      // When:
-      // - The turn is advanced
-      // Then:
-      // - The game is lost and the outro dialog appears
-      const { controlPanel, settingsPanel, agentsDataGrid, outroDialog } =
-        renderApp(false)
-      settingsPanel.assertShowOutro(true)
-      await controlPanel.advance1Turn()
-      for await (const agentIdx of _.range(0, 10)) {
-        console.log(`Hiring agent ${agentIdx + 1}`)
-        await agentsDataGrid.hireAgent()
-      }
-      await controlPanel.advance1Turn(true)
-      controlPanel.assertTurn2()
-      outroDialog.assertVisibility('visible', true)
+    // Given:
+    // - The game is about to be lost when turn is advanced
+    // - The 'show outro' is enabled
+    // When:
+    // - The turn is advanced
+    // Then:
+    // - The game is lost and the outro dialog appears
+    const { controlPanel, settingsPanel, agentsDataGrid, outroDialog } =
+      renderApp(false)
+    settingsPanel.assertShowOutro(true)
+    await controlPanel.advance1Turn()
+    for await (const agentIdx of _.range(0, 10)) {
+      console.log(`Hiring agent ${agentIdx + 1}`)
+      await agentsDataGrid.hireAgent()
+    }
+    await controlPanel.advance1Turn(true)
+    controlPanel.assertTurn2()
+    outroDialog.assertVisibility('visible', true)
 
-      // Given:
-      // - The game is over
-      // - The 'show outro' is enabled
-      // When:
-      // - The turn is reverted and then advanced again
-      // Then:
-      // - The game is lost and the outro dialog appears
-      await outroDialog.close()
-      await controlPanel.revert1Turn()
-      controlPanel.assertTurn1()
-      await controlPanel.advance1Turn(true)
-      controlPanel.assertTurn2()
-      outroDialog.assertVisibility('visible', true)
+    // Given:
+    // - The game is over
+    // - The 'show outro' is enabled
+    // When:
+    // - The turn is reverted and then advanced again
+    // Then:
+    // - The game is lost and the outro dialog appears
+    await outroDialog.close()
+    await controlPanel.revert1Turn()
+    controlPanel.assertTurn1()
+    await controlPanel.advance1Turn(true)
+    controlPanel.assertTurn2()
+    outroDialog.assertVisibility('visible', true)
 
-      // Given:
-      // - The game is over
-      // - The 'show outro' is enabled
-      // When:
-      // - The 'show outro' gets disabled
-      // - The turn is reverted and then advanced again
-      // Then:
-      // - The game is over but the outro dialog does not appear
-      await outroDialog.close()
-      await settingsPanel.disableShowOutro()
-      await controlPanel.revert1Turn()
-      controlPanel.assertTurn1()
-      await controlPanel.advance1Turn()
-      controlPanel.assertTurn2()
-      outroDialog.assertVisibility('not present')
-    },
-    20_000,
-  )
+    // Given:
+    // - The game is over
+    // - The 'show outro' is enabled
+    // When:
+    // - The 'show outro' gets disabled
+    // - The turn is reverted and then advanced again
+    // Then:
+    // - The game is over but the outro dialog does not appear
+    await outroDialog.close()
+    await settingsPanel.disableShowOutro()
+    await controlPanel.revert1Turn()
+    controlPanel.assertTurn1()
+    await controlPanel.advance1Turn()
+    controlPanel.assertTurn2()
+    outroDialog.assertVisibility('not present')
+  }, 20_000)
 
   test('load data from local storage', () => {
     const storedData: StoredData = loadDataFromLocalStorage()
     assert.isNotEmpty(storedData)
     console.log('storedData', JSON.stringify(storedData, undefined, 2))
+  })
+
+  test.skip('scratchpad', async () => {
+    expect.hasAssertions()
+    const { controlPanel } = renderApp(false)
+
+    await controlPanel.advance1Turn()
+    // expectButtonToBeEnabled('Revert 1 turn')
+    controlPanel.assertTurn2()
   })
 
   // eslint-disable-next-line vitest/no-disabled-tests
