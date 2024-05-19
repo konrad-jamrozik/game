@@ -125,11 +125,12 @@ export async function clickButton(
 ): Promise<void> {
   expectButtonToBeEnabled(text)
 
-  console.log(`----- CLICK BUTTON: '${text}'`)
-  const user: UserEvent = userEvent.setup()
-  await user.click(screen.getByText(text))
+  console.log(`----- CLICK BUTTON: '${text}' waitForText: '${waitForText}'`)
+  await clickWithDelay(screen.getByText(text))
   await waitForButtonToBeEnabled(waitForText ?? text)
-  console.log(`----- CLICK BUTTON: '${text}' DONE`)
+  console.log(
+    `----- CLICK BUTTON: '${text}' waitForText: '${waitForText}' DONE`,
+  )
 }
 
 export async function waitForButtonToBeEnabled(text: string): Promise<void> {
@@ -146,15 +147,30 @@ export async function waitForButtonToBeEnabled(text: string): Promise<void> {
 export async function clickButtonAndWaitForItToDisappear(
   text: string,
 ): Promise<void> {
-  const user: UserEvent = userEvent.setup()
-  await user.click(screen.getByText(text))
+  await clickWithDelay(screen.getByText(text))
   // https://testing-library.com/docs/guide-disappearance/#waiting-for-disappearance
   await waitForElementToBeRemoved(() => screen.queryByText(text))
 }
 
 export async function clickElement(role: string, name: string): Promise<void> {
   console.log(`----- CLICK ELEMENT: '${role}' '${name}'`)
-  const user: UserEvent = userEvent.setup()
-  await user.click(screen.getByRole(role, { name }))
+  await clickWithDelay(screen.getByRole(role, { name }))
   console.log(`----- CLICK ELEMENT: '${role}' '${name}' DONE`)
+}
+
+/**
+ * By default we delay some time after click to give React some time to disable buttons etc.
+ */
+const defaultClickDelayMs = 20
+
+async function clickWithDelay(element: Element, ms?: number): Promise<void> {
+  const user: UserEvent = userEvent.setup()
+  await user.click(element)
+  await delay(ms ?? defaultClickDelayMs)
+}
+
+export async function delay(ms: number): Promise<void> {
+  return new Promise((resolve) => {
+    setTimeout(resolve, ms)
+  })
 }

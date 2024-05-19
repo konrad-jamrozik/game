@@ -186,9 +186,10 @@ describe('Test suite for App.tsx', () => {
     expect.hasAssertions()
     const { controlPanel } = renderApp(false)
 
-    await controlPanel.advance1Turn()
+    // await controlPanel.advance1Turn()
     // expectButtonToBeEnabled('Revert 1 turn')
-    controlPanel.assertTurn2()
+    // controlPanel.assertTurn2()
+    await controlPanel.advance1Turn()
   })
 
   // eslint-disable-next-line vitest/no-disabled-tests

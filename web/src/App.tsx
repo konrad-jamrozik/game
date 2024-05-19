@@ -61,11 +61,10 @@ export default function App({
     outroEnabled && isGameOver === true,
   )
 
-  // kja temp debug
-  console.log(
-    `import.meta.env.PROD: ${import.meta.env.PROD}, import.meta.env.MODE: ${import.meta.env.MODE}, process.env.NODE_ENV: ${process.env['NODE_ENV']}`,
-  )
-  console.log(`introEnabled: ${introEnabled}, showIntro: ${showIntro}`)
+  // console.log(
+  //   `import.meta.env.PROD: ${import.meta.env.PROD}, import.meta.env.MODE: ${import.meta.env.MODE}, process.env.NODE_ENV: ${process.env['NODE_ENV']}`,
+  // )
+  // console.log(`introEnabled: ${introEnabled}, showIntro: ${showIntro}`)
 
   // kja should this instead be an useEffect that depends on the current state update count,
   // or something like that?
