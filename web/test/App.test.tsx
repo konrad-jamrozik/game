@@ -1,7 +1,4 @@
 /* eslint-disable max-lines-per-function */
-/* eslint-disable sonarjs/no-duplicate-string */
-/* eslint-disable max-statements */
-/* eslint-disable vitest/max-expects */
 import { render, screen, cleanup } from '@testing-library/react'
 import _ from 'lodash'
 import { describe, expect, assert, test, beforeAll, beforeEach } from 'vitest'
@@ -149,7 +146,6 @@ describe('Test suite for App.tsx', () => {
     import.meta.env['DEBUG_PRINT_LIMIT'] = '1000'
     console.log('DEBUG_PRINT_LIMIT:', import.meta.env['DEBUG_PRINT_LIMIT'])
     renderApp(false)
-    // eslint-disable-next-line github/array-foreach, lodash/prefer-lodash-method
     for (const checkbox of screen.getAllByRole('checkbox', {
       name: 'Show Intro',
     })) {
