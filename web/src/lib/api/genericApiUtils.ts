@@ -31,7 +31,7 @@ export async function callApi<T>(
   params.setLoading(true)
   params.setError('')
 
-  const logRequest = await log(params.request)
+  const logRequest: string = await log(params.request)
   try {
     console.log(`callApi() TRY: ${logRequest}`)
 
@@ -91,5 +91,5 @@ export async function log(req: Request, pretty?: boolean): Promise<string> {
     const stringified = JSON.stringify(parsed, undefined, 2)
     return stringified
   }
-  return `${method} ${url} ${body}`
+  return `${method} ${url} ${_.truncate(body, { length: 200 })}`
 }

@@ -13,42 +13,6 @@ import { OutroDialogFixture } from './fixtures/OutroDialogFixture'
 import { SettingsPanelFixture } from './fixtures/SettingsPanelFixture'
 import { verifyBackendApiIsReachable } from './testUtils'
 
-// kja tests:
-
-// kja: CI tests fail sometimes due to relying on cloud backend and slow cold boot:
-// they hit a timeout. Re-running works as the API is booted and replies within timeout.
-
-// Build abstractions like:
-// "DoPlayerAction(count)" which hires agents
-// "EndGameInOneTurn" which hires agents to the max and advances to force game over
-
-// Test: Testing intro/outro
-// Assume: "Show intro" and "Show outro" are enabled in settings and this is the default state.
-// When the game is loaded for the first time, the intro dialog is displayed.
-// When the game is reset, the intro dialog is displayed.
-// Closing the intro dialog hides it.
-
-// Test: Reset turn
-// show that 'revert turn' changes to 'reset turn' when agent gets hired.
-// show that 'revert turn' reverts to the END of previous turn (after all player actions), not beginning. See also below:
-// test for the corner cases described in GameSessionData.resetGameState
-// I.e. how to get back to previous turn end (just by revert) and beginning (by revert, revert, advance)
-
-// Test: Clear local storage
-// question: do tests have isolated local storage?
-// question: if I disable test isolation, how much it will speed up things?
-
-// Test: delegate turn to AI:
-// Always need to assert Result is undecided until I get seeds in
-// From turn N/A: start 1 target 5
-// From turn 1: start 1 target 5
-// Then (from turn 5): start 1, target 5
-// Then (from turn 5): start 4, target 5
-// Then (from turn 5): start 5, target 6
-// Then (from turn 6): start 3, target 4
-// Then (from turn 4): start 6, target 7
-// But also just read and cover: resolveStartAndTargetTurn
-
 describe('Test suite for App.tsx', () => {
   beforeAll(async () => {
     await verifyBackendApiIsReachable()
@@ -171,7 +135,8 @@ describe('Test suite for App.tsx', () => {
     outroDialog.assertVisibility('not present')
   }, 20_000)
 
-  test('load data from local storage', () => {
+  test('Load data from local storage', () => {
+    localStorage.clear()
     const storedData: StoredData = loadDataFromLocalStorage()
     assert.isNotEmpty(storedData)
     console.log('storedData', JSON.stringify(storedData, undefined, 2))
@@ -181,10 +146,6 @@ describe('Test suite for App.tsx', () => {
   test.skip('scratchpad', async () => {
     expect.hasAssertions()
     const { controlPanel } = renderApp(false)
-
-    // await controlPanel.advance1Turn()
-    // expectButtonToBeEnabled('Revert 1 turn')
-    // controlPanel.assertTurn2()
     await controlPanel.advance1Turn()
   })
 
@@ -221,3 +182,29 @@ function renderApp(introEnabled: boolean): {
     outroDialog: new OutroDialogFixture(),
   }
 }
+
+// Future work:
+
+// CI tests fail sometimes due to relying on cloud backend and slow cold boot:
+// they hit a timeout. Re-running works as the API is booted and replies within timeout.
+
+// Test: Reset turn
+// show that 'revert turn' changes to 'reset turn' when agent gets hired.
+// show that 'revert turn' reverts to the END of previous turn (after all player actions), not beginning. See also below:
+// test for the corner cases described in GameSessionData.resetGameState
+// I.e. how to get back to previous turn end (just by revert) and beginning (by revert, revert, advance)
+
+// Test: Clear local storage
+// question: do tests have isolated local storage?
+// question: if I disable test isolation, how much it will speed up things?
+
+// Test: delegate turn to AI:
+// Always need to assert Result is undecided until I get seeds in
+// From turn N/A: start 1 target 5
+// From turn 1: start 1 target 5
+// Then (from turn 5): start 1, target 5
+// Then (from turn 5): start 4, target 5
+// Then (from turn 5): start 5, target 6
+// Then (from turn 6): start 3, target 4
+// Then (from turn 4): start 6, target 7
+// But also just read and cover: resolveStartAndTargetTurn
