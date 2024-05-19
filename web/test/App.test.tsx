@@ -96,6 +96,7 @@ describe('Test suite for App.tsx', () => {
       renderApp(false)
     settingsPanel.assertShowOutro(true)
     await controlPanel.advance1Turn()
+    outroDialog.assertVisibility('not present')
     for await (const agentIdx of _.range(0, 10)) {
       console.log(`Hiring agent ${agentIdx + 1}`)
       await agentsDataGrid.hireAgent()
