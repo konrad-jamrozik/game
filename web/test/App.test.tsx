@@ -124,44 +124,6 @@ describe('Test suite for App.tsx', () => {
     console.log('storedData', JSON.stringify(storedData, undefined, 2))
   })
 
-  test.todo('test App', async () => {
-    expect.hasAssertions()
-    const user: UserEvent = userEvent.setup()
-
-    renderApp(true)
-
-    const introDialogHeader: HTMLElement = screen.getByText('Situation Report')
-    expect(introDialogHeader).toBeVisible()
-
-    console.log('clicking I accept the responsibility')
-    await user.click(screen.getByText('I accept the responsibility'))
-
-    expect(introDialogHeader).not.toBeVisible()
-
-    const gameSessionHeader: HTMLElement = screen.getByText('Game Session')
-    expect(gameSessionHeader).toBeInTheDocument()
-
-    const resetGame: HTMLElement = screen.getByText('Reset game')
-    expect(resetGame).toBeDisabled()
-
-    expect(screen.getByText('Current turn: N/A')).toBeInTheDocument()
-
-    console.log('clicking Advance 1 turn')
-    await user.click(screen.getByText('Advance 1 turn'))
-
-    await screen.findByText('Current turn: 1', undefined, { timeout: 3000 })
-    expect(screen.getByText('Current turn: 1')).toBeInTheDocument()
-
-    expect(resetGame).toBeEnabled()
-    expect(introDialogHeader).not.toBeVisible()
-    console.log('clicking Reset game')
-    await user.click(screen.getByText('Reset game'))
-    console.log('finding situation report')
-    await screen.findByText('Situation Report', undefined, { timeout: 3000 })
-    console.log('asserting')
-    expect(screen.getByText('Situation Report')).toBeVisible()
-  })
-
   // eslint-disable-next-line vitest/no-disabled-tests
   test.skip('screen debug', () => {
     import.meta.env['DEBUG_PRINT_LIMIT'] = '1000'
