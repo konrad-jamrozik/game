@@ -11,12 +11,7 @@ import { GameSessionControlPanelFixture } from './fixtures/GameSessionControlPan
 import { IntroDialogFixture } from './fixtures/IntroDialogFixture'
 import { OutroDialogFixture } from './fixtures/OutroDialogFixture'
 import { SettingsPanelFixture } from './fixtures/SettingsPanelFixture'
-import {
-  clickButton,
-  expectButtonToBeEnabled,
-  expectButtonsToBeEnabled,
-  verifyBackendApiIsReachable,
-} from './testUtils'
+import { verifyBackendApiIsReachable } from './testUtils'
 
 // kja tests:
 
