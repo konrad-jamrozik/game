@@ -10,8 +10,11 @@ import {
 } from '../testUtils'
 
 export class GameSessionControlPanelFixture {
-  public async advance1Turn(): Promise<void> {
-    await clickButton('Advance 1 turn')
+  public async advance1Turn(expectGameOver = false): Promise<void> {
+    await clickButton(
+      'Advance 1 turn',
+      expectGameOver ? 'Reset game' : 'Advance 1 turn',
+    )
   }
 
   public async revert1Turn(): Promise<void> {

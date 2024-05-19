@@ -18,3 +18,8 @@ Also consider checking for unused dependencies:
 - https://react.dev/learn/passing-data-deeply-with-context
 - https://react.dev/learn/scaling-up-with-reducer-and-context
 - https://react-typescript-cheatsheet.netlify.app/docs/basic/getting-started/context/
+
+## About vitest
+
+- https://github.com/vitest-dev/vitest/issues/4494
+- https://kentcdodds.com/blog/improve-test-error-messages-of-your-abstractions

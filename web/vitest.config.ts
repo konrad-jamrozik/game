@@ -9,5 +9,8 @@ export default defineConfig({
   test: {
     setupFiles: ['./test/vitest.setup.ts'],
     environment: 'jsdom',
+    chaiConfig: {
+      includeStack: true,
+    },
   },
 })

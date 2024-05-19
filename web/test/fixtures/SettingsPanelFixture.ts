@@ -5,10 +5,12 @@ import { clickElement, getElementCheckState } from '../testUtils'
 export class SettingsPanelFixture {
   public async disableShowIntro(): Promise<void> {
     await clickElement('checkbox', 'Show Intro')
+    this.assertShowIntro(false)
   }
 
   public async disableShowOutro(): Promise<void> {
     await clickElement('checkbox', 'Show Outro')
+    this.assertShowOutro(false)
   }
 
   public assertShowIntro(isChecked: boolean): void {

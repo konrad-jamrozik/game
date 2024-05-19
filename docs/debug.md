@@ -33,6 +33,15 @@ See also https://react.dev/learn/react-developer-tools
 5. In VSCode `Run and Debug` tab, select the configuration and launch it.
 6. Observe the breakpoint getting hit and observe the `Debug console` contents.
 
+## How to debug vitest tests in VS Code
+
+In VSCode:
+
+1. `Vitest: Show Output Channel`
+2. `Run test` (right arrow icon) on the test file you want to debug.
+   This will cause it load specific tests once the run is done.
+3. `Debug tes` (right arrow with bug icon) on the test line you want to debug.
+
 ## Doc reference
 
 - Explanation of VS Code launch configurations:  

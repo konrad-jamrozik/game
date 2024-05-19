@@ -12,7 +12,7 @@
     "build": "tsc && vite build",
     "preview": "vite preview",
     "test": "vitest",
-    "test:run": "vitest run",
+    "test:once": "vitest run",
     "test:ui": "vitest --ui",
     "test:cov": "vitest --coverage",
     "test:uicov": "vitest --ui --coverage.enabled=true",

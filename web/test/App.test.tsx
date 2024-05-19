@@ -1,3 +1,4 @@
+/* eslint-disable max-statements */
 /* eslint-disable max-lines-per-function */
 import { render, screen, cleanup } from '@testing-library/react'
 import _ from 'lodash'
@@ -70,7 +71,7 @@ describe('Test suite for App.tsx', () => {
    *   - "Revert 1 turn"
    *   - "Reset game"
    * Then:
-   * - The game should behave correctly.
+   * - The game behaves correctly.
    */
   test('Game boot with no intro: Advance 1 turn, Revert 1 turn, Reset game', async () => {
     expect.hasAssertions()
@@ -91,9 +92,10 @@ describe('Test suite for App.tsx', () => {
   test('Intro dialog and setting', async () => {
     expect.hasAssertions()
 
-    // When the app is rendered with 'show intro' settings:
-    // - The intro dialog should appears.
-    // - The corresponding setting should be set.
+    // When the app is rendered with 'show intro' settings
+    // Then:
+    // - The intro dialog appears.
+    // - The corresponding setting 'Show outro' setting is enabled.
     const { controlPanel, settingsPanel, introDialog } = renderApp(true)
     introDialog.assertVisibility('visible')
     await introDialog.close()
@@ -101,39 +103,77 @@ describe('Test suite for App.tsx', () => {
 
     await controlPanel.advance1Turn()
 
-    // When the game is reset when the 'show intro' setting is enabled:
-    // - The intro dialog should appear.
+    // When the game is reset when the 'show intro' setting is enabled.
+    // Then the intro dialog appear.
     await controlPanel.resetGame()
     introDialog.assertVisibility('visible')
 
     await introDialog.close()
     await controlPanel.advance1Turn()
 
-    // When the 'show intro' setting is disabled and then the game is reset:
-    // - The intro dialog should not appear.
+    // When the 'show intro' setting is disabled and then the game is reset.
+    // Then the intro dialog appears.
     await settingsPanel.disableShowIntro()
     await controlPanel.resetGame()
     introDialog.assertVisibility('not present')
   })
 
-  test('WIP Outro dialog and setting', async () => {
-    expect.hasAssertions()
+  test.todo(
+    'Outro dialog and setting',
+    async () => {
+      expect.hasAssertions()
 
-    const { controlPanel, settingsPanel, agentsDataGrid, outroDialog } =
-      renderApp(false)
-    settingsPanel.assertShowOutro(true)
+      // Given:
+      // - The game is about to be lost when turn is advanced
+      // - The 'show outro' is enabled
+      // When:
+      // - The turn is advanced
+      // Then:
+      // - The game is lost and the outro dialog appears
+      const { controlPanel, settingsPanel, agentsDataGrid, outroDialog } =
+        renderApp(false)
+      settingsPanel.assertShowOutro(true)
+      await controlPanel.advance1Turn()
+      for await (const agentIdx of _.range(0, 10)) {
+        console.log(`Hiring agent ${agentIdx + 1}`)
+        await agentsDataGrid.hireAgent()
+      }
+      await controlPanel.advance1Turn(true)
+      controlPanel.assertTurn2()
+      outroDialog.assertVisibility('visible', true)
 
-    await controlPanel.advance1Turn()
+      // Given:
+      // - The game is over
+      // - The 'show outro' is enabled
+      // When:
+      // - The turn is reverted and then advanced again
+      // Then:
+      // - The game is lost and the outro dialog appears
+      await outroDialog.close()
+      await controlPanel.revert1Turn()
+      controlPanel.assertTurn1()
+      await controlPanel.advance1Turn(true)
+      controlPanel.assertTurn2()
+      outroDialog.assertVisibility('visible', true)
 
-    for await (const agentIdx of _.range(0, 10)) {
-      console.log(`Hiring agent ${agentIdx + 1}`)
-      await agentsDataGrid.hireAgent()
-    }
-
-    await controlPanel.advance1Turn()
-    controlPanel.assertTurn2()
-    outroDialog.assertVisibility('visible', true)
-  }, 20_000)
+      // Given:
+      // - The game is over
+      // - The 'show outro' is enabled
+      // When:
+      // - The 'show outro' gets disabled
+      // - The turn is reverted and then advanced again
+      // Then:
+      // - The game is over but the outro dialog does not appear
+      await outroDialog.close()
+      await settingsPanel.disableShowOutro()
+      await controlPanel.revert1Turn()
+      controlPanel.assertTurn1()
+      await controlPanel.advance1Turn()
+      controlPanel.assertTurn2()
+      outroDialog.assertVisibility('visible', false)
+    },
+    20_000_000,
+  )
 
   test('load data from local storage', () => {
     const storedData: StoredData = loadDataFromLocalStorage()

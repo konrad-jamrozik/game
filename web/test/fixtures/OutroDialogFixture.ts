@@ -8,6 +8,7 @@ import {
 
 export class OutroDialogFixture {
   public async close(): Promise<void> {
+    console.log('OutroDialogFixture.close()')
     await clickButtonAndWaitForItToDisappear('I am sorry')
   }
 
@@ -15,6 +16,7 @@ export class OutroDialogFixture {
     htmlElementVisibility?: HTMLElementVisibility,
     waitForElement = false,
   ): void {
+    console.log('OutroDialogFixture.assertVisibility()')
     expectHeader2('Situation Report', htmlElementVisibility, waitForElement)
   }
 }
