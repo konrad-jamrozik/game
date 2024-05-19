@@ -119,7 +119,7 @@ describe('Test suite for App.tsx', () => {
   })
 
   test.todo(
-    'Outro dialog and setting',
+    'WIP Outro dialog and setting',
     async () => {
       expect.hasAssertions()
 
@@ -170,9 +170,9 @@ describe('Test suite for App.tsx', () => {
       controlPanel.assertTurn1()
       await controlPanel.advance1Turn()
       controlPanel.assertTurn2()
-      outroDialog.assertVisibility('visible', false)
+      outroDialog.assertVisibility('not present')
     },
-    20_000_000,
+    20_000,
   )
 
   test('load data from local storage', () => {
