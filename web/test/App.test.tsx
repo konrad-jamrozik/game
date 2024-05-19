@@ -177,6 +177,7 @@ describe('Test suite for App.tsx', () => {
     console.log('storedData', JSON.stringify(storedData, undefined, 2))
   })
 
+  // eslint-disable-next-line vitest/no-disabled-tests
   test.skip('scratchpad', async () => {
     expect.hasAssertions()
     const { controlPanel } = renderApp(false)

@@ -3,6 +3,7 @@ import { describe, expect, test } from 'vitest'
 import { Label } from '../../src/components/Label.tsx'
 
 describe('describe Label', () => {
+  // eslint-disable-next-line vitest/no-disabled-tests
   test.skip('test Label', () => {
     expect.hasAssertions()
     render(<Label>Test Label</Label>)
