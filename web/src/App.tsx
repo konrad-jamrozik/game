@@ -215,19 +215,23 @@ export default function App({
 //
 // Basically the flow as implemented is as follows:
 //
-//  newGameState = await backendApiCall()
-//  gameState.update(newGameState)
-//  gameStateUpdated.set(true)
+//  In "advance time" button click handler:
+//    newGameState = await backendApiCall()
+//    gameState.update(newGameState)
+//    gameStateUpdated.set(true)
 //
-//  re-render:
-//  if (showOutroDialog(gameState, gameStateUpdated)) { showOutroDialog = true }
-//  if (gameStateUpdated) { gameStateUpdated = false }
+//  On re-render, in top-level "App" logic
+//    if (showOutroDialog(gameState, gameStateUpdated)) { showOutroDialog = true }
+//    if (gameStateUpdated) { gameStateUpdated = false }
 //
 // But I would wish for this flow, but it violates React rules:
 //
-//  newGameState = await backendApiCall()
-//  updatedGameState = gameState.update(newGameState) // ❗VIOLATES REACT RULES ❗
-//  if (showOutroDialog(updatedGameState)) { showOutroDialog = true }
+//  In "advance time" button click handler:
+//    newGameState = await backendApiCall()
+//    // ❗VIOLATES REACT RULES ❗Trying to immediately access the new state instead of letting react first save it and then read on re-render
+//    updatedGameState = gameState.update(newGameState)
+//    // ❗CONCEPTUAL COUPLING ❗ This code should not know about outro dialog. Perhaps pass as input callback argument?
+//    if (showOutroDialog(updatedGameState)) { showOutroDialog = true }
 //
 // I had a chat with ChatGPT about this here:
 // https://chatgpt.com/g/g-AVrfRPzod-react-ai/c/b1bffd24-2aa1-4899-80a3-855c1b6c2843?oai-dm=1
