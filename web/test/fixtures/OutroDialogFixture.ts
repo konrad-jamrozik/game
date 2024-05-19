@@ -11,7 +11,10 @@ export class OutroDialogFixture {
     await clickButtonAndWaitForItToDisappear('I am sorry')
   }
 
-  public assertVisibility(htmlElementVisibility?: HTMLElementVisibility): void {
-    expectHeader2('Situation Report', htmlElementVisibility)
+  public assertVisibility(
+    htmlElementVisibility?: HTMLElementVisibility,
+    waitForElement = false,
+  ): void {
+    expectHeader2('Situation Report', htmlElementVisibility, waitForElement)
   }
 }

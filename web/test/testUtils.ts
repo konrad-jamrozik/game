@@ -44,18 +44,29 @@ export function expectParagraph(
 export function expectHeader2(
   text: string,
   htmlElementVisibility?: HTMLElementVisibility,
+  waitForElement = false,
 ): void {
-  expectElementWithText(text, 'H2', htmlElementVisibility ?? 'present')
+  expectElementWithText(
+    text,
+    'H2',
+    htmlElementVisibility ?? 'present',
+    waitForElement,
+  )
 }
 
 export function expectElementWithText(
   text: string,
   htmlTagName: string,
   htmlElementVisibility: HTMLElementVisibility,
+  waitForElement = false,
 ): void {
   if (_.includes(presentStates, htmlElementVisibility)) {
-    const htmlElement: HTMLElement = screen.getByText(text)
-    expect(htmlElement.tagName).toBe(htmlTagName)
+    const htmlElement: HTMLElement | null = waitForElement
+      ? screen.queryByText(text)
+      : screen.getByText(text)
+
+    expect(htmlElement).not.toBeNull()
+    expect(htmlElement!.tagName).toBe(htmlTagName)
     expect(htmlElement).toBeInTheDocument()
     if (htmlElementVisibility === 'visible') {
       expect(htmlElement).toBeVisible()

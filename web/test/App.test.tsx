@@ -119,7 +119,7 @@ describe('Test suite for App.tsx', () => {
     introDialog.assertVisibility('not present')
   })
 
-  test.todo('WIP Outro dialog and setting', async () => {
+  test('WIP Outro dialog and setting', async () => {
     expect.hasAssertions()
 
     const { controlPanel, settingsPanel, agentsDataGrid, outroDialog } =
@@ -128,18 +128,15 @@ describe('Test suite for App.tsx', () => {
 
     await controlPanel.advance1Turn()
 
-    await agentsDataGrid.hireAgent()
-    await agentsDataGrid.hireAgent()
-
-    // _.forIn(_.range(1, 11), async () => {
-    //   await agentsDataGrid.hireAgent()
-    // })
+    for await (const agentIdx of _.range(0, 10)) {
+      console.log(`Hiring agent ${agentIdx + 1}`)
+      await agentsDataGrid.hireAgent()
+    }
 
     await controlPanel.advance1Turn()
     controlPanel.assertTurn2()
-    await screen.findByText('Situation Report')
-    outroDialog.assertVisibility('visible')
-  })
+    outroDialog.assertVisibility('visible', true)
+  }, 20_000)
 
   test('load data from local storage', () => {
     const storedData: StoredData = loadDataFromLocalStorage()

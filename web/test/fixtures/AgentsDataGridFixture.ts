@@ -3,6 +3,6 @@ import { clickButton } from '../testUtils'
 
 export class AgentsDataGridFixture {
   public async hireAgent(): Promise<void> {
-    await clickButton('Hire agent')
+    await clickButton('Hire agent', 'Advance 1 turn')
   }
 }
