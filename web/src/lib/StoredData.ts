@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/class-methods-use-this */
 import _ from 'lodash'
 import type { GameSessionDataType } from './GameSessionData'
 
