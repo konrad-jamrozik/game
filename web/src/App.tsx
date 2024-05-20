@@ -49,16 +49,11 @@ export default function App({
 
   const [turnAdvanced, setTurnAdvanced] = useState<boolean>(false)
 
-  const {
-    introEnabled,
-    setIntroEnabled,
-    outroEnabled,
-    setOutroEnabled,
-    showIntro,
-    setShowIntro,
-    showOutro,
-    setShowOutro,
-  } = useAndUpdateIntroAndOutro(settings, gameSession, isGameOver, turnAdvanced)
+  const { introEnabled, setIntroEnabled, showIntro, setShowIntro } =
+    useAndSetIntro(settings, gameSession.isInitialized())
+
+  const { outroEnabled, setOutroEnabled, showOutro, setShowOutro } =
+    useAndSetOutro(settings, isGameOver, turnAdvanced)
 
   if (turnAdvanced) {
     // Reset the 'turnAdvanced' signal after it was used.
@@ -181,41 +176,55 @@ export default function App({
   )
 }
 
-function useAndUpdateIntroAndOutro(
+/**
+ * State hook and their state processing for IntroDialog.tsx
+ */
+function useAndSetIntro(
   settings: Settings,
-  gameSession: GameSession,
-  isGameOver: boolean | undefined,
-  turnAdvanced: boolean,
+  gameSessionIsInitialized: boolean,
 ): {
   introEnabled: boolean
   setIntroEnabled: React.Dispatch<React.SetStateAction<boolean>>
-  outroEnabled: boolean
-  setOutroEnabled: React.Dispatch<React.SetStateAction<boolean>>
   showIntro: boolean
   setShowIntro: React.Dispatch<React.SetStateAction<boolean>>
-  showOutro: boolean
-  setShowOutro: React.Dispatch<React.SetStateAction<boolean>>
 } {
   const [introEnabled, setIntroEnabled] = useState<boolean>(
     settings.introEnabled,
   )
-  const [outroEnabled, setOutroEnabled] = useState<boolean>(
-    settings.outroEnabled,
-  )
   const [showIntro, setShowIntro] = useState<boolean>(
-    settings.introEnabled && !gameSession.isInitialized(),
+    settings.introEnabled && !gameSessionIsInitialized,
   )
-  const [showOutro, setShowOutro] = useState<boolean>(isGameOver === true)
-
   if (showIntro && !introEnabled) {
     // If the 'showIntro' signal fired but intro is not enabled then clear the signal,
     // to prevent the intro showing up as soon as introEnabled is set to true later on.
     setShowIntro(false)
   }
+  return { introEnabled, setIntroEnabled, showIntro, setShowIntro }
+}
+
+/**
+ * State hook and their state processing for OutroDialog.tsx
+ */
+function useAndSetOutro(
+  settings: Settings,
+  isGameOver: boolean | undefined,
+  turnAdvanced: boolean,
+): {
+  outroEnabled: boolean
+  setOutroEnabled: React.Dispatch<React.SetStateAction<boolean>>
+  showOutro: boolean
+  setShowOutro: React.Dispatch<React.SetStateAction<boolean>>
+} {
+  const [outroEnabled, setOutroEnabled] = useState<boolean>(
+    settings.outroEnabled,
+  )
+
+  const [showOutro, setShowOutro] = useState<boolean>(isGameOver === true)
+
   if (showOutro && !outroEnabled) {
     // If the 'showOutro' signal fired but intro is not enabled then clear the signal,
     // to prevent the outro showing up as soon as outroEnabled is set to true later on.
-    setShowIntro(false)
+    setShowOutro(false)
   } else if (
     !showOutro &&
     outroEnabled &&
@@ -227,12 +236,8 @@ function useAndUpdateIntroAndOutro(
   }
 
   return {
-    introEnabled,
-    setIntroEnabled,
     outroEnabled,
     setOutroEnabled,
-    showIntro,
-    setShowIntro,
     showOutro,
     setShowOutro,
   }
