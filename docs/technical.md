@@ -93,7 +93,7 @@ instead of some kind of synchronization that needs to be updated independently o
 Money quote from [sending a POST request] denoting this is definitely not an effect:
 
 > When you choose whether to put some logic into an event handler or an Effect, the main question you need to answer is
-> what kind of logic it is from the user’s perspective. If this logic is caused by a particular interaction, keep it in 
+> what kind of logic it is from the user’s perspective. If this logic is caused by a particular interaction, keep it in
 > the event handler. If it’s caused by the user seeing the component on the screen, keep it in the Effect.
 
 [discussion about 'chain of computations']: https://react.dev/learn/you-might-not-need-an-effect#chains-of-computations
