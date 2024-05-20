@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/parameter-properties */
 import _ from 'lodash'
 import { useContext, useState } from 'react'
+import { Md5 } from 'ts-md5'
 import { GameSessionContext } from '../components/GameSessionProvider'
 import {
   type GameSessionData,
@@ -29,6 +30,10 @@ export function useGameSession(
   )
   const [loading, setLoading] = useState<boolean>(false)
   const [error, setError] = useState<string>()
+
+  console.log(
+    `useGameSession: data: '${Md5.hashStr(JSON.stringify(data))}', loading: '${loading}', error: '${error}'`,
+  )
 
   return new GameSession(
     new GameSessionDataWrapper(data, setData),

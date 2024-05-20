@@ -12,6 +12,7 @@ export type GameSessionProviderProps = {
 export function GameSessionProvider(
   props: GameSessionProviderProps,
 ): React.JSX.Element {
+  console.log(`render GameSessionProvider.tsx`)
   const gameSession = useGameSession(props.storedGameSessionData)
   return (
     <GameSessionContext.Provider value={gameSession}>
