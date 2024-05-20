@@ -74,3 +74,27 @@ describe('Test suite for App.tsx', () => {
     }
   })
 })
+
+// kja: CI tests fail sometimes due to relying on cloud backend and slow cold boot:
+// they hit a timeout. Re-running works as the API is booted and replies within timeout.
+
+// Test: Reset turn
+// show that 'revert turn' changes to 'reset turn' when agent gets hired.
+// show that 'revert turn' reverts to the END of previous turn (after all player actions), not beginning. See also below:
+// test for the corner cases described in GameSessionData.resetGameState
+// I.e. how to get back to previous turn end (just by revert) and beginning (by revert, revert, advance)
+
+// Test: Clear local storage
+// question: do tests have isolated local storage?
+// question: if I disable test isolation, how much it will speed up things?
+
+// Test: delegate turn to AI:
+// Always need to assert Result is undecided until I get seeds in
+// From turn N/A: start 1 target 5
+// From turn 1: start 1 target 5
+// Then (from turn 5): start 1, target 5
+// Then (from turn 5): start 4, target 5
+// Then (from turn 5): start 5, target 6
+// Then (from turn 6): start 3, target 4
+// Then (from turn 4): start 6, target 7
+// But also just read and cover: resolveStartAndTargetTurn
