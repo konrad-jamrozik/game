@@ -2,10 +2,11 @@ import { Button, Card, CardContent, CardHeader, Switch } from '@mui/material'
 import Grid from '@mui/material/Unstable_Grid2'
 import _ from 'lodash'
 import { useState } from 'react'
-import { loadSettings } from '../../lib/StoredData'
+import { type StoredData, loadSettings } from '../../lib/StoredData'
 import { Label } from '../Label'
 
 export type SettingsPanelProps = {
+  storedData: StoredData
   introEnabled: boolean
   setIntroEnabled: React.Dispatch<React.SetStateAction<boolean>>
   outroEnabled: boolean
@@ -21,15 +22,7 @@ export function SettingsPanel(props: SettingsPanelProps): React.JSX.Element {
   ): void {
     setIntroChecked(event.target.checked)
     props.setIntroEnabled(event.target.checked)
-
-    // kja dedup logic processing local storage
-    const settings = loadSettings()
-    const newSettings = {
-      ...settings,
-      introEnabled: event.target.checked,
-    }
-    // kja localStorage.setItem('settings', JSON.stringify(newSettings))
-    localStorage.setItem('settings', JSON.stringify(newSettings))
+    props.storedData.setIntroEnabled(event.target.checked)
   }
 
   function handleOutroEnabledChange(

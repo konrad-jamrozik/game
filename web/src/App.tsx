@@ -18,7 +18,7 @@ import {
   missionsStatsDataSeries,
   moneyStatsDataSeries,
 } from './lib/GameStateDataSeries'
-import type { SettingsType } from './lib/StoredData'
+import type { SettingsType, StoredData } from './lib/StoredData'
 function Footer(): React.JSX.Element {
   return (
     <Typography variant="body2" color="text.secondary" align="center">
@@ -36,15 +36,16 @@ const lineChartMaxWidth = '700px'
 
 // eslint-disable-next-line max-lines-per-function
 export default function App({
-  settings,
+  storedData,
 }: {
-  settings: SettingsType
+  storedData: StoredData
 }): React.JSX.Element {
   console.log(`render App.tsx`)
   const gameSession = useGameSessionContext()
   const gameStates = gameSession.getGameStates()
   const currentGameState = gameSession.getCurrentGameStateUnsafe()
   const gameResult = gameSession.getGameResultUnsafe()
+  const settings = storedData.getSettings()
 
   const [turnAdvanced, setTurnAdvanced] = useState<boolean>(false)
 
@@ -81,6 +82,7 @@ export default function App({
         <Grid sx={{ bgcolor: '#002110' }}>
           <SettingsPanel
             {...{
+              storedData,
               introEnabled,
               setIntroEnabled,
               outroEnabled,

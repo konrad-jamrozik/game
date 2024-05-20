@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/class-methods-use-this */
 import _ from 'lodash'
 import type { GameSessionDataType } from './GameSessionData'
 
@@ -21,8 +22,12 @@ type StoredDataTypeMap = {
 }
 
 export class StoredData {
-  private readonly data: StoredDataType
+  private data!: StoredDataType
   public constructor() {
+    this.reload()
+  }
+
+  public reload(): void {
     this.data = loadDataFromLocalStorage()
   }
 
@@ -32,6 +37,28 @@ export class StoredData {
 
   public getSettings(): SettingsType {
     return this.data.settings
+  }
+
+  public setIntroEnabled(enabled: boolean): void {
+    // kja abstract setting settings logic
+    const newSettings: SettingsType = {
+      ...this.getSettings(),
+      introEnabled: enabled,
+    }
+    localStorage.setItem('settings', JSON.stringify(newSettings))
+    // Note: at this point this.getSettings() will still return the old settings.
+    // Call .reload() to update them.
+  }
+
+  public setOutroEnabled(enabled: boolean): void {
+    // kja abstract setting settings logic
+    const newSettings: SettingsType = {
+      ...this.getSettings(),
+      outroEnabled: enabled,
+    }
+    localStorage.setItem('settings', JSON.stringify(newSettings))
+    // Note: at this point this.getSettings() will still return the old settings.
+    // Call .reload() to update them.
   }
 }
 
@@ -74,3 +101,8 @@ function load<T extends StoredDataTypeName>(
 // kja issue when trying to store 300 turns:
 // Uncaught (in promise) DOMException: Failed to execute 'setItem' on 'Storage': Setting the value of 'gameSessionData' exceeded the quota.
 // https://stackoverflow.com/questions/23977690/setting-the-value-of-dataurl-exceeded-the-quota
+
+// Recommendations:
+// https://chatgpt.com/share/b1109c2f-306b-441b-b690-f05435902fc2
+// https://github.com/marcuswestin/store.js#list-of-all-plugins
+// Related, from React doc: https://github.com/immerjs/immer

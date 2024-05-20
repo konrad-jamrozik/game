@@ -23,7 +23,7 @@ if (rootElement) {
         <GameSessionProvider
           storedGameSessionData={storedData.getGameSessionData()}
         >
-          <App settings={storedData.getSettings()} />
+          <App storedData={storedData} />
         </GameSessionProvider>
       </ThemeProvider>
     </React.StrictMode>,
