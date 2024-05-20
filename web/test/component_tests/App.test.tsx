@@ -1,7 +1,7 @@
 import { screen, cleanup } from '@testing-library/react'
 import _ from 'lodash'
 import { describe, expect, assert, test, beforeAll, beforeEach } from 'vitest'
-import { type StoredData, loadDataFromLocalStorage } from '../../src/main'
+import { type StoredDataType, loadDataFromLocalStorage } from '../../src/main'
 import { renderApp } from '../test_lib/testComponentUtils'
 import { verifyBackendApiIsReachable } from '../test_lib/testUtils'
 
@@ -47,7 +47,7 @@ describe('Test suite for App.tsx', () => {
 
   test('Load data from local storage', () => {
     localStorage.clear()
-    const storedData: StoredData = loadDataFromLocalStorage()
+    const storedData: StoredDataType = loadDataFromLocalStorage()
     assert.isNotEmpty(storedData)
     console.log('storedData', JSON.stringify(storedData, undefined, 2))
   })

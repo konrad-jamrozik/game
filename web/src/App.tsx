@@ -18,7 +18,7 @@ import {
   missionsStatsDataSeries,
   moneyStatsDataSeries,
 } from './lib/GameStateDataSeries'
-import type { Settings } from './main'
+import type { SettingsType } from './main'
 function Footer(): React.JSX.Element {
   return (
     <Typography variant="body2" color="text.secondary" align="center">
@@ -38,7 +38,7 @@ const lineChartMaxWidth = '700px'
 export default function App({
   settings,
 }: {
-  settings: Settings
+  settings: SettingsType
 }): React.JSX.Element {
   console.log(`render App.tsx`)
   const gameSession = useGameSessionContext()
@@ -179,7 +179,7 @@ export default function App({
  * State hook and their state processing for IntroDialog.tsx
  */
 function useAndSetIntro(
-  settings: Settings,
+  settings: SettingsType,
   gameSessionIsInitialized: boolean,
 ): {
   introEnabled: boolean
@@ -205,7 +205,7 @@ function useAndSetIntro(
  * State hook and their state processing for OutroDialog.tsx
  */
 function useAndSetOutro(
-  settings: Settings,
+  settings: SettingsType,
   isGameOver: boolean | undefined,
   turnAdvanced: boolean,
 ): {

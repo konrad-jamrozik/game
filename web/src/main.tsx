@@ -15,7 +15,7 @@ import theme from './theme.tsx'
 const rootElement = document.querySelector('#root')
 
 if (rootElement) {
-  const storedData: StoredData = loadDataFromLocalStorage()
+  const storedData: StoredDataType = loadDataFromLocalStorage()
   ReactDOM.createRoot(rootElement).render(
     <React.StrictMode>
       <ThemeProvider theme={theme}>
@@ -33,7 +33,7 @@ if (rootElement) {
 }
 
 // kja move this data loading logic to its own class + load by iterating keys of StoredData type
-export function loadDataFromLocalStorage(): StoredData {
+export function loadDataFromLocalStorage(): StoredDataType {
   const gameSessionData = loadGameSessionData()
   const settings = loadSettings()
   return { gameSessionData, settings }
@@ -55,10 +55,12 @@ function loadGameSessionData(): GameSessionDataType | undefined {
   }
 }
 
-function loadSettings(): Settings {
+function loadSettings(): SettingsType {
   const storedSettingsString: string | null = localStorage.getItem('settings')
   if (!_.isNil(storedSettingsString)) {
-    const settings: Settings = JSON.parse(storedSettingsString) as Settings
+    const settings: SettingsType = JSON.parse(
+      storedSettingsString,
+    ) as SettingsType
     console.log('Loaded settings from local storage', settings)
     return settings
     // eslint-disable-next-line no-else-return
@@ -69,12 +71,12 @@ function loadSettings(): Settings {
   }
 }
 
-export type Settings = {
+export type SettingsType = {
   readonly introEnabled: boolean
   readonly outroEnabled: boolean
 }
-export type StoredData = {
-  readonly settings: Settings
+export type StoredDataType = {
+  readonly settings: SettingsType
   readonly gameSessionData?: GameSessionDataType | undefined
 }
 // kja issue when trying to store 300 turns:
