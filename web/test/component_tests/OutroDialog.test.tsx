@@ -21,17 +21,25 @@ describe('Test suite for OutroDialog.tsx', () => {
     expect.hasAssertions()
 
     // Given:
+    // - The game session is not started.
+    // - The 'show outro' is enabled.
+    // When:
+    // - The turn is advanced thus starting the game session.
+    // Then:
+    // - No outro dialog appears.
+    const { controlPanel, settingsPanel, agentsDataGrid, outroDialog } =
+      renderApp(false)
+    settingsPanel.assertShowOutro(true)
+    await controlPanel.advance1Turn()
+    outroDialog.assertVisibility('not present')
+
+    // Given:
     // - The game is about to be lost when turn is advanced
     // - The 'show outro' is enabled
     // When:
     // - The turn is advanced
     // Then:
     // - The game is lost and the outro dialog appears
-    const { controlPanel, settingsPanel, agentsDataGrid, outroDialog } =
-      renderApp(false)
-    settingsPanel.assertShowOutro(true)
-    await controlPanel.advance1Turn()
-    outroDialog.assertVisibility('not present')
     for await (const agentIdx of _.range(0, 10)) {
       console.log(`Hiring agent ${agentIdx + 1}`)
       await agentsDataGrid.hireAgent()

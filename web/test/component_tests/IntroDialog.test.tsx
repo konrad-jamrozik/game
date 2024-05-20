@@ -1,3 +1,4 @@
+/* eslint-disable sonarjs/no-duplicate-string */
 import { cleanup } from '@testing-library/react'
 import { beforeAll, beforeEach, describe, expect, test } from 'vitest'
 import { renderApp } from '../test_lib/testComponentUtils'
@@ -37,9 +38,21 @@ describe('Test suite for IntroDialog.tsx', () => {
     await controlPanel.advance1Turn()
 
     // When the 'show intro' setting is disabled and then the game is reset.
-    // Then the intro dialog appears.
+    // Then the intro dialog does not appear.
     await settingsPanel.disableShowIntro()
     await controlPanel.resetGame()
+    introDialog.assertVisibility('not present')
+  })
+
+  test('Do not show intro upon resetting the game and enabling the setting', async () => {
+    expect.hasAssertions()
+
+    const { controlPanel, settingsPanel, introDialog } = renderApp(false)
+    introDialog.assertVisibility('not present')
+    await controlPanel.advance1Turn()
+    await controlPanel.resetGame()
+    introDialog.assertVisibility('not present')
+    await settingsPanel.enableShowIntro()
     introDialog.assertVisibility('not present')
   })
 })

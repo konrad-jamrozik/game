@@ -18,7 +18,6 @@ import { Label } from '../Label'
 
 export type GameSessionControlPanelProps = {
   readonly gameSession: GameSession
-  readonly introEnabled: boolean
   readonly setShowIntro: React.Dispatch<React.SetStateAction<boolean>>
   readonly setTurnAdvanced: React.Dispatch<React.SetStateAction<boolean>>
 }
@@ -87,11 +86,7 @@ export function GameSessionControlPanel(
               {delegate1TurnToAiButton(advanceTurns, props.gameSession)}
             </Grid>
             <Grid xsOffset={'auto'}>
-              {resetGameSessionButton(
-                props.gameSession,
-                props.introEnabled,
-                props.setShowIntro,
-              )}
+              {resetGameSessionButton(props.gameSession, props.setShowIntro)}
             </Grid>
           </Grid>
 
@@ -279,16 +274,11 @@ function resetCurrentTurnButton(gameSession: GameSession): React.JSX.Element {
 
 function resetGameSessionButton(
   gameSession: GameSession,
-  introEnabled: boolean,
   setShowIntro: React.Dispatch<React.SetStateAction<boolean>>,
 ): React.JSX.Element {
   function resetGame(): void {
     gameSession.resetGame()
-    // kja this 'introEnabled' check should not be necessary here. Only the IntroDialog itself
-    // should check if it is enabled and if not, not show anything, even if show intro is set.
-    if (introEnabled) {
-      setShowIntro(true)
-    }
+    setShowIntro(true)
   }
 
   return (

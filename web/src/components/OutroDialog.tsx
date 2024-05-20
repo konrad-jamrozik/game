@@ -8,9 +8,10 @@ import _ from 'lodash'
 import type { GameResult } from '../lib/GameSession'
 
 export type OutroDialogProps = {
-  readonly gameResult: GameResult | undefined
+  readonly outroEnabled: boolean
   readonly showOutro: boolean
   readonly setShowOutro: React.Dispatch<React.SetStateAction<boolean>>
+  readonly gameResult: GameResult | undefined
 }
 
 export default function OutroDialog(
@@ -21,7 +22,7 @@ export default function OutroDialog(
   }
 
   return (
-    <Dialog open={props.showOutro} onClose={handleClose}>
+    <Dialog open={props.outroEnabled && props.showOutro} onClose={handleClose}>
       <DialogTitle
         sx={{
           // bgcolor: '#603050',

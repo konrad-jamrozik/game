@@ -47,6 +47,8 @@ export default function App({
   const isGameOver = gameSession.isGameOverUnsafe()
   const gameResult = gameSession.getGameResultUnsafe()
 
+  const [turnAdvanced, setTurnAdvanced] = useState<boolean>(false)
+
   // For explanation of introEnabled and showIntro states, see comment on IntroDialog() component.
   const [introEnabled, setIntroEnabled] = useState<boolean>(
     settings.introEnabled,
@@ -55,31 +57,35 @@ export default function App({
     settings.outroEnabled,
   )
   const [showIntro, setShowIntro] = useState<boolean>(
-    introEnabled && !gameSession.isInitialized(),
+    settings.introEnabled && !gameSession.isInitialized(),
   )
+  const [showOutro, setShowOutro] = useState<boolean>(isGameOver === true)
 
-  const [showOutro, setShowOutro] = useState<boolean>(
-    outroEnabled && isGameOver === true,
-  )
-
-  // console.log(
-  //   `import.meta.env.PROD: ${import.meta.env.PROD}, import.meta.env.MODE: ${import.meta.env.MODE}, process.env.NODE_ENV: ${process.env['NODE_ENV']}`,
-  // )
-  // console.log(`introEnabled: ${introEnabled}, showIntro: ${showIntro}`)
-
-  const [turnAdvanced, setTurnAdvanced] = useState<boolean>(false)
-  console.log(`turnAdvanced: ${turnAdvanced}`)
-  if (outroEnabled && !showOutro && turnAdvanced && isGameOver === true) {
+  if (showIntro && !introEnabled) {
+    // If the 'showIntro' signal fired but intro is not enabled then clear the signal,
+    // to prevent the intro showing up as soon as introEnabled is set to true.
+    setShowIntro(false)
+  }
+  if (showOutro) {
+    if (!outroEnabled) {
+      // If the 'showOutro' signal fired but intro is not enabled then clear the signal,
+      // to prevent the outro showing up as soon as outroEnabled is set to true.
+      setShowIntro(false)
+    }
+  } else if (outroEnabled && turnAdvanced && isGameOver === true) {
+    // Signal to show outro if the turn just advanced, causing the game to be over.
     setShowOutro(true)
   }
+
   if (turnAdvanced) {
+    // Reset the 'turnAdvanced' signal after it was used.
     setTurnAdvanced(false)
   }
 
   return (
     <Fragment>
-      <IntroDialog {...{ showIntro, setShowIntro }} />
-      <OutroDialog {...{ gameResult, showOutro, setShowOutro }} />
+      <IntroDialog {...{ introEnabled, showIntro, setShowIntro }} />
+      <OutroDialog {...{ outroEnabled, showOutro, setShowOutro, gameResult }} />
       <Grid
         container
         justifyContent={'center'}
@@ -91,7 +97,6 @@ export default function App({
         <Grid sx={{ bgcolor: '#200000' }}>
           <GameSessionControlPanel
             gameSession={gameSession}
-            introEnabled={introEnabled}
             setShowIntro={setShowIntro}
             setTurnAdvanced={setTurnAdvanced}
           />
@@ -192,3 +197,7 @@ export default function App({
     </Fragment>
   )
 }
+
+// console.log(
+//   `import.meta.env.PROD: ${import.meta.env.PROD}, import.meta.env.MODE: ${import.meta.env.MODE}, process.env.NODE_ENV: ${process.env['NODE_ENV']}`,
+// )

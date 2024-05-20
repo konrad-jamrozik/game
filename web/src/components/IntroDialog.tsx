@@ -7,6 +7,7 @@ import DialogTitle from '@mui/material/DialogTitle'
 import _ from 'lodash'
 
 export type IntroDialogProps = {
+  readonly introEnabled: boolean
   readonly showIntro: boolean
   readonly setShowIntro: React.Dispatch<React.SetStateAction<boolean>>
 }
@@ -36,7 +37,7 @@ export default function IntroDialog(
   }
 
   return (
-    <Dialog open={props.showIntro} onClose={handleClose}>
+    <Dialog open={props.introEnabled && props.showIntro} onClose={handleClose}>
       <DialogTitle
         sx={{
           // bgcolor: '#603050',
