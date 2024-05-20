@@ -1,8 +1,7 @@
 import { Button, Card, CardContent, CardHeader, Switch } from '@mui/material'
 import Grid from '@mui/material/Unstable_Grid2'
 import _ from 'lodash'
-import { useState } from 'react'
-import { type StoredData, loadSettings } from '../../lib/StoredData'
+import type { StoredData } from '../../lib/StoredData'
 import { Label } from '../Label'
 
 export type SettingsPanelProps = {
@@ -14,13 +13,9 @@ export type SettingsPanelProps = {
 }
 
 export function SettingsPanel(props: SettingsPanelProps): React.JSX.Element {
-  const [introChecked, setIntroChecked] = useState<boolean>(props.introEnabled)
-  const [outroChecked, setOutroChecked] = useState<boolean>(props.outroEnabled)
-
   function handleIntroEnabledChange(
     event: React.ChangeEvent<HTMLInputElement>,
   ): void {
-    setIntroChecked(event.target.checked)
     props.setIntroEnabled(event.target.checked)
     props.storedData.setIntroEnabled(event.target.checked)
   }
@@ -28,7 +23,6 @@ export function SettingsPanel(props: SettingsPanelProps): React.JSX.Element {
   function handleOutroEnabledChange(
     event: React.ChangeEvent<HTMLInputElement>,
   ): void {
-    setOutroChecked(event.target.checked)
     props.setOutroEnabled(event.target.checked)
     props.storedData.setOutroEnabled(event.target.checked)
   }
@@ -50,7 +44,7 @@ export function SettingsPanel(props: SettingsPanelProps): React.JSX.Element {
           >
             <Label typographyVariant="body1">Show intro</Label>
             <Switch
-              checked={introChecked}
+              checked={props.introEnabled}
               onChange={handleIntroEnabledChange}
               inputProps={{ 'aria-label': 'Show Intro' }}
             />
@@ -67,7 +61,7 @@ export function SettingsPanel(props: SettingsPanelProps): React.JSX.Element {
           >
             <Label typographyVariant="body1">Show outro</Label>
             <Switch
-              checked={outroChecked}
+              checked={props.outroEnabled}
               onChange={handleOutroEnabledChange}
               inputProps={{ 'aria-label': 'Show Outro' }}
             />
