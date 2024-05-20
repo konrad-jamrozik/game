@@ -67,14 +67,13 @@ export default function App({
   // )
   // console.log(`introEnabled: ${introEnabled}, showIntro: ${showIntro}`)
 
-  // This design pattern perhaps should be changed in the future. See docs/technical.md for details.
-  const [gameStateUpdated, setGameStateUpdated] = useState<boolean>(false)
-  console.log(`gameStateUpdated: ${gameStateUpdated}`)
-  if (outroEnabled && !showOutro && gameStateUpdated && isGameOver === true) {
+  const [turnAdvanced, setTurnAdvanced] = useState<boolean>(false)
+  console.log(`turnAdvanced: ${turnAdvanced}`)
+  if (outroEnabled && !showOutro && turnAdvanced && isGameOver === true) {
     setShowOutro(true)
   }
-  if (gameStateUpdated) {
-    setGameStateUpdated(false)
+  if (turnAdvanced) {
+    setTurnAdvanced(false)
   }
 
   return (
@@ -94,7 +93,7 @@ export default function App({
             gameSession={gameSession}
             introEnabled={introEnabled}
             setShowIntro={setShowIntro}
-            setGameStateUpdated={setGameStateUpdated}
+            setTurnAdvanced={setTurnAdvanced}
           />
         </Grid>
         <Grid sx={{ bgcolor: '#002110' }}>

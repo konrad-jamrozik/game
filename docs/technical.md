@@ -39,17 +39,17 @@ It should not happen again on further rerenders.
 
 I solved this by a two-step process simulating a "one-time" event:
 
-1. When the backend call returns it says if game state was updated or not. If it was, it sets the `gameStateUpdated`
+1. When the backend call returns it says if game state was updated or not. If it was, it sets the `turnAdvanced`
    state. This will trigger future re-render.
-2. When the re-render happens and sees the `gameStateUpdated` is true, it sets it to false, thus preventing further
+2. When the re-render happens and sees the `turnAdvanced` is true, it sets it to false, thus preventing further
    re-renders thinking that game state updated.
 
 While this solution works it feels clunky. I was concerned it introduces extra re-render, but my profiling with
-`console.log()` to log component rerenders shows that while App.tsc, which owns the state `gameStateUpdated`, indeed
+`console.log()` to log component rerenders shows that while App.tsc, which owns the state `turnAdvanced`, indeed
 re-renders, it happens in the same render done by React, as observed in React profiler. This is probably caused
 by the batching: https://react.dev/learn/queueing-a-series-of-state-updates
 
-Ideally, when the backend API call returns, instead of setting `gameStateUpdated` to true,
+Ideally, when the backend API call returns, instead of setting `turnAdvanced` to true,
 I could immediately determine if outro dialog needs to be shown and if so, set appropriate state.
 
 However: normal re-render determines if to show outro dialog based on the react state containing the game session state,
@@ -61,11 +61,11 @@ Basically the flow as implemented is as follows:
 // In "advance time" button click handler:
     const newGameState = await backendApiCall()
     gameState.update(newGameState)
-    gameStateUpdated.set(true)
+    turnAdvanced.set(true)
 
 // On re-render, in top-level "App" logic
-    if (showOutroDialog(gameState, gameStateUpdated)) { showOutroDialog = true }
-    if (gameStateUpdated) { gameStateUpdated = false }
+    if (showOutroDialog(gameState, turnAdvanced)) { showOutroDialog = true }
+    if (turnAdvanced) { turnAdvanced = false }
 ```
 
 But I would wish for this flow, but it violates React rules:

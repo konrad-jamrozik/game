@@ -20,7 +20,7 @@ export type GameSessionControlPanelProps = {
   readonly gameSession: GameSession
   readonly introEnabled: boolean
   readonly setShowIntro: React.Dispatch<React.SetStateAction<boolean>>
-  readonly setGameStateUpdated: React.Dispatch<React.SetStateAction<boolean>>
+  readonly setTurnAdvanced: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 const defaultStartTurn = 1
@@ -46,18 +46,13 @@ export function GameSessionControlPanel(
       props.gameSession.getCurrentTurnUnsafe(),
       turnsToAdvance,
     )
-    const gameStateUpdated = await props.gameSession.advanceTurns(
+    const turnAdvanced = await props.gameSession.advanceTurns(
       resolvedStartTurn,
       resolvedTargetTurn,
       delegateToAi,
     )
-    // kja this logic should be encapsulated inside game session, similar to 'loading' and 'error' states.
-    // Then the client code could do on re-render: gameSession.hasGameStateUpdated().
-    // It needs to apply all cases of game state update, not just advanceTurns.
-    // Notably, also all player actions.
-    // See also docs/technical.md about React.
-    if (gameStateUpdated) {
-      props.setGameStateUpdated(true)
+    if (turnAdvanced) {
+      props.setTurnAdvanced(true)
     }
   }
 
