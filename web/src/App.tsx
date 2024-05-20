@@ -44,7 +44,6 @@ export default function App({
   const gameSession = useGameSessionContext()
   const gameStates = gameSession.getGameStates()
   const currentGameState = gameSession.getCurrentGameStateUnsafe()
-  const isGameOver = gameSession.isGameOverUnsafe()
   const gameResult = gameSession.getGameResultUnsafe()
 
   const [turnAdvanced, setTurnAdvanced] = useState<boolean>(false)
@@ -53,7 +52,7 @@ export default function App({
     useAndSetIntro(settings, gameSession.isInitialized())
 
   const { outroEnabled, setOutroEnabled, showOutro, setShowOutro } =
-    useAndSetOutro(settings, isGameOver, turnAdvanced)
+    useAndSetOutro(settings, gameSession.isGameOverUnsafe(), turnAdvanced)
 
   if (turnAdvanced) {
     // Reset the 'turnAdvanced' signal after it was used.
