@@ -2,7 +2,7 @@ import { Button, Card, CardContent, CardHeader, Switch } from '@mui/material'
 import Grid from '@mui/material/Unstable_Grid2'
 import _ from 'lodash'
 import { useState } from 'react'
-import type { SettingsType } from '../../main'
+import { loadSettings } from '../../lib/StoredData'
 import { Label } from '../Label'
 
 export type SettingsPanelProps = {
@@ -101,21 +101,4 @@ export function SettingsPanel(props: SettingsPanelProps): React.JSX.Element {
       </CardContent>
     </Card>
   )
-}
-
-// kja dedup with loadSettings in web/src/main.ts
-function loadSettings(): SettingsType {
-  const storedSettingsString: string | null = localStorage.getItem('settings')
-  if (!_.isNil(storedSettingsString)) {
-    const settings: SettingsType = JSON.parse(
-      storedSettingsString,
-    ) as SettingsType
-    console.log('Loaded settings from local storage', settings)
-    return settings
-    // eslint-disable-next-line no-else-return
-  } else {
-    console.log('No settings found in local storage. Using default settings.')
-
-    return { introEnabled: true, outroEnabled: true }
-  }
 }

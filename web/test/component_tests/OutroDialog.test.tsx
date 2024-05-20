@@ -2,9 +2,12 @@
 import { cleanup } from '@testing-library/react'
 import _ from 'lodash'
 import { describe, expect, assert, test, beforeAll, beforeEach } from 'vitest'
-import { type StoredDataType, loadDataFromLocalStorage } from '../../src/main'
 import { renderApp } from '../test_lib/testComponentUtils'
 import { verifyBackendApiIsReachable } from '../test_lib/testUtils'
+import {
+  StoredDataType,
+  loadDataFromLocalStorage,
+} from '../../src/lib/StoredData'
 
 describe('Test suite for OutroDialog.tsx', () => {
   beforeAll(async () => {
