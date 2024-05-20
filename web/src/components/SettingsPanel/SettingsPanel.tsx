@@ -30,15 +30,7 @@ export function SettingsPanel(props: SettingsPanelProps): React.JSX.Element {
   ): void {
     setOutroChecked(event.target.checked)
     props.setOutroEnabled(event.target.checked)
-
-    // kja dedup logic processing local storage
-    const settings = loadSettings()
-    const newSettings = {
-      ...settings,
-      outroEnabled: event.target.checked,
-    }
-    // kja localStorage.setItem('settings', JSON.stringify(newSettings))
-    localStorage.setItem('settings', JSON.stringify(newSettings))
+    props.storedData.setOutroEnabled(event.target.checked)
   }
 
   return (
