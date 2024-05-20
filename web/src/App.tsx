@@ -10,7 +10,7 @@ import IntroDialog from './components/IntroDialog'
 import { MissionSitesDataGrid } from './components/MissionSitesDataGrid/MissionSitesDataGrid'
 import OutroDialog from './components/OutroDialog'
 import { SettingsPanel } from './components/SettingsPanel/SettingsPanel'
-import { type GameSession, useGameSessionContext } from './lib/GameSession'
+import { useGameSessionContext } from './lib/GameSession'
 import {
   agentStatsDataSeries,
   intelStatsDataSeries,
