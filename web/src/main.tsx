@@ -21,7 +21,7 @@ if (rootElement) {
       <ThemeProvider theme={theme}>
         <CssBaseline enableColorScheme />
         <GameSessionProvider
-          storedGameSessionData={storedData.getGameSessionData()}
+          storedGameSessionData={storedData.getGameSessionData()} // kja NEXT: drill storedData through here instead
         >
           <App storedData={storedData} />
         </GameSessionProvider>
