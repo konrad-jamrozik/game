@@ -11,13 +11,47 @@ export type StoredDataType = {
   readonly gameSessionData?: GameSessionDataType | undefined
 }
 
-export type StoredDataTypeName = 'gameSessionData' | 'settings'
+type StoredDataTypeName = 'gameSessionData' | 'settings'
 
 type StoredDataTypeMap = {
   [key in StoredDataTypeName]: SettingsType | GameSessionDataType
 } & {
   gameSessionData: GameSessionDataType
   settings: SettingsType
+}
+
+export class StoredData {
+  private readonly data: StoredDataType
+  public constructor() {
+    this.data = loadDataFromLocalStorage()
+  }
+
+  public getGameSessionData(): GameSessionDataType | undefined {
+    return this.data.gameSessionData
+  }
+
+  public getSettings(): SettingsType {
+    return this.data.settings
+  }
+}
+
+export function loadDataFromLocalStorage(): StoredDataType {
+  const gameSessionData = loadGameSessionData()
+  const settings = loadSettings()
+  return { gameSessionData, settings }
+}
+
+export function loadGameSessionData(): GameSessionDataType | undefined {
+  return load('gameSessionData')
+}
+
+export function loadSettings(): SettingsType {
+  let loadedSettings = load('settings')
+  if (loadedSettings === undefined) {
+    console.log('No settings found in local storage. Using default settings.')
+    loadedSettings = { introEnabled: true, outroEnabled: true }
+  }
+  return loadedSettings
 }
 
 function load<T extends StoredDataTypeName>(
@@ -35,25 +69,6 @@ function load<T extends StoredDataTypeName>(
     console.log(`Load from local storage data at key '${key}': undefined`)
     return undefined
   }
-}
-
-export function loadDataFromLocalStorage(): StoredDataType {
-  const gameSessionData = loadGameSessionData()
-  const settings = loadSettings()
-  return { gameSessionData, settings }
-}
-
-function loadGameSessionData(): GameSessionDataType | undefined {
-  return load('gameSessionData')
-}
-
-export function loadSettings(): SettingsType {
-  let loadedSettings = load('settings')
-  if (loadedSettings === undefined) {
-    console.log('No settings found in local storage. Using default settings.')
-    loadedSettings = { introEnabled: true, outroEnabled: true }
-  }
-  return loadedSettings
 }
 
 // kja issue when trying to store 300 turns:

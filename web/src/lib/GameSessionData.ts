@@ -88,6 +88,7 @@ export class GameSessionData {
   }
 
   private setData(data: GameSessionDataType): void {
+    // kja localStorage.setItem('gameSessionData', JSON.stringify(data))
     localStorage.setItem('gameSessionData', JSON.stringify(data))
     this._setData(data)
   }

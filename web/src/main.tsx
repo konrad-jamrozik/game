@@ -9,22 +9,21 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App.tsx'
 import { GameSessionProvider } from './components/GameSessionProvider.tsx'
-import {
-  loadDataFromLocalStorage,
-  type StoredDataType,
-} from './lib/StoredData.ts'
+import { StoredData } from './lib/StoredData.ts'
 import theme from './theme.tsx'
 
 const rootElement = document.querySelector('#root')
 
 if (rootElement) {
-  const storedData: StoredDataType = loadDataFromLocalStorage()
+  const storedData: StoredData = new StoredData()
   ReactDOM.createRoot(rootElement).render(
     <React.StrictMode>
       <ThemeProvider theme={theme}>
         <CssBaseline enableColorScheme />
-        <GameSessionProvider storedGameSessionData={storedData.gameSessionData}>
-          <App settings={storedData.settings} />
+        <GameSessionProvider
+          storedGameSessionData={storedData.getGameSessionData()}
+        >
+          <App settings={storedData.getSettings()} />
         </GameSessionProvider>
       </ThemeProvider>
     </React.StrictMode>,

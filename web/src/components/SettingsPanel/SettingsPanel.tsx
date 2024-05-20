@@ -28,6 +28,7 @@ export function SettingsPanel(props: SettingsPanelProps): React.JSX.Element {
       ...settings,
       introEnabled: event.target.checked,
     }
+    // kja localStorage.setItem('settings', JSON.stringify(newSettings))
     localStorage.setItem('settings', JSON.stringify(newSettings))
   }
 
@@ -43,6 +44,7 @@ export function SettingsPanel(props: SettingsPanelProps): React.JSX.Element {
       ...settings,
       outroEnabled: event.target.checked,
     }
+    // kja localStorage.setItem('settings', JSON.stringify(newSettings))
     localStorage.setItem('settings', JSON.stringify(newSettings))
   }
 
