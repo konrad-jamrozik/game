@@ -3,11 +3,11 @@
 import _ from 'lodash'
 import { initialTurn, type GameState } from './codesync/GameState'
 
-export class GameSessionDataWrapper {
+export class GameSessionData {
   public constructor(
-    private readonly _data: GameSessionData,
+    private readonly _data: GameSessionDataType,
     private readonly _setData: React.Dispatch<
-      React.SetStateAction<GameSessionData>
+      React.SetStateAction<GameSessionDataType>
     >,
   ) {}
 
@@ -46,7 +46,7 @@ export class GameSessionDataWrapper {
       0,
       -1,
     )
-    const newGameSessionData: GameSessionData = {
+    const newGameSessionData: GameSessionDataType = {
       gameStates: previousTurnsGameStates,
       resetGameState: previousTurnsGameStates.at(-1),
     }
@@ -58,7 +58,7 @@ export class GameSessionDataWrapper {
       0,
       -1,
     )
-    const newGameSessionData: GameSessionData = {
+    const newGameSessionData: GameSessionDataType = {
       gameStates: [...previousTurnsGameStates, this._data.resetGameState!],
       resetGameState: this._data.resetGameState,
     }
@@ -69,11 +69,11 @@ export class GameSessionDataWrapper {
     gameStates: GameState[],
     resultOfPlayerAction: boolean,
   ): void {
-    GameSessionDataWrapper.verify(gameStates)
+    GameSessionData.verify(gameStates)
     const resetGameState = resultOfPlayerAction
       ? this._data.resetGameState
       : gameStates.at(-1)
-    const newData: GameSessionData = {
+    const newData: GameSessionDataType = {
       ...this._data,
       gameStates,
       resetGameState,
@@ -87,13 +87,13 @@ export class GameSessionDataWrapper {
     this._setData(initialGameSessionData)
   }
 
-  private setData(data: GameSessionData): void {
+  private setData(data: GameSessionDataType): void {
     localStorage.setItem('gameSessionData', JSON.stringify(data))
     this._setData(data)
   }
 }
 
-export type GameSessionData = {
+export type GameSessionDataType = {
   readonly gameStates: readonly GameState[]
   /**
    * The game state to which the current turn game state should be reset when
@@ -124,7 +124,7 @@ export type GameSessionData = {
   readonly resetGameState: GameState | undefined
 }
 
-export const initialGameSessionData: GameSessionData = {
+export const initialGameSessionData: GameSessionDataType = {
   gameStates: [],
   resetGameState: undefined,
 }

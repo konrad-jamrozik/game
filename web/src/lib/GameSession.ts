@@ -5,8 +5,8 @@ import { useContext, useState } from 'react'
 import { Md5 } from 'ts-md5'
 import { GameSessionContext } from '../components/GameSessionProvider'
 import {
-  type GameSessionData,
-  GameSessionDataWrapper,
+  type GameSessionDataType,
+  GameSessionData,
   initialGameSessionData,
 } from './GameSessionData'
 import { callAdvanceTurnsApi } from './api/advanceTurnsApi'
@@ -24,9 +24,9 @@ export function useGameSessionContext(): GameSession {
 }
 
 export function useGameSession(
-  storedGameSessionData?: GameSessionData | undefined,
+  storedGameSessionData?: GameSessionDataType | undefined,
 ): GameSession {
-  const [data, setData] = useState<GameSessionData>(
+  const [data, setData] = useState<GameSessionDataType>(
     storedGameSessionData ?? initialGameSessionData,
   )
   const [loading, setLoading] = useState<boolean>(false)
@@ -37,7 +37,7 @@ export function useGameSession(
   )
 
   return new GameSession(
-    new GameSessionDataWrapper(data, setData),
+    new GameSessionData(data, setData),
     loading,
     setLoading,
     error,
@@ -47,7 +47,7 @@ export function useGameSession(
 
 export class GameSession {
   public constructor(
-    private readonly data: GameSessionDataWrapper,
+    private readonly data: GameSessionData,
 
     public readonly loading: boolean,
     private readonly setLoading: React.Dispatch<React.SetStateAction<boolean>>,

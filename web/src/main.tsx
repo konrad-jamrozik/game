@@ -9,7 +9,7 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App.tsx'
 import { GameSessionProvider } from './components/GameSessionProvider.tsx'
-import type { GameSessionData } from './lib/GameSessionData.ts'
+import type { GameSessionDataType } from './lib/GameSessionData.ts'
 import theme from './theme.tsx'
 
 const rootElement = document.querySelector('#root')
@@ -39,13 +39,13 @@ export function loadDataFromLocalStorage(): StoredData {
   return { gameSessionData, settings }
 }
 
-function loadGameSessionData(): GameSessionData | undefined {
+function loadGameSessionData(): GameSessionDataType | undefined {
   const storedGameSessionDataString: string | null =
     localStorage.getItem('gameSessionData')
   if (!_.isNil(storedGameSessionDataString)) {
-    const gameSessionData: GameSessionData = JSON.parse(
+    const gameSessionData: GameSessionDataType = JSON.parse(
       storedGameSessionDataString,
-    ) as GameSessionData
+    ) as GameSessionDataType
     console.log('Loaded game session data from local storage', gameSessionData)
     return gameSessionData
     // eslint-disable-next-line no-else-return
@@ -75,7 +75,7 @@ export type Settings = {
 }
 export type StoredData = {
   readonly settings: Settings
-  readonly gameSessionData?: GameSessionData | undefined
+  readonly gameSessionData?: GameSessionDataType | undefined
 }
 // kja issue when trying to store 300 turns:
 // Uncaught (in promise) DOMException: Failed to execute 'setItem' on 'Storage': Setting the value of 'gameSessionData' exceeded the quota.
