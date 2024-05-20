@@ -11,7 +11,32 @@ export type StoredDataType = {
   readonly gameSessionData?: GameSessionDataType | undefined
 }
 
-// kja move this data loading logic to its own class + load by iterating keys of StoredData type
+export type StoredDataTypeName = 'gameSessionData' | 'settings'
+
+type StoredDataTypeMap = {
+  [key in StoredDataTypeName]: SettingsType | GameSessionDataType
+} & {
+  gameSessionData: GameSessionDataType
+  settings: SettingsType
+}
+
+function load<T extends StoredDataTypeName>(
+  key: T,
+): StoredDataTypeMap[T] | undefined {
+  // Your loading logic here
+  // For example, if you're loading from local storage:
+  const data: string | null = localStorage.getItem(key)
+  if (!_.isNil(data)) {
+    const loadedData = JSON.parse(data) as StoredDataTypeMap[T]
+    console.log(`Load from local storage data at key '${key}':`, loadedData)
+    return loadedData
+    // eslint-disable-next-line no-else-return
+  } else {
+    console.log(`Load from local storage data at key '${key}': undefined`)
+    return undefined
+  }
+}
+
 export function loadDataFromLocalStorage(): StoredDataType {
   const gameSessionData = loadGameSessionData()
   const settings = loadSettings()
@@ -19,35 +44,16 @@ export function loadDataFromLocalStorage(): StoredDataType {
 }
 
 function loadGameSessionData(): GameSessionDataType | undefined {
-  const storedGameSessionDataString: string | null =
-    localStorage.getItem('gameSessionData')
-  if (!_.isNil(storedGameSessionDataString)) {
-    const gameSessionData: GameSessionDataType = JSON.parse(
-      storedGameSessionDataString,
-    ) as GameSessionDataType
-    console.log('Loaded game session data from local storage', gameSessionData)
-    return gameSessionData
-    // eslint-disable-next-line no-else-return
-  } else {
-    console.log('No game session data found in local storage')
-    return undefined
-  }
+  return load('gameSessionData')
 }
 
 export function loadSettings(): SettingsType {
-  const storedSettingsString: string | null = localStorage.getItem('settings')
-  if (!_.isNil(storedSettingsString)) {
-    const settings: SettingsType = JSON.parse(
-      storedSettingsString,
-    ) as SettingsType
-    console.log('Loaded settings from local storage', settings)
-    return settings
-    // eslint-disable-next-line no-else-return
-  } else {
+  let loadedSettings = load('settings')
+  if (loadedSettings === undefined) {
     console.log('No settings found in local storage. Using default settings.')
-
-    return { introEnabled: true, outroEnabled: true }
+    loadedSettings = { introEnabled: true, outroEnabled: true }
   }
+  return loadedSettings
 }
 
 // kja issue when trying to store 300 turns:
