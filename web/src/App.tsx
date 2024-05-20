@@ -10,7 +10,7 @@ import IntroDialog from './components/IntroDialog'
 import { MissionSitesDataGrid } from './components/MissionSitesDataGrid/MissionSitesDataGrid'
 import OutroDialog from './components/OutroDialog'
 import { SettingsPanel } from './components/SettingsPanel/SettingsPanel'
-import { useGameSessionContext } from './lib/GameSession'
+import { type GameSession, useGameSessionContext } from './lib/GameSession'
 import {
   agentStatsDataSeries,
   intelStatsDataSeries,
@@ -49,33 +49,16 @@ export default function App({
 
   const [turnAdvanced, setTurnAdvanced] = useState<boolean>(false)
 
-  // For explanation of introEnabled and showIntro states, see comment on IntroDialog() component.
-  const [introEnabled, setIntroEnabled] = useState<boolean>(
-    settings.introEnabled,
-  )
-  const [outroEnabled, setOutroEnabled] = useState<boolean>(
-    settings.outroEnabled,
-  )
-  const [showIntro, setShowIntro] = useState<boolean>(
-    settings.introEnabled && !gameSession.isInitialized(),
-  )
-  const [showOutro, setShowOutro] = useState<boolean>(isGameOver === true)
-
-  if (showIntro && !introEnabled) {
-    // If the 'showIntro' signal fired but intro is not enabled then clear the signal,
-    // to prevent the intro showing up as soon as introEnabled is set to true.
-    setShowIntro(false)
-  }
-  if (showOutro) {
-    if (!outroEnabled) {
-      // If the 'showOutro' signal fired but intro is not enabled then clear the signal,
-      // to prevent the outro showing up as soon as outroEnabled is set to true.
-      setShowIntro(false)
-    }
-  } else if (outroEnabled && turnAdvanced && isGameOver === true) {
-    // Signal to show outro if the turn just advanced, causing the game to be over.
-    setShowOutro(true)
-  }
+  const {
+    introEnabled,
+    setIntroEnabled,
+    outroEnabled,
+    setOutroEnabled,
+    showIntro,
+    setShowIntro,
+    showOutro,
+    setShowOutro,
+  } = useAndUpdateIntroAndOutro(settings, gameSession, isGameOver, turnAdvanced)
 
   if (turnAdvanced) {
     // Reset the 'turnAdvanced' signal after it was used.
@@ -196,6 +179,63 @@ export default function App({
       </Grid>
     </Fragment>
   )
+}
+
+function useAndUpdateIntroAndOutro(
+  settings: Settings,
+  gameSession: GameSession,
+  isGameOver: boolean | undefined,
+  turnAdvanced: boolean,
+): {
+  introEnabled: boolean
+  setIntroEnabled: React.Dispatch<React.SetStateAction<boolean>>
+  outroEnabled: boolean
+  setOutroEnabled: React.Dispatch<React.SetStateAction<boolean>>
+  showIntro: boolean
+  setShowIntro: React.Dispatch<React.SetStateAction<boolean>>
+  showOutro: boolean
+  setShowOutro: React.Dispatch<React.SetStateAction<boolean>>
+} {
+  const [introEnabled, setIntroEnabled] = useState<boolean>(
+    settings.introEnabled,
+  )
+  const [outroEnabled, setOutroEnabled] = useState<boolean>(
+    settings.outroEnabled,
+  )
+  const [showIntro, setShowIntro] = useState<boolean>(
+    settings.introEnabled && !gameSession.isInitialized(),
+  )
+  const [showOutro, setShowOutro] = useState<boolean>(isGameOver === true)
+
+  if (showIntro && !introEnabled) {
+    // If the 'showIntro' signal fired but intro is not enabled then clear the signal,
+    // to prevent the intro showing up as soon as introEnabled is set to true later on.
+    setShowIntro(false)
+  }
+  if (showOutro && !outroEnabled) {
+    // If the 'showOutro' signal fired but intro is not enabled then clear the signal,
+    // to prevent the outro showing up as soon as outroEnabled is set to true later on.
+    setShowIntro(false)
+  } else if (
+    !showOutro &&
+    outroEnabled &&
+    turnAdvanced &&
+    isGameOver === true
+  ) {
+    // Signal to show outro if the turn just advanced, causing the game to be over.
+    setShowOutro(true)
+  }
+
+  return {
+    introEnabled,
+    setIntroEnabled,
+    outroEnabled,
+    setOutroEnabled,
+    showIntro,
+    setShowIntro,
+    showOutro,
+    setShowOutro,
+  }
 }
 
 // console.log(
