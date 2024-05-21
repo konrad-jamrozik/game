@@ -31,7 +31,7 @@ article. Once I clicked the relevant button in Azure portal, it has pushed
 The file was not yet working correctly, though, and I had to fix it by making [commit 463e9e7: fix GitHub Actions workflow].
 
 Having the GitHub actions workflow created from the deployment center shows that it is connected to GitHub, in `Settings`
-pane in the Deployment Center Azure view], as e.g. seen in [`game-api1` Deployment Center].
+pane in the Deployment Center Azure view, as e.g. seen in [`game-api1` Deployment Center].
 There are also few other benefits, like logs being synced from the GitHub runner logs to the center,
 as explained in [the FAQ][Azure App Service CD FAQ].
 
