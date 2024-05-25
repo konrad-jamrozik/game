@@ -7,9 +7,9 @@ import {
   type GridRowSelectionModel,
 } from '@mui/x-data-grid'
 import _ from 'lodash'
-import { useGameSessionContext } from '../../lib/GameSession'
 import type { MissionSite } from '../../lib/codesync/GameState'
 import { isActive } from '../../lib/codesync/ruleset'
+import { useGameSessionContext } from '../../lib/gameSession/GameSession'
 import { defaultComponentMinWidth } from '../../lib/utils'
 import DeployMissionDialog from './DeployMissionDialog'
 

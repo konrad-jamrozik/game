@@ -1,4 +1,4 @@
-import type { GameSessionDataType } from '../GameSessionData'
+import type { GameSessionDataType } from '../gameSession/GameSessionData'
 
 export type StoredDataType = {
   readonly settings: SettingsType

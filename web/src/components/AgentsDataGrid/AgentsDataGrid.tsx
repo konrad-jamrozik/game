@@ -11,7 +11,6 @@ import {
 } from '@mui/x-data-grid'
 import _ from 'lodash'
 import { useState } from 'react'
-import { type GameSession, useGameSessionContext } from '../../lib/GameSession'
 import type {
   Agent,
   AgentState,
@@ -23,6 +22,10 @@ import {
   getSurvivalChanceNonNegative,
   getSurvivalSkill,
 } from '../../lib/codesync/ruleset'
+import {
+  type GameSession,
+  useGameSessionContext,
+} from '../../lib/gameSession/GameSession'
 import { renderAgentStateCell } from '../../lib/rendering'
 import {
   defaultComponentHeight,

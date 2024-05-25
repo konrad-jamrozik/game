@@ -1,6 +1,6 @@
 import { createContext } from 'react'
-import { type GameSession, useGameSession } from '../lib/GameSession'
-import type { GameSessionDataType } from '../lib/GameSessionData'
+import { type GameSession, useGameSession } from '../lib/gameSession/GameSession'
+import type { GameSessionDataType } from '../lib/gameSession/GameSessionData'
 
 // https://react-typescript-cheatsheet.netlify.app/docs/basic/getting-started/context
 export const GameSessionContext = createContext<GameSession>(undefined!)

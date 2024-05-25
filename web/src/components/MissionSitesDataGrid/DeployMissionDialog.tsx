@@ -8,9 +8,12 @@ import Grid from '@mui/material/Unstable_Grid2'
 import type { GridRowId, GridRowSelectionModel } from '@mui/x-data-grid'
 import _ from 'lodash'
 import { Fragment, useState } from 'react'
-import { useGameSessionContext, type GameSession } from '../../lib/GameSession'
 import type { MissionSite } from '../../lib/codesync/GameState'
 import { requiredSurvivingAgentsForSuccess } from '../../lib/codesync/ruleset'
+import {
+  useGameSessionContext,
+  type GameSession,
+} from '../../lib/gameSession/GameSession'
 import { getSx } from '../../lib/rendering'
 import { AgentsDataGrid } from '../AgentsDataGrid/AgentsDataGrid'
 import { Label } from '../Label'

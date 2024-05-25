@@ -10,7 +10,6 @@ import IntroDialog from './components/IntroDialog'
 import { MissionSitesDataGrid } from './components/MissionSitesDataGrid/MissionSitesDataGrid'
 import OutroDialog from './components/OutroDialog'
 import { SettingsPanel } from './components/SettingsPanel/SettingsPanel'
-import { useGameSessionContext } from './lib/GameSession'
 import {
   agentStatsDataSeries,
   intelStatsDataSeries,
@@ -18,6 +17,7 @@ import {
   missionsStatsDataSeries,
   moneyStatsDataSeries,
 } from './lib/GameStateDataSeries'
+import { useGameSessionContext } from './lib/gameSession/GameSession'
 import type { StoredData } from './lib/storedData/StoredData'
 import type { SettingsType } from './lib/storedData/StoredDataType'
 function Footer(): React.JSX.Element {

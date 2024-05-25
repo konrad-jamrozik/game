@@ -3,21 +3,21 @@
 import _ from 'lodash'
 import { useContext, useState } from 'react'
 import { Md5 } from 'ts-md5'
-import { GameSessionContext } from '../components/GameSessionProvider'
+import { GameSessionContext } from '../../components/GameSessionProvider'
+import { callAdvanceTurnsApi } from '../api/advanceTurnsApi'
+import { callApplyPlayerActionApi } from '../api/applyPlayerActionApi'
+import { playerActionsPayloadsProviders } from '../api/playerActionsPayloadsProviders'
+import { initialTurn, type GameState, type Assets } from '../codesync/GameState'
+import type {
+  AgentPlayerActionName,
+  PlayerActionPayload,
+} from '../codesync/PlayerActionPayload'
+import { agentHireCost, transportCapBuyingCost } from '../codesync/ruleset'
 import {
   type GameSessionDataType,
   GameSessionData,
   initialGameSessionData,
 } from './GameSessionData'
-import { callAdvanceTurnsApi } from './api/advanceTurnsApi'
-import { callApplyPlayerActionApi } from './api/applyPlayerActionApi'
-import { playerActionsPayloadsProviders } from './api/playerActionsPayloadsProviders'
-import { initialTurn, type GameState, type Assets } from './codesync/GameState'
-import type {
-  AgentPlayerActionName,
-  PlayerActionPayload,
-} from './codesync/PlayerActionPayload'
-import { agentHireCost, transportCapBuyingCost } from './codesync/ruleset'
 
 export function useGameSessionContext(): GameSession {
   return useContext(GameSessionContext)

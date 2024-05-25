@@ -5,7 +5,7 @@ import DialogActions from '@mui/material/DialogActions'
 import DialogContent from '@mui/material/DialogContent'
 import DialogTitle from '@mui/material/DialogTitle'
 import _ from 'lodash'
-import type { GameResult } from '../lib/GameSession'
+import type { GameResult } from '../lib/gameSession/GameSession'
 
 export type OutroDialogProps = {
   readonly outroEnabled: boolean

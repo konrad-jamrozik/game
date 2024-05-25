@@ -1,7 +1,7 @@
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable @typescript-eslint/parameter-properties */
 import _ from 'lodash'
-import { initialTurn, type GameState } from './codesync/GameState'
+import { initialTurn, type GameState } from '../codesync/GameState'
 
 export class GameSessionData {
   public constructor(

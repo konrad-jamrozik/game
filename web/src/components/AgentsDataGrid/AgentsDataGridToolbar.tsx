@@ -2,7 +2,7 @@ import AddIcon from '@mui/icons-material/Add'
 import ChecklistIcon from '@mui/icons-material/Checklist'
 import { Button } from '@mui/material'
 import { GridToolbarContainer } from '@mui/x-data-grid'
-import type { GameSession } from '../../lib/GameSession'
+import type { GameSession } from '../../lib/gameSession/GameSession'
 import {
   AgentsActionDropdown,
   type AgentsActionDropdownProps,

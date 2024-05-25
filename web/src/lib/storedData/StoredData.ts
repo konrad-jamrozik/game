@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import type { GameSessionDataType } from '../GameSessionData'
+import type { GameSessionDataType } from '../gameSession/GameSessionData'
 import type {
   SettingsType,
   StoredDataType,
