@@ -16,9 +16,9 @@ export function renderApp(introEnabled: boolean): {
   outroDialog: OutroDialogFixture
 } {
   const storedData = new StoredData()
-  storedData.setIntroEnabled(introEnabled)
+  storedData.persistIntroEnabled(introEnabled)
   storedData.reload()
-  storedData.setOutroEnabled(true)
+  storedData.persistOutroEnabled(true)
   storedData.reload()
   render(
     <GameSessionProvider storedGameSessionData={undefined}>

@@ -38,7 +38,7 @@ export class StoredData {
     return this.data.settings
   }
 
-  public setIntroEnabled(enabled: boolean): void {
+  public persistIntroEnabled(enabled: boolean): void {
     // kja abstract setting settings logic
     const newSettings: SettingsType = {
       ...this.getSettings(),
@@ -49,7 +49,7 @@ export class StoredData {
     // Call .reload() to update them.
   }
 
-  public setOutroEnabled(enabled: boolean): void {
+  public persistOutroEnabled(enabled: boolean): void {
     // kja abstract setting settings logic
     const newSettings: SettingsType = {
       ...this.getSettings(),

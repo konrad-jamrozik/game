@@ -17,14 +17,14 @@ export function SettingsPanel(props: SettingsPanelProps): React.JSX.Element {
     event: React.ChangeEvent<HTMLInputElement>,
   ): void {
     props.setIntroEnabled(event.target.checked)
-    props.storedData.setIntroEnabled(event.target.checked)
+    props.storedData.persistIntroEnabled(event.target.checked)
   }
 
   function handleOutroEnabledChange(
     event: React.ChangeEvent<HTMLInputElement>,
   ): void {
     props.setOutroEnabled(event.target.checked)
-    props.storedData.setOutroEnabled(event.target.checked)
+    props.storedData.persistOutroEnabled(event.target.checked)
   }
 
   return (
