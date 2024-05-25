@@ -9,7 +9,7 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App.tsx'
 import { GameSessionProvider } from './components/GameSessionProvider.tsx'
-import { StoredData } from './lib/StoredData.ts'
+import { StoredData } from './lib/storedData/StoredData.ts'
 import theme from './theme.tsx'
 
 const rootElement = document.querySelector('#root')

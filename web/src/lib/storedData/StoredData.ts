@@ -1,24 +1,11 @@
 import _ from 'lodash'
-import type { GameSessionDataType } from './GameSessionData'
-
-export type SettingsType = {
-  readonly introEnabled: boolean
-  readonly outroEnabled: boolean
-}
-
-export type StoredDataType = {
-  readonly settings: SettingsType
-  readonly gameSessionData?: GameSessionDataType | undefined
-}
-
-type StoredDataTypeName = 'gameSessionData' | 'settings'
-
-type StoredDataTypeMap = {
-  [key in StoredDataTypeName]: SettingsType | GameSessionDataType
-} & {
-  gameSessionData: GameSessionDataType
-  settings: SettingsType
-}
+import type { GameSessionDataType } from '../GameSessionData'
+import type {
+  SettingsType,
+  StoredDataType,
+  StoredDataTypeMap,
+  StoredDataTypeName,
+} from './StoredDataType'
 
 export class StoredData {
   private data!: StoredDataType

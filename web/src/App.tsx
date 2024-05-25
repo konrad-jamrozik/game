@@ -18,7 +18,8 @@ import {
   missionsStatsDataSeries,
   moneyStatsDataSeries,
 } from './lib/GameStateDataSeries'
-import type { SettingsType, StoredData } from './lib/StoredData'
+import type { StoredData } from './lib/storedData/StoredData'
+import type { SettingsType } from './lib/storedData/StoredDataType'
 function Footer(): React.JSX.Element {
   return (
     <Typography variant="body2" color="text.secondary" align="center">

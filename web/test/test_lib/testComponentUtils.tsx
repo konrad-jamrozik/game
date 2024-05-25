@@ -1,7 +1,7 @@
 import { render } from '@testing-library/react'
 import App from '../../src/App'
 import { GameSessionProvider } from '../../src/components/GameSessionProvider'
-import { StoredData } from '../../src/lib/StoredData'
+import { StoredData } from '../../src/lib/storedData/StoredData'
 import { AgentsDataGridFixture } from '../test_fixtures/AgentsDataGridFixture'
 import { GameSessionControlPanelFixture } from '../test_fixtures/GameSessionControlPanelFixture'
 import { IntroDialogFixture } from '../test_fixtures/IntroDialogFixture'

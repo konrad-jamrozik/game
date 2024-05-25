@@ -1,7 +1,7 @@
 import { Button, Card, CardContent, CardHeader, Switch } from '@mui/material'
 import Grid from '@mui/material/Unstable_Grid2'
 import _ from 'lodash'
-import type { StoredData } from '../../lib/StoredData'
+import type { StoredData } from '../../lib/storedData/StoredData'
 import { Label } from '../Label'
 
 export type SettingsPanelProps = {

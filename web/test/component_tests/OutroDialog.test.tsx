@@ -2,10 +2,8 @@
 import { cleanup } from '@testing-library/react'
 import _ from 'lodash'
 import { describe, expect, assert, test, beforeAll, beforeEach } from 'vitest'
-import {
-  type StoredDataType,
-  loadDataFromLocalStorage,
-} from '../../src/lib/StoredData'
+import { loadDataFromLocalStorage } from '../../src/lib/storedData/StoredData'
+import type { StoredDataType } from '../../src/lib/storedData/StoredDataType'
 import { renderApp } from '../test_lib/testComponentUtils'
 import { verifyBackendApiIsReachable } from '../test_lib/testUtils'
 
