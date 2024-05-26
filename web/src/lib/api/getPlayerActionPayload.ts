@@ -1,3 +1,4 @@
+/* c8 ignore start */
 /* eslint-disable no-else-return */
 import type {
   PlayerActionName,

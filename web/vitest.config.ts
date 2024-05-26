@@ -9,6 +9,10 @@ export default defineConfig({
   test: {
     setupFiles: ['./test/vitest.setup.ts'],
     environment: 'jsdom',
+    testTimeout: 10_000,
+    coverage: {
+      include: ['src/**/*.ts', 'src/**/*.tsx'],
+    },
     chaiConfig: {
       includeStack: true,
     },

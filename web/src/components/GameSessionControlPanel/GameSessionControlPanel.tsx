@@ -358,5 +358,6 @@ function resolveStartAndTargetTurn(
       resolvedTargetTurn: currentTurn + turnsToAdvance,
     }
   }
+  /* c8 ignore next */
   throw new Error('Unreachable code')
 }

@@ -14,6 +14,7 @@ export class GameSessionData {
   ) {}
 
   private static verify(gameStates: readonly GameState[]): void {
+    /* c8 ignore start */
     if (_.isEmpty(gameStates)) {
       throw new Error('gameStates must not be empty')
     }
@@ -21,7 +22,6 @@ export class GameSessionData {
     if (firstTurn !== initialTurn) {
       throw new Error(`first turn must be initialTurn of ${initialTurn}`)
     }
-
     // Verify that CurrentTurn increments in all gameStates
     if (
       !_.every(
@@ -33,6 +33,7 @@ export class GameSessionData {
         'gameStates must have sequential turns, incrementing by 1',
       )
     }
+    /* c8 ignore stop */
   }
 
   public getGameStates(): readonly GameState[] {

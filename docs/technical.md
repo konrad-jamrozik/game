@@ -106,3 +106,7 @@ More links:
 - https://react.dev/reference/react/useState#storing-information-from-previous-renders
 - https://react.dev/learn/you-might-not-need-an-effect#sharing-logic-between-event-handlers
 - https://stackoverflow.com/questions/58818727/react-usestate-not-setting-initial-value
+
+## Ignoring lines for code coverage
+
+https://jestjs.io/docs/configuration#collectcoverage-boolean

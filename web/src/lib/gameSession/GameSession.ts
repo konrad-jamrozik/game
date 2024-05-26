@@ -81,22 +81,26 @@ export class GameSession {
   }
 
   public async hireAgents(count: number): Promise<boolean> {
+    /* c8 ignore start */
     if (count !== 1) {
       throw new Error(
         'Currently hiring of only exactly 1 agent at a time is supported. See playerActionsPayloadsProviders for details.',
       )
     }
+    /* c8 ignore stop */
     const payloadProvider = playerActionsPayloadsProviders.HireAgents
     const payload = payloadProvider()
     return this.applyPlayerAction(payload)
   }
 
   public async buyTransportCap(count: number): Promise<boolean> {
+    /* c8 ignore start */
     if (count !== 1) {
       throw new Error(
         'Currently buying exactly 1 transport cap. at a time is supported. See playerActionsPayloadsProviders for details.',
       )
     }
+    /* c8 ignore stop */
     const payloadProvider = playerActionsPayloadsProviders.BuyTransportCap
     const payload = payloadProvider()
     return this.applyPlayerAction(payload)
@@ -246,10 +250,11 @@ export class GameSession {
     newGameStates: GameState[],
     resultOfPlayerAction?: boolean,
   ): void {
+    /* c8 ignore start */
     if (_.isEmpty(newGameStates)) {
       throw new Error('newGameStates must not be empty')
     }
-
+    /* c8 ignore stop */
     const firstTurnInNewGameStates = newGameStates.at(0)!.Timeline.CurrentTurn
     const lastTurnInNewGameStates = newGameStates.at(-1)!.Timeline.CurrentTurn
 
