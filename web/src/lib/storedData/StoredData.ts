@@ -28,31 +28,27 @@ export class StoredData {
   }
 
   public persistIntroEnabled(enabled: boolean): void {
-    // kja abstract setting settings logic
-    const newSettings: SettingsType = {
-      ...this.getSettings(),
-      introEnabled: enabled,
-    }
-    localStorage.setItem('settings', JSON.stringify(newSettings))
-    // Note: at this point this.getSettings() will still return the old settings.
-    // Call .reload() to update them.
+    this.persistSetting('introEnabled', enabled)
   }
 
   public persistOutroEnabled(enabled: boolean): void {
-    // kja abstract setting settings logic
-    const newSettings: SettingsType = {
-      ...this.getSettings(),
-      outroEnabled: enabled,
-    }
-    localStorage.setItem('settings', JSON.stringify(newSettings))
-    // Note: at this point this.getSettings() will still return the old settings.
-    // Call .reload() to update them.
+    this.persistSetting('outroEnabled', enabled)
   }
 
   public persistGameSessionData(data: GameSessionDataType): void {
     localStorage.setItem('gameSessionData', JSON.stringify(data))
     // Note: at this point this.getGameSessionData() will still return the old data.
     // Call .reload() to update it.
+  }
+
+  private persistSetting(key: keyof SettingsType, value: boolean): void {
+    const newSettings: SettingsType = {
+      ...this.getSettings(),
+      [key]: value,
+    }
+    localStorage.setItem('settings', JSON.stringify(newSettings))
+    // Note: at this point this.getSettings() will still return the old settings.
+    // Call .reload() to update them.
   }
 }
 
