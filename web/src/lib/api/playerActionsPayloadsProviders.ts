@@ -58,6 +58,13 @@ type PayloadProviderMap = {
     | PayloadFromIds
     | PayloadFromNothing
 } & {
+  // Note: this block provides type-safety only against a payload provider for given action
+  // having too many parameters, but not not enough.
+  // For example, if this declares "AdvanceTime" player action should produce payload
+  // from no parameters, and the actual implementation would take some parameters,
+  // then this would properly catch it.
+  // However, if this declares "RecallAgents" should produce payload from "IDs" parameter,
+  // and the actual implementation would take no parameters, then this would not catch that.
   AdvanceTime: PayloadFromNothing
   BuyTransportCap: PayloadFromNothing
   HireAgents: PayloadFromNothing
