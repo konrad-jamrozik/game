@@ -20,9 +20,7 @@ if (rootElement) {
     <React.StrictMode>
       <ThemeProvider theme={theme}>
         <CssBaseline enableColorScheme />
-        <GameSessionProvider
-          storedGameSessionData={storedData.getGameSessionData()} // kja NEXT: drill storedData through here instead
-        >
+        <GameSessionProvider storedData={storedData}>
           <App storedData={storedData} />
         </GameSessionProvider>
       </ThemeProvider>

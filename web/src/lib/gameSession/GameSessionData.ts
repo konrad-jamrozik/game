@@ -2,9 +2,11 @@
 /* eslint-disable @typescript-eslint/parameter-properties */
 import _ from 'lodash'
 import { initialTurn, type GameState } from '../codesync/GameState'
+import type { StoredData } from '../storedData/StoredData'
 
 export class GameSessionData {
   public constructor(
+    private readonly storedData: StoredData,
     private readonly _data: GameSessionDataType,
     private readonly _setData: React.Dispatch<
       React.SetStateAction<GameSessionDataType>
@@ -88,8 +90,7 @@ export class GameSessionData {
   }
 
   private setData(data: GameSessionDataType): void {
-    // kja localStorage.setItem('gameSessionData', JSON.stringify(data))
-    localStorage.setItem('gameSessionData', JSON.stringify(data))
+    this.storedData.persistGameSessionData(data)
     this._setData(data)
   }
 }

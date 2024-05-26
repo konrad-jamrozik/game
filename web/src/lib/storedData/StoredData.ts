@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/class-methods-use-this */
 import _ from 'lodash'
 import type { GameSessionDataType } from '../gameSession/GameSessionData'
 import type {
@@ -9,6 +10,7 @@ import type {
 
 export class StoredData {
   private data!: StoredDataType
+
   public constructor() {
     this.reload()
   }
@@ -45,6 +47,12 @@ export class StoredData {
     localStorage.setItem('settings', JSON.stringify(newSettings))
     // Note: at this point this.getSettings() will still return the old settings.
     // Call .reload() to update them.
+  }
+
+  public persistGameSessionData(data: GameSessionDataType): void {
+    localStorage.setItem('gameSessionData', JSON.stringify(data))
+    // Note: at this point this.getGameSessionData() will still return the old data.
+    // Call .reload() to update it.
   }
 }
 

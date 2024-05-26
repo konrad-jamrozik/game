@@ -21,7 +21,7 @@ export function renderApp(introEnabled: boolean): {
   storedData.persistOutroEnabled(true)
   storedData.reload()
   render(
-    <GameSessionProvider storedGameSessionData={undefined}>
+    <GameSessionProvider storedData={storedData}>
       <App storedData={storedData} />
     </GameSessionProvider>,
   )

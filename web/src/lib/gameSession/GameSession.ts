@@ -13,6 +13,7 @@ import type {
   PlayerActionPayload,
 } from '../codesync/PlayerActionPayload'
 import { agentHireCost, transportCapBuyingCost } from '../codesync/ruleset'
+import type { StoredData } from '../storedData/StoredData'
 import {
   type GameSessionDataType,
   GameSessionData,
@@ -23,9 +24,9 @@ export function useGameSessionContext(): GameSession {
   return useContext(GameSessionContext)
 }
 
-export function useGameSession(
-  storedGameSessionData?: GameSessionDataType | undefined,
-): GameSession {
+export function useGameSession(storedData: StoredData): GameSession {
+  const storedGameSessionData: GameSessionDataType | undefined =
+    storedData.getGameSessionData()
   const [data, setData] = useState<GameSessionDataType>(
     storedGameSessionData ?? initialGameSessionData,
   )
@@ -37,7 +38,7 @@ export function useGameSession(
   )
 
   return new GameSession(
-    new GameSessionData(data, setData),
+    new GameSessionData(storedData, data, setData),
     loading,
     setLoading,
     error,
