@@ -27,6 +27,7 @@ function Start-GameLocalDevTwoPanes {
     split-pane --profile "PowerShell" --horizontal --tabColor $steel_blue --title "Frontend" --startingDirectory $frontendDir PowerShell -ExecutionPolicy RemoteSigned -Command "npm run dev" `; `
     split-pane --profile "PowerShell" --tabColor $crimson --title "Backend" --startingDirectory $backendDir PowerShell -ExecutionPolicy RemoteSigned -Command "dotnet watch --project api --launch-profile https" `; `
     move-focus up
+    code $kjgameDir
     
 }
 New-Alias game-start-localdev Start-GameLocalDevTwoPanes
