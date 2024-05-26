@@ -1,23 +1,10 @@
-import { screen, cleanup } from '@testing-library/react'
-import _ from 'lodash'
-import { describe, expect, assert, test, beforeAll, beforeEach } from 'vitest'
+import { screen } from '@testing-library/react'
+import { assert, describe, expect, test } from 'vitest'
 import { loadDataFromLocalStorage } from '../../src/lib/storedData/StoredData'
 import type { StoredDataType } from '../../src/lib/storedData/StoredDataType'
 import { renderApp } from '../test_lib/testComponentUtils'
-import { verifyBackendApiIsReachable } from '../test_lib/testUtils'
 
 describe('Test suite for App.tsx', () => {
-  beforeAll(async () => {
-    await verifyBackendApiIsReachable()
-  })
-
-  beforeEach(() => {
-    // Needed per:
-    // https://stackoverflow.com/questions/78493555/how-can-i-run-tests-in-a-single-file-in-parallel-when-using-screen-from-testin
-    cleanup()
-    localStorage.clear()
-  })
-
   /**
    * Given:
    * - Render of App.tsx
@@ -74,20 +61,7 @@ describe('Test suite for App.tsx', () => {
   })
 })
 
-// kja: CI tests fail sometimes due to relying on cloud backend and slow cold boot:
-// they hit a timeout. Re-running works as the API is booted and replies within timeout.
-
-// Test: Reset turn
-// show that 'revert turn' changes to 'reset turn' when agent gets hired.
-// show that 'revert turn' reverts to the END of previous turn (after all player actions), not beginning. See also below:
-// test for the corner cases described in GameSessionData.resetGameState
-// I.e. how to get back to previous turn end (just by revert) and beginning (by revert, revert, advance)
-
-// Test: Clear local storage
-// question: do tests have isolated local storage?
-// question: if I disable test isolation, how much it will speed up things?
-
-// Test: delegate turn to AI:
+// kja Test: delegate turn to AI:
 // Always need to assert Result is undecided until I get seeds in
 // From turn N/A: start 1 target 5
 // From turn 1: start 1 target 5

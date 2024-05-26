@@ -24,6 +24,19 @@ Also consider checking for unused dependencies:
 - https://github.com/vitest-dev/vitest/issues/4494
 - https://kentcdodds.com/blog/improve-test-error-messages-of-your-abstractions
 
+### Ignoring lines for code coverage
+
+https://jestjs.io/docs/configuration#collectcoverage-boolean
+
+### CI tests and cold boot
+
+CI tests may sometimes fail due to relying on cloud backend and slow cold boot:
+they hit a timeout. Re-running works as the API is booted and replies within timeout.
+
+This also appears to be mitigated by `verifyBackendApiIsReachable` ran at
+the beginning of each test suite, which tries to reach the backend and thus force
+it to boot.
+
 ## React: post-processing result of API call
 
 Consider following problem:
@@ -106,7 +119,3 @@ More links:
 - https://react.dev/reference/react/useState#storing-information-from-previous-renders
 - https://react.dev/learn/you-might-not-need-an-effect#sharing-logic-between-event-handlers
 - https://stackoverflow.com/questions/58818727/react-usestate-not-setting-initial-value
-
-## Ignoring lines for code coverage
-
-https://jestjs.io/docs/configuration#collectcoverage-boolean

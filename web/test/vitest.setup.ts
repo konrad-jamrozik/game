@@ -1,5 +1,18 @@
 import '@testing-library/jest-dom/vitest'
-import { vi } from 'vitest'
+import { cleanup } from '@testing-library/react'
+import { beforeAll, beforeEach, vi } from 'vitest'
+import { verifyBackendApiIsReachable } from './test_lib/testUtils'
+
+beforeAll(async () => {
+  await verifyBackendApiIsReachable()
+})
+
+beforeEach(() => {
+  // Needed per:
+  // https://stackoverflow.com/questions/78493555/how-can-i-run-tests-in-a-single-file-in-parallel-when-using-screen-from-testin
+  cleanup()
+  localStorage.clear()
+})
 
 // This is required to allow vitest to connect to localhost backend using self-signed certificate.
 // Without this, I was getting:

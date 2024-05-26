@@ -1,24 +1,8 @@
 /* eslint-disable sonarjs/no-duplicate-string */
-import { cleanup } from '@testing-library/react'
-import { beforeAll, beforeEach, describe, expect, test } from 'vitest'
+import { describe, expect, test } from 'vitest'
 import { renderApp } from '../test_lib/testComponentUtils'
-import { verifyBackendApiIsReachable } from '../test_lib/testUtils'
 
-// kja dedup the beforeAll and beforeEach with
-// https://vitest.dev/config/#setupfiles
-// or https://vitest.dev/guide/test-context#test-extend
 describe('Test suite for IntroDialog.tsx', () => {
-  beforeAll(async () => {
-    await verifyBackendApiIsReachable()
-  })
-
-  beforeEach(() => {
-    // Needed per:
-    // https://stackoverflow.com/questions/78493555/how-can-i-run-tests-in-a-single-file-in-parallel-when-using-screen-from-testin
-    cleanup()
-    localStorage.clear()
-  })
-
   test('Intro dialog and setting', async () => {
     expect.hasAssertions()
 

@@ -1,22 +1,9 @@
 /* eslint-disable max-statements */
-import { cleanup } from '@testing-library/react'
 import _ from 'lodash'
-import { describe, expect, test, beforeAll, beforeEach } from 'vitest'
+import { describe, expect, test } from 'vitest'
 import { renderApp } from '../test_lib/testComponentUtils'
-import { verifyBackendApiIsReachable } from '../test_lib/testUtils'
 
 describe('Test suite for OutroDialog.tsx', () => {
-  beforeAll(async () => {
-    await verifyBackendApiIsReachable()
-  })
-
-  beforeEach(() => {
-    // Needed per:
-    // https://stackoverflow.com/questions/78493555/how-can-i-run-tests-in-a-single-file-in-parallel-when-using-screen-from-testin
-    cleanup()
-    localStorage.clear()
-  })
-
   test('Outro dialog and setting', async () => {
     expect.hasAssertions()
 
