@@ -1,8 +1,6 @@
-/* eslint-disable sonarjs/no-duplicate-string */
 import { describe, expect, test } from 'vitest'
 import { renderApp } from '../test_lib/testComponentUtils'
 
-// eslint-disable-next-line vitest/no-disabled-tests
 describe('Test suite for GameSessionData.ts', () => {
   test('Reset to beginning of current turn', async () => {
     expect.hasAssertions()
@@ -38,7 +36,6 @@ describe('Test suite for GameSessionData.ts', () => {
     controlPanel.assertTurn1(false)
   })
 
-  // eslint-disable-next-line vitest/no-disabled-tests
   test.todo('Revert to beginning of previous turn')
   // See note in GameSessionData.ts / GameSessionDataType.resetGameState
 })
