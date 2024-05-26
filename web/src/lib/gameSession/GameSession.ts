@@ -209,6 +209,11 @@ export class GameSession {
 
     const currentGameState = this.data.getGameStates().at(-1)
     const resetGameState = this.data.getResetGameState()
+    // kja This return wrong value after reverting: it always returns false due to same number of updates, as if resetGameState was not updated.
+    console.log(
+      `hasPlayerMadeActionsInCurrentTurn: ${currentGameState!.UpdateCount > resetGameState.UpdateCount} ` +
+        `currentGameState!.UpdateCount ${currentGameState!.UpdateCount} (${currentGameState?.Timeline.CurrentTurn}) > ${resetGameState.UpdateCount} (${resetGameState.Timeline.CurrentTurn}) resetGameState.UpdateCount`,
+    )
     return currentGameState!.UpdateCount > resetGameState.UpdateCount
   }
 
@@ -218,6 +223,8 @@ export class GameSession {
     return canAdvanceTime
   }
 
+  // kja bug in canDelegateTurnsToAi. Should test for it. The bug is due to the fact
+  // hasPlayerMadeActionsInCurrentTurn will return false when the turn was reverted form future turn to the end of current turn.
   public canDelegateTurnsToAi(): boolean {
     const canDelegateTurnsToAi =
       !this.loading &&

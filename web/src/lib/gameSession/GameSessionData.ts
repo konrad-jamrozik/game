@@ -99,6 +99,7 @@ export class GameSessionData {
 export type GameSessionDataType = {
   readonly gameStates: readonly GameState[]
   /**
+   * // kja this should be called revertTurnState or something, not resetGame
    * The game state to which the current turn game state should be reset when
    * the 'reset turn' button is clicked.
    *
@@ -131,6 +132,9 @@ export type GameSessionDataType = {
    * // One reason for this change is that it is not possible to revert to the beginning of turn 1 after turn 2.
    * // If one is in turn 2 and clicks "revert 1 turn" then it will revert to the end of turn 1 and instead
    * // of having enabled "reset turn" button the UI will have disabled "revert 1 turn".
+   * //
+   * // The way I can do it is by looking at turn number: first reset to first state with given turn number,
+   * // then to last state with turnNo-1, then to first state with turnNo-1, then to last state with turnNo-2, and so on.
    */
   readonly resetGameState: GameState | undefined
 }
