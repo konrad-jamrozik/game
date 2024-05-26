@@ -1,9 +1,7 @@
 /* eslint-disable max-statements */
 import { cleanup } from '@testing-library/react'
 import _ from 'lodash'
-import { describe, expect, assert, test, beforeAll, beforeEach } from 'vitest'
-import { loadDataFromLocalStorage } from '../../src/lib/storedData/StoredData'
-import type { StoredDataType } from '../../src/lib/storedData/StoredDataType'
+import { describe, expect, test, beforeAll, beforeEach } from 'vitest'
 import { renderApp } from '../test_lib/testComponentUtils'
 import { verifyBackendApiIsReachable } from '../test_lib/testUtils'
 
@@ -16,6 +14,7 @@ describe('Test suite for OutroDialog.tsx', () => {
     // Needed per:
     // https://stackoverflow.com/questions/78493555/how-can-i-run-tests-in-a-single-file-in-parallel-when-using-screen-from-testin
     cleanup()
+    localStorage.clear()
   })
 
   test('Outro dialog and setting', async () => {
@@ -79,18 +78,4 @@ describe('Test suite for OutroDialog.tsx', () => {
     controlPanel.assertTurn2()
     outroDialog.assertVisibility('not present')
   }, 20_000)
-
-  test('Load data from local storage', () => {
-    localStorage.clear()
-    const storedData: StoredDataType = loadDataFromLocalStorage()
-    assert.isNotEmpty(storedData)
-    console.log('storedData', JSON.stringify(storedData, undefined, 2))
-  })
-
-  // eslint-disable-next-line vitest/no-disabled-tests
-  test.skip('scratchpad', async () => {
-    expect.hasAssertions()
-    const { controlPanel } = renderApp(false)
-    await controlPanel.advance1Turn()
-  })
 })

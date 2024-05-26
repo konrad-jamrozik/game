@@ -122,6 +122,14 @@ export type GameSessionDataType = {
    * If now player reverts the turn to turn 9, then resetGameState will point to the game state at the end of turn 9,
    * meaning after the player action of 'hire agent'. If the player would want to go back to the beginning of turn 9,
    * then the player can revert to turn 8 and advance turn, to effectively end up at the beginning of turn 9.
+   *
+   * // kja Change the behavior above. Reverting turn should revert to the end of previous turn, not beginning.
+   * // Hence it will flip between Revert 1 turn / Reset turn / Revert 1 turn / Reset turn/
+   * // Unless player made no actions given turn. Then reverting turn is effectively reverting to the beginning.
+   * //
+   * // One reason for this change is that it is not possible to revert to the beginning of turn 1 after turn 2.
+   * // If one is in turn 2 and clicks "revert 1 turn" then it will revert to the end of turn 1 and instead
+   * // of having enabled "reset turn" button the UI will have disabled "revert 1 turn".
    */
   readonly resetGameState: GameState | undefined
 }

@@ -20,6 +20,9 @@ export class GameSessionControlPanelFixture {
   public async revert1Turn(): Promise<void> {
     await clickButton('Revert 1 turn', 'Advance 1 turn')
   }
+  public async resetTurn(): Promise<void> {
+    await clickButton('Reset turn', 'Advance 1 turn')
+  }
 
   public async resetGame(): Promise<void> {
     await clickButton('Reset game', 'Advance 1 turn')
@@ -30,14 +33,22 @@ export class GameSessionControlPanelFixture {
     expectButtonsToBeDisabled('Reset game', 'Reset turn')
   }
 
-  public assertTurn1(): void {
+  public assertTurn1(playerMadeActions = false): void {
     expectParagraph('Current turn: 1')
     expectButtonToBeEnabled('Reset game')
-    expectButtonToBeDisabled('Revert 1 turn')
+    if (playerMadeActions) {
+      expectButtonToBeEnabled('Reset turn')
+    } else {
+      expectButtonToBeDisabled('Revert 1 turn')
+    }
   }
 
-  public assertTurn2(): void {
+  public assertTurn2(playerMadeActions = false): void {
     expectParagraph('Current turn: 2')
-    expectButtonsToBeEnabled('Reset game', 'Revert 1 turn')
+    const turnReversalButton = playerMadeActions
+      ? 'Reset turn'
+      : 'Revert 1 turn'
+    expectButtonsToBeEnabled('Reset game', turnReversalButton)
+    expectButtonToBeEnabled(turnReversalButton)
   }
 }

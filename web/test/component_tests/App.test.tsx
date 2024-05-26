@@ -15,6 +15,7 @@ describe('Test suite for App.tsx', () => {
     // Needed per:
     // https://stackoverflow.com/questions/78493555/how-can-i-run-tests-in-a-single-file-in-parallel-when-using-screen-from-testin
     cleanup()
+    localStorage.clear()
   })
 
   /**
