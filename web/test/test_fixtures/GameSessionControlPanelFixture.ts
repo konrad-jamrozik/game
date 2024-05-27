@@ -29,15 +29,36 @@ export class GameSessionControlPanelFixture {
     await clickButton('Reset game', 'Advance 1 turn')
   }
 
-  public async delegateTurnsToAi(expectGameOver = false): Promise<void> {
-    await clickButton(
-      'Delegate turns to AI:',
-      expectGameOver ? 'Reset game' : 'Advance 1 turn',
-    )
+  public async delegateTurnsToAi(
+    startTurn: number,
+    targetTurn: number,
+  ): Promise<void> {
+    await this.setStartTurn(startTurn)
+    await this.setTargetTurn(targetTurn)
+    await this.clickDelegateTurnsToAi()
+    this.assertTurn(targetTurn)
+  }
+
+  public async setStartTurn(startTurn: number): Promise<void> {
+    await typeIntoElement('spinbutton', 'start', startTurn.toString())
   }
 
   public async setTargetTurn(targetTurn: number): Promise<void> {
     await typeIntoElement('spinbutton', 'target', targetTurn.toString())
+  }
+
+  public async clickDelegateTurnToAi(expectGameOver = false): Promise<void> {
+    await clickButton(
+      'Delegate 1 turn to AI',
+      expectGameOver ? 'Reset game' : 'Advance 1 turn',
+    )
+  }
+
+  public async clickDelegateTurnsToAi(expectGameOver = false): Promise<void> {
+    await clickButton(
+      'Delegate turns to AI:',
+      expectGameOver ? 'Reset game' : 'Advance 1 turn',
+    )
   }
 
   public assertNoGameSession(): void {
