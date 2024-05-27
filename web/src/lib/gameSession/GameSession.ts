@@ -70,7 +70,7 @@ export class GameSession {
     targetTurn: number,
     delegateToAi?: boolean | undefined,
   ): Promise<boolean> {
-    const startGameState = this.getGameStateAtTurn(startTurn)
+    const startGameState = this.getGameStateAtTurnEnd(startTurn)
     const newGameStates = await callAdvanceTurnsApi({
       setLoading: this.setLoading,
       setError: this.setError,
@@ -201,8 +201,7 @@ export class GameSession {
         : 'undecided'
   }
 
-  // kja this will have to be split for "at turn start" and "at turn end" cases
-  public getGameStateAtTurn(turn: number): GameState {
+  public getGameStateAtTurnEnd(turn: number): GameState {
     return _.findLast(
       this.data.getGameStates(),
       (gs) => gs.Timeline.CurrentTurn === turn,
