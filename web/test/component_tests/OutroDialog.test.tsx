@@ -64,5 +64,5 @@ describe('Test suite for OutroDialog.tsx', () => {
     await controlPanel.advance1Turn(true)
     controlPanel.assertTurn2()
     outroDialog.assertVisibility('not present')
-  }, 20_000)
+  })
 })
