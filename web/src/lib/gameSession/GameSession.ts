@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/init-declarations */
 /* eslint-disable max-lines-per-function */
-/* eslint-disable no-lonely-if */
 /* eslint-disable sonarjs/no-inverted-boolean-check */
 /* eslint-disable max-statements */
 /* eslint-disable max-lines */
