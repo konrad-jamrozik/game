@@ -32,6 +32,14 @@ export class GameSessionData {
         if (!(currTurn <= nextTurn && nextTurn <= currTurn + 1)) {
           throw new Error('gameStates turns must increment by 0 or 1')
         }
+        if (
+          currTurn === nextTurn &&
+          !(currGs.UpdateCount < nextGs.UpdateCount)
+        ) {
+          throw new Error(
+            'If there are 2 game states with the same turn, the later state must have higher UpdateCount',
+          )
+        }
         return nextGs
       },
       gameStates[0]!,

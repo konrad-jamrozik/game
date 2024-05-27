@@ -238,8 +238,8 @@ export class GameSession {
     return canAdvanceTime
   }
 
-  // kja bug in canDelegateTurnsToAi. Should test for it. The bug is due to the fact
-  // hasPlayerMadeActionsInCurrentTurn will return false when the turn was reverted form future turn to the end of current turn.
+  // kja test canDelegateTurnsToAi. Previously there was a bug:
+  // if turn was reverted, it incorrectly returned true even if there were player actions.
   public canDelegateTurnsToAi(): boolean {
     const canDelegateTurnsToAi =
       !this.loading &&
