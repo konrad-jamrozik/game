@@ -7,6 +7,7 @@ import {
   expectButtonsToBeDisabled,
   expectButtonsToBeEnabled,
   expectParagraph,
+  typeIntoElement,
 } from '../test_lib/testUtils'
 
 export class GameSessionControlPanelFixture {
@@ -26,6 +27,10 @@ export class GameSessionControlPanelFixture {
 
   public async resetGame(): Promise<void> {
     await clickButton('Reset game', 'Advance 1 turn')
+  }
+
+  public async setTargetTurn(targetTurn: number): Promise<void> {
+    await typeIntoElement('spinbutton', 'target', targetTurn.toString())
   }
 
   public assertNoGameSession(): void {

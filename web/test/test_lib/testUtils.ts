@@ -158,6 +158,16 @@ export async function clickElement(role: string, name: string): Promise<void> {
   console.log(`----- CLICK ELEMENT: '${role}' '${name}' DONE`)
 }
 
+export async function typeIntoElement(
+  role: string,
+  name: string,
+  content: string,
+): Promise<void> {
+  console.log(`----- TYPE INTO ELEMENT: '${role}' '${name}' '${content}'`)
+  await typeWithDelay(screen.getByRole(role, { name }), content)
+  console.log(`----- TYPE INTO ELEMENT: '${role}' '${name}' ' ${content}' DONE`)
+}
+
 /**
  * By default we delay some time after click to give React some time to disable buttons etc.
  */
@@ -166,6 +176,16 @@ const defaultClickDelayMs = 20
 async function clickWithDelay(element: Element, ms?: number): Promise<void> {
   const user: UserEvent = userEvent.setup()
   await user.click(element)
+  await delay(ms ?? defaultClickDelayMs)
+}
+
+async function typeWithDelay(
+  element: Element,
+  content: string,
+  ms?: number,
+): Promise<void> {
+  const user: UserEvent = userEvent.setup()
+  await user.type(element, content)
   await delay(ms ?? defaultClickDelayMs)
 }
 

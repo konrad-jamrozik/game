@@ -60,14 +60,3 @@ describe('Test suite for App.tsx', () => {
     }
   })
 })
-
-// kja Test: delegate turn to AI:
-// Always need to assert Result is undecided until I get seeds in
-// From turn N/A: start 1 target 5
-// From turn 1: start 1 target 5
-// Then (from turn 5): start 1, target 5
-// Then (from turn 5): start 4, target 5
-// Then (from turn 5): start 5, target 6
-// Then (from turn 6): start 3, target 4
-// Then (from turn 4): start 6, target 7
-// But also just read and cover: resolveStartAndTargetTurn
