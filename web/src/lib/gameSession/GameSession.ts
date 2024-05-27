@@ -12,7 +12,7 @@ import { GameSessionContext } from '../../components/GameSessionProvider'
 import { callAdvanceTurnsApi } from '../api/advanceTurnsApi'
 import { callApplyPlayerActionApi } from '../api/applyPlayerActionApi'
 import { playerActionsPayloadsProviders } from '../api/playerActionsPayloadsProviders'
-import { initialTurn, type GameState, type Assets } from '../codesync/GameState'
+import type { GameState, Assets } from '../codesync/GameState'
 import type {
   AgentPlayerActionName,
   PlayerActionPayload,
