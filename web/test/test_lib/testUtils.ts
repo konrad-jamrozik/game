@@ -148,8 +148,12 @@ export async function clickButtonAndWaitForItToDisappear(
   text: string,
 ): Promise<void> {
   await clickWithDelay(screen.getByText(text))
-  // https://testing-library.com/docs/guide-disappearance/#waiting-for-disappearance
-  await waitForElementToBeRemoved(() => screen.queryByText(text))
+  // This check is necessary because I was getting flaky error:
+  // Error: The element(s) given to waitForElementToBeRemoved are already removed. waitForElementToBeRemoved requires that the element(s) exist(s) before waiting for removal.
+  if (screen.queryByText(text) !== null) {
+    // https://testing-library.com/docs/guide-disappearance/#waiting-for-disappearance
+    await waitForElementToBeRemoved(() => screen.queryByText(text))
+  }
 }
 
 export async function clickElement(role: string, name: string): Promise<void> {
