@@ -33,6 +33,9 @@ export class GameSessionData {
           throw new Error('gameStates turns must increment by 0 or 1')
         }
         if (
+          /* The 'currTurn !== initialTurn' check is needed to because of the
+          initial accumulator value the currGs and nextGs will be the same state at first. */
+          currTurn !== initialTurn &&
           currTurn === nextTurn &&
           !(currGs.UpdateCount < nextGs.UpdateCount)
         ) {
