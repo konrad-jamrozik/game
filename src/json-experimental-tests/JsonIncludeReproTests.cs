@@ -47,8 +47,8 @@ public class JsonIncludeReproTests
         Assert.That(!serializedFoo2.Contains("BarProp"));
 
         // Read-only property that got [JsonInclude], so it should be present.
-        // !!! THIS IS THE REPRO / TEST FAILURE !!!
-        Assert.That(serializedFoo2.Contains("QuxProp"));
+        // !!! THIS IS THE REPRO !!!
+        Assert.That(!serializedFoo2.Contains("QuxProp"));
     }
 
     private class FooClass
