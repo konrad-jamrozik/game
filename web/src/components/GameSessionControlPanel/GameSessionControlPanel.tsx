@@ -240,19 +240,21 @@ function delegateTurnsToAiButton(
 }
 
 function resetCurrentTurnButton(gameSession: GameSession): React.JSX.Element {
-  const playerMadeActions = gameSession.hasPlayerMadeActionsInCurrentTurn()
+  const playerMadeActions: boolean | undefined =
+    gameSession.hasPlayerMadeActionsInCurrentTurn()
   const isDisabled =
     !gameSession.isInitialized() ||
     gameSession.loading ||
-    (gameSession.getCurrentTurn() === initialTurn && !playerMadeActions)
+    (gameSession.getCurrentTurn() === initialTurn &&
+      !(playerMadeActions ?? false))
 
   const label =
-    playerMadeActions || !gameSession.isInitialized()
+    (playerMadeActions ?? false) || !gameSession.isInitialized()
       ? `Reset turn`
       : `Revert 1 turn`
 
   function reset(): void {
-    if (playerMadeActions) {
+    if (playerMadeActions ?? false) {
       gameSession.resetCurrentTurn()
     } else {
       gameSession.revertToPreviousTurn()

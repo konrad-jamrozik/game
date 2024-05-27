@@ -119,3 +119,10 @@ More links:
 - https://react.dev/reference/react/useState#storing-information-from-previous-renders
 - https://react.dev/learn/you-might-not-need-an-effect#sharing-logic-between-event-handlers
 - https://stackoverflow.com/questions/58818727/react-usestate-not-setting-initial-value
+
+### npm eating args after `npm run test --`
+
+- [Open
+[BUG] Arguments are not correctly passed from CLI to npm script (npm 7, Windows, Powershell)
+#3136](https://github.com/npm/cli/issues/3136)
+  - Workaround: https://github.com/npm/cli/issues/3136#issuecomment-1968089218

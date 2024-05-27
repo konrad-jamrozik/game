@@ -1,3 +1,4 @@
+/* eslint-disable sonarjs/no-inverted-boolean-check */
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable @typescript-eslint/parameter-properties */
 import _ from 'lodash'
@@ -22,15 +23,30 @@ export class GameSessionData {
     if (firstTurn !== initialTurn) {
       throw new Error(`first turn must be initialTurn of ${initialTurn}`)
     }
-    // Verify that CurrentTurn increments in all gameStates
-    if (
-      !_.every(
-        gameStates,
-        (gs, index) => gs.Timeline.CurrentTurn === firstTurn + index,
-      )
-    ) {
+    // eslint-disable-next-line lodash/collection-method-value
+    _.reduce(
+      gameStates,
+      (currGs, nextGs) => {
+        const currTurn = currGs.Timeline.CurrentTurn
+        const nextTurn = nextGs.Timeline.CurrentTurn
+        if (!(currTurn <= nextTurn && nextTurn <= currTurn + 1)) {
+          throw new Error('gameStates turns must increment by 0 or 1')
+        }
+        return nextGs
+      },
+      gameStates[0]!,
+    )
+    const gssByCurrentTurn = _.groupBy(
+      gameStates,
+      (gs) => gs.Timeline.CurrentTurn,
+    )
+    const maxOccurrencesOfAnyTurn = _.maxBy(
+      _.values(gssByCurrentTurn),
+      (gss) => gss.length,
+    )!.length
+    if (!(maxOccurrencesOfAnyTurn <= 2)) {
       throw new Error(
-        'gameStates must have sequential turns, incrementing by 1',
+        'There can be no more than two gameStates with given currentTurn',
       )
     }
     /* c8 ignore stop */
@@ -40,46 +56,51 @@ export class GameSessionData {
     return this._data.gameStates
   }
 
-  public getResetGameState(): GameState {
-    return this._data.resetGameState!
+  public getCurrentTurn(): number {
+    return this.getCurrentGameState().Timeline.CurrentTurn
+  }
+
+  public getCurrentGameState(): GameState {
+    return this.getCurrentGameStateUnsafe()!
+  }
+
+  public getCurrentGameStateUnsafe(): GameState | undefined {
+    return this.getGameStates().at(-1)
   }
 
   public revertToPreviousTurn(): void {
-    const previousTurnsGameStates: GameState[] = this._data.gameStates.slice(
-      0,
-      -1,
-    )
     const newGameSessionData: GameSessionDataType = {
-      gameStates: previousTurnsGameStates,
-      resetGameState: previousTurnsGameStates.at(-1),
+      gameStates: this.getGameStatesUntilCurrentTurnStart().slice(0, -1),
     }
     this.setData(newGameSessionData)
+  }
+
+  public getGameStateAtCurrentTurnStart(): GameState {
+    return this.getGameStatesUntilCurrentTurnStart().at(-1)!
+  }
+
+  public getGameStatesUntilCurrentTurnStart(): GameState[] {
+    const currentTurn = this.getCurrentTurn()
+    const sliceEnd =
+      this.getGameStates().length >= 2 &&
+      this.getGameStates().at(-2)!.Timeline.CurrentTurn === currentTurn
+        ? -1
+        : undefined
+    return this.getGameStates().slice(0, sliceEnd)
   }
 
   public resetCurrentTurn(): void {
-    const previousTurnsGameStates: GameState[] = this._data.gameStates.slice(
-      0,
-      -1,
-    )
     const newGameSessionData: GameSessionDataType = {
-      gameStates: [...previousTurnsGameStates, this._data.resetGameState!],
-      resetGameState: this._data.resetGameState,
+      gameStates: this.getGameStatesUntilCurrentTurnStart(),
     }
     this.setData(newGameSessionData)
   }
 
-  public setDataStates(
-    gameStates: GameState[],
-    resultOfPlayerAction: boolean,
-  ): void {
+  public setDataStates(gameStates: GameState[]): void {
     GameSessionData.verify(gameStates)
-    const resetGameState = resultOfPlayerAction
-      ? this._data.resetGameState
-      : gameStates.at(-1)
     const newData: GameSessionDataType = {
       ...this._data,
       gameStates,
-      resetGameState,
     }
 
     this.setData(newData)
@@ -98,50 +119,10 @@ export class GameSessionData {
 
 export type GameSessionDataType = {
   readonly gameStates: readonly GameState[]
-  /**
-   * // kja this should be called revertTurnState or something, not resetGame
-   * The game state to which the current turn game state should be reset when
-   * the 'reset turn' button is clicked.
-   *
-   * When the game session is not loaded, reset game state is undefined.
-   * When the game session is loaded and the player never reverted or reset
-   * current turn, then resetGameState points to the game state at the beginning
-   * of current turn. This way resetting current turn will revert to the beginning
-   * of current turn, before the player made any player actions.
-   *
-   * After player reverts the turn, resetGameState points to the game state
-   * as it was at the end of the turn before the reverted turn, after all player actions.
-   *
-   * If one desires to reset the game to a the beginning of one of the previous turns,
-   * one could revert to the turn before that and advance turn.
-   *
-   * Example:
-   * Player is at turn 9. Player made player action of 'hire agent'; and then advanced time by 1 turn to turn 10.
-   * Now resetGameState is at the beginning of turn 10. If now player makes a player action, like 'launch mission',
-   * then resetting the turn to resetGameState will effectively move time backwards to the beginning of turn 10,
-   * before 'launch mission' player action was made.
-   *
-   * If now player reverts the turn to turn 9, then resetGameState will point to the game state at the end of turn 9,
-   * meaning after the player action of 'hire agent'. If the player would want to go back to the beginning of turn 9,
-   * then the player can revert to turn 8 and advance turn, to effectively end up at the beginning of turn 9.
-   *
-   * // kja Change the behavior above. Reverting turn should revert to the end of previous turn, not beginning.
-   * // Hence it will flip between Revert 1 turn / Reset turn / Revert 1 turn / Reset turn/
-   * // Unless player made no actions given turn. Then reverting turn is effectively reverting to the beginning.
-   * //
-   * // One reason for this change is that it is not possible to revert to the beginning of turn 1 after turn 2.
-   * // If one is in turn 2 and clicks "revert 1 turn" then it will revert to the end of turn 1 and instead
-   * // of having enabled "reset turn" button the UI will have disabled "revert 1 turn".
-   * //
-   * // The way I can do it is by looking at turn number: first reset to first state with given turn number,
-   * // then to last state with turnNo-1, then to first state with turnNo-1, then to last state with turnNo-2, and so on.
-   */
-  readonly resetGameState: GameState | undefined
 }
 
 export const initialGameSessionData: GameSessionDataType = {
   gameStates: [],
-  resetGameState: undefined,
 }
 // Future work: Consider for later:
 // using a reducer to manage game sates:

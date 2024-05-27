@@ -1,3 +1,8 @@
+/* eslint-disable @typescript-eslint/init-declarations */
+/* eslint-disable max-lines-per-function */
+/* eslint-disable no-lonely-if */
+/* eslint-disable sonarjs/no-inverted-boolean-check */
+/* eslint-disable max-statements */
 /* eslint-disable max-lines */
 /* eslint-disable @typescript-eslint/parameter-properties */
 import _ from 'lodash'
@@ -125,10 +130,18 @@ export class GameSession {
   }
 
   public revertToPreviousTurn(): void {
+    if (this.hasPlayerMadeActionsInCurrentTurn() ?? true) {
+      throw new Error(
+        'Cannot revert turn when player has made actions or game is not initialized',
+      )
+    }
     this.data.revertToPreviousTurn()
   }
 
   public resetCurrentTurn(): void {
+    if (!(this.hasPlayerMadeActionsInCurrentTurn() ?? false)) {
+      throw new Error("Cannot reset turn when player hasn't made any actions")
+    }
     this.data.resetCurrentTurn()
   }
 
@@ -161,7 +174,7 @@ export class GameSession {
   }
 
   public getCurrentTurn(): number {
-    return this.getCurrentGameState().Timeline.CurrentTurn
+    return this.data.getCurrentTurn()
   }
 
   public getCurrentTurnUnsafe(): number | undefined {
@@ -184,6 +197,7 @@ export class GameSession {
         : 'undecided'
   }
 
+  // kja this will have to be split for "at turn start" and "at turn end" cases
   public getGameStateAtTurn(turn: number): GameState {
     return _.findLast(
       this.data.getGameStates(),
@@ -202,19 +216,16 @@ export class GameSession {
     return this.getCurrentGameState().IsGameOver
   }
 
-  public hasPlayerMadeActionsInCurrentTurn(): boolean {
+  public hasPlayerMadeActionsInCurrentTurn(): boolean | undefined {
     if (!this.isInitialized()) {
-      return false
+      return undefined
     }
 
-    const currentGameState = this.data.getGameStates().at(-1)
-    const resetGameState = this.data.getResetGameState()
-    // kja This return wrong value after reverting: it always returns false due to same number of updates, as if resetGameState was not updated.
-    console.log(
-      `hasPlayerMadeActionsInCurrentTurn: ${currentGameState!.UpdateCount > resetGameState.UpdateCount} ` +
-        `currentGameState!.UpdateCount ${currentGameState!.UpdateCount} (${currentGameState?.Timeline.CurrentTurn}) > ${resetGameState.UpdateCount} (${resetGameState.Timeline.CurrentTurn}) resetGameState.UpdateCount`,
+    const currentGameState = this.getCurrentGameState()
+    const getGameStateAtCurrentTurnStart = this.getGameStateAtCurrentTurnStart()
+    return (
+      currentGameState.UpdateCount > getGameStateAtCurrentTurnStart.UpdateCount
     )
-    return currentGameState!.UpdateCount > resetGameState.UpdateCount
   }
 
   public canAdvanceTime(): boolean {
@@ -229,7 +240,8 @@ export class GameSession {
     const canDelegateTurnsToAi =
       !this.loading &&
       (!this.isInitialized() ||
-        (!this.isGameOver() && !this.hasPlayerMadeActionsInCurrentTurn()))
+        (!this.isGameOver() &&
+          !(this.hasPlayerMadeActionsInCurrentTurn() ?? false)))
     return canDelegateTurnsToAi
   }
 
@@ -237,8 +249,8 @@ export class GameSession {
     return this.isInitialized() && !this.isGameOver()
   }
 
-  public getCurrentGameState(): GameState {
-    return this.data.getGameStates().at(-1)!
+  public getGameStateAtCurrentTurnStart(): GameState {
+    return this.data.getGameStateAtCurrentTurnStart()
   }
 
   public getAssets(): Assets {
@@ -249,8 +261,12 @@ export class GameSession {
     return this.getCurrentGameStateUnsafe()?.Assets
   }
 
+  public getCurrentGameState(): GameState {
+    return this.data.getCurrentGameState()
+  }
+
   public getCurrentGameStateUnsafe(): GameState | undefined {
-    return this.data.getGameStates().at(-1)
+    return this.data.getCurrentGameStateUnsafe()
   }
 
   public upsertGameStates(
@@ -261,17 +277,91 @@ export class GameSession {
     if (_.isEmpty(newGameStates)) {
       throw new Error('newGameStates must not be empty')
     }
+    if (this.isGameOverUnsafe() === true) {
+      throw new Error('Cannot upsert game states to game that is over')
+    }
+    if (resultOfPlayerAction === true && !this.isInitialized()) {
+      throw new Error(
+        'The upserted game state cannot be result of player action when the game is not initialized.',
+      )
+    }
+    if (resultOfPlayerAction === true && newGameStates.length !== 1) {
+      throw new Error(
+        'Exactly one new game state must be upserted as a result of player action',
+      )
+    }
     /* c8 ignore stop */
+
     const firstTurnInNewGameStates = newGameStates.at(0)!.Timeline.CurrentTurn
     const lastTurnInNewGameStates = newGameStates.at(-1)!.Timeline.CurrentTurn
 
     const retainedGameStatesSliceStart = 0
-    const retainedGameStatesSliceEnd = firstTurnInNewGameStates - initialTurn
+    let retainedGameStatesSliceEnd: number | undefined
 
-    const retainedGameStates = this.getGameStates().slice(
+    let retainedGameStates = this.getGameStates().slice(
       retainedGameStatesSliceStart,
       retainedGameStatesSliceEnd,
     )
+
+    // kja curr work
+    if (this.isInitialized()) {
+      if (resultOfPlayerAction === true) {
+        if (this.hasPlayerMadeActionsInCurrentTurn() ?? false) {
+          // If player already made actions in the current turn
+          // Then update (replace) the current state with new game state
+          retainedGameStatesSliceEnd = -1
+          retainedGameStates = this.getGameStates().slice(
+            retainedGameStatesSliceStart,
+            retainedGameStatesSliceEnd,
+          )
+          if (!(retainedGameStates.at(-1) === this.getGameStates().at(-2))) {
+            throw new Error(
+              'if (!(retainedGameStates.at(-1) === this.getGameStates().at(-2)))',
+            )
+          }
+        } else {
+          // If player did not make actions in the current turn
+          // Then insert (append) the new state after the current state
+          retainedGameStatesSliceEnd = undefined
+          retainedGameStates = this.getGameStates().slice(
+            retainedGameStatesSliceStart,
+            retainedGameStatesSliceEnd,
+          )
+          if (!(retainedGameStates.at(-1) === this.getGameStates().at(-1))) {
+            throw new Error(
+              'if (!(retainedGameStates.at(-1) === this.getGameStates().at(-1)))',
+            )
+          }
+        }
+      } else {
+        // If the game session is initialized and the new states are not a result of player action
+        // then the new states could be a result of delegating turns to AI.
+        // Retain all the game states up to the turn before the first turn in the new game states.
+        retainedGameStatesSliceEnd = _.takeWhile(
+          this.getGameStates(),
+          (gs) => gs.Timeline.CurrentTurn < firstTurnInNewGameStates,
+        ).length
+        retainedGameStates = this.getGameStates().slice(
+          retainedGameStatesSliceStart,
+          retainedGameStatesSliceEnd,
+        )
+      }
+    } else {
+      // If the game session is not initialized, i.e. there are no existing game states, insert all the new states.
+      retainedGameStatesSliceEnd = 0
+      retainedGameStates = this.getGameStates().slice(
+        retainedGameStatesSliceStart,
+        retainedGameStatesSliceEnd,
+      )
+      if (
+        !(retainedGameStatesSliceEnd === 0 && _.isEmpty(retainedGameStates))
+      ) {
+        throw new Error(
+          'Invalid state: game not initialized but retained game states are not empty',
+        )
+      }
+    }
+
     const firstTurnInRetainedGameStates =
       retainedGameStates.at(0)?.Timeline.CurrentTurn
     const lastTurnInRetainedGameStates =
@@ -286,10 +376,7 @@ export class GameSession {
     )
 
     const gameStatesAfterUpsertion = [...retainedGameStates, ...newGameStates]
-    this.data.setDataStates(
-      gameStatesAfterUpsertion,
-      Boolean(resultOfPlayerAction),
-    )
+    this.data.setDataStates(gameStatesAfterUpsertion)
     this.setLoading(false)
     this.setError('')
   }

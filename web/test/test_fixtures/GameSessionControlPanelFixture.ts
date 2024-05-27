@@ -49,6 +49,5 @@ export class GameSessionControlPanelFixture {
       ? 'Reset turn'
       : 'Revert 1 turn'
     expectButtonsToBeEnabled('Reset game', turnReversalButton)
-    expectButtonToBeEnabled(turnReversalButton)
   }
 }

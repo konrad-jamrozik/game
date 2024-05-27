@@ -44,7 +44,7 @@ describe('Test suite for OutroDialog.tsx', () => {
     // - The game is lost and the outro dialog appears
     await outroDialog.close()
     await controlPanel.revert1Turn()
-    controlPanel.assertTurn1()
+    controlPanel.assertTurn1(true)
     await controlPanel.advance1Turn(true)
     controlPanel.assertTurn2()
     outroDialog.assertVisibility('visible', true)
@@ -60,7 +60,7 @@ describe('Test suite for OutroDialog.tsx', () => {
     await outroDialog.close()
     await settingsPanel.disableShowOutro()
     await controlPanel.revert1Turn()
-    controlPanel.assertTurn1()
+    controlPanel.assertTurn1(true)
     await controlPanel.advance1Turn(true)
     controlPanel.assertTurn2()
     outroDialog.assertVisibility('not present')
