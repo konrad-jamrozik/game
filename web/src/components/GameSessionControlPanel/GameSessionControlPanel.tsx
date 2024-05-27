@@ -336,7 +336,7 @@ function resolveStartAndTargetTurn(
   // Case 2: If turnsToAdvance is defined, then [startTurn, targetTurn] is ignored.
   // ---------------------------------------------------------------------------
 
-  // If currentTurns is not defined, the turns to advance start from initialTurn until initialTurn + turnsToAdvance -1.
+  // If currentTurn is not defined, the turns to advance start from initialTurn until initialTurn + turnsToAdvance -1.
   // For example, initialTurn is 1 and turnsToAdvance is 3, then the interval is [1, 3].
   //
   // This code branch is a special case. Because currentTurn is not defined, we assume the game session is not loaded.
