@@ -352,7 +352,7 @@ function resolveStartAndTargetTurn(
     }
   }
 
-  // If currentTurns is defined, the turns to advance start from currentTurn until currentTurn + turnsToAdvance.
+  // If currentTurn is defined, the turns to advance start from currentTurn, and go until currentTurn + turnsToAdvance.
   // For example, if currentTurn is 8 and turnsToAdvance is 3, then the interval is [8, 11].
   if (turnsToAdvanceDefined && currentTurnDefined) {
     return {
