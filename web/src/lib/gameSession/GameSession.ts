@@ -11,7 +11,7 @@ import { GameSessionContext } from '../../components/GameSessionProvider'
 import { callAdvanceTurnsApi } from '../api/advanceTurnsApi'
 import { callApplyPlayerActionApi } from '../api/applyPlayerActionApi'
 import { playerActionsPayloadsProviders } from '../api/playerActionsPayloadsProviders'
-import type { GameState, Assets } from '../codesync/GameState'
+import { type GameState, type Assets, initialTurn } from '../codesync/GameState'
 import type {
   AgentPlayerActionName,
   PlayerActionPayload,
@@ -135,6 +135,11 @@ export class GameSession {
     if (this.hasPlayerMadeActionsInCurrentTurn() ?? true) {
       throw new Error(
         'Cannot revert turn when player has made actions or game is not initialized',
+      )
+    }
+    if (this.getCurrentTurn() === initialTurn) {
+      throw new Error(
+        `Cannot revert turn when current turn is initialTurn of ${initialTurn}`,
       )
     }
     /* c8 ignore stop */
