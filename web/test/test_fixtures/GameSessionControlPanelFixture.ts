@@ -29,6 +29,13 @@ export class GameSessionControlPanelFixture {
     await clickButton('Reset game', 'Advance 1 turn')
   }
 
+  public async delegateTurnsToAi(expectGameOver = false): Promise<void> {
+    await clickButton(
+      'Delegate turns to AI:',
+      expectGameOver ? 'Reset game' : 'Advance 1 turn',
+    )
+  }
+
   public async setTargetTurn(targetTurn: number): Promise<void> {
     await typeIntoElement('spinbutton', 'target', targetTurn.toString())
   }
@@ -49,10 +56,16 @@ export class GameSessionControlPanelFixture {
   }
 
   public assertTurn2(playerMadeActions = false): void {
-    expectParagraph('Current turn: 2')
-    const turnReversalButton = playerMadeActions
-      ? 'Reset turn'
-      : 'Revert 1 turn'
+    this.assertTurn(2, playerMadeActions)
+  }
+
+  public assertTurn(turn: number, playerMadeActions?: boolean): void {
+    if (turn < 2) {
+      throw new Error('Turn must be 2 or greater')
+    }
+    expectParagraph(`Current turn: ${turn}`)
+    const turnReversalButton =
+      playerMadeActions ?? false ? 'Reset turn' : 'Revert 1 turn'
     expectButtonsToBeEnabled('Reset game', turnReversalButton)
   }
 }

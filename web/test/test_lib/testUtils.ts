@@ -185,6 +185,7 @@ async function typeWithDelay(
   ms?: number,
 ): Promise<void> {
   const user: UserEvent = userEvent.setup()
+  await user.clear(element)
   await user.type(element, content)
   await delay(ms ?? defaultClickDelayMs)
 }

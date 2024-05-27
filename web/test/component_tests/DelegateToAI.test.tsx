@@ -5,7 +5,7 @@ import { renderApp } from '../test_lib/testComponentUtils'
 describe('Test suite for delegating turns to AI', () => {
   // kja Test: delegate turn to AI:
   // Always need to assert Result is undecided until I get seeds in
-  // From turn N/A: start 1 target 5
+  // DONE From turn N/A: start 1 target 5
   // From turn 1: start 1 target 5
   // Then (from turn 5): start 1, target 5
   // Then (from turn 5): start 4, target 5
@@ -21,5 +21,7 @@ describe('Test suite for delegating turns to AI', () => {
 
     controlPanel.assertNoGameSession()
     await controlPanel.setTargetTurn(5)
+    await controlPanel.delegateTurnsToAi()
+    controlPanel.assertTurn(5)
   })
 })
