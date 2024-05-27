@@ -37,11 +37,13 @@ export function getPlayerActionPayload(
     return payloadProvider(ids!)
   } else if (isPayloadFromIdsAndTargetId(payloadProvider)) {
     return payloadProvider(ids!, targetId!)
+    /* c8 ignore start */
   } else {
     throw new Error(
       `Unknown payload provider for playerActionName: ${playerActionName}`,
     )
   }
+  /* c8 ignore stop */
 }
 function isPayloadFromNothing(
   provider: PayloadProvider,

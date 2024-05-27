@@ -130,18 +130,22 @@ export class GameSession {
   }
 
   public revertToPreviousTurn(): void {
+    /* c8 ignore start */
     if (this.hasPlayerMadeActionsInCurrentTurn() ?? true) {
       throw new Error(
         'Cannot revert turn when player has made actions or game is not initialized',
       )
     }
+    /* c8 ignore stop */
     this.data.revertToPreviousTurn()
   }
 
   public resetCurrentTurn(): void {
+    /* c8 ignore start */
     if (!(this.hasPlayerMadeActionsInCurrentTurn() ?? false)) {
       throw new Error("Cannot reset turn when player hasn't made any actions")
     }
+    /* c8 ignore stop */
     this.data.resetCurrentTurn()
   }
 
@@ -303,7 +307,6 @@ export class GameSession {
       retainedGameStatesSliceEnd,
     )
 
-    // kja curr work
     if (this.isInitialized()) {
       if (resultOfPlayerAction === true) {
         if (this.hasPlayerMadeActionsInCurrentTurn() ?? false) {
@@ -314,11 +317,13 @@ export class GameSession {
             retainedGameStatesSliceStart,
             retainedGameStatesSliceEnd,
           )
+          /* c8 ignore start */
           if (!(retainedGameStates.at(-1) === this.getGameStates().at(-2))) {
             throw new Error(
               'if (!(retainedGameStates.at(-1) === this.getGameStates().at(-2)))',
             )
           }
+          /* c8 ignore end */
         } else {
           // If player did not make actions in the current turn
           // Then insert (append) the new state after the current state
@@ -327,11 +332,13 @@ export class GameSession {
             retainedGameStatesSliceStart,
             retainedGameStatesSliceEnd,
           )
+          /* c8 ignore start */
           if (!(retainedGameStates.at(-1) === this.getGameStates().at(-1))) {
             throw new Error(
               'if (!(retainedGameStates.at(-1) === this.getGameStates().at(-1)))',
             )
           }
+          /* c8 ignore end */
         }
       } else {
         // If the game session is initialized and the new states are not a result of player action
@@ -353,6 +360,7 @@ export class GameSession {
         retainedGameStatesSliceStart,
         retainedGameStatesSliceEnd,
       )
+      /* c8 ignore start */
       if (
         !(retainedGameStatesSliceEnd === 0 && _.isEmpty(retainedGameStates))
       ) {
@@ -360,6 +368,7 @@ export class GameSession {
           'Invalid state: game not initialized but retained game states are not empty',
         )
       }
+      /* c8 ignore stop */
     }
 
     const firstTurnInRetainedGameStates =
