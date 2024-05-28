@@ -86,11 +86,11 @@ function load<T extends StoredDataTypeName>(
   }
 }
 
-// kja issue when trying to store 300 turns:
+// Future work issue when trying to store 300 turns:
 // Uncaught (in promise) DOMException: Failed to execute 'setItem' on 'Storage': Setting the value of 'gameSessionData' exceeded the quota.
 // https://stackoverflow.com/questions/23977690/setting-the-value-of-dataurl-exceeded-the-quota
 
-// Recommendations:
+// Recommendations to use for localStorage:
 // https://chatgpt.com/share/b1109c2f-306b-441b-b690-f05435902fc2
 // https://github.com/marcuswestin/store.js#list-of-all-plugins
 // Related, from React doc: https://github.com/immerjs/immer
