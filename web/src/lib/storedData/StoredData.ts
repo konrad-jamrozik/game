@@ -74,8 +74,6 @@ export function loadSettingsData(): SettingsDataType {
 function load<T extends StoredDataTypeName>(
   key: T,
 ): StoredDataTypeMap[T] | undefined {
-  // Your loading logic here
-  // For example, if you're loading from local storage:
   const data: string | null = localStorage.getItem(key)
   if (!_.isNil(data)) {
     const loadedData = JSON.parse(data) as StoredDataTypeMap[T]
