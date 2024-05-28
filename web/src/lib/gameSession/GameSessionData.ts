@@ -115,8 +115,7 @@ export class GameSessionData {
     this.setData(newGameSessionData)
   }
 
-  // kja this should be setGameStates
-  public setDataStates(gameStates: GameState[]): void {
+  public setGameStates(gameStates: GameState[]): void {
     GameSessionData.verify(gameStates)
     const newData: GameSessionDataType = {
       ...this._data,
@@ -127,7 +126,7 @@ export class GameSessionData {
   }
 
   public resetData(): void {
-    localStorage.removeItem('gameSessionData')
+    this.storedData.resetGameSessionData()
     this._setData(initialGameSessionData)
   }
 

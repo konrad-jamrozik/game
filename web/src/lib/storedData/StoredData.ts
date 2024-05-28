@@ -26,6 +26,10 @@ export class StoredData {
     return this.data.settings
   }
 
+  public resetGameSessionData(): void {
+    this.removeFromLocalStorage('gameSessionData')
+  }
+
   public persistGameSessionData(newGameSessionData: GameSessionDataType): void {
     this.setInLocalStorage('gameSessionData', newGameSessionData)
     this.data = { ...this.data, gameSessionData: newGameSessionData }
@@ -37,10 +41,14 @@ export class StoredData {
   }
 
   private setInLocalStorage<T extends StoredDataTypeName>(
-    data: T,
+    key: T,
     value: StoredDataTypeMap[T],
   ): void {
-    localStorage.setItem(data, JSON.stringify(value))
+    localStorage.setItem(key, JSON.stringify(value))
+  }
+
+  private removeFromLocalStorage<T extends StoredDataTypeName>(key: T): void {
+    localStorage.removeItem(key)
   }
 }
 

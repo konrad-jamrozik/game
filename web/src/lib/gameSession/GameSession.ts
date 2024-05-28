@@ -320,7 +320,7 @@ export class GameSession {
     )
 
     const gameStatesAfterUpsertion = [...retainedGameStates, ...newGameStates]
-    this.data.setDataStates(gameStatesAfterUpsertion)
+    this.data.setGameStates(gameStatesAfterUpsertion)
     this.setLoading(false)
     this.setError('')
   }

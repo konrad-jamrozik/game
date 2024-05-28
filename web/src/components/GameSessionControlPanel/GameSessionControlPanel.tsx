@@ -325,8 +325,6 @@ function resolveStartAndTargetTurn(
   let resolvedStartTurn: number | undefined
   let resolvedTargetTurn: number | undefined
 
-  // kja should I assert here that turnsToAdvance if defined, then it is 1?
-
   // Case 1: If turnsToAdvance is not defined, then [startTurn, targetTurn] is used.
   // ---------------------------------------------------------------------------
 
