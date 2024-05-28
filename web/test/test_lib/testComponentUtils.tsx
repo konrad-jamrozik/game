@@ -20,6 +20,8 @@ export function renderApp(introEnabled: boolean): {
   storedData.reload()
   storedData.persistOutroEnabled(true)
   storedData.reload()
+  storedData.persistChartsEnabled(false)
+  storedData.reload()
   render(
     <GameSessionProvider storedData={storedData}>
       <App storedData={storedData} />

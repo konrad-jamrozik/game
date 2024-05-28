@@ -1,22 +1,14 @@
 import { Link, Typography } from '@mui/material'
 import Grid from '@mui/material/Unstable_Grid2'
-import _ from 'lodash'
 import { Fragment, useState } from 'react'
 import { AgentsDataGrid } from './components/AgentsDataGrid/AgentsDataGrid'
 import { AssetsDataGrid } from './components/AssetsDataGrid/AssetsDataGrid'
+import { Charts } from './components/Charts'
 import { GameSessionControlPanel } from './components/GameSessionControlPanel/GameSessionControlPanel'
-import { GameStatsLineChart } from './components/GameStatsLineChart'
 import IntroDialog from './components/IntroDialog'
 import { MissionSitesDataGrid } from './components/MissionSitesDataGrid/MissionSitesDataGrid'
 import OutroDialog from './components/OutroDialog'
 import { SettingsPanel } from './components/SettingsPanel/SettingsPanel'
-import {
-  agentStatsDataSeries,
-  intelStatsDataSeries,
-  miscStatsDataSeries,
-  missionsStatsDataSeries,
-  moneyStatsDataSeries,
-} from './lib/GameStateDataSeries'
 import { useGameSessionContext } from './lib/gameSession/GameSession'
 import type { StoredData } from './lib/storedData/StoredData'
 import type { SettingsType } from './lib/storedData/StoredDataType'
@@ -32,9 +24,6 @@ function Footer(): React.JSX.Element {
   )
 }
 
-const lineChartAspectRatio = '1.5'
-const lineChartMaxWidth = '700px'
-
 // eslint-disable-next-line max-lines-per-function
 export default function App({
   storedData,
@@ -43,7 +32,6 @@ export default function App({
 }): React.JSX.Element {
   console.log(`render App.tsx`)
   const gameSession = useGameSessionContext()
-  const gameStates = gameSession.getGameStates()
   const currentGameState = gameSession.getCurrentGameStateUnsafe()
   const gameResult = gameSession.getGameResultUnsafe()
   const settings = storedData.getSettings()
@@ -106,76 +94,7 @@ export default function App({
         <Grid sx={{ bgcolor: '#002040' }}>
           <AgentsDataGrid />
         </Grid>
-        <Grid
-          xs={12}
-          lg={6}
-          sx={{
-            bgcolor: '#003000',
-            aspectRatio: lineChartAspectRatio,
-            maxWidth: lineChartMaxWidth,
-          }}
-        >
-          <GameStatsLineChart
-            gameStates={gameStates}
-            dataSeries={moneyStatsDataSeries}
-          />
-        </Grid>
-        <Grid
-          xs={12}
-          lg={6}
-          sx={{
-            bgcolor: '#303000',
-            aspectRatio: lineChartAspectRatio,
-            maxWidth: lineChartMaxWidth,
-          }}
-        >
-          <GameStatsLineChart
-            gameStates={gameStates}
-            dataSeries={agentStatsDataSeries}
-          />
-        </Grid>
-        <Grid
-          xs={12}
-          lg={6}
-          sx={{
-            bgcolor: '#402000',
-            aspectRatio: lineChartAspectRatio,
-            maxWidth: lineChartMaxWidth,
-          }}
-        >
-          <GameStatsLineChart
-            gameStates={gameStates}
-            dataSeries={intelStatsDataSeries}
-          />
-        </Grid>
-        <Grid
-          xs={12}
-          lg={6}
-          sx={{
-            bgcolor: '#002040',
-            aspectRatio: lineChartAspectRatio,
-            maxWidth: lineChartMaxWidth,
-          }}
-        >
-          <GameStatsLineChart
-            gameStates={gameStates}
-            dataSeries={miscStatsDataSeries}
-          />
-        </Grid>
-        <Grid
-          xs={12}
-          lg={6}
-          sx={{
-            bgcolor: '#003030',
-            aspectRatio: lineChartAspectRatio,
-            maxWidth: lineChartMaxWidth,
-          }}
-        >
-          <GameStatsLineChart
-            gameStates={gameStates}
-            dataSeries={missionsStatsDataSeries}
-          />
-        </Grid>
+        {chartsEnabled && <Charts />}
         <Grid xs={12} sx={{ bgcolor: '#300020' }}>
           <Footer />
         </Grid>
