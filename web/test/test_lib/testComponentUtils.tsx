@@ -1,6 +1,7 @@
 import { render } from '@testing-library/react'
 import App from '../../src/App'
 import { GameSessionProvider } from '../../src/components/GameSessionProvider'
+import { SettingsProvider } from '../../src/components/SettingsProvider'
 import { StoredData } from '../../src/lib/storedData/StoredData'
 import { AgentsDataGridFixture } from '../test_fixtures/AgentsDataGridFixture'
 import { GameSessionControlPanelFixture } from '../test_fixtures/GameSessionControlPanelFixture'
@@ -16,16 +17,17 @@ export function renderApp(introEnabled: boolean): {
   outroDialog: OutroDialogFixture
 } {
   const storedData = new StoredData()
-  storedData.persistIntroEnabled(introEnabled)
-  storedData.reload()
-  storedData.persistOutroEnabled(true)
-  storedData.reload()
-  storedData.persistChartsEnabled(false)
-  storedData.reload()
+  storedData.persistSettingsData({
+    introEnabled,
+    outroEnabled: true,
+    chartsEnabled: false,
+  })
   render(
-    <GameSessionProvider storedData={storedData}>
-      <App storedData={storedData} />
-    </GameSessionProvider>,
+    <SettingsProvider storedData={storedData}>
+      <GameSessionProvider storedData={storedData}>
+        <App />
+      </GameSessionProvider>
+    </SettingsProvider>,
   )
   return {
     controlPanel: new GameSessionControlPanelFixture(),

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/parameter-properties */
 /* eslint-disable @typescript-eslint/class-methods-use-this */
 import _ from 'lodash'
 import type { GameSessionDataType } from '../gameSession/GameSessionData'
@@ -12,13 +13,9 @@ import type {
 } from './StoredDataType'
 
 export class StoredData {
-  private data!: StoredDataType
+  private data: StoredDataType
 
   public constructor() {
-    this.reload()
-  }
-
-  public reload(): void {
     this.data = loadDataFromLocalStorage()
   }
 
@@ -30,32 +27,14 @@ export class StoredData {
     return this.data.settings
   }
 
-  public persistIntroEnabled(enabled: boolean): void {
-    this.persistSetting('introEnabled', enabled)
-  }
-
-  public persistOutroEnabled(enabled: boolean): void {
-    this.persistSetting('outroEnabled', enabled)
-  }
-
-  public persistChartsEnabled(enabled: boolean): void {
-    this.persistSetting('chartsEnabled', enabled)
-  }
-
   public persistGameSessionData(newGameSessionData: GameSessionDataType): void {
     this.setInLocalStorage('gameSessionData', newGameSessionData)
-    // Note: at this point this.getGameSessionData() will still return the old data.
-    // Call .reload() to update it.
+    this.data = { ...this.data, gameSessionData: newGameSessionData }
   }
 
-  private persistSetting(key: keyof SettingsDataType, value: boolean): void {
-    const newSettingsData: SettingsDataType = {
-      ...this.getSettingsData(),
-      [key]: value,
-    }
+  public persistSettingsData(newSettingsData: SettingsDataType): void {
     this.setInLocalStorage('settingsData', newSettingsData)
-    // Note: at this point this.getSettings() will still return the old settings.
-    // Call .reload() to update them.
+    this.data = { ...this.data, settings: newSettingsData }
   }
 
   private setInLocalStorage<T extends StoredDataTypeName>(

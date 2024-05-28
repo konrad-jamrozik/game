@@ -10,42 +10,27 @@ import { MissionSitesDataGrid } from './components/MissionSitesDataGrid/MissionS
 import OutroDialog from './components/OutroDialog'
 import { SettingsPanel } from './components/SettingsPanel/SettingsPanel'
 import { useGameSessionContext } from './lib/gameSession/GameSession'
-import type { SettingsDataType } from './lib/settings/Settings'
-import type { StoredData } from './lib/storedData/StoredData'
-function Footer(): React.JSX.Element {
-  return (
-    <Typography variant="body2" color="text.secondary" align="center">
-      {'Game by '}
-      <Link color="inherit" href="https://github.com/konrad-jamrozik/">
-        Konrad Jamrozik
-      </Link>{' '}
-      {new Date().getFullYear()}.
-    </Typography>
-  )
-}
+import { type Settings, useSettingsContext } from './lib/settings/Settings'
 
 // eslint-disable-next-line max-lines-per-function
-export default function App({
-  storedData,
-}: {
-  storedData: StoredData
-}): React.JSX.Element {
+export default function App(): React.JSX.Element {
   console.log(`render App.tsx`)
   const gameSession = useGameSessionContext()
+  const settings = useSettingsContext()
   const currentGameState = gameSession.getCurrentGameStateUnsafe()
   const gameResult = gameSession.getGameResultUnsafe()
-  const settings = storedData.getSettingsData()
 
   const [turnAdvanced, setTurnAdvanced] = useState<boolean>(false)
 
-  const { introEnabled, setIntroEnabled, showIntro, setShowIntro } =
-    useAndSetIntro(settings, gameSession.isInitialized())
+  const { showIntro, setShowIntro } = useAndSetIntro(
+    settings,
+    gameSession.isInitialized(),
+  )
 
-  const { outroEnabled, setOutroEnabled, showOutro, setShowOutro } =
-    useAndSetOutro(settings, gameSession.isGameOverUnsafe(), turnAdvanced)
-
-  const [chartsEnabled, setChartsEnabled] = useState<boolean>(
-    settings.chartsEnabled,
+  const { showOutro, setShowOutro } = useAndSetOutro(
+    settings,
+    gameSession.isGameOverUnsafe(),
+    turnAdvanced,
   )
 
   if (turnAdvanced) {
@@ -55,8 +40,17 @@ export default function App({
 
   return (
     <Fragment>
-      <IntroDialog {...{ introEnabled, showIntro, setShowIntro }} />
-      <OutroDialog {...{ outroEnabled, showOutro, setShowOutro, gameResult }} />
+      <IntroDialog
+        {...{ introEnabled: settings.introEnabled, showIntro, setShowIntro }}
+      />
+      <OutroDialog
+        {...{
+          outroEnabled: settings.outroEnabled,
+          showOutro,
+          setShowOutro,
+          gameResult,
+        }}
+      />
       <Grid
         container
         justifyContent={'center'}
@@ -73,17 +67,7 @@ export default function App({
           />
         </Grid>
         <Grid sx={{ bgcolor: '#002110' }}>
-          <SettingsPanel
-            {...{
-              storedData,
-              introEnabled,
-              setIntroEnabled,
-              outroEnabled,
-              setOutroEnabled,
-              chartsEnabled,
-              setChartsEnabled,
-            }}
-          />
+          <SettingsPanel />
         </Grid>
         <Grid sx={{ bgcolor: '#300030' }}>
           <AssetsDataGrid assets={currentGameState?.Assets} />
@@ -94,7 +78,7 @@ export default function App({
         <Grid sx={{ bgcolor: '#002040' }}>
           <AgentsDataGrid />
         </Grid>
-        {chartsEnabled && <Charts />}
+        {settings.chartsEnabled && <Charts />}
         <Grid xs={12} sx={{ bgcolor: '#300020' }}>
           <Footer />
         </Grid>
@@ -107,54 +91,43 @@ export default function App({
  * State hook and their state processing for IntroDialog.tsx
  */
 function useAndSetIntro(
-  settings: SettingsDataType,
+  settings: Settings,
   gameSessionIsInitialized: boolean,
 ): {
-  introEnabled: boolean
-  setIntroEnabled: React.Dispatch<React.SetStateAction<boolean>>
   showIntro: boolean
   setShowIntro: React.Dispatch<React.SetStateAction<boolean>>
 } {
-  const [introEnabled, setIntroEnabled] = useState<boolean>(
-    settings.introEnabled,
-  )
   const [showIntro, setShowIntro] = useState<boolean>(
     settings.introEnabled && !gameSessionIsInitialized,
   )
-  if (showIntro && !introEnabled) {
+  if (showIntro && !settings.introEnabled) {
     // If the 'showIntro' signal fired but intro is not enabled then clear the signal,
     // to prevent the intro showing up as soon as introEnabled is set to true later on.
     setShowIntro(false)
   }
-  return { introEnabled, setIntroEnabled, showIntro, setShowIntro }
+  return { showIntro, setShowIntro }
 }
 
 /**
  * State hook and their state processing for OutroDialog.tsx
  */
 function useAndSetOutro(
-  settings: SettingsDataType,
+  settings: Settings,
   isGameOver: boolean | undefined,
   turnAdvanced: boolean,
 ): {
-  outroEnabled: boolean
-  setOutroEnabled: React.Dispatch<React.SetStateAction<boolean>>
   showOutro: boolean
   setShowOutro: React.Dispatch<React.SetStateAction<boolean>>
 } {
-  const [outroEnabled, setOutroEnabled] = useState<boolean>(
-    settings.outroEnabled,
-  )
-
   const [showOutro, setShowOutro] = useState<boolean>(isGameOver === true)
 
-  if (showOutro && !outroEnabled) {
+  if (showOutro && !settings.outroEnabled) {
     // If the 'showOutro' signal fired but intro is not enabled then clear the signal,
     // to prevent the outro showing up as soon as outroEnabled is set to true later on.
     setShowOutro(false)
   } else if (
     !showOutro &&
-    outroEnabled &&
+    settings.outroEnabled &&
     turnAdvanced &&
     isGameOver === true
   ) {
@@ -163,11 +136,21 @@ function useAndSetOutro(
   }
 
   return {
-    outroEnabled,
-    setOutroEnabled,
     showOutro,
     setShowOutro,
   }
+}
+
+function Footer(): React.JSX.Element {
+  return (
+    <Typography variant="body2" color="text.secondary" align="center">
+      {'Game by '}
+      <Link color="inherit" href="https://github.com/konrad-jamrozik/">
+        Konrad Jamrozik
+      </Link>{' '}
+      {new Date().getFullYear()}.
+    </Typography>
+  )
 }
 
 // console.log(

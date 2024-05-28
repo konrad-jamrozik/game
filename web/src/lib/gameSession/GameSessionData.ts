@@ -115,6 +115,7 @@ export class GameSessionData {
     this.setData(newGameSessionData)
   }
 
+  // kja this should be setGameStates
   public setDataStates(gameStates: GameState[]): void {
     GameSessionData.verify(gameStates)
     const newData: GameSessionDataType = {

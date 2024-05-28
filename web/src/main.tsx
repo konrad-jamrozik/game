@@ -4,11 +4,11 @@ import '@fontsource/roboto/400.css'
 import '@fontsource/roboto/500.css'
 import '@fontsource/roboto/700.css'
 import CssBaseline from '@mui/material/CssBaseline'
-import _ from 'lodash'
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App.tsx'
 import { GameSessionProvider } from './components/GameSessionProvider.tsx'
+import { SettingsProvider } from './components/SettingsProvider.tsx'
 import { StoredData } from './lib/storedData/StoredData.ts'
 import theme from './theme.tsx'
 
@@ -20,9 +20,11 @@ if (rootElement) {
     <React.StrictMode>
       <ThemeProvider theme={theme}>
         <CssBaseline enableColorScheme />
-        <GameSessionProvider storedData={storedData}>
-          <App storedData={storedData} />
-        </GameSessionProvider>
+        <SettingsProvider storedData={storedData}>
+          <GameSessionProvider storedData={storedData}>
+            <App />
+          </GameSessionProvider>
+        </SettingsProvider>
       </ThemeProvider>
     </React.StrictMode>,
   )

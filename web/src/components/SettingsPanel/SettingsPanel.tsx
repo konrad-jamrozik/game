@@ -1,40 +1,28 @@
 /* eslint-disable sonarjs/no-duplicate-string */
 import { Button, Card, CardContent, CardHeader, Switch } from '@mui/material'
 import Grid from '@mui/material/Unstable_Grid2'
-import _ from 'lodash'
-import type { StoredData } from '../../lib/storedData/StoredData'
+import { type Settings, useSettingsContext } from '../../lib/settings/Settings'
 import { Label } from '../Label'
 
-export type SettingsPanelProps = {
-  storedData: StoredData
-  introEnabled: boolean
-  setIntroEnabled: React.Dispatch<React.SetStateAction<boolean>>
-  outroEnabled: boolean
-  setOutroEnabled: React.Dispatch<React.SetStateAction<boolean>>
-  chartsEnabled: boolean
-  setChartsEnabled: React.Dispatch<React.SetStateAction<boolean>>
-}
+export function SettingsPanel(): React.JSX.Element {
+  const settings: Settings = useSettingsContext()
 
-export function SettingsPanel(props: SettingsPanelProps): React.JSX.Element {
   function handleIntroEnabledChange(
     event: React.ChangeEvent<HTMLInputElement>,
   ): void {
-    props.setIntroEnabled(event.target.checked)
-    props.storedData.persistIntroEnabled(event.target.checked)
+    settings.setIntroEnabled(event.target.checked)
   }
 
   function handleOutroEnabledChange(
     event: React.ChangeEvent<HTMLInputElement>,
   ): void {
-    props.setOutroEnabled(event.target.checked)
-    props.storedData.persistOutroEnabled(event.target.checked)
+    settings.setOutroEnabled(event.target.checked)
   }
 
   function handleChartsEnabledChange(
     event: React.ChangeEvent<HTMLInputElement>,
   ): void {
-    props.setChartsEnabled(event.target.checked)
-    props.storedData.persistChartsEnabled(event.target.checked)
+    settings.setChartsEnabled(event.target.checked)
   }
 
   return (
@@ -54,7 +42,7 @@ export function SettingsPanel(props: SettingsPanelProps): React.JSX.Element {
           >
             <Label typographyVariant="body1">Show intro</Label>
             <Switch
-              checked={props.introEnabled}
+              checked={settings.introEnabled}
               onChange={handleIntroEnabledChange}
               inputProps={{ 'aria-label': 'Show Intro' }}
             />
@@ -71,7 +59,7 @@ export function SettingsPanel(props: SettingsPanelProps): React.JSX.Element {
           >
             <Label typographyVariant="body1">Show outro</Label>
             <Switch
-              checked={props.outroEnabled}
+              checked={settings.outroEnabled}
               onChange={handleOutroEnabledChange}
               inputProps={{ 'aria-label': 'Show Outro' }}
             />
@@ -88,7 +76,7 @@ export function SettingsPanel(props: SettingsPanelProps): React.JSX.Element {
           >
             <Label typographyVariant="body1">Show charts</Label>
             <Switch
-              checked={props.chartsEnabled}
+              checked={settings.chartsEnabled}
               onChange={handleChartsEnabledChange}
               inputProps={{ 'aria-label': 'Show charts' }}
             />
