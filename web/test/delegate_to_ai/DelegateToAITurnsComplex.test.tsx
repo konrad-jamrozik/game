@@ -8,6 +8,9 @@ describe('Test suite for delegating turns to AI', () => {
   // This test aims to cover: GameSessionControlPanel.tsx / resolveStartAndTargetTurn
   // Future work: once the UI allows inspecting existing state history, assert here that states
   // were retained correctly.
+  // This test actually managed to fail by causing the game session to be lost.
+  // https://github.com/konrad-jamrozik/game/actions/runs/9264956219
+  // Setting a random seed would fix it.
   test('Delegate turns to AI - boundary cases', async () => {
     const controlPanel = setupTest()
     await controlPanel.delegateTurnsToAi(1, 5)
