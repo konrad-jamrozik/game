@@ -6,7 +6,11 @@ In this document `.` refers to the repository root.
 
 ## Things to do periodically
 
-Run `npm-check-updates --upgrade` from `game/web` to update dependencies.
+### `npm-check-updates`
+
+First, ensure [`npm-check-updates`] is installed by running `npm install -g npm-check-updates`.
+
+Run `npm-check-updates --peer` and then `npm-check-updates --peer --interactive` from `game/web` to update dependencies.
 See e.g. [this commit](https://github.com/konrad-jamrozik/game/commit/5950149545d9894bc0a3defcb742c0cf7a55179b).
 
 Also consider checking for unused dependencies:
@@ -126,3 +130,5 @@ More links:
 [BUG] Arguments are not correctly passed from CLI to npm script (npm 7, Windows, Powershell)
 #3136](https://github.com/npm/cli/issues/3136)
   - Workaround: https://github.com/npm/cli/issues/3136#issuecomment-1968089218
+
+[`npm-check-updates`]: https://www.npmjs.com/package/npm-check-updates
