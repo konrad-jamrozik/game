@@ -1,3 +1,5 @@
+/* eslint-disable max-statements */
+/* eslint-disable @typescript-eslint/init-declarations */
 /* eslint-disable max-lines */
 import {
   Button,
@@ -312,68 +314,79 @@ function resolveStartAndTargetTurn(
   const turnsToAdvanceDefined = !_.isUndefined(turnsToAdvance)
   const currentTurnDefined = !_.isUndefined(currentTurn)
 
-  console.log(
-    `resolveStartAndTargetTurn: ` +
-      `[startTurn, targetTurn]: [${startTurn}, ${targetTurn}], ` +
-      `currentTurn: ${currentTurn}, turnsToAdvance: ${turnsToAdvance}`,
-  )
+  /* c8 ignore start */
+  if (turnsToAdvanceDefined && turnsToAdvance !== 1) {
+    throw new Error(
+      `turnsToAdvance must be 1, if it's defined. It is instead ${turnsToAdvance}.`,
+    )
+  }
+  /* c8 ignore stop */
+
+  let resolvedStartTurn: number | undefined
+  let resolvedTargetTurn: number | undefined
 
   // kja should I assert here that turnsToAdvance if defined, then it is 1?
 
   // Case 1: If turnsToAdvance is not defined, then [startTurn, targetTurn] is used.
   // ---------------------------------------------------------------------------
 
-  // Case 1.1
-  // If currentTurn is not defined, then the interval is [startTurn, targetTurn].
-  // kja this need elaboration: currentTurn not being defined means the game is not initialized, so startTurn should be 1?
+  // Case 1.1: use turn range when there is no game session in progress.
+  // If currentTurn is not defined, then the interval is [initialTurn, targetTurn].
+  // This is because if currentTurn is not defined, then the game is not initialized,
+  // hence we force the resolvedStartTurn to be initialTurn.
   if (!turnsToAdvanceDefined && !currentTurnDefined) {
-    return {
-      resolvedStartTurn: startTurn,
-      resolvedTargetTurn: targetTurn,
-    }
+    resolvedStartTurn = initialTurn
+    resolvedTargetTurn = targetTurn
   }
 
-  // Case 1.2
+  // Case 1.2: use turn range for game session in progress.
   // If startTurn is after currentTurn, then the turns are advanced from current turn,
   // otherwise there would be gap in the turns.
   // Hence the actual resolved interval is [min(startTurn, currentTurn), targetTurn].
   if (!turnsToAdvanceDefined && currentTurnDefined) {
-    return {
-      resolvedStartTurn: _.min([startTurn, currentTurn])!,
-      resolvedTargetTurn: targetTurn,
-    }
+    resolvedStartTurn = _.min([startTurn, currentTurn])!
+    resolvedTargetTurn = targetTurn
   }
 
   // Case 2: If turnsToAdvance is defined, then [startTurn, targetTurn] is ignored.
   // ---------------------------------------------------------------------------
 
-  // Case 2.1
-  // If currentTurn is not defined, the turns to advance start from initialTurn until initialTurn + turnsToAdvance -1.
-  // For example, initialTurn is 1 and turnsToAdvance is 3, then the interval is [1, 3].
+  // Case 2.1: use turn range for game session not in progress.
+  // If currentTurn is not defined, the turns to advance start from initialTurn until initialTurn + turnsToAdvance - 1.
+  // For example:
+  // - if turnsToAdvance is 1, then the interval is [initialTurn, initialTurn]
+  // - if turnsToAdvance is 3 and initialTurn is 1, then the interval is [1, 3].
   //
-  // This code branch is a special case. Because currentTurn is not defined, we assume the game session is not loaded.
-  // As a result, we are not advancing starting from initialTurn, but from "before" initialTurn (or "into" initialTurn).
+  // This code branch is a special case.
+  //
+  // Because currentTurn is not defined, we assume the game session is not initialized.
+  // As a result, we are not advancing starting from initialTurn, but from "before" initialTurn (or "into" initialTurn),
+  // to initialize the game session.
   // It is assumed here that the downstream code will interpret this special case correctly.
-  //
-  // Consider case of turnsToAdvance = 1. Then the interval is [initialTurn, initialTurn], as it should:
-  // we just want to advance to the initialTurn.
   if (turnsToAdvanceDefined && !currentTurnDefined) {
-    return {
-      resolvedStartTurn: initialTurn,
-      resolvedTargetTurn: initialTurn + turnsToAdvance - 1,
-    }
+    resolvedStartTurn = initialTurn
+    resolvedTargetTurn = initialTurn + turnsToAdvance - 1
   }
 
-  // Case 2.2
+  // Case 2.2: use turn range for game session in progress.
   // If currentTurn is defined, the turns to advance start from currentTurn, and go until currentTurn + turnsToAdvance.
   // For example, if currentTurn is 8 and turnsToAdvance is 3, then the interval is [8, 11].
   if (turnsToAdvanceDefined && currentTurnDefined) {
-    return {
-      resolvedStartTurn: currentTurn,
-      resolvedTargetTurn: currentTurn + turnsToAdvance,
-    }
-    /* c8 ignore start */
+    resolvedStartTurn = currentTurn
+    resolvedTargetTurn = currentTurn + turnsToAdvance
   }
-  throw new Error('Unreachable code')
+
+  /* c8 ignore start */
+  if (_.isUndefined(resolvedStartTurn) || _.isUndefined(resolvedTargetTurn)) {
+    throw new TypeError(`resolvedStartTurn or resolvedEndTurn is undefined.`)
+  }
+  /* c8 ignore stop */
+
+  console.log(
+    `resolveStartAndTargetTurn: ` +
+      `currentTurn: ${currentTurn}, turnsToAdvance: ${turnsToAdvance}, ` +
+      `[startTurn, targetTurn]: [${startTurn}, ${targetTurn}], ` +
+      `resolved: [${resolvedStartTurn}, ${resolvedTargetTurn}]`,
+  )
+  return { resolvedStartTurn, resolvedTargetTurn }
 }
-/* c8 ignore stop */

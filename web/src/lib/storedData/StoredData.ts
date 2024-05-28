@@ -56,7 +56,7 @@ export function loadGameSessionData(): GameSessionDataType | undefined {
 
 export function loadSettingsData(): SettingsDataType {
   let loadedSettings = load('settingsData')
-  if (loadedSettings === undefined) {
+  if (_.isUndefined(loadedSettings)) {
     console.log('No settings found in local storage. Using default settings.')
     loadedSettings = defaultSettingsData
   }

@@ -69,7 +69,8 @@ export class GameSession {
     targetTurn: number,
     delegateToAi?: boolean | undefined,
   ): Promise<boolean> {
-    const startGameState = this.getGameStateAtTurnEnd(startTurn)
+    const startGameState: GameState | undefined =
+      this.getGameStateAtTurnEndUnsafe(startTurn)
     const newGameStates = await callAdvanceTurnsApi({
       setLoading: this.setLoading,
       setError: this.setError,
@@ -205,11 +206,11 @@ export class GameSession {
         : 'undecided'
   }
 
-  public getGameStateAtTurnEnd(turn: number): GameState {
+  public getGameStateAtTurnEndUnsafe(turn: number): GameState | undefined {
     return _.findLast(
       this.data.getGameStates(),
       (gs) => gs.Timeline.CurrentTurn === turn,
-    )!
+    )
   }
 
   public isGameOverUnsafe(): boolean | undefined {
