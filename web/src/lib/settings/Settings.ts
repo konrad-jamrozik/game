@@ -27,7 +27,6 @@ export function useSettings(storedData: StoredData): Settings {
   const [introEnabled, setIntroEnabled] = useState<boolean>(
     storedSettingsData.introEnabled,
   )
-  console.log('kja useSettings introEnabled', introEnabled)
   const [outroEnabled, setOutroEnabled] = useState<boolean>(
     storedSettingsData.outroEnabled,
   )
@@ -46,7 +45,6 @@ export function useSettings(storedData: StoredData): Settings {
   )
 }
 
-// kja curr work: use this
 export class Settings {
   public constructor(
     private readonly storedData: StoredData,

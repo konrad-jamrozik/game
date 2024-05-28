@@ -312,6 +312,12 @@ function resolveStartAndTargetTurn(
   const turnsToAdvanceDefined = !_.isUndefined(turnsToAdvance)
   const currentTurnDefined = !_.isUndefined(currentTurn)
 
+  console.log(
+    `resolveStartAndTargetTurn: ` +
+      `[startTurn, targetTurn]: [${startTurn}, ${targetTurn}], ` +
+      `currentTurn: ${currentTurn}, turnsToAdvance: ${turnsToAdvance}`,
+  )
+
   // kja should I assert here that turnsToAdvance if defined, then it is 1?
 
   // Case 1: If turnsToAdvance is not defined, then [startTurn, targetTurn] is used.
