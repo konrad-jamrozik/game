@@ -12,11 +12,10 @@ import { SettingsPanel } from './components/SettingsPanel/SettingsPanel'
 import { useGameSessionContext } from './lib/gameSession/GameSession'
 import { type Settings, useSettingsContext } from './lib/settings/Settings'
 
-// eslint-disable-next-line max-lines-per-function
 export default function App(): React.JSX.Element {
   console.log(`render App.tsx`)
-  const gameSession = useGameSessionContext()
   const settings = useSettingsContext()
+  const gameSession = useGameSessionContext()
   const currentGameState = gameSession.getCurrentGameStateUnsafe()
   const gameResult = gameSession.getGameResultUnsafe()
 
