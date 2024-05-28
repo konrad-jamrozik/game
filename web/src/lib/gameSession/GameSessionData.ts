@@ -5,6 +5,14 @@ import _ from 'lodash'
 import { initialTurn, type GameState } from '../codesync/GameState'
 import type { StoredData } from '../storedData/StoredData'
 
+export type GameSessionDataType = {
+  readonly gameStates: readonly GameState[]
+}
+
+export const initialGameSessionData: GameSessionDataType = {
+  gameStates: [],
+}
+
 export class GameSessionData {
   public constructor(
     private readonly storedData: StoredData,
@@ -128,13 +136,6 @@ export class GameSessionData {
   }
 }
 
-export type GameSessionDataType = {
-  readonly gameStates: readonly GameState[]
-}
-
-export const initialGameSessionData: GameSessionDataType = {
-  gameStates: [],
-}
 // Future work: Consider for later:
 // using a reducer to manage game sates:
 // https://react.dev/learn/extracting-state-logic-into-a-reducer

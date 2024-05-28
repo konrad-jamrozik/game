@@ -1,29 +1,16 @@
 import type { GameSessionDataType } from '../gameSession/GameSessionData'
+import type { SettingsDataType } from '../settings/Settings'
 
 export type StoredDataType = {
-  readonly settings: SettingsType
+  readonly settings: SettingsDataType
   readonly gameSessionData?: GameSessionDataType | undefined
 }
 
-export type SettingsType = {
-  readonly introEnabled: boolean
-  readonly outroEnabled: boolean
-  readonly chartsEnabled: boolean
-}
-
-export function getDefaultSettings(): SettingsType {
-  return {
-    introEnabled: true,
-    outroEnabled: true,
-    chartsEnabled: true,
-  }
-}
-
-export type StoredDataTypeName = 'gameSessionData' | 'settings'
+export type StoredDataTypeName = 'gameSessionData' | 'settingsData'
 
 export type StoredDataTypeMap = {
-  [key in StoredDataTypeName]: SettingsType | GameSessionDataType
+  [key in StoredDataTypeName]: SettingsDataType | GameSessionDataType
 } & {
   gameSessionData: GameSessionDataType
-  settings: SettingsType
+  settingsData: SettingsDataType
 }

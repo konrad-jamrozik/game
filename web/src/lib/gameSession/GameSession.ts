@@ -22,8 +22,6 @@ import {
   initialGameSessionData,
 } from './GameSessionData'
 
-export type GameResult = 'won' | 'lost' | 'undecided'
-
 export function useGameSessionContext(): GameSession {
   return useContext(GameSessionContext)
 }
@@ -49,6 +47,8 @@ export function useGameSession(storedData: StoredData): GameSession {
     setError,
   )
 }
+
+export type GameResult = 'won' | 'lost' | 'undecided'
 
 export class GameSession {
   public constructor(
@@ -241,8 +241,6 @@ export class GameSession {
     return canAdvanceTime
   }
 
-  // kja test canDelegateTurnsToAi. Previously there was a bug:
-  // if turn was reverted, it incorrectly returned true even if there were player actions.
   public canDelegateTurnsToAi(): boolean {
     const canDelegateTurnsToAi =
       !this.loading &&

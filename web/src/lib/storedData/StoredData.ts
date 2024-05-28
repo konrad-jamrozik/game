@@ -2,11 +2,13 @@
 import _ from 'lodash'
 import type { GameSessionDataType } from '../gameSession/GameSessionData'
 import {
-  getDefaultSettings,
-  type SettingsType,
-  type StoredDataType,
-  type StoredDataTypeMap,
-  type StoredDataTypeName,
+  defaultSettingsData,
+  type SettingsDataType,
+} from '../settings/Settings'
+import type {
+  StoredDataType,
+  StoredDataTypeMap,
+  StoredDataTypeName,
 } from './StoredDataType'
 
 export class StoredData {
@@ -24,7 +26,7 @@ export class StoredData {
     return this.data.gameSessionData
   }
 
-  public getSettings(): SettingsType {
+  public getSettingsData(): SettingsDataType {
     return this.data.settings
   }
 
@@ -40,26 +42,33 @@ export class StoredData {
     this.persistSetting('chartsEnabled', enabled)
   }
 
-  public persistGameSessionData(data: GameSessionDataType): void {
-    localStorage.setItem('gameSessionData', JSON.stringify(data))
+  public persistGameSessionData(newGameSessionData: GameSessionDataType): void {
+    this.setInLocalStorage('gameSessionData', newGameSessionData)
     // Note: at this point this.getGameSessionData() will still return the old data.
     // Call .reload() to update it.
   }
 
-  private persistSetting(key: keyof SettingsType, value: boolean): void {
-    const newSettings: SettingsType = {
-      ...this.getSettings(),
+  private persistSetting(key: keyof SettingsDataType, value: boolean): void {
+    const newSettingsData: SettingsDataType = {
+      ...this.getSettingsData(),
       [key]: value,
     }
-    localStorage.setItem('settings', JSON.stringify(newSettings))
+    this.setInLocalStorage('settingsData', newSettingsData)
     // Note: at this point this.getSettings() will still return the old settings.
     // Call .reload() to update them.
+  }
+
+  private setInLocalStorage<T extends StoredDataTypeName>(
+    data: T,
+    value: StoredDataTypeMap[T],
+  ): void {
+    localStorage.setItem(data, JSON.stringify(value))
   }
 }
 
 export function loadDataFromLocalStorage(): StoredDataType {
   const gameSessionData = loadGameSessionData()
-  const settings = loadSettings()
+  const settings = loadSettingsData()
   return { gameSessionData, settings }
 }
 
@@ -67,11 +76,11 @@ export function loadGameSessionData(): GameSessionDataType | undefined {
   return load('gameSessionData')
 }
 
-export function loadSettings(): SettingsType {
-  let loadedSettings = load('settings')
+export function loadSettingsData(): SettingsDataType {
+  let loadedSettings = load('settingsData')
   if (loadedSettings === undefined) {
     console.log('No settings found in local storage. Using default settings.')
-    loadedSettings = getDefaultSettings()
+    loadedSettings = defaultSettingsData
   }
   return loadedSettings
 }

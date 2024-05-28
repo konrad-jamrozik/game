@@ -10,8 +10,8 @@ import { MissionSitesDataGrid } from './components/MissionSitesDataGrid/MissionS
 import OutroDialog from './components/OutroDialog'
 import { SettingsPanel } from './components/SettingsPanel/SettingsPanel'
 import { useGameSessionContext } from './lib/gameSession/GameSession'
+import type { SettingsDataType } from './lib/settings/Settings'
 import type { StoredData } from './lib/storedData/StoredData'
-import type { SettingsType } from './lib/storedData/StoredDataType'
 function Footer(): React.JSX.Element {
   return (
     <Typography variant="body2" color="text.secondary" align="center">
@@ -34,7 +34,7 @@ export default function App({
   const gameSession = useGameSessionContext()
   const currentGameState = gameSession.getCurrentGameStateUnsafe()
   const gameResult = gameSession.getGameResultUnsafe()
-  const settings = storedData.getSettings()
+  const settings = storedData.getSettingsData()
 
   const [turnAdvanced, setTurnAdvanced] = useState<boolean>(false)
 
@@ -107,7 +107,7 @@ export default function App({
  * State hook and their state processing for IntroDialog.tsx
  */
 function useAndSetIntro(
-  settings: SettingsType,
+  settings: SettingsDataType,
   gameSessionIsInitialized: boolean,
 ): {
   introEnabled: boolean
@@ -133,7 +133,7 @@ function useAndSetIntro(
  * State hook and their state processing for OutroDialog.tsx
  */
 function useAndSetOutro(
-  settings: SettingsType,
+  settings: SettingsDataType,
   isGameOver: boolean | undefined,
   turnAdvanced: boolean,
 ): {
