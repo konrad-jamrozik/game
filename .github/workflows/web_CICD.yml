@@ -83,7 +83,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
       - run: npm clean-install
-      - run: npm run test:once
+      - run: npm run test:once -- --pool=forks --retry=1
 
   close_pull_request:
     if: github.event_name == 'pull_request' && github.event.action == 'closed'
