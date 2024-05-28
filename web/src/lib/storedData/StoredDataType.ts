@@ -8,6 +8,15 @@ export type StoredDataType = {
 export type SettingsType = {
   readonly introEnabled: boolean
   readonly outroEnabled: boolean
+  readonly chartsEnabled: boolean
+}
+
+export function getDefaultSettings(): SettingsType {
+  return {
+    introEnabled: true,
+    outroEnabled: true,
+    chartsEnabled: true,
+  }
 }
 
 export type StoredDataTypeName = 'gameSessionData' | 'settings'

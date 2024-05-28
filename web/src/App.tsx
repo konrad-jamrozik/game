@@ -56,6 +56,10 @@ export default function App({
   const { outroEnabled, setOutroEnabled, showOutro, setShowOutro } =
     useAndSetOutro(settings, gameSession.isGameOverUnsafe(), turnAdvanced)
 
+  const [chartsEnabled, setChartsEnabled] = useState<boolean>(
+    settings.chartsEnabled,
+  )
+
   if (turnAdvanced) {
     // Reset the 'turnAdvanced' signal after it was used.
     setTurnAdvanced(false)
@@ -88,6 +92,8 @@ export default function App({
               setIntroEnabled,
               outroEnabled,
               setOutroEnabled,
+              chartsEnabled,
+              setChartsEnabled,
             }}
           />
         </Grid>

@@ -1,11 +1,12 @@
 /* eslint-disable @typescript-eslint/class-methods-use-this */
 import _ from 'lodash'
 import type { GameSessionDataType } from '../gameSession/GameSessionData'
-import type {
-  SettingsType,
-  StoredDataType,
-  StoredDataTypeMap,
-  StoredDataTypeName,
+import {
+  getDefaultSettings,
+  type SettingsType,
+  type StoredDataType,
+  type StoredDataTypeMap,
+  type StoredDataTypeName,
 } from './StoredDataType'
 
 export class StoredData {
@@ -33,6 +34,10 @@ export class StoredData {
 
   public persistOutroEnabled(enabled: boolean): void {
     this.persistSetting('outroEnabled', enabled)
+  }
+
+  public persistChartsEnabled(enabled: boolean): void {
+    this.persistSetting('chartsEnabled', enabled)
   }
 
   public persistGameSessionData(data: GameSessionDataType): void {
@@ -66,7 +71,7 @@ export function loadSettings(): SettingsType {
   let loadedSettings = load('settings')
   if (loadedSettings === undefined) {
     console.log('No settings found in local storage. Using default settings.')
-    loadedSettings = { introEnabled: true, outroEnabled: true }
+    loadedSettings = getDefaultSettings()
   }
   return loadedSettings
 }

@@ -1,3 +1,4 @@
+/* eslint-disable sonarjs/no-duplicate-string */
 import { Button, Card, CardContent, CardHeader, Switch } from '@mui/material'
 import Grid from '@mui/material/Unstable_Grid2'
 import _ from 'lodash'
@@ -10,6 +11,8 @@ export type SettingsPanelProps = {
   setIntroEnabled: React.Dispatch<React.SetStateAction<boolean>>
   outroEnabled: boolean
   setOutroEnabled: React.Dispatch<React.SetStateAction<boolean>>
+  chartsEnabled: boolean
+  setChartsEnabled: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 export function SettingsPanel(props: SettingsPanelProps): React.JSX.Element {
@@ -25,6 +28,13 @@ export function SettingsPanel(props: SettingsPanelProps): React.JSX.Element {
   ): void {
     props.setOutroEnabled(event.target.checked)
     props.storedData.persistOutroEnabled(event.target.checked)
+  }
+
+  function handleChartsEnabledChange(
+    event: React.ChangeEvent<HTMLInputElement>,
+  ): void {
+    props.setChartsEnabled(event.target.checked)
+    props.storedData.persistChartsEnabled(event.target.checked)
   }
 
   return (
@@ -64,6 +74,23 @@ export function SettingsPanel(props: SettingsPanelProps): React.JSX.Element {
               checked={props.outroEnabled}
               onChange={handleOutroEnabledChange}
               inputProps={{ 'aria-label': 'Show Outro' }}
+            />
+          </Grid>
+          <Grid
+            xs={12}
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              width: '100%',
+              justifyContent: 'space-between',
+              //backgroundColor: 'rgb(64, 32, 0)',
+            }}
+          >
+            <Label typographyVariant="body1">Show charts</Label>
+            <Switch
+              checked={props.chartsEnabled}
+              onChange={handleChartsEnabledChange}
+              inputProps={{ 'aria-label': 'Show charts' }}
             />
           </Grid>
           <Grid xs={12} sx={{ display: 'flex', justifyContent: 'center' }}>

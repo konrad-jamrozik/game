@@ -312,10 +312,14 @@ function resolveStartAndTargetTurn(
   const turnsToAdvanceDefined = !_.isUndefined(turnsToAdvance)
   const currentTurnDefined = !_.isUndefined(currentTurn)
 
+  // kja should I assert here that turnsToAdvance if defined, then it is 1?
+
   // Case 1: If turnsToAdvance is not defined, then [startTurn, targetTurn] is used.
   // ---------------------------------------------------------------------------
 
+  // Case 1.1
   // If currentTurn is not defined, then the interval is [startTurn, targetTurn].
+  // kja this need elaboration: currentTurn not being defined means the game is not initialized, so startTurn should be 1?
   if (!turnsToAdvanceDefined && !currentTurnDefined) {
     return {
       resolvedStartTurn: startTurn,
@@ -323,6 +327,7 @@ function resolveStartAndTargetTurn(
     }
   }
 
+  // Case 1.2
   // If startTurn is after currentTurn, then the turns are advanced from current turn,
   // otherwise there would be gap in the turns.
   // Hence the actual resolved interval is [min(startTurn, currentTurn), targetTurn].
@@ -336,6 +341,7 @@ function resolveStartAndTargetTurn(
   // Case 2: If turnsToAdvance is defined, then [startTurn, targetTurn] is ignored.
   // ---------------------------------------------------------------------------
 
+  // Case 2.1
   // If currentTurn is not defined, the turns to advance start from initialTurn until initialTurn + turnsToAdvance -1.
   // For example, initialTurn is 1 and turnsToAdvance is 3, then the interval is [1, 3].
   //
@@ -352,6 +358,7 @@ function resolveStartAndTargetTurn(
     }
   }
 
+  // Case 2.2
   // If currentTurn is defined, the turns to advance start from currentTurn, and go until currentTurn + turnsToAdvance.
   // For example, if currentTurn is 8 and turnsToAdvance is 3, then the interval is [8, 11].
   if (turnsToAdvanceDefined && currentTurnDefined) {
