@@ -32,7 +32,7 @@ public static class Ruleset
         int survivalThreshold = AgentSurvivalThreshold(agent, mission);
 
         // For an agent to survive, they must roll above the survival threshold, in the range [1..100].
-        // Survival threshold of 0 means agent always survives. 
+        // Survival threshold of 0 means agent always survives.
         // Survival threshold of 100 means agent never survives.
         // See also AgentSurvivalChance.
         bool survived = survivalRoll > survivalThreshold;
@@ -40,7 +40,7 @@ public static class Ruleset
         log.Info(
             $"{agent.LogString} survived {mission.LogString} : {survived,5}. " +
             $"Skill: {agent.SurvivalSkill,3}, Difficulty: {mission.Site.Difficulty,3}, " +
-            $"Roll: {survivalRoll,3} { (survived ? "> " : "<=") } {survivalThreshold,3}," +
+            $"Roll: {survivalRoll,3} {(survived ? "> " : "<=")} {survivalThreshold,3}," +
             $"{(survived ? $" RecoversIn: {recoversIn,3}" : "")}"
             );
 
@@ -53,7 +53,7 @@ public static class Ruleset
             return 0;
 
         int aboveThreshold = survivalRoll - survivalThreshold;
-        Contract.Assert(aboveThreshold  >= 1);
+        Contract.Assert(aboveThreshold >= 1);
 
         // Subtracting "(aboveThreshold - 1)" instead of just "aboveThreshold"
         // because "aboveThreshold" is always at least 1, so without
@@ -81,7 +81,7 @@ public static class Ruleset
     //   RollResult rollResult = randomGen.Roll1To100();
     //   bool survived = agentSurvivalChance.Result(rollResult)
     //   Interval agentRecoveryInterval = AgentRecoveryInterval()
-    //   int recoversIn = agentRecoveryInterval(rollResult);
+    //   int recoversIn = agentRecoveryInterval.Result(rollResult);
     /**
      * As of 2/7/2024 the formula is:
      * 100%  + agent survival skill - mission difficulty
@@ -91,14 +91,17 @@ public static class Ruleset
      * BaseMissionSiteDifficulty is 30.
      *
      * As such:
-     * - An agent having the same survival skill as mission difficulty will always survive it.
-     *   E.g. difficulty of 30 and skill of 30 will result in 100% + 30 - 30 = 100%
+     * - An agent having the same survival skill as mission difficulty would always survive it,
+     *   but the survival is capped at 99%.
+     *   E.g. difficulty of 30 and skill of 30 will result in 100% + 30 - 30 = 100%, capped to 99%
      * - Each point of survival skill below mission difficulty is 1% less chance of survival.
      *   E.g. difficulty of 150 and skill of 135 will result in 100% + 135 - 150 = 100 - 15 = 85%
-     * - A completely rookie agent has a 70% chance to survive the easiest mission.
+     * - A completely rookie agent has a 70% chance to survive the easiest mission of base difficulty 30.
      *   100% + 0 - 30 = 70%.
      * - A mission with difficulty of 100 will always kill a 0 skill agent:
      *   100% + 0 - 100 = 0%.
+     * - A mission with difficulty 1XY will always kill a XY skill agent.
+     *   100% + XY - 1XY = 100% - 100 = 0%.
      * - An agent, to "naturally" achieve at least 1% chance of surviving a mission, must have at least
      *   ((mission difficulty - 100) + 1) survival skill.
      *   E.g. a mission with difficulty of 125 will give only 1% chance of survival to any agent
