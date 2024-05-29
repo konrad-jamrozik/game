@@ -27,7 +27,10 @@ import {
   useGameSessionContext,
   type GameSession,
 } from '../../lib/gameSession/GameSession'
-import { agentStateColors, sxClassesFromColors } from '../../lib/rendering'
+import {
+  agentStateColors,
+  sxClassesFromColors,
+} from '../../lib/rendering/renderingUtils'
 import {
   defaultComponentHeight,
   defaultComponentMinWidth,
@@ -195,7 +198,7 @@ export type AgentRow = {
   turnsInTraining: number
 }
 
-const agentStateColumnValueMap: { [key in AgentState]: string } = {
+const agentStateValueGetterMap: { [key in AgentState]: string } = {
   GeneratingIncome: 'Income',
   GatheringIntel: 'Intel',
   InTransit: 'InTransit',
@@ -206,7 +209,7 @@ const agentStateColumnValueMap: { [key in AgentState]: string } = {
   Terminated: 'Terminated',
 }
 
-const invertedAgentStateColumnValueMap = _.invert(agentStateColumnValueMap)
+const invertedAgentStateValueGetterMap = _.invert(agentStateValueGetterMap)
 
 const columns: GridColDef[] = [
   { field: 'id', headerName: 'ID', width: 82 },
@@ -216,10 +219,10 @@ const columns: GridColDef[] = [
     width: 120,
 
     valueGetter: (agentState: AgentState): string =>
-      agentStateColumnValueMap[agentState],
+      agentStateValueGetterMap[agentState],
     cellClassName: (params: GridCellParams<AgentRow, string>): string => {
       const agentStateColumnValue: string = params.value!
-      return invertedAgentStateColumnValueMap[agentStateColumnValue]!
+      return invertedAgentStateValueGetterMap[agentStateColumnValue]!
     },
   },
   {

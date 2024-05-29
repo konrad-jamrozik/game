@@ -2,9 +2,9 @@ import { Typography, type SxProps, type Theme } from '@mui/material'
 import type { SystemStyleObject } from '@mui/system'
 import type { GridRenderCellParams } from '@mui/x-data-grid'
 import _ from 'lodash'
-import type { AssetRow } from '../components/AssetsDataGrid/AssetsDataGrid'
-import type { MissionRow } from '../components/MissionsDataGrid/MissionsDataGrid'
-import type { AgentState, Assets, MissionState } from './codesync/GameState'
+import type { AssetRow } from '../../components/AssetsDataGrid/AssetsDataGrid'
+import type { MissionRow } from '../../components/MissionsDataGrid/MissionsDataGrid'
+import type { AgentState, Assets, MissionState } from '../codesync/GameState'
 
 export function renderMissionStateCell(
   params: GridRenderCellParams<MissionRow, MissionState>,

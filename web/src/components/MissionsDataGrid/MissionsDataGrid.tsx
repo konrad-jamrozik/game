@@ -3,7 +3,7 @@ import { DataGrid, type GridColDef } from '@mui/x-data-grid'
 import _ from 'lodash'
 import type { Mission, MissionSite } from '../../lib/codesync/GameState'
 import { useGameSessionContext } from '../../lib/gameSession/GameSession'
-import { renderMissionStateCell } from '../../lib/rendering'
+import { renderMissionStateCell } from '../../lib/rendering/renderingUtils'
 import {
   defaultComponentHeight,
   defaultComponentMinWidth,
