@@ -44,10 +44,11 @@ export function MissionsDataGrid(): React.JSX.Element {
         initialState={{
           pagination: {
             paginationModel: {
-              pageSize: 25,
+              pageSize: 50,
             },
           },
         }}
+        pageSizeOptions={[50]}
         sx={(theme) => ({ bgcolor: theme.palette.background.default })}
       />
     </Box>

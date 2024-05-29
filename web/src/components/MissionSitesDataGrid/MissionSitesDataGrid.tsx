@@ -13,7 +13,7 @@ import { useGameSessionContext } from '../../lib/gameSession/GameSession'
 import { defaultComponentMinWidth } from '../../lib/utils'
 import DeployMissionDialog from './DeployMissionDialog'
 
-const tableHeight = 330
+const gridHeight = 330
 
 export function MissionSitesDataGrid(): React.JSX.Element {
   const gameSession = useGameSessionContext()
@@ -23,9 +23,9 @@ export function MissionSitesDataGrid(): React.JSX.Element {
   const columns: GridColDef[] = [
     {
       field: 'id',
-      headerName: 'Id',
+      headerName: 'Site',
       disableColumnMenu: true,
-      width: 70,
+      width: 80,
     },
     {
       field: 'difficulty',
@@ -44,7 +44,7 @@ export function MissionSitesDataGrid(): React.JSX.Element {
       disableColumnMenu: true,
       sortable: false,
       headerName: '',
-      width: 80,
+      width: 90,
       renderCell: (
         params: GridRenderCellParams<MissionSiteRow>,
       ): React.JSX.Element | undefined => {
@@ -62,9 +62,9 @@ export function MissionSitesDataGrid(): React.JSX.Element {
   return (
     <Box
       sx={{
-        height: tableHeight,
+        height: gridHeight,
         minWidth: defaultComponentMinWidth,
-        maxWidth: 358,
+        maxWidth: 380,
         width: '100%',
       }}
     >

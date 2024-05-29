@@ -92,7 +92,12 @@ export default function DeployMissionDialog(
 
   return (
     <Fragment>
-      <Button variant="text" color="primary" onClick={handleOpen}>
+      <Button
+        variant="text"
+        color="primary"
+        sx={{ padding: '0px' }}
+        onClick={handleOpen}
+      >
         Deploy
       </Button>
       <Dialog open={open} onClose={handleClose}>

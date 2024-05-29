@@ -53,6 +53,8 @@ export function renderAssetNameCell(
     displayedValue = 'Curr. Tr. cap.'
   }
 
+  // kja fix the cell rendering everywhere by not using Typography. Instead by using:
+  // https://mui.com/x/react-data-grid/style/#styling-cells
   return <Typography sx={getSx(assetName)}>{displayedValue}</Typography>
 }
 

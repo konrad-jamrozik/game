@@ -39,6 +39,7 @@ export default function TransportCapMgmtDialog(
   return (
     <Fragment>
       <Button
+        sx={{ padding: '0px' }}
         variant="text"
         color="primary"
         onClick={() => {

@@ -96,7 +96,7 @@ export function AgentsDataGrid(props: AgentsDataGridProps): React.JSX.Element {
         initialState={{
           pagination: {
             paginationModel: {
-              pageSize: 25,
+              pageSize: 50,
             },
           },
           columns: {
@@ -126,7 +126,7 @@ export function AgentsDataGrid(props: AgentsDataGridProps): React.JSX.Element {
               }
             : {}
         }
-        pageSizeOptions={[25]}
+        pageSizeOptions={[50]}
         checkboxSelection
         isRowSelectable={(params: GridRowParams<AgentRow>) =>
           isAgentRowSelectable(params, action, gameSession)
