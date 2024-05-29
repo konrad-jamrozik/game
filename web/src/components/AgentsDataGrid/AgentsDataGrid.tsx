@@ -3,11 +3,12 @@ import { Box } from '@mui/material'
 import {
   DataGrid,
   useGridApiRef,
+  type GridCellParams,
   type GridColDef,
   type GridRowId,
+  type GridRowParams,
   type GridRowSelectionModel,
   type GridValidRowModel,
-  type GridRowParams,
 } from '@mui/x-data-grid'
 import _ from 'lodash'
 import { useState } from 'react'
@@ -23,10 +24,9 @@ import {
   getSurvivalSkill,
 } from '../../lib/codesync/ruleset'
 import {
-  type GameSession,
   useGameSessionContext,
+  type GameSession,
 } from '../../lib/gameSession/GameSession'
-import { renderAgentStateCell } from '../../lib/rendering'
 import {
   defaultComponentHeight,
   defaultComponentMinWidth,
@@ -86,6 +86,9 @@ export function AgentsDataGrid(props: AgentsDataGridProps): React.JSX.Element {
         minWidth: defaultComponentMinWidth,
         maxWidth: deploymentDisplay ? 488 : 550,
         width: '100%',
+        '& .red': {
+          color: '#ff0000',
+        },
       }}
     >
       <DataGrid
@@ -197,7 +200,27 @@ const columns: GridColDef[] = [
     field: 'state',
     headerName: 'State',
     width: 120,
-    renderCell: renderAgentStateCell,
+    cellClassName: (params: GridCellParams<AgentRow, AgentState>): string => {
+      const agentState: AgentState = params.value!
+
+      if (agentState === 'Recovering') {
+        return 'red'
+      }
+      return ''
+    },
+    valueGetter: (agentState: AgentState): string => {
+      let displayedValue: string = agentState
+
+      if (agentState === 'GeneratingIncome') {
+        displayedValue = 'Income'
+      }
+      if (agentState === 'GatheringIntel') {
+        displayedValue = 'Intel'
+      }
+      return displayedValue
+    },
+    // kja curr work: replacing renderAgentStateCell
+    //renderCell: renderAgentStateCell,
   },
   {
     field: 'survivalSkill',
