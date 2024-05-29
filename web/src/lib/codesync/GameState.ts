@@ -33,7 +33,8 @@ export type Assets = {
 
 export type Mission = {
   readonly Id: number
-  readonly CurrentState: 'Active' | 'Successful' | 'Failed'
+  readonly CurrentState: MissionState
+  readonly $Id_Site: number
 }
 
 export type MissionSite = {
@@ -53,6 +54,8 @@ export type AgentState =
   | 'GeneratingIncome'
   | 'Recovering'
   | 'Terminated'
+
+export type MissionState = 'Successful' | 'Failed' | 'Active'
 
 export type Agent = {
   readonly Id: number

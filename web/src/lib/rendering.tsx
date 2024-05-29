@@ -2,7 +2,8 @@ import { Typography, type SxProps, type Theme } from '@mui/material'
 import type { GridRenderCellParams } from '@mui/x-data-grid'
 import type { AgentRow } from '../components/AgentsDataGrid/AgentsDataGrid'
 import type { AssetRow } from '../components/AssetsDataGrid/AssetsDataGrid'
-import type { AgentState, Assets } from './codesync/GameState'
+import type { MissionRow } from '../components/MissionsDataGrid/MissionsDataGrid'
+import type { AgentState, Assets, MissionState } from './codesync/GameState'
 
 export function renderAgentStateCell(
   params: GridRenderCellParams<AgentRow, AgentState>,
@@ -10,14 +11,33 @@ export function renderAgentStateCell(
   const agentState: AgentState = params.value!
   let displayedValue: string = agentState
 
-  if (params.value === 'GeneratingIncome') {
+  if (agentState === 'GeneratingIncome') {
     displayedValue = 'Income'
   }
-  if (params.value === 'GatheringIntel') {
+  if (agentState === 'GatheringIntel') {
     displayedValue = 'Intel'
   }
 
   return <Typography sx={getSx(agentState)}>{displayedValue}</Typography>
+}
+
+export function renderMissionStateCell(
+  params: GridRenderCellParams<MissionRow, MissionState>,
+): React.JSX.Element {
+  const missionState: MissionState = params.value!
+  let displayedValue: string = missionState
+
+  if (missionState === 'Successful') {
+    displayedValue = '✅'
+  }
+  if (missionState === 'Failed') {
+    displayedValue = '❌'
+  }
+  if (missionState === 'Active') {
+    displayedValue = '⚔️'
+  }
+
+  return <Typography>{displayedValue}</Typography>
 }
 
 export function renderAssetNameCell(
@@ -26,10 +46,10 @@ export function renderAssetNameCell(
   const assetName: keyof Assets = params.value!
   let displayedValue: string = assetName
 
-  if (params.value === 'MaxTransportCapacity') {
+  if (assetName === 'MaxTransportCapacity') {
     displayedValue = 'Max Tr. cap.'
   }
-  if (params.value === 'CurrentTransportCapacity') {
+  if (assetName === 'CurrentTransportCapacity') {
     displayedValue = 'Curr. Tr. cap.'
   }
 

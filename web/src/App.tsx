@@ -7,6 +7,7 @@ import { Charts } from './components/Charts'
 import { GameSessionControlPanel } from './components/GameSessionControlPanel/GameSessionControlPanel'
 import IntroDialog from './components/IntroDialog'
 import { MissionSitesDataGrid } from './components/MissionSitesDataGrid/MissionSitesDataGrid'
+import { MissionsDataGrid } from './components/MissionsDataGrid/MissionsDataGrid'
 import OutroDialog from './components/OutroDialog'
 import { SettingsPanel } from './components/SettingsPanel/SettingsPanel'
 import { useGameSessionContext } from './lib/gameSession/GameSession'
@@ -76,6 +77,9 @@ export default function App(): React.JSX.Element {
         </Grid>
         <Grid sx={{ bgcolor: '#002040' }}>
           <AgentsDataGrid />
+        </Grid>
+        <Grid sx={{ bgcolor: '#301040' }}>
+          <MissionsDataGrid />
         </Grid>
         {settings.chartsEnabled && <Charts />}
         <Grid xs={12} sx={{ bgcolor: '#300020' }}>
