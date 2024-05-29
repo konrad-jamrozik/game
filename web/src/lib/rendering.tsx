@@ -1,4 +1,5 @@
 import { Typography, type SxProps, type Theme } from '@mui/material'
+import type { SystemStyleObject } from '@mui/system'
 import type { GridRenderCellParams } from '@mui/x-data-grid'
 import type { AgentRow } from '../components/AgentsDataGrid/AgentsDataGrid'
 import type { AssetRow } from '../components/AssetsDataGrid/AssetsDataGrid'
@@ -96,6 +97,15 @@ const allColors: { [key in AllStylableValues]: string } = {
   ...assetsColors,
   ...agentStateColors,
   ...miscColors,
+}
+
+// export type SxProps<Theme extends object = {}> =
+//   | SystemStyleObject<Theme>
+// kja curr work
+export const sxClassesFromAllColors: SystemStyleObject<Theme> = {
+  '& .red': {
+    color: '#ff0000',
+  },
 }
 
 // I might like to have a list of all the GameState type property keys
