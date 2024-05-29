@@ -1,26 +1,10 @@
 import { Typography, type SxProps, type Theme } from '@mui/material'
 import type { SystemStyleObject } from '@mui/system'
 import type { GridRenderCellParams } from '@mui/x-data-grid'
-import type { AgentRow } from '../components/AgentsDataGrid/AgentsDataGrid'
+import _ from 'lodash'
 import type { AssetRow } from '../components/AssetsDataGrid/AssetsDataGrid'
 import type { MissionRow } from '../components/MissionsDataGrid/MissionsDataGrid'
 import type { AgentState, Assets, MissionState } from './codesync/GameState'
-
-export function renderAgentStateCell(
-  params: GridRenderCellParams<AgentRow, AgentState>,
-): React.JSX.Element {
-  const agentState: AgentState = params.value!
-  let displayedValue: string = agentState
-
-  if (agentState === 'GeneratingIncome') {
-    displayedValue = 'Income'
-  }
-  if (agentState === 'GatheringIntel') {
-    displayedValue = 'Intel'
-  }
-
-  return <Typography sx={getSx(agentState)}>{displayedValue}</Typography>
-}
 
 export function renderMissionStateCell(
   params: GridRenderCellParams<MissionRow, MissionState>,
@@ -99,13 +83,18 @@ const allColors: { [key in AllStylableValues]: string } = {
   ...miscColors,
 }
 
-// export type SxProps<Theme extends object = {}> =
-//   | SystemStyleObject<Theme>
-// kja curr work
-export const sxClassesFromAllColors: SystemStyleObject<Theme> = {
-  '& .red': {
-    color: '#ff0000',
-  },
+// kja use this everywhere where applicable. See existing usage.
+export function sxClassesFromColors(
+  valueToColorMap: Partial<{
+    [key in AllStylableValues]: string
+  }>,
+): SystemStyleObject<Theme> {
+  const valueToColorPairs: [string, { color: string }][] = _.map(
+    valueToColorMap,
+    (color, valueToStyle) => [`& .${valueToStyle}`, { color }],
+  ) as [string, { color: string }][]
+  const sxClasses = Object.fromEntries(valueToColorPairs)
+  return sxClasses as SystemStyleObject<Theme>
 }
 
 // I might like to have a list of all the GameState type property keys

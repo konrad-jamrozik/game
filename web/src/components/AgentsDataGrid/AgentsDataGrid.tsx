@@ -27,13 +27,13 @@ import {
   useGameSessionContext,
   type GameSession,
 } from '../../lib/gameSession/GameSession'
+import { agentStateColors, sxClassesFromColors } from '../../lib/rendering'
 import {
   defaultComponentHeight,
   defaultComponentMinWidth,
 } from '../../lib/utils'
 import { AgentsDataGridToolbar } from './AgentsDataGridToolbar'
 import type { BatchAgentPlayerActionOption } from './batchAgentPlayerActionOptions'
-import { sxClassesFromAllColors } from '../../lib/rendering'
 
 export type AgentsDataGridProps = {
   readonly missionSiteToDeploy?: MissionSite | undefined
@@ -89,7 +89,7 @@ export function AgentsDataGrid(props: AgentsDataGridProps): React.JSX.Element {
           maxWidth: deploymentDisplay ? 488 : 550,
           width: '100%',
         },
-        sxClassesFromAllColors,
+        sxClassesFromColors(agentStateColors),
       ]}
     >
       <DataGrid
@@ -195,33 +195,32 @@ export type AgentRow = {
   turnsInTraining: number
 }
 
+const agentStateColumnValueMap: { [key in AgentState]: string } = {
+  GeneratingIncome: 'Income',
+  GatheringIntel: 'Intel',
+  InTransit: 'InTransit',
+  Available: 'Available',
+  OnMission: 'OnMission',
+  Training: 'Training',
+  Recovering: 'Recovering',
+  Terminated: 'Terminated',
+}
+
+const invertedAgentStateColumnValueMap = _.invert(agentStateColumnValueMap)
+
 const columns: GridColDef[] = [
   { field: 'id', headerName: 'ID', width: 82 },
   {
     field: 'state',
     headerName: 'State',
     width: 120,
-    cellClassName: (params: GridCellParams<AgentRow, AgentState>): string => {
-      const agentState: AgentState = params.value!
 
-      if (agentState === 'Recovering') {
-        return 'red'
-      }
-      return ''
+    valueGetter: (agentState: AgentState): string =>
+      agentStateColumnValueMap[agentState],
+    cellClassName: (params: GridCellParams<AgentRow, string>): string => {
+      const agentStateColumnValue: string = params.value!
+      return invertedAgentStateColumnValueMap[agentStateColumnValue]!
     },
-    valueGetter: (agentState: AgentState): string => {
-      let displayedValue: string = agentState
-
-      if (agentState === 'GeneratingIncome') {
-        displayedValue = 'Income'
-      }
-      if (agentState === 'GatheringIntel') {
-        displayedValue = 'Intel'
-      }
-      return displayedValue
-    },
-    // kja curr work: replacing renderAgentStateCell
-    //renderCell: renderAgentStateCell,
   },
   {
     field: 'survivalSkill',
