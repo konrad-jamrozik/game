@@ -6,34 +6,26 @@ import type {
 import _ from 'lodash'
 import type { AgentState } from '../codesync/GameState'
 
-export const agentStateColors: {
-  [key in AgentState]: string
+const agentStateRenderMap: {
+  [key in AgentState]: { display: string; color: string }
 } = {
-  InTransit: 'DeepSkyBlue',
-  OnMission: 'DarkOrange',
-  Available: 'LightSeaGreen',
-  Training: 'MediumPurple',
-  GeneratingIncome: 'Gold',
-  GatheringIntel: 'DodgerBlue',
-  Recovering: 'Crimson',
-  Terminated: 'DarkRed',
+  InTransit: { display: 'InTransit', color: 'DeepSkyBlue' },
+  Available: { display: 'Available', color: 'LightSeaGreen' },
+  OnMission: { display: 'OnMission', color: 'DarkOrange' },
+  Training: { display: 'Training', color: 'MediumPurple' },
+  GatheringIntel: { display: 'Intel', color: 'DodgerBlue' },
+  GeneratingIncome: { display: 'Income', color: 'Gold' },
+  Recovering: { display: 'Recovering', color: 'Crimson' },
+  Terminated: { display: 'Terminated', color: 'DarkRed' },
 }
 
-export const agentStateValueGetterMap: {
-  [key in AgentState]: string
-} = {
-  GeneratingIncome: 'Income',
-  GatheringIntel: 'Intel',
-  InTransit: 'InTransit',
-  Available: 'Available',
-  OnMission: 'OnMission',
-  Training: 'Training',
-  Recovering: 'Recovering',
-  Terminated: 'Terminated',
-}
-export const invertedAgentStateValueGetterMap = _.invert(
-  agentStateValueGetterMap,
+const invertedAgentStateValueMap = _.invert(
+  _.mapValues(agentStateRenderMap, (value) => value.display),
 )
+
+export const agentStateColors: {
+  [key in AgentState]: string
+} = _.mapValues(agentStateRenderMap, (value) => value.color)
 
 export const agentStateGridColDef: GridColDef = {
   field: 'state',
@@ -41,11 +33,11 @@ export const agentStateGridColDef: GridColDef = {
   width: 120,
 
   valueGetter: (agentState: AgentState): string =>
-    agentStateValueGetterMap[agentState],
+    agentStateRenderMap[agentState].display,
   cellClassName: (
     params: GridCellParams<GridValidRowModel, string>,
   ): string => {
     const agentStateColumnValue: string = params.value!
-    return invertedAgentStateValueGetterMap[agentStateColumnValue]!
+    return invertedAgentStateValueMap[agentStateColumnValue]!
   },
 }

@@ -3,7 +3,6 @@ import { Box } from '@mui/material'
 import {
   DataGrid,
   useGridApiRef,
-  type GridCellParams,
   type GridColDef,
   type GridRowId,
   type GridRowParams,
@@ -30,8 +29,6 @@ import {
 import {
   agentStateColors,
   agentStateGridColDef,
-  agentStateValueGetterMap,
-  invertedAgentStateValueGetterMap,
 } from '../../lib/rendering/renderAgentState'
 import { sxClassesFromColors } from '../../lib/rendering/renderUtils'
 import {
