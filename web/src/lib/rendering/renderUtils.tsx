@@ -5,6 +5,7 @@ import _ from 'lodash'
 import type { AssetRow } from '../../components/AssetsDataGrid/AssetsDataGrid'
 import type { MissionRow } from '../../components/MissionsDataGrid/MissionsDataGrid'
 import type { AgentState, Assets, MissionState } from '../codesync/GameState'
+import { agentStateColors } from './renderAgentState'
 
 export function renderMissionStateCell(
   params: GridRenderCellParams<MissionRow, MissionState>,
@@ -45,17 +46,6 @@ export function renderAssetNameCell(
 
 export function getSx(key: AllStylableValues): SxProps<Theme> {
   return { color: allColors[key] }
-}
-
-export const agentStateColors: { [key in AgentState]: string } = {
-  InTransit: 'DeepSkyBlue',
-  OnMission: 'DarkOrange',
-  Available: 'LightSeaGreen',
-  Training: 'MediumPurple',
-  GeneratingIncome: 'Gold',
-  GatheringIntel: 'DodgerBlue',
-  Recovering: 'Crimson',
-  Terminated: 'DarkRed',
 }
 
 export const assetsColors: { [key in keyof Assets]: string } = {

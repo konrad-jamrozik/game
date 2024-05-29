@@ -10,7 +10,7 @@ import {
   type GameSession,
   useGameSessionContext,
 } from '../../lib/gameSession/GameSession'
-import { getSx } from '../../lib/rendering/renderingUtils'
+import { getSx } from '../../lib/rendering/renderUtils'
 import { Label } from '../Label'
 
 export type TransportCapMgmtDialogProps = {

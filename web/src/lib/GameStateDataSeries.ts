@@ -6,7 +6,8 @@ import {
   incomeGeneratedPerAgent,
   missionLaunched,
 } from './codesync/ruleset'
-import { agentStateColors, assetsColors } from './rendering/renderingUtils'
+import { assetsColors } from './rendering/renderUtils'
+import { agentStateColors } from './rendering/renderAgentState'
 import { median } from './utils'
 
 export type GameStateDataSeries = {

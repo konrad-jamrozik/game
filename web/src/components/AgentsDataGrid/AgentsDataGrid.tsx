@@ -29,8 +29,10 @@ import {
 } from '../../lib/gameSession/GameSession'
 import {
   agentStateColors,
-  sxClassesFromColors,
-} from '../../lib/rendering/renderingUtils'
+  agentStateValueGetterMap,
+  invertedAgentStateValueGetterMap,
+} from '../../lib/rendering/renderAgentState'
+import { sxClassesFromColors } from '../../lib/rendering/renderUtils'
 import {
   defaultComponentHeight,
   defaultComponentMinWidth,
@@ -197,19 +199,6 @@ export type AgentRow = {
   turnHired: number
   turnsInTraining: number
 }
-
-const agentStateValueGetterMap: { [key in AgentState]: string } = {
-  GeneratingIncome: 'Income',
-  GatheringIntel: 'Intel',
-  InTransit: 'InTransit',
-  Available: 'Available',
-  OnMission: 'OnMission',
-  Training: 'Training',
-  Recovering: 'Recovering',
-  Terminated: 'Terminated',
-}
-
-const invertedAgentStateValueGetterMap = _.invert(agentStateValueGetterMap)
 
 const columns: GridColDef[] = [
   { field: 'id', headerName: 'ID', width: 82 },

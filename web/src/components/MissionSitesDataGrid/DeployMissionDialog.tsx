@@ -14,7 +14,7 @@ import {
   useGameSessionContext,
   type GameSession,
 } from '../../lib/gameSession/GameSession'
-import { getSx } from '../../lib/rendering/renderingUtils'
+import { getSx } from '../../lib/rendering/renderUtils'
 import { AgentsDataGrid } from '../AgentsDataGrid/AgentsDataGrid'
 import { Label } from '../Label'
 
