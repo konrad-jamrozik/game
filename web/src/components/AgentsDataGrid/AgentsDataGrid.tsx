@@ -29,6 +29,7 @@ import {
 } from '../../lib/gameSession/GameSession'
 import {
   agentStateColors,
+  agentStateGridColDef,
   agentStateValueGetterMap,
   invertedAgentStateValueGetterMap,
 } from '../../lib/rendering/renderAgentState'
@@ -202,18 +203,7 @@ export type AgentRow = {
 
 const columns: GridColDef[] = [
   { field: 'id', headerName: 'ID', width: 82 },
-  {
-    field: 'state',
-    headerName: 'State',
-    width: 120,
-
-    valueGetter: (agentState: AgentState): string =>
-      agentStateValueGetterMap[agentState],
-    cellClassName: (params: GridCellParams<AgentRow, string>): string => {
-      const agentStateColumnValue: string = params.value!
-      return invertedAgentStateValueGetterMap[agentStateColumnValue]!
-    },
-  },
+  agentStateGridColDef,
   {
     field: 'survivalSkill',
     headerName: 'Skill',

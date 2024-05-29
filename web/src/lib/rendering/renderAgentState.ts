@@ -1,3 +1,8 @@
+import type {
+  GridCellParams,
+  GridColDef,
+  GridValidRowModel,
+} from '@mui/x-data-grid'
 import _ from 'lodash'
 import type { AgentState } from '../codesync/GameState'
 
@@ -29,3 +34,18 @@ export const agentStateValueGetterMap: {
 export const invertedAgentStateValueGetterMap = _.invert(
   agentStateValueGetterMap,
 )
+
+export const agentStateGridColDef: GridColDef = {
+  field: 'state',
+  headerName: 'State',
+  width: 120,
+
+  valueGetter: (agentState: AgentState): string =>
+    agentStateValueGetterMap[agentState],
+  cellClassName: (
+    params: GridCellParams<GridValidRowModel, string>,
+  ): string => {
+    const agentStateColumnValue: string = params.value!
+    return invertedAgentStateValueGetterMap[agentStateColumnValue]!
+  },
+}

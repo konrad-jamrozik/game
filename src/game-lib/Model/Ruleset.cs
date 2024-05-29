@@ -84,7 +84,7 @@ public static class Ruleset
     //   int recoversIn = agentRecoveryInterval.Result(rollResult);
     /**
      * As of 2/7/2024 the formula is:
-     * 100%  + agent survival skill - mission difficulty
+     * 100% + agent survival skill - mission difficulty
      * AND no more than 99%
      * AND no less than 0%
      *
