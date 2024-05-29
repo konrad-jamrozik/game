@@ -28,7 +28,7 @@ class RootJsonConverter : JsonConverter<Root>
                 // during deserialization to replace the ID with the leaf instance deserialized
                 // from leaves List.
                 int id = branchObj["NestedLeaf"]!["Id"]!.GetValue<int>();
-                branchObj.Add("$id_NestedLeaf", id);
+                branchObj.Add("$Id_NestedLeaf", id);
                 branchObj.Remove("NestedLeaf");
             });
         node.WriteTo(writer, _serializationOptions);
@@ -42,7 +42,7 @@ class RootJsonConverter : JsonConverter<Root>
         Dictionary<int, Leaf> leavesById = leaves.ToDictionary(leaf => leaf.Id);
         List<Branch> branches = branchesArray.Select(branch =>
         {
-            int nestedLeafId = branch!["$id_NestedLeaf"]!.GetValue<int>();
+            int nestedLeafId = branch!["$Id_NestedLeaf"]!.GetValue<int>();
             Leaf leaf = leavesById[nestedLeafId];
             int branchId = branch["Id"]!.GetValue<int>();
             // Note here is the magic sauce: instead of creating leaf duplicate here,

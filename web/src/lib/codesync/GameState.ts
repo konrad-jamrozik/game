@@ -34,6 +34,8 @@ export type Assets = {
 export type Mission = {
   readonly Id: number
   readonly CurrentState: MissionState
+  readonly AgentsSent: number
+  readonly AgentsTerminated: number
   readonly $Id_Site: number
 }
 

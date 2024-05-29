@@ -80,7 +80,7 @@ public abstract class JsonConverterSupportingReferences<T> : JsonConverter<T>
         // when, for example, replacing Agent.CurrentMission with its ID reference.
         // The Agent.CurrentMission may be null if the Agent is not on any mission.
         int? id = obj[propName] != null ? IdFromObjPropName() : null;
-        obj.Add("$id_" + propName, id);
+        obj.Add("$Id_" + propName, id);
         obj.Remove(propName);
 
         int? IdFromObjPropName()
@@ -104,7 +104,7 @@ public abstract class JsonConverterSupportingReferences<T> : JsonConverter<T>
 
     private static TDep? GetByRef<TDep>(JsonNode node, Dictionary<int, TDep> depsById, string refPropName)
     {
-        JsonNode? refValNode = node["$id_" + refPropName];
+        JsonNode? refValNode = node["$Id_" + refPropName];
         if (refValNode == null)
             // This is for deserializing the null ID reference as explained in
             // ReplaceObjectPropertyWithRef

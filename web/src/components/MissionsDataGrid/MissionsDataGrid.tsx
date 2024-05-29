@@ -1,7 +1,7 @@
 import { Box } from '@mui/material'
 import { DataGrid, type GridColDef } from '@mui/x-data-grid'
 import _ from 'lodash'
-import type { Mission } from '../../lib/codesync/GameState'
+import type { Mission, MissionSite } from '../../lib/codesync/GameState'
 import { useGameSessionContext } from '../../lib/gameSession/GameSession'
 import { renderMissionStateCell } from '../../lib/rendering'
 import {
@@ -16,8 +16,15 @@ export function MissionsDataGrid(): React.JSX.Element {
     ? gameSession.getCurrentGameState().Missions
     : []
 
+  const missionSites: MissionSite[] = gameSession.isInitialized()
+    ? gameSession.getCurrentGameState().MissionSites
+    : []
+
   const rows: MissionRow[] = _.reverse(
-    _.map(missions, (mission) => getRow(mission)),
+    _.map(missions, (mission) => {
+      const missionSite = getMissionSite(mission, missionSites)
+      return getRow(mission, missionSite)
+    }),
   )
 
   return (
@@ -25,7 +32,7 @@ export function MissionsDataGrid(): React.JSX.Element {
       sx={{
         height: defaultComponentHeight,
         minWidth: defaultComponentMinWidth,
-        maxWidth: 550,
+        maxWidth: 650,
         width: '100%',
       }}
     >
@@ -40,7 +47,6 @@ export function MissionsDataGrid(): React.JSX.Element {
               pageSize: 25,
             },
           },
-          // sorting: { sortModel: [{ field: 'id', sort: 'desc' }] },
         }}
         sx={(theme) => ({ bgcolor: theme.palette.background.default })}
       />
@@ -50,26 +56,68 @@ export function MissionsDataGrid(): React.JSX.Element {
 export type MissionRow = {
   id: number
   state: string
+  difficulty: number
+  agentsSent: number
+  agentsTerminated: number
 }
 
 const columns: GridColDef[] = [
   {
     field: 'id',
     headerName: 'Mission',
-    sortable: true,
     width: 130,
-    // sortingOrder: ['desc', 'asc'],
   },
   {
     field: 'state',
     headerName: 'State',
-    sortable: true,
-    width: 110,
+    width: 90,
     disableColumnMenu: true,
     renderCell: renderMissionStateCell,
   },
+  {
+    field: 'difficulty',
+    headerName: 'Difficulty',
+    width: 130,
+    disableColumnMenu: true,
+  },
+  {
+    field: 'agentsSent',
+    headerName: 'Agents sent',
+    width: 130,
+    disableColumnMenu: true,
+  },
+  {
+    field: 'agentsTerminated',
+    headerName: 'Agents lost',
+    width: 130,
+    disableColumnMenu: true,
+  },
 ]
 
-function getRow(mission: Mission): MissionRow {
-  return { id: mission.Id, state: mission.CurrentState }
+function getRow(mission: Mission, missionSite: MissionSite): MissionRow {
+  return {
+    id: mission.Id,
+    state: mission.CurrentState,
+    difficulty: missionSite.Difficulty,
+    agentsSent: mission.AgentsSent,
+    agentsTerminated: mission.AgentsTerminated,
+  }
+}
+
+function getMissionSite(
+  mission: Mission,
+  missionSites: MissionSite[],
+): MissionSite {
+  const missionSite = _.find(
+    missionSites,
+    (site) => site.Id === mission.$Id_Site,
+  )
+
+  /* c8 ignore start */
+  if (!missionSite) {
+    throw new Error(`Mission site with id ${mission.$Id_Site} not found.`)
+  }
+  /* c8 ignore stop */
+
+  return missionSite
 }

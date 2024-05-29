@@ -130,7 +130,7 @@ public class GameState : IEquatable<GameState>
         // result in an infinite loop: 'options' would use GameStateJsonConverter, which would use 'options', which
         // would use GameStateJsonConverter, which would use 'options'...
         //
-        // Note: that the JsonStringEnumConverter() defined within converterOptions
+        // Note: the JsonStringEnumConverter() defined within converterOptions
         // is a "leaf" converter in the sense it doesn't need any other of the settings
         // defined in the options of which it is part of.
 
