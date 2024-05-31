@@ -83,6 +83,18 @@ const columns: GridColDef[] = [
     headerName: 'Estimate',
     disableColumnMenu: true,
     width: 105,
+    valueFormatter: (value?: number): string => {
+      if (_.isUndefined(value)) {
+        return ''
+      }
+      if (value > 0) {
+        return `+${value}`
+      }
+      if (value < 0) {
+        return `${value}`
+      }
+      return `~`
+    },
   },
   {
     field: 'isManageable',
