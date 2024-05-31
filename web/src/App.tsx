@@ -70,7 +70,7 @@ export default function App(): React.JSX.Element {
           <SettingsPanel />
         </Grid>
         <Grid sx={{ bgcolor: '#300030' }}>
-          <AssetsDataGrid assets={currentGameState?.Assets} />
+          <AssetsDataGrid currentGameState={currentGameState} />
         </Grid>
         <Grid sx={{ bgcolor: '#302000' }}>
           <MissionSitesDataGrid />

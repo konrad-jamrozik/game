@@ -1,13 +1,23 @@
+/* eslint-disable arrow-body-style */
 // codesync UfoGameLib.Model.Ruleset
 // Note: ideally I would auto-generate the ruleset.ts file from the backend code,
 // but there doesn't appear to be a well-supported, official solution for this.
 import _ from 'lodash'
-import type { Agent, AgentState, Mission, MissionSite } from './GameState'
+import type {
+  Agent,
+  AgentState,
+  Assets,
+  GameState,
+  Mission,
+  MissionSite,
+} from './GameState'
 import type { AgentPlayerActionName } from './PlayerActionPayload'
 
 export const agentUpkeepCost = 5
 
 export const incomeGeneratedPerAgent = agentUpkeepCost * 3
+
+export const intelGatheredPerAgent = 5
 
 export const agentHireCost = 50
 
@@ -79,6 +89,49 @@ export const agentPlayerActionConditionMap: {
   SackAgents: canBeSacked,
 }
 
+type EstimatableAssets = Pick<Assets, 'Money' | 'Intel'>
+
+export function getAssetTurnDiffEstimate(
+  gameState: GameState,
+  assetName: keyof EstimatableAssets,
+): number {
+  return assetTurnDiffEstimates[assetName](gameState)
+}
+
+const assetTurnDiffEstimates: {
+  [assetName in keyof EstimatableAssets]: (gameState: GameState) => number
+} = {
+  Intel: (gameState) => {
+    return intelGatheringAgents(gameState).length * intelGatheredPerAgent
+  },
+  Money: (gameState) => {
+    const incomeGenerated = computeIncomeGenerated(
+      incomeGeneratingAgents(gameState).length,
+    )
+    const agentsUpkeep = computeAgentsUpkeepCost(gameState.Assets.Agents.length)
+    const moneyChange = computeMoneyChange(
+      gameState.Assets.Funding,
+      incomeGenerated,
+      agentsUpkeep,
+    )
+    return moneyChange
+  },
+}
+
+function incomeGeneratingAgents(gameState: GameState): Agent[] {
+  return _.filter(
+    gameState.Assets.Agents,
+    (agent: Agent) => agent.CurrentState === 'GeneratingIncome',
+  )
+}
+
+function intelGatheringAgents(gameState: GameState): Agent[] {
+  return _.filter(
+    gameState.Assets.Agents,
+    (agent: Agent) => agent.CurrentState === 'GatheringIntel',
+  )
+}
+
 function canBeRecalled(agent: Agent): boolean {
   const validStates: AgentState[] = ['GatheringIntel', 'GeneratingIncome']
   return _.includes(validStates, agent.CurrentState)
@@ -119,4 +172,20 @@ function skillFromMissions(agent: Agent): number {
     skillFromFirstMissions +
     missionsBeyondFirstMissions * skillFromEachMissionBeyondFirstMissions
   )
+}
+
+function computeMoneyChange(
+  funding: number,
+  incomeGenerated: number,
+  agentUpkeep: number,
+): number {
+  return funding + incomeGenerated - agentUpkeep
+}
+
+function computeIncomeGenerated(incomeGeneratingAgentCount: number): number {
+  return incomeGeneratingAgentCount * incomeGeneratedPerAgent
+}
+
+function computeAgentsUpkeepCost(agentCount: number): number {
+  return agentCount * agentUpkeepCost
 }

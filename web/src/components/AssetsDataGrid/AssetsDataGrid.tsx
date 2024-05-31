@@ -7,7 +7,8 @@ import {
   type GridRowSelectionModel,
 } from '@mui/x-data-grid'
 import _ from 'lodash'
-import type { Assets } from '../../lib/codesync/GameState'
+import type { Assets, GameState } from '../../lib/codesync/GameState'
+import { getAssetTurnDiffEstimate } from '../../lib/codesync/ruleset'
 import {
   assetNameColors,
   assetNameGridColDef,
@@ -19,21 +20,21 @@ import {
 import TransportCapMgmtDialog from './TransportCapMgmtDialog'
 
 export type AssetsDataGridProps = {
-  readonly assets: Assets | undefined
+  readonly currentGameState: GameState | undefined
 }
 
-const tableHeight = 330
+const gridHeight = 330
 
 export function AssetsDataGrid(props: AssetsDataGridProps): React.JSX.Element {
-  const rows: AssetRow[] = getRows(props.assets)
+  const rows: AssetRow[] = getRows(props.currentGameState)
 
   return (
     <Box
       sx={[
         {
-          height: tableHeight,
+          height: gridHeight,
           minWidth: defaultComponentMinWidth,
-          maxWidth: 302,
+          maxWidth: 407,
           width: '100%',
         },
         sxClassesFromColors(assetNameColors),
@@ -65,6 +66,7 @@ function onRowSelectionModelChange(
 export type AssetRow = {
   name: keyof Assets
   value: number
+  estimate?: number | undefined
   isManageable?: boolean
 }
 
@@ -75,6 +77,12 @@ const columns: GridColDef[] = [
     headerName: 'Value',
     disableColumnMenu: true,
     width: 90,
+  },
+  {
+    field: 'estimate',
+    headerName: 'Estimate',
+    disableColumnMenu: true,
+    width: 105,
   },
   {
     field: 'isManageable',
@@ -95,23 +103,39 @@ const columns: GridColDef[] = [
   },
 ]
 
-function getRows(assets?: Assets): AssetRow[] {
-  return !_.isUndefined(assets)
-    ? [
-        { name: 'Money', value: assets.Money },
-        { name: 'Intel', value: assets.Intel },
-        { name: 'Support', value: assets.Support },
-        { name: 'Funding', value: assets.Funding },
-        {
-          name: 'MaxTransportCapacity',
-          value: assets.MaxTransportCapacity,
-          isManageable: true,
-        },
-        {
-          name: 'CurrentTransportCapacity',
-          value: assets.CurrentTransportCapacity,
-        },
-        { name: 'Agents', value: assets.Agents.length },
-      ]
-    : []
+function getRows(gameState?: GameState): AssetRow[] {
+  if (_.isUndefined(gameState)) {
+    return []
+  }
+  const assets = gameState.Assets
+  return [
+    {
+      name: 'Money',
+      value: assets.Money,
+      estimate: getAssetTurnDiffEstimate(gameState, 'Money'),
+    },
+    {
+      name: 'Intel',
+      value: assets.Intel,
+      estimate: getAssetTurnDiffEstimate(gameState, 'Intel'),
+    },
+    {
+      name: 'Support',
+      value: assets.Support,
+    },
+    {
+      name: 'Funding',
+      value: assets.Funding,
+    },
+    {
+      name: 'MaxTransportCapacity',
+      value: assets.MaxTransportCapacity,
+      isManageable: true,
+    },
+    {
+      name: 'CurrentTransportCapacity',
+      value: assets.CurrentTransportCapacity,
+    },
+    { name: 'Agents', value: assets.Agents.length },
+  ]
 }
