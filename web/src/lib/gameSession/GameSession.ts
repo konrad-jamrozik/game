@@ -5,7 +5,10 @@
 import _ from 'lodash'
 import { useContext, useState } from 'react'
 import { Md5 } from 'ts-md5'
-import type { GameEvent } from '../../components/EventsDataGrid/EventsDataGrid'
+import type {
+  GameEvent,
+  GameEventKind,
+} from '../../components/EventsDataGrid/EventsDataGrid'
 import { GameSessionContext } from '../../components/GameSessionProvider'
 import { callAdvanceTurnsApi } from '../api/advanceTurnsApi'
 import { callApplyPlayerActionApi } from '../api/applyPlayerActionApi'
@@ -13,6 +16,7 @@ import { playerActionsPayloadsProviders } from '../api/playerActionsPayloadsProv
 import { initialTurn, type Assets, type GameState } from '../codesync/GameState'
 import type {
   AgentPlayerActionName,
+  PlayerActionName,
   PlayerActionPayload,
 } from '../codesync/PlayerActionPayload'
 import { agentHireCost, transportCapBuyingCost } from '../codesync/ruleset'
@@ -81,6 +85,9 @@ export class GameSession {
     })
     if (!_.isUndefined(newGameStates)) {
       this.upsertGameStates(newGameStates)
+      // kja next: upsert here game events as computed based on game state diff. E.g. mission completed/failed
+      // Note these events should disappear when reverting to previous turn. As these are events from "non-player" turn.
+      // So the game events can happen "between" player turns.
       return true
     }
     return false
@@ -272,28 +279,8 @@ export class GameSession {
     return this.data.getCurrentGameState()
   }
 
-  // eslint-disable-next-line @typescript-eslint/class-methods-use-this
-  public getGameEvents(): GameEvent[] {
-    return [
-      {
-        Id: 1,
-        Turn: 1,
-        Kind: 'AgentHired',
-        Description: 'Agent 1 hired',
-      },
-      {
-        Id: 2,
-        Turn: 1,
-        Kind: 'AgentSacked',
-        Description: 'Agent 1 sacked',
-      },
-      {
-        Id: 3,
-        Turn: 1,
-        Kind: 'AgentAssigned',
-        Description: 'Agent 1 assigned to intel gathering',
-      },
-    ]
+  public getGameEvents(): readonly GameEvent[] {
+    return this.data.getGameEvents()
   }
 
   public getCurrentGameStateUnsafe(): GameState | undefined {
@@ -350,6 +337,33 @@ export class GameSession {
     this.setError('')
   }
 
+  public upsertGameEvents(playerActionPayload: PlayerActionPayload): void {
+    const gameEvents = this.getGameEvents()
+    const gameEventMaxId = gameEvents.at(-1)?.Id ?? 0
+    const newGameEventId = gameEventMaxId + 1
+    const newGameEvent: GameEvent = {
+      Id: newGameEventId,
+      Turn: this.getCurrentTurn(),
+      Kind: this.getGameEventKind(playerActionPayload),
+      Description: playerActionPayload.Action,
+    }
+    const newGameEvents: GameEvent[] = [...gameEvents, newGameEvent]
+    this.data.setGameEvents(newGameEvents)
+  }
+
+  // eslint-disable-next-line @typescript-eslint/class-methods-use-this
+  private getGameEventKind(
+    playerActionPayload: PlayerActionPayload,
+  ): GameEventKind {
+    const action: PlayerActionName = playerActionPayload.Action
+    // kja next: convert this to a dereference of a map from PlayerActionName to GameEventKind
+    return action === 'LaunchMission'
+      ? 'MissionLaunched'
+      : action === 'HireAgents'
+        ? 'AgentHired'
+        : 'Unknown'
+  }
+
   private async applyPlayerAction(
     playerActionPayload: PlayerActionPayload,
   ): Promise<boolean> {
@@ -363,6 +377,7 @@ export class GameSession {
 
     if (!_.isUndefined(newGameState)) {
       this.upsertGameStates([newGameState], true)
+      this.upsertGameEvents(playerActionPayload)
       return true
     }
     return false

@@ -14,7 +14,7 @@ export type GameEvent = {
   readonly Description: string
 }
 
-type GameEventKind =
+export type GameEventKind =
   | 'AgentHired'
   | 'AgentSacked'
   | 'AgentAssigned'
@@ -23,11 +23,12 @@ type GameEventKind =
   | 'MissionLaunched'
   | 'MissionSuccessful'
   | 'MissionFailed'
+  | 'Unknown'
 
 export function EventsDataGrid(): React.JSX.Element {
   const gameSession = useGameSessionContext()
 
-  const gameEvents: GameEvent[] = gameSession.isInitialized()
+  const gameEvents: readonly GameEvent[] = gameSession.isInitialized()
     ? gameSession.getGameEvents()
     : []
 

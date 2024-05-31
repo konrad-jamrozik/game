@@ -19,7 +19,7 @@ export const initialGameSessionData: GameSessionDataType = {
 export class GameSessionData {
   public constructor(
     private readonly storedData: StoredData,
-    private readonly _data: GameSessionDataType,
+    private _data: GameSessionDataType,
     private readonly _setData: React.Dispatch<
       React.SetStateAction<GameSessionDataType>
     >,
@@ -139,6 +139,16 @@ export class GameSessionData {
     this.setData(newData)
   }
 
+  public setGameEvents(gameEvents: GameEvent[]): void {
+    // kja to add GameSessionData.verify(gameEvents)
+    // GameSessionData.verify(gameEvents)
+    const newData: GameSessionDataType = {
+      ...this._data,
+      gameEvents,
+    }
+    this.setData(newData)
+  }
+
   public resetData(): void {
     this.storedData.resetGameSessionData()
     this._setData(initialGameSessionData)
@@ -147,6 +157,7 @@ export class GameSessionData {
   private setData(data: GameSessionDataType): void {
     this.storedData.persistGameSessionData(data)
     this._setData(data)
+    this._data = data
   }
 }
 
