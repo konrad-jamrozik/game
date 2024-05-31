@@ -7,8 +7,8 @@ import {
   missionLaunched,
 } from './codesync/ruleset'
 import { agentStateColors } from './rendering/renderAgentState'
+import { assetNameColors } from './rendering/renderAssets'
 import { missionStateColors } from './rendering/renderMissionState'
-import { assetsColors } from './rendering/renderUtils'
 import { median } from './utils'
 
 export type GameStateDataSeries = {
@@ -54,12 +54,12 @@ export const allGameStatsDataSeriesByKey: AllStatsDataSeries = {
   money: {
     dataFunc: (gs) => gs.Assets.Money,
     label: 'Money',
-    color: assetsColors.Money,
+    color: assetNameColors.Money,
   },
   funding: {
     dataFunc: (gs) => gs.Assets.Funding,
     label: 'Funding',
-    color: assetsColors.Funding,
+    color: assetNameColors.Funding,
   },
   incomeGenerated: {
     dataFunc: (gs) =>
@@ -80,22 +80,22 @@ export const allGameStatsDataSeriesByKey: AllStatsDataSeries = {
   intel: {
     dataFunc: (gs) => gs.Assets.Intel,
     label: 'Intel',
-    color: assetsColors.Intel,
+    color: assetNameColors.Intel,
   },
   support: {
     dataFunc: (gs) => gs.Assets.Support * supportScale,
     label: 'Support/10',
-    color: assetsColors.Support,
+    color: assetNameColors.Support,
   },
   maxTransportCapacity: {
     dataFunc: (gs) => gs.Assets.MaxTransportCapacity,
     label: 'Transp. Cap',
-    color: assetsColors.MaxTransportCapacity,
+    color: assetNameColors.MaxTransportCapacity,
   },
   agents: {
     dataFunc: (gs) => _.size(gs.Assets.Agents),
     label: 'Agents',
-    color: assetsColors.Agents,
+    color: assetNameColors.Agents,
   },
   terminatedAgents: {
     dataFunc: (gs) => _.size(gs.TerminatedAgents),

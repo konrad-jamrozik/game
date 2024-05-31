@@ -1,41 +1,13 @@
-import { Typography, type SxProps, type Theme } from '@mui/material'
+import type { SxProps, Theme } from '@mui/material'
 import type { SystemStyleObject } from '@mui/system'
-import type { GridRenderCellParams } from '@mui/x-data-grid'
 import _ from 'lodash'
-import type { AssetRow } from '../../components/AssetsDataGrid/AssetsDataGrid'
 import type { AgentState, Assets, MissionState } from '../codesync/GameState'
 import { agentStateColors } from './renderAgentState'
+import { assetNameColors } from './renderAssets'
 import { missionStateColors } from './renderMissionState'
-
-// kja next: migrate renderAssetNameCell to follow the renderAgentState.ts model
-export function renderAssetNameCell(
-  params: GridRenderCellParams<AssetRow, keyof Assets>,
-): React.JSX.Element {
-  const assetName: keyof Assets = params.value!
-  let displayedValue: string = assetName
-
-  if (assetName === 'MaxTransportCapacity') {
-    displayedValue = 'Max Tr. cap.'
-  }
-  if (assetName === 'CurrentTransportCapacity') {
-    displayedValue = 'Curr. Tr. cap.'
-  }
-
-  return <Typography sx={getSx(assetName)}>{displayedValue}</Typography>
-}
 
 export function getSx(key: AllStylableValues): SxProps<Theme> {
   return { color: allColors[key] }
-}
-
-export const assetsColors: { [key in keyof Assets]: string } = {
-  Money: 'LimeGreen',
-  Funding: 'GoldenRod',
-  Intel: agentStateColors.GatheringIntel,
-  Support: 'YellowGreen',
-  CurrentTransportCapacity: agentStateColors.InTransit,
-  MaxTransportCapacity: agentStateColors.InTransit,
-  Agents: agentStateColors.Available,
 }
 
 type MiscValues = 'Cost' | 'Difficulty'
@@ -48,13 +20,12 @@ export const miscColors: { [key in MiscValues]: string } = {
 }
 
 const allColors: { [key in AllStylableValues]: string } = {
-  ...assetsColors,
+  ...assetNameColors,
   ...agentStateColors,
   ...missionStateColors,
   ...miscColors,
 }
 
-// kja use this everywhere where applicable. See existing usage.
 export function sxClassesFromColors(
   valueToColorMap: Partial<{
     [key in AllStylableValues]: string

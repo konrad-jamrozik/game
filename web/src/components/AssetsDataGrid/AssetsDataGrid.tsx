@@ -8,7 +8,11 @@ import {
 } from '@mui/x-data-grid'
 import _ from 'lodash'
 import type { Assets } from '../../lib/codesync/GameState'
-import { renderAssetNameCell } from '../../lib/rendering/renderUtils'
+import {
+  assetNameColors,
+  assetNameGridColDef,
+} from '../../lib/rendering/renderAssets'
+import { sxClassesFromColors } from '../../lib/rendering/renderUtils'
 import { defaultComponentMinWidth } from '../../lib/utils'
 import TransportCapMgmtDialog from './TransportCapMgmtDialog'
 
@@ -23,12 +27,15 @@ export function AssetsDataGrid(props: AssetsDataGridProps): React.JSX.Element {
 
   return (
     <Box
-      sx={{
-        height: tableHeight,
-        minWidth: defaultComponentMinWidth,
-        maxWidth: 302,
-        width: '100%',
-      }}
+      sx={[
+        {
+          height: tableHeight,
+          minWidth: defaultComponentMinWidth,
+          maxWidth: 302,
+          width: '100%',
+        },
+        sxClassesFromColors(assetNameColors),
+      ]}
     >
       <DataGrid
         rows={rows}
@@ -54,20 +61,13 @@ function onRowSelectionModelChange(
 }
 
 export type AssetRow = {
-  name: string
+  name: keyof Assets
   value: number
   isManageable?: boolean
 }
 
 const columns: GridColDef[] = [
-  {
-    field: 'name',
-    headerName: 'Asset',
-    disableColumnMenu: true,
-    sortable: false,
-    width: 110,
-    renderCell: renderAssetNameCell,
-  },
+  assetNameGridColDef,
   {
     field: 'value',
     headerName: 'Value',
