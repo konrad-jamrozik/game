@@ -5,10 +5,6 @@
 import _ from 'lodash'
 import { useContext, useState } from 'react'
 import { Md5 } from 'ts-md5'
-import type {
-  GameEvent,
-  GameEventKind,
-} from '../../components/EventsDataGrid/EventsDataGrid'
 import { GameSessionContext } from '../../components/GameSessionProvider'
 import { callAdvanceTurnsApi } from '../api/advanceTurnsApi'
 import { callApplyPlayerActionApi } from '../api/applyPlayerActionApi'
@@ -16,11 +12,11 @@ import { playerActionsPayloadsProviders } from '../api/playerActionsPayloadsProv
 import { initialTurn, type Assets, type GameState } from '../codesync/GameState'
 import type {
   AgentPlayerActionName,
-  PlayerActionName,
   PlayerActionPayload,
 } from '../codesync/PlayerActionPayload'
 import { agentHireCost, transportCapBuyingCost } from '../codesync/ruleset'
 import type { StoredData } from '../storedData/StoredData'
+import type { GameEvent } from './GameEvent'
 import {
   GameSessionData,
   initialGameSessionData,
@@ -88,6 +84,7 @@ export class GameSession {
       // kja next: upsert here game events as computed based on game state diff. E.g. mission completed/failed
       // Note these events should disappear when reverting to previous turn. As these are events from "non-player" turn.
       // So the game events can happen "between" player turns.
+      // Once this is done, I will have to implement WorldEvent type in GameEvent.ts
       return true
     }
     return false
@@ -344,24 +341,12 @@ export class GameSession {
     const newGameEvent: GameEvent = {
       Id: newGameEventId,
       Turn: this.getCurrentTurn(),
-      Kind: this.getGameEventKind(playerActionPayload),
+      Type: 'PlayerAction',
+      Name: playerActionPayload.Action,
       Description: playerActionPayload.Action,
     }
     const newGameEvents: GameEvent[] = [...gameEvents, newGameEvent]
     this.data.setGameEvents(newGameEvents)
-  }
-
-  // eslint-disable-next-line @typescript-eslint/class-methods-use-this
-  private getGameEventKind(
-    playerActionPayload: PlayerActionPayload,
-  ): GameEventKind {
-    const action: PlayerActionName = playerActionPayload.Action
-    // kja next: convert this to a dereference of a map from PlayerActionName to GameEventKind
-    return action === 'LaunchMission'
-      ? 'MissionLaunched'
-      : action === 'HireAgents'
-        ? 'AgentHired'
-        : 'Unknown'
   }
 
   private async applyPlayerAction(

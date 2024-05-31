@@ -1,29 +1,16 @@
 import { Box } from '@mui/material'
 import { DataGrid, type GridColDef } from '@mui/x-data-grid'
 import _ from 'lodash'
+import type {
+  GameEvent,
+  GameEventName,
+  GameEventType,
+} from '../../lib/gameSession/GameEvent'
 import { useGameSessionContext } from '../../lib/gameSession/GameSession'
 import {
   defaultComponentHeight,
   defaultComponentMinWidth,
 } from '../../lib/rendering/renderUtils'
-
-export type GameEvent = {
-  readonly Id: number
-  readonly Turn: number
-  readonly Kind: GameEventKind
-  readonly Description: string
-}
-
-export type GameEventKind =
-  | 'AgentHired'
-  | 'AgentSacked'
-  | 'AgentAssigned'
-  | 'AgentRecalled'
-  | 'MissionExpired'
-  | 'MissionLaunched'
-  | 'MissionSuccessful'
-  | 'MissionFailed'
-  | 'Unknown'
 
 export function EventsDataGrid(): React.JSX.Element {
   const gameSession = useGameSessionContext()
@@ -36,7 +23,8 @@ export function EventsDataGrid(): React.JSX.Element {
     _.map(gameEvents, (event) => ({
       id: event.Id,
       turn: event.Turn,
-      kind: event.Kind,
+      type: event.Type,
+      name: event.Name,
       description: event.Description,
     })),
   )
@@ -71,10 +59,11 @@ export function EventsDataGrid(): React.JSX.Element {
   )
 }
 
-export type GameEventRow = {
+export type GameEventRow<T extends GameEventType = GameEventType> = {
   readonly id: number
   readonly turn: number
-  readonly kind: GameEventKind
+  readonly type: T
+  readonly name: GameEventName<T>
   readonly description: string
 }
 
@@ -91,8 +80,14 @@ const columns: GridColDef<GameEventRow>[] = [
     disableColumnMenu: true,
   },
   {
-    field: 'kind',
-    headerName: 'Kind',
+    field: 'name',
+    headerName: 'Name',
+    width: 140,
+    disableColumnMenu: true,
+  },
+  {
+    field: 'type',
+    headerName: 'Type',
     width: 130,
     disableColumnMenu: true,
   },

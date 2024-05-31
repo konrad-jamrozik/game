@@ -2,9 +2,9 @@
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable @typescript-eslint/parameter-properties */
 import _ from 'lodash'
-import type { GameEvent } from '../../components/EventsDataGrid/EventsDataGrid'
 import { initialTurn, type GameState } from '../codesync/GameState'
 import type { StoredData } from '../storedData/StoredData'
+import type { GameEvent } from './GameEvent'
 
 export type GameSessionDataType = {
   readonly gameStates: readonly GameState[]
