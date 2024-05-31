@@ -63,6 +63,7 @@ export function MissionsDataGrid(): React.JSX.Element {
 }
 export type MissionRow = {
   id: number
+  turn: number
   state: string
   difficulty: number
   agentsSent: number
@@ -74,6 +75,12 @@ const columns: GridColDef<MissionRow>[] = [
     field: 'id',
     headerName: 'Mission',
     width: 120,
+  },
+  {
+    field: 'turn',
+    headerName: 'Turn',
+    width: 80,
+    disableColumnMenu: true,
   },
   missionStateGridColDef,
   {
@@ -99,6 +106,7 @@ const columns: GridColDef<MissionRow>[] = [
 function getRow(mission: Mission, missionSite: MissionSite): MissionRow {
   return {
     id: mission.Id,
+    turn: missionSite.TurnDeactivated!,
     state: mission.CurrentState,
     difficulty: missionSite.Difficulty,
     agentsSent: mission.AgentsSent,

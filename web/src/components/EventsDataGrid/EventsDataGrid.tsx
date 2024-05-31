@@ -9,6 +9,7 @@ import {
 
 export type Event = {
   readonly Id: number
+  readonly Turn: number
   readonly Kind: EventKind
   readonly Description: string
 }
@@ -27,12 +28,13 @@ export function EventsDataGrid(): React.JSX.Element {
   const gameSession = useGameSessionContext()
 
   const events: Event[] = gameSession.isInitialized()
-    ? gameSession.getCurrentTurnEvents()
+    ? gameSession.getEvents()
     : []
 
   const rows: EventRow[] = _.reverse(
     _.map(events, (event) => ({
       id: event.Id,
+      turn: event.Turn,
       kind: event.Kind,
       description: event.Description,
     })),
@@ -70,6 +72,7 @@ export function EventsDataGrid(): React.JSX.Element {
 
 export type EventRow = {
   readonly id: number
+  readonly turn: number
   readonly kind: EventKind
   readonly description: string
 }
@@ -79,6 +82,12 @@ const columns: GridColDef<EventRow>[] = [
     field: 'id',
     headerName: 'Event',
     width: 110,
+  },
+  {
+    field: 'turn',
+    headerName: 'Turn',
+    width: 80,
+    disableColumnMenu: true,
   },
   {
     field: 'kind',

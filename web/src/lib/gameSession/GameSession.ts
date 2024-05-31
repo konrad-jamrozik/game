@@ -273,20 +273,23 @@ export class GameSession {
   }
 
   // eslint-disable-next-line @typescript-eslint/class-methods-use-this
-  public getCurrentTurnEvents(): Event[] {
+  public getEvents(): Event[] {
     return [
       {
         Id: 1,
+        Turn: 1,
         Kind: 'AgentHired',
         Description: 'Agent 1 hired',
       },
       {
         Id: 2,
+        Turn: 1,
         Kind: 'AgentSacked',
         Description: 'Agent 1 sacked',
       },
       {
         Id: 3,
+        Turn: 1,
         Kind: 'AgentAssigned',
         Description: 'Agent 1 assigned to intel gathering',
       },
