@@ -189,7 +189,7 @@ export const allGameStatsDataSeriesByKey: AllStatsDataSeries = {
     dataFunc: (gs) =>
       _.size(_.filter(gs.Missions, (mission) => missionLaunched(mission))),
     label: 'Missions launched',
-    color: 'dDodgerBlue',
+    color: 'DodgerBlue',
   },
   missionsSuccessful: {
     dataFunc: (gs) =>
