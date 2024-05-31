@@ -5,11 +5,12 @@
 import _ from 'lodash'
 import { useContext, useState } from 'react'
 import { Md5 } from 'ts-md5'
+import type { Event } from '../../components/EventsDataGrid/EventsDataGrid'
 import { GameSessionContext } from '../../components/GameSessionProvider'
 import { callAdvanceTurnsApi } from '../api/advanceTurnsApi'
 import { callApplyPlayerActionApi } from '../api/applyPlayerActionApi'
 import { playerActionsPayloadsProviders } from '../api/playerActionsPayloadsProviders'
-import { type GameState, type Assets, initialTurn } from '../codesync/GameState'
+import { initialTurn, type Assets, type GameState } from '../codesync/GameState'
 import type {
   AgentPlayerActionName,
   PlayerActionPayload,
@@ -17,9 +18,9 @@ import type {
 import { agentHireCost, transportCapBuyingCost } from '../codesync/ruleset'
 import type { StoredData } from '../storedData/StoredData'
 import {
-  type GameSessionDataType,
   GameSessionData,
   initialGameSessionData,
+  type GameSessionDataType,
 } from './GameSessionData'
 
 export function useGameSessionContext(): GameSession {
@@ -269,6 +270,27 @@ export class GameSession {
 
   public getCurrentGameState(): GameState {
     return this.data.getCurrentGameState()
+  }
+
+  // eslint-disable-next-line @typescript-eslint/class-methods-use-this
+  public getCurrentTurnEvents(): Event[] {
+    return [
+      {
+        Id: 1,
+        Kind: 'AgentHired',
+        Description: 'Agent 1 hired',
+      },
+      {
+        Id: 2,
+        Kind: 'AgentSacked',
+        Description: 'Agent 1 sacked',
+      },
+      {
+        Id: 3,
+        Kind: 'AgentAssigned',
+        Description: 'Agent 1 assigned to intel gathering',
+      },
+    ]
   }
 
   public getCurrentGameStateUnsafe(): GameState | undefined {

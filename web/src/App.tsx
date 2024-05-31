@@ -4,6 +4,7 @@ import { Fragment, useState } from 'react'
 import { AgentsDataGrid } from './components/AgentsDataGrid/AgentsDataGrid'
 import { AssetsDataGrid } from './components/AssetsDataGrid/AssetsDataGrid'
 import { Charts } from './components/Charts'
+import { EventsDataGrid } from './components/EventsDataGrid/EventsDataGrid'
 import { GameSessionControlPanel } from './components/GameSessionControlPanel/GameSessionControlPanel'
 import IntroDialog from './components/IntroDialog'
 import { MissionSitesDataGrid } from './components/MissionSitesDataGrid/MissionSitesDataGrid'
@@ -80,6 +81,9 @@ export default function App(): React.JSX.Element {
         </Grid>
         <Grid sx={{ bgcolor: '#301040' }}>
           <MissionsDataGrid />
+        </Grid>
+        <Grid sx={{ bgcolor: '#002040' }}>
+          <EventsDataGrid />
         </Grid>
         {settings.chartsEnabled && <Charts />}
         <Grid xs={12} sx={{ bgcolor: '#300020' }}>

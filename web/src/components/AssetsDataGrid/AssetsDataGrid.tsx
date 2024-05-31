@@ -70,7 +70,7 @@ export type AssetRow = {
   isManageable?: boolean
 }
 
-const columns: GridColDef[] = [
+const columns: GridColDef<AssetRow>[] = [
   assetNameGridColDef,
   {
     field: 'value',

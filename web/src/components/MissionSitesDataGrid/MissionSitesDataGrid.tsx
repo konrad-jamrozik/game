@@ -20,7 +20,7 @@ export function MissionSitesDataGrid(): React.JSX.Element {
   const missionSites = gameSession.getCurrentGameStateUnsafe()?.MissionSites
   const rows: MissionSiteRow[] = getRows(missionSites)
 
-  const columns: GridColDef[] = [
+  const columns: GridColDef<MissionSiteRow>[] = [
     {
       field: 'id',
       headerName: 'Site',

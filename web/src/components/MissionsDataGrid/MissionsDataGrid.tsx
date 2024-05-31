@@ -69,11 +69,11 @@ export type MissionRow = {
   agentsTerminated: number
 }
 
-const columns: GridColDef[] = [
+const columns: GridColDef<MissionRow>[] = [
   {
     field: 'id',
     headerName: 'Mission',
-    width: 130,
+    width: 120,
   },
   missionStateGridColDef,
   {
