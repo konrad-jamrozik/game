@@ -5,7 +5,7 @@
 import _ from 'lodash'
 import { useContext, useState } from 'react'
 import { Md5 } from 'ts-md5'
-import type { Event } from '../../components/EventsDataGrid/EventsDataGrid'
+import type { GameEvent } from '../../components/EventsDataGrid/EventsDataGrid'
 import { GameSessionContext } from '../../components/GameSessionProvider'
 import { callAdvanceTurnsApi } from '../api/advanceTurnsApi'
 import { callApplyPlayerActionApi } from '../api/applyPlayerActionApi'
@@ -273,7 +273,7 @@ export class GameSession {
   }
 
   // eslint-disable-next-line @typescript-eslint/class-methods-use-this
-  public getEvents(): Event[] {
+  public getGameEvents(): GameEvent[] {
     return [
       {
         Id: 1,

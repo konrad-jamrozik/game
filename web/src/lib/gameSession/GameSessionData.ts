@@ -2,15 +2,18 @@
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable @typescript-eslint/parameter-properties */
 import _ from 'lodash'
+import type { GameEvent } from '../../components/EventsDataGrid/EventsDataGrid'
 import { initialTurn, type GameState } from '../codesync/GameState'
 import type { StoredData } from '../storedData/StoredData'
 
 export type GameSessionDataType = {
   readonly gameStates: readonly GameState[]
+  readonly gameEvents: readonly GameEvent[]
 }
 
 export const initialGameSessionData: GameSessionDataType = {
   gameStates: [],
+  gameEvents: [],
 }
 
 export class GameSessionData {
@@ -75,6 +78,10 @@ export class GameSessionData {
     return this._data.gameStates
   }
 
+  public getGameEvents(): readonly GameEvent[] {
+    return this._data.gameEvents
+  }
+
   public getCurrentTurn(): number {
     return this.getCurrentGameState().Timeline.CurrentTurn
   }
@@ -90,6 +97,7 @@ export class GameSessionData {
   public revertToPreviousTurn(): void {
     const newGameSessionData: GameSessionDataType = {
       gameStates: this.getGameStatesUntilCurrentTurnStart().slice(0, -1),
+      gameEvents: this.getEventsUntilPreviousTurn(),
     }
     this.setData(newGameSessionData)
   }
@@ -108,9 +116,15 @@ export class GameSessionData {
     return this.getGameStates().slice(0, sliceEnd)
   }
 
+  public getEventsUntilPreviousTurn(): GameEvent[] {
+    const currentTurn = this.getCurrentTurn()
+    return _.filter(this.getGameEvents(), (event) => event.Turn < currentTurn)
+  }
+
   public resetCurrentTurn(): void {
     const newGameSessionData: GameSessionDataType = {
       gameStates: this.getGameStatesUntilCurrentTurnStart(),
+      gameEvents: this.getEventsUntilPreviousTurn(),
     }
     this.setData(newGameSessionData)
   }

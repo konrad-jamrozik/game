@@ -7,14 +7,14 @@ import {
   defaultComponentMinWidth,
 } from '../../lib/rendering/renderUtils'
 
-export type Event = {
+export type GameEvent = {
   readonly Id: number
   readonly Turn: number
-  readonly Kind: EventKind
+  readonly Kind: GameEventKind
   readonly Description: string
 }
 
-type EventKind =
+type GameEventKind =
   | 'AgentHired'
   | 'AgentSacked'
   | 'AgentAssigned'
@@ -27,12 +27,12 @@ type EventKind =
 export function EventsDataGrid(): React.JSX.Element {
   const gameSession = useGameSessionContext()
 
-  const events: Event[] = gameSession.isInitialized()
-    ? gameSession.getEvents()
+  const gameEvents: GameEvent[] = gameSession.isInitialized()
+    ? gameSession.getGameEvents()
     : []
 
-  const rows: EventRow[] = _.reverse(
-    _.map(events, (event) => ({
+  const rows: GameEventRow[] = _.reverse(
+    _.map(gameEvents, (event) => ({
       id: event.Id,
       turn: event.Turn,
       kind: event.Kind,
@@ -70,14 +70,14 @@ export function EventsDataGrid(): React.JSX.Element {
   )
 }
 
-export type EventRow = {
+export type GameEventRow = {
   readonly id: number
   readonly turn: number
-  readonly kind: EventKind
+  readonly kind: GameEventKind
   readonly description: string
 }
 
-const columns: GridColDef<EventRow>[] = [
+const columns: GridColDef<GameEventRow>[] = [
   {
     field: 'id',
     headerName: 'Event',
