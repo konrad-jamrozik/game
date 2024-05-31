@@ -30,11 +30,11 @@ import {
   agentStateColors,
   agentStateGridColDef,
 } from '../../lib/rendering/renderAgentState'
-import { sxClassesFromColors } from '../../lib/rendering/renderUtils'
 import {
   defaultComponentHeight,
   defaultComponentMinWidth,
-} from '../../lib/utils'
+  sxClassesFromColors,
+} from '../../lib/rendering/renderUtils'
 import { AgentsDataGridToolbar } from './AgentsDataGridToolbar'
 import type { BatchAgentPlayerActionOption } from './batchAgentPlayerActionOptions'
 

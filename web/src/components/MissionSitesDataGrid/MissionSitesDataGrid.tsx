@@ -10,7 +10,7 @@ import _ from 'lodash'
 import type { MissionSite } from '../../lib/codesync/GameState'
 import { isActive } from '../../lib/codesync/ruleset'
 import { useGameSessionContext } from '../../lib/gameSession/GameSession'
-import { defaultComponentMinWidth } from '../../lib/utils'
+import { defaultComponentMinWidth } from '../../lib/rendering/renderUtils'
 import DeployMissionDialog from './DeployMissionDialog'
 
 const gridHeight = 330

@@ -12,8 +12,10 @@ import {
   assetNameColors,
   assetNameGridColDef,
 } from '../../lib/rendering/renderAssets'
-import { sxClassesFromColors } from '../../lib/rendering/renderUtils'
-import { defaultComponentMinWidth } from '../../lib/utils'
+import {
+  defaultComponentMinWidth,
+  sxClassesFromColors,
+} from '../../lib/rendering/renderUtils'
 import TransportCapMgmtDialog from './TransportCapMgmtDialog'
 
 export type AssetsDataGridProps = {

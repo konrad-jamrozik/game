@@ -7,11 +7,11 @@ import {
   missionStateColors,
   missionStateGridColDef,
 } from '../../lib/rendering/renderMissionState'
-import { sxClassesFromColors } from '../../lib/rendering/renderUtils'
 import {
   defaultComponentHeight,
   defaultComponentMinWidth,
-} from '../../lib/utils'
+  sxClassesFromColors,
+} from '../../lib/rendering/renderUtils'
 
 export function MissionsDataGrid(): React.JSX.Element {
   const gameSession = useGameSessionContext()

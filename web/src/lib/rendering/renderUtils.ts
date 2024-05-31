@@ -6,9 +6,14 @@ import { agentStateColors } from './renderAgentState'
 import { assetNameColors } from './renderAssets'
 import { missionStateColors } from './renderMissionState'
 
-export function getSx(key: AllStylableValues): SxProps<Theme> {
-  return { color: allColors[key] }
-}
+export const defaultComponentHeight = 500
+
+// In Chrome DevTools Settings / Devices:
+// Legend: Width x Height (pixel ratio)
+// Mobile S: 320px x _
+// "My 15.6'' Razer laptop": 1536px x 695px
+// "Pixel 5": 393px x 850px (2.75)
+export const defaultComponentMinWidth = '250px'
 
 type MiscValues = 'Cost' | 'Difficulty'
 
@@ -26,6 +31,10 @@ const allColors: { [key in AllStylableValues]: string } = {
   ...miscColors,
 }
 
+export function getSx(key: AllStylableValues): SxProps<Theme> {
+  return { color: allColors[key] }
+}
+
 export function sxClassesFromColors(
   valueToColorMap: Partial<{
     [key in AllStylableValues]: string
@@ -39,7 +48,7 @@ export function sxClassesFromColors(
   return sxClasses as SystemStyleObject<Theme>
 }
 
-// I might like to have a list of all the GameState type property keys
+// Future work: I might like to have a list of all the GameState type property keys
 // (recursively over all its children, including Assets property keys etc.)
 // for compile-time exhaustiveness checking to ensure all GameState properties
 // have rendering logic defined for them.
