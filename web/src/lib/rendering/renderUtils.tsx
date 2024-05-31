@@ -3,29 +3,9 @@ import type { SystemStyleObject } from '@mui/system'
 import type { GridRenderCellParams } from '@mui/x-data-grid'
 import _ from 'lodash'
 import type { AssetRow } from '../../components/AssetsDataGrid/AssetsDataGrid'
-import type { MissionRow } from '../../components/MissionsDataGrid/MissionsDataGrid'
 import type { AgentState, Assets, MissionState } from '../codesync/GameState'
 import { agentStateColors } from './renderAgentState'
-
-// kja next: migrate renderMissionStateCell to follow the renderAgentState.ts model
-export function renderMissionStateCell(
-  params: GridRenderCellParams<MissionRow, MissionState>,
-): React.JSX.Element {
-  const missionState: MissionState = params.value!
-  let displayedValue: string = missionState
-
-  if (missionState === 'Successful') {
-    displayedValue = '✅'
-  }
-  if (missionState === 'Failed') {
-    displayedValue = '❌'
-  }
-  if (missionState === 'Active') {
-    displayedValue = '⚔️'
-  }
-
-  return <Typography>{displayedValue}</Typography>
-}
+import { missionStateColors } from './renderMissionState'
 
 // kja next: migrate renderAssetNameCell to follow the renderAgentState.ts model
 export function renderAssetNameCell(
@@ -60,7 +40,7 @@ export const assetsColors: { [key in keyof Assets]: string } = {
 
 type MiscValues = 'Cost' | 'Difficulty'
 
-type AllStylableValues = keyof Assets | AgentState | MiscValues
+type AllStylableValues = keyof Assets | AgentState | MissionState | MiscValues
 
 export const miscColors: { [key in MiscValues]: string } = {
   Cost: 'red',
@@ -70,6 +50,7 @@ export const miscColors: { [key in MiscValues]: string } = {
 const allColors: { [key in AllStylableValues]: string } = {
   ...assetsColors,
   ...agentStateColors,
+  ...missionStateColors,
   ...miscColors,
 }
 

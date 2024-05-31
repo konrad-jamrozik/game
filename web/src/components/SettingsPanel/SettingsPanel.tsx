@@ -4,6 +4,8 @@ import Grid from '@mui/material/Unstable_Grid2'
 import { type Settings, useSettingsContext } from '../../lib/settings/Settings'
 import { Label } from '../Label'
 
+// kja redo settings panel using list:
+// https://mui.com/material-ui/react-list/#switch
 export function SettingsPanel(): React.JSX.Element {
   const settings: Settings = useSettingsContext()
 

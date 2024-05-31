@@ -3,7 +3,11 @@ import { DataGrid, type GridColDef } from '@mui/x-data-grid'
 import _ from 'lodash'
 import type { Mission, MissionSite } from '../../lib/codesync/GameState'
 import { useGameSessionContext } from '../../lib/gameSession/GameSession'
-import { renderMissionStateCell } from '../../lib/rendering/renderUtils'
+import {
+  missionStateColors,
+  missionStateGridColDef,
+} from '../../lib/rendering/renderMissionState'
+import { sxClassesFromColors } from '../../lib/rendering/renderUtils'
 import {
   defaultComponentHeight,
   defaultComponentMinWidth,
@@ -29,12 +33,15 @@ export function MissionsDataGrid(): React.JSX.Element {
 
   return (
     <Box
-      sx={{
-        height: defaultComponentHeight,
-        minWidth: defaultComponentMinWidth,
-        maxWidth: 650,
-        width: '100%',
-      }}
+      sx={[
+        {
+          height: defaultComponentHeight,
+          minWidth: defaultComponentMinWidth,
+          maxWidth: 650,
+          width: '100%',
+        },
+        sxClassesFromColors(missionStateColors),
+      ]}
     >
       <DataGrid
         rows={rows}
@@ -68,17 +75,11 @@ const columns: GridColDef[] = [
     headerName: 'Mission',
     width: 130,
   },
-  {
-    field: 'state',
-    headerName: 'State',
-    width: 90,
-    disableColumnMenu: true,
-    renderCell: renderMissionStateCell,
-  },
+  missionStateGridColDef,
   {
     field: 'difficulty',
     headerName: 'Difficulty',
-    width: 130,
+    width: 110,
     disableColumnMenu: true,
   },
   {

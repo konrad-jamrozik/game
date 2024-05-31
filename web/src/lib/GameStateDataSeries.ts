@@ -7,6 +7,7 @@ import {
   missionLaunched,
 } from './codesync/ruleset'
 import { agentStateColors } from './rendering/renderAgentState'
+import { missionStateColors } from './rendering/renderMissionState'
 import { assetsColors } from './rendering/renderUtils'
 import { median } from './utils'
 
@@ -74,7 +75,7 @@ export const allGameStatsDataSeriesByKey: AllStatsDataSeries = {
   upkeep: {
     dataFunc: (gs) => _.size(gs.Assets.Agents) * agentUpkeepCost,
     label: 'Upkeep',
-    color: 'red',
+    color: 'Red',
   },
   intel: {
     dataFunc: (gs) => gs.Assets.Intel,
@@ -156,7 +157,7 @@ export const allGameStatsDataSeriesByKey: AllStatsDataSeries = {
           )
         : 0,
     label: 'Avg. diff. last 5 sites',
-    color: 'red',
+    color: 'Red',
   },
   maxAgentSurvSkill: {
     dataFunc: (gs) =>
@@ -166,7 +167,7 @@ export const allGameStatsDataSeriesByKey: AllStatsDataSeries = {
           )
         : 0,
     label: 'Max surv. skill',
-    color: 'mediumPurple',
+    color: 'MediumPurple',
   },
   meanAgentSurvSkill: {
     dataFunc: (gs) =>
@@ -188,7 +189,7 @@ export const allGameStatsDataSeriesByKey: AllStatsDataSeries = {
     dataFunc: (gs) =>
       _.size(_.filter(gs.Missions, (mission) => missionLaunched(mission))),
     label: 'Missions launched',
-    color: 'dodgerBlue',
+    color: 'dDodgerBlue',
   },
   missionsSuccessful: {
     dataFunc: (gs) =>
@@ -199,7 +200,7 @@ export const allGameStatsDataSeriesByKey: AllStatsDataSeries = {
         ),
       ),
     label: 'Missions successful',
-    color: 'darkGreen',
+    color: missionStateColors.Successful,
   },
   missionsFailed: {
     dataFunc: (gs) =>
@@ -207,13 +208,13 @@ export const allGameStatsDataSeriesByKey: AllStatsDataSeries = {
         _.filter(gs.Missions, (mission) => mission.CurrentState === 'Failed'),
       ),
     label: 'Missions failed',
-    color: 'red',
+    color: missionStateColors.Failed,
   },
   missionSitesExpired: {
     dataFunc: (gs) =>
       _.size(_.filter(gs.MissionSites, (missionSite) => missionSite.Expired)),
     label: 'Mission sites expired',
-    color: 'darkRed',
+    color: 'DarkRed',
   },
 }
 
