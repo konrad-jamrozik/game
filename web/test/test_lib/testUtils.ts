@@ -107,9 +107,9 @@ export function expectButtonsToBeDisabled(...texts: string[]): void {
   expectButtonsToBe(texts, false)
 }
 
-export function expectButtonsToBe(texts: string[], enabled: boolean): void {
-  for (const text of texts) {
-    const htmlElement: HTMLElement = screen.getByText(text)
+export function expectButtonsToBe(names: string[], enabled: boolean): void {
+  for (const name of names) {
+    const htmlElement: HTMLElement = screen.getByRole('button', { name })
     expect(htmlElement.tagName).toBe('BUTTON')
     if (enabled) {
       expect(htmlElement).toBeEnabled()
@@ -120,16 +120,16 @@ export function expectButtonsToBe(texts: string[], enabled: boolean): void {
 }
 
 export async function clickButton(
-  text: string,
+  name: string,
   waitForText?: string,
 ): Promise<void> {
-  expectButtonToBeEnabled(text)
+  expectButtonToBeEnabled(name)
 
-  console.log(`----- CLICK BUTTON: '${text}' waitForText: '${waitForText}'`)
-  await clickWithDelay(screen.getByText(text))
-  await waitForButtonToBeEnabled(waitForText ?? text)
+  console.log(`----- CLICK BUTTON: '${name}' waitForText: '${waitForText}'`)
+  await clickWithDelay(screen.getByRole('button', { name }))
+  await waitForButtonToBeEnabled(waitForText ?? name)
   console.log(
-    `----- CLICK BUTTON: '${text}' waitForText: '${waitForText}' DONE`,
+    `----- CLICK BUTTON: '${name}' waitForText: '${waitForText}' DONE`,
   )
 }
 
