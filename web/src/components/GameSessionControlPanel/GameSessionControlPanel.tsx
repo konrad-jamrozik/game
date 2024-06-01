@@ -137,7 +137,7 @@ function startTurnInputTextField(
     <TextField
       sx={{ width }}
       id="textfield-start-turn"
-      label="start"
+      label="Start"
       type="number"
       size="small"
       value={startTurn}
@@ -166,7 +166,7 @@ function targetTurnInputTextField(
     <TextField
       sx={{ width }}
       id="textfield-target-turn"
-      label="target"
+      label="Target"
       type="number"
       size="small"
       value={targetTurn}

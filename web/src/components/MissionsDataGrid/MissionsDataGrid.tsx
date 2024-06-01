@@ -37,7 +37,7 @@ export function MissionsDataGrid(): React.JSX.Element {
         {
           height: defaultComponentHeight,
           minWidth: defaultComponentMinWidth,
-          maxWidth: 665,
+          maxWidth: 670,
           width: '100%',
         },
         sxClassesFromColors(missionStateColors),
@@ -92,13 +92,13 @@ const columns: GridColDef<MissionRow>[] = [
   {
     field: 'agentsSent',
     headerName: 'Agents sent',
-    width: 130,
+    width: 125,
     disableColumnMenu: true,
   },
   {
     field: 'agentsTerminated',
     headerName: 'Agents lost',
-    width: 130,
+    width: 125,
     disableColumnMenu: true,
   },
 ]

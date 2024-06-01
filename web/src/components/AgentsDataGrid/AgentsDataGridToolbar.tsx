@@ -14,6 +14,7 @@ import type { BatchAgentPlayerActionOption } from './batchAgentPlayerActionOptio
 
 const paddingTop = '4px'
 const stackRowPaddingY = '2px'
+const buttonHeight = '40px'
 
 type AgentsDataGridToolbarProps = {
   getSelectedRowsIds: () => number[]
@@ -57,19 +58,21 @@ export function AgentsDataGridToolbar(
             startIcon={<AddIcon />}
             onClick={handleHireAgent}
             disabled={!props.gameSession.canHireAgents(agentsToHireCount)}
+            sx={{ marginRight: '4px', height: buttonHeight }}
           >
             Hire agents
           </Button>
           {agentsToHireCountTextField(agentsToHireCount, setAgentsToHireCount)}
           <Label>Cost: {agentsToHireCount * agentHireCost}</Label>
         </Stack>
-        <Stack direction="row" paddingY={stackRowPaddingY}>
+        <Stack direction="row" paddingY={stackRowPaddingY} alignItems="center">
           <Button
             color="primary"
             startIcon={<ChecklistIcon />}
             style={{ whiteSpace: 'pre' }}
             onClick={handleBatchAgentPlayerAction}
             disabled={selectedAgentCount === 0 || props.action === 'None'}
+            sx={{ height: buttonHeight }}
           >
             Act on agents
           </Button>
@@ -87,7 +90,7 @@ function agentsToHireCountTextField(
   return (
     <TextField
       id="textfield-agentsToHireCount"
-      label="count"
+      label="Count"
       type="number"
       size="small"
       value={agentsToHireCount}

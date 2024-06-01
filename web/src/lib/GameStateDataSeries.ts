@@ -121,7 +121,7 @@ export const allGameStatsDataSeriesByKey: AllStatsDataSeries = {
           (agent) => agent.CurrentState === 'GeneratingIncome',
         ),
       ),
-    label: 'GeneratingIncome',
+    label: 'Generating income',
     color: agentStateColors.GeneratingIncome,
   },
   gatheringIntel: {
@@ -132,7 +132,7 @@ export const allGameStatsDataSeriesByKey: AllStatsDataSeries = {
           (agent) => agent.CurrentState === 'GatheringIntel',
         ),
       ),
-    label: 'GatheringIntel',
+    label: 'Gathering intel',
     color: agentStateColors.GatheringIntel,
   },
   recovering: {
