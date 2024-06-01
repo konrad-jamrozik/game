@@ -25,7 +25,7 @@ export function getDisplayedType(action: PlayerActionPayload): string {
       return `Send agents to gen. inc.`
     }
     case 'SendAgentsToIntelGathering': {
-      return `Send agents to intel gath.`
+      return `Send agents to gath. intel`
     }
     case 'SendAgentsToTraining': {
       return `Send agents to training`

@@ -9,7 +9,7 @@ import type { AgentState } from '../codesync/GameState'
 const agentStateRenderMap: {
   [key in AgentState]: { display: string; color: string }
 } = {
-  InTransit: { display: 'InTransit', color: 'DeepSkyBlue' },
+  InTransit: { display: 'In transit', color: 'DeepSkyBlue' },
   Available: { display: 'Available', color: 'LightSeaGreen' },
   OnMission: { display: 'OnMission', color: 'DarkOrange' },
   Training: { display: 'Training', color: 'MediumPurple' },
