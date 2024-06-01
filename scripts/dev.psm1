@@ -15,6 +15,7 @@ if (-not $kjgameDirExists) {
 
 $backendDir = "$kjgameDir\src"
 $frontendDir = "$kjgameDir\web"
+$pwsh = "$env:USERPROFILE\.dotnet\tools\pwsh.exe"
 
 $crimson = '#DC143C' # https://www.color-hex.com/color/dc143c
 $steel_blue = '#4682B4' # https://www.color-hex.com/color/4682b4
@@ -24,11 +25,10 @@ $blue_violet = '#8A2BE2' # https://www.color-hex.com/color/8a2be2
 function Start-GameLocalDevTwoPanes {
     Write-Host "Starting game local dev with two panes"
     wt --window 0 new-tab --profile "PowerShell" --startingDirectory $kjgameDir --tabColor $blue_violet --title "Game dev localhost" `; `
-    split-pane --profile "PowerShell" --horizontal --tabColor $steel_blue --title "Frontend" --startingDirectory $frontendDir PowerShell -ExecutionPolicy RemoteSigned -Command "npm run dev" `; `
-    split-pane --profile "PowerShell" --tabColor $crimson --title "Backend" --startingDirectory $backendDir PowerShell -ExecutionPolicy RemoteSigned -Command "dotnet watch --project api --launch-profile https" `; `
+    split-pane --profile "PowerShell" --startingDirectory $frontendDir --horizontal --tabColor $steel_blue --title "Frontend"  $pwsh -ExecutionPolicy RemoteSigned -Command "npm run dev" `; `
+    split-pane --profile "PowerShell" --startingDirectory $backendDir --tabColor $crimson --title "Backend"  $pwsh -ExecutionPolicy RemoteSigned -Command "dotnet watch --project api --launch-profile https" `; `
     move-focus up
     code $kjgameDir
-    
 }
 New-Alias game-start-localdev Start-GameLocalDevTwoPanes
 
@@ -41,17 +41,17 @@ New-Alias game-start-code Start-GameVSCode
 
 function Start-GameFrontend {
     Write-Host "Starting game localhost frontend"
-    wt --window 0 new-tab --profile "PowerShell" --horizontal --tabColor $steel_blue --title "Frontend" --startingDirectory $frontendDir PowerShell -ExecutionPolicy RemoteSigned -Command "npm run dev"
+    wt --window 0 new-tab --profile "PowerShell" --horizontal --tabColor $steel_blue --title "Frontend" --startingDirectory $frontendDir $pwsh -ExecutionPolicy RemoteSigned -Command "npm run dev"
 }
 New-Alias game-start-frontend Start-GameFrontend
 
 function Start-GameBackend {
     Write-Host "Starting game localhost backend"
-    wt --window 0 new-tab --profile "PowerShell" --tabColor $crimson --title "Backend" --startingDirectory $backendDir PowerShell -ExecutionPolicy RemoteSigned -Command "dotnet watch --project api --launch-profile https"
+    wt --window 0 new-tab --profile "PowerShell" --tabColor $crimson --title "Backend" --startingDirectory $backendDir $pwsh -ExecutionPolicy RemoteSigned -Command "dotnet watch --project api --launch-profile https"
 }
 New-Alias game-start-backend Start-GameBackend
 
-function Remove-FrontendPortUsage {
+function Remove-FrontendPortUsage([string]$Port = "5173") {
     # Ideally I should leverage Invoke-AsAdmin from kj-invoke.psm1 after I figured out
     # how to capture the output of the elevated netstat command and return it for post-processing.
     # https://stackoverflow.com/questions/8761888/capturing-standard-out-and-error-with-start-process
@@ -60,7 +60,7 @@ function Remove-FrontendPortUsage {
     $netstatOutput = netstat -abno
 
     # Filter for lines containing :5173
-    $filteredLine = $netstatOutput | Select-String ":5173"
+    $filteredLine = $netstatOutput | Select-String ":$Port"
 
     # Extract the number using regex
     if ($null -ne $filteredLine) {
