@@ -31,8 +31,7 @@ describe('Test suite for OutroDialog.tsx', () => {
       console.log(`Hiring agent ${agentIdx + 1}`)
       await agentsDataGrid.hireAgent()
     }
-    await controlPanel.advance1Turn(true)
-    controlPanel.assertTurn2()
+    await controlPanel.advance1Turn(true, true)
     outroDialog.assertVisibility('visible', true)
 
     // Given:
@@ -43,10 +42,10 @@ describe('Test suite for OutroDialog.tsx', () => {
     // Then:
     // - The game is lost and the outro dialog appears
     await outroDialog.close()
+    controlPanel.assertTurn2()
     await controlPanel.revert1Turn()
     controlPanel.assertTurn1(true)
-    await controlPanel.advance1Turn(true)
-    controlPanel.assertTurn2()
+    await controlPanel.advance1Turn(true, true)
     outroDialog.assertVisibility('visible', true)
 
     // Given:
@@ -58,6 +57,7 @@ describe('Test suite for OutroDialog.tsx', () => {
     // Then:
     // - The game is over but the outro dialog does not appear
     await outroDialog.close()
+    controlPanel.assertTurn2()
     await settingsPanel.disableShowOutro()
     await controlPanel.revert1Turn()
     controlPanel.assertTurn1(true)

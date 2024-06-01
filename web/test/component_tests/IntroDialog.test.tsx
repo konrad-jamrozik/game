@@ -19,7 +19,7 @@ describe('Test suite for IntroDialog.tsx', () => {
 
     // When the game is reset when the 'show intro' setting is enabled.
     // Then the intro dialog appear.
-    await controlPanel.resetGame()
+    await controlPanel.resetGame(true)
     introDialog.assertVisibility('visible')
 
     await introDialog.close()

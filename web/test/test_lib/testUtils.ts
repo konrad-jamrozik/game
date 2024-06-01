@@ -91,20 +91,20 @@ export function getElementCheckState(
   }
 }
 
-export function expectButtonToBeEnabled(text: string): void {
-  expectButtonsToBeEnabled(text)
+export function expectButtonToBeEnabled(name: string): void {
+  expectButtonsToBeEnabled(name)
 }
 
-export function expectButtonsToBeEnabled(...texts: string[]): void {
-  expectButtonsToBe(texts, true)
+export function expectButtonsToBeEnabled(...names: string[]): void {
+  expectButtonsToBe(names, true)
 }
 
-export function expectButtonToBeDisabled(text: string): void {
-  expectButtonsToBeDisabled(text)
+export function expectButtonToBeDisabled(name: string): void {
+  expectButtonsToBeDisabled(name)
 }
 
-export function expectButtonsToBeDisabled(...texts: string[]): void {
-  expectButtonsToBe(texts, false)
+export function expectButtonsToBeDisabled(...names: string[]): void {
+  expectButtonsToBe(names, false)
 }
 
 export function expectButtonsToBe(names: string[], enabled: boolean): void {
@@ -121,22 +121,22 @@ export function expectButtonsToBe(names: string[], enabled: boolean): void {
 
 export async function clickButton(
   name: string,
-  waitForText?: string,
+  waitForName?: string,
 ): Promise<void> {
   expectButtonToBeEnabled(name)
 
-  console.log(`----- CLICK BUTTON: '${name}' waitForText: '${waitForText}'`)
+  console.log(`----- CLICK BUTTON: '${name}' waitForName: '${waitForName}'`)
   await clickWithDelay(screen.getByRole('button', { name }))
-  await waitForButtonToBeEnabled(waitForText ?? name)
+  await waitForButtonToBeEnabled(waitForName ?? name)
   console.log(
-    `----- CLICK BUTTON: '${name}' waitForText: '${waitForText}' DONE`,
+    `----- CLICK BUTTON: '${name}' waitForName: '${waitForName}' DONE`,
   )
 }
 
-export async function waitForButtonToBeEnabled(text: string): Promise<void> {
+export async function waitForButtonToBeEnabled(name: string): Promise<void> {
   await waitFor(
     () => {
-      expectButtonToBeEnabled(text)
+      expectButtonToBeEnabled(name)
     },
     {
       timeout: 5000,
@@ -145,14 +145,16 @@ export async function waitForButtonToBeEnabled(text: string): Promise<void> {
 }
 
 export async function clickButtonAndWaitForItToDisappear(
-  text: string,
+  name: string,
 ): Promise<void> {
-  await clickWithDelay(screen.getByText(text))
+  await clickWithDelay(screen.getByRole('button', { name }))
   // This check is necessary because I was getting flaky error:
   // Error: The element(s) given to waitForElementToBeRemoved are already removed. waitForElementToBeRemoved requires that the element(s) exist(s) before waiting for removal.
-  if (screen.queryByText(text) !== null) {
+  if (screen.queryByRole('button', { name }) !== null) {
     // https://testing-library.com/docs/guide-disappearance/#waiting-for-disappearance
-    await waitForElementToBeRemoved(() => screen.queryByText(text))
+    await waitForElementToBeRemoved(() =>
+      screen.queryByRole('button', { name }),
+    )
   }
 }
 

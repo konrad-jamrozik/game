@@ -11,10 +11,17 @@ import {
 } from '../test_lib/testUtils'
 
 export class GameSessionControlPanelFixture {
-  public async advance1Turn(expectGameOver = false): Promise<void> {
+  public async advance1Turn(
+    expectGameOver = false,
+    showOutro = false,
+  ): Promise<void> {
     await clickButton(
       'Advance 1 turn',
-      expectGameOver ? 'Reset game' : 'Advance 1 turn',
+      expectGameOver
+        ? showOutro
+          ? 'I am sorry'
+          : 'Reset game'
+        : 'Advance 1 turn',
     )
   }
 
@@ -25,8 +32,11 @@ export class GameSessionControlPanelFixture {
     await clickButton('Reset turn', 'Advance 1 turn')
   }
 
-  public async resetGame(): Promise<void> {
-    await clickButton('Reset game', 'Advance 1 turn')
+  public async resetGame(showIntro = false): Promise<void> {
+    await clickButton(
+      'Reset game',
+      showIntro ? 'I accept the responsibility' : 'Advance 1 turn',
+    )
   }
 
   public async delegateTurnsToAi(
