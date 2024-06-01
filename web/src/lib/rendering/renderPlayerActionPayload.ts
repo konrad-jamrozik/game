@@ -7,37 +7,54 @@ import type {
 } from '../codesync/PlayerActionPayload'
 import { str } from '../utils'
 
-const actionToDisplayedTypeMap: { [name in PlayerActionName]: string } = {
-  AdvanceTime: 'Advance time',
-  BuyTransportCap: 'Buy transport capacity',
-  HireAgents: 'Hire agents',
-  LaunchMission: 'Launch mission',
-  SackAgents: 'Sack agents',
-  SendAgentsToIncomeGeneration: 'Send agents to gen. inc.',
-  SendAgentsToIntelGathering: 'Send agents to gath. intel',
-  SendAgentsToTraining: 'Send agents to training',
-  RecallAgents: 'Recall agents',
-}
-
-const actionToDisplayedDetailsMap: { [name in PlayerActionName]: string } = {
-  AdvanceTime: '',
-  BuyTransportCap: '',
-  HireAgents: `Count: $TargetID`,
-  LaunchMission: `Agent IDs: $IDs, Site: $TargetID`,
-  SackAgents: `Agent IDs: $IDs`,
-  SendAgentsToIncomeGeneration: `Agent IDs: $IDs`,
-  SendAgentsToIntelGathering: `Agent IDs: $IDs`,
-  SendAgentsToTraining: `Agent IDs: $IDs`,
-  RecallAgents: `Agent IDs: $IDs`,
+const playerActionNameToDisplayMap: {
+  [name in PlayerActionName]: {
+    displayedType: string
+    displayedDetails: string
+  }
+} = {
+  AdvanceTime: { displayedType: 'Advance time', displayedDetails: '' },
+  BuyTransportCap: {
+    displayedType: 'Buy transport capacity',
+    displayedDetails: '',
+  },
+  HireAgents: {
+    displayedType: 'Hire agents',
+    displayedDetails: `Count: $TargetID`,
+  },
+  LaunchMission: {
+    displayedType: 'Launch mission',
+    displayedDetails: `Agent IDs: $IDs, Site: $TargetID`,
+  },
+  SackAgents: {
+    displayedType: 'Sack agents',
+    displayedDetails: `Agent IDs: $IDs`,
+  },
+  SendAgentsToIncomeGeneration: {
+    displayedType: 'Send agents to gen. inc.',
+    displayedDetails: `Agent IDs: $IDs`,
+  },
+  SendAgentsToIntelGathering: {
+    displayedType: 'Send agents to gath. intel',
+    displayedDetails: `Agent IDs: $IDs`,
+  },
+  SendAgentsToTraining: {
+    displayedType: 'Send agents to training',
+    displayedDetails: `Agent IDs: $IDs`,
+  },
+  RecallAgents: {
+    displayedType: 'Recall agents',
+    displayedDetails: `Agent IDs: $IDs`,
+  },
 }
 
 export function getDisplayedType(action: PlayerActionPayload): string {
-  return actionToDisplayedTypeMap[action.Action]
+  return playerActionNameToDisplayMap[action.Action].displayedType
 }
 
 export function getDisplayedDetails(action: PlayerActionPayload): string {
   return formatString(
-    actionToDisplayedDetailsMap[action.Action],
+    playerActionNameToDisplayMap[action.Action].displayedDetails,
     logIds(action),
     action.TargetId,
   )
