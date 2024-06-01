@@ -40,7 +40,7 @@ export function EventsDataGrid(): React.JSX.Element {
         {
           height: defaultComponentHeight,
           minWidth: defaultComponentMinWidth,
-          maxWidth: 845,
+          maxWidth: 860,
           width: '100%',
         },
       ]}

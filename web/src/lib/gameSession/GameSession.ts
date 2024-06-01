@@ -81,6 +81,9 @@ export class GameSession {
     })
     if (!_.isUndefined(newGameStates)) {
       this.upsertGameStates(newGameStates)
+      if (delegateToAi === false) {
+        this.upsertAdvanceTurnGameEvent()
+      }
       // kja next: upsert here game events as computed based on game state diff. E.g. mission completed/failed
       // Note these events should disappear when reverting to previous turn. As these are events from "non-player" turn.
       // So the game events can happen "between" player turns.
@@ -346,6 +349,12 @@ export class GameSession {
     }
     const newGameEvents: GameEvent[] = [...gameEvents, newGameEvent]
     this.data.setGameEvents(newGameEvents)
+  }
+
+  public upsertAdvanceTurnGameEvent(): void {
+    const payloadProvider = playerActionsPayloadsProviders.AdvanceTime
+    const payload = payloadProvider()
+    this.upsertGameEvent(payload)
   }
 
   private async applyPlayerAction(

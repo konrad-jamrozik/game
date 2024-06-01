@@ -23,10 +23,10 @@ export function getDisplayedType(action: PlayerActionPayload): string {
       return `Sack agents`
     }
     case 'SendAgentsToIncomeGeneration': {
-      return `Send agents to income generation`
+      return `Send agents to inc. gen.`
     }
     case 'SendAgentsToIntelGathering': {
-      return `Send agents to intel gathering`
+      return `Send agents to intel gath.`
     }
     case 'SendAgentsToTraining': {
       return `Send agents to training`
