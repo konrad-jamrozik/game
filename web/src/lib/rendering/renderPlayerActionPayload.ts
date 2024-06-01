@@ -1,39 +1,25 @@
 /* eslint-disable @typescript-eslint/consistent-return */
 /* eslint-disable default-case */
-import type { PlayerActionPayload } from '../codesync/PlayerActionPayload'
+import type {
+  PlayerActionName,
+  PlayerActionPayload,
+} from '../codesync/PlayerActionPayload'
 import { str } from '../utils'
 
-// kja make this declarative map
+const actionToDisplayedTypeMap: { [name in PlayerActionName]: string } = {
+  AdvanceTime: 'Advance time',
+  BuyTransportCap: 'Buy transport capacity',
+  HireAgents: 'Hire agents',
+  LaunchMission: 'Launch mission',
+  SackAgents: 'Sack agents',
+  SendAgentsToIncomeGeneration: 'Send agents to gen. inc.',
+  SendAgentsToIntelGathering: 'Send agents to gath. intel',
+  SendAgentsToTraining: 'Send agents to training',
+  RecallAgents: 'Recall agents',
+}
+
 export function getDisplayedType(action: PlayerActionPayload): string {
-  switch (action.Action) {
-    case 'AdvanceTime': {
-      return 'Advance time'
-    }
-    case 'BuyTransportCap': {
-      return 'Buy transport capacity'
-    }
-    case 'HireAgents': {
-      return 'Hire agents'
-    }
-    case 'LaunchMission': {
-      return `Launch mission`
-    }
-    case 'SackAgents': {
-      return `Sack agents`
-    }
-    case 'SendAgentsToIncomeGeneration': {
-      return `Send agents to gen. inc.`
-    }
-    case 'SendAgentsToIntelGathering': {
-      return `Send agents to gath. intel`
-    }
-    case 'SendAgentsToTraining': {
-      return `Send agents to training`
-    }
-    case 'RecallAgents': {
-      return `Recall agents`
-    }
-  }
+  return actionToDisplayedTypeMap[action.Action]
 }
 
 export function getDisplayedDetails(action: PlayerActionPayload): string {
