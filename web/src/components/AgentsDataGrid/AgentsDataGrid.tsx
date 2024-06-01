@@ -55,8 +55,10 @@ export function AgentsDataGrid(props: AgentsDataGridProps): React.JSX.Element {
     ? filterAgents(gameSession, deploymentDisplay)
     : []
 
-  const rows: AgentRow[] = _.map(agents, (agent) =>
-    getRow(agent, deploymentDisplay ? props.missionSiteToDeploy : undefined),
+  const rows: AgentRow[] = _.reverse(
+    _.map(agents, (agent) =>
+      getRow(agent, deploymentDisplay ? props.missionSiteToDeploy : undefined),
+    ),
   )
 
   const apiRef = useGridApiRef()
