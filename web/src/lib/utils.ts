@@ -13,3 +13,7 @@ export function median(numbers: number[]): number {
     ? (sorted[middleIndex - 1]! + sorted[middleIndex]!) / 2
     : sorted[middleIndex]!
 }
+
+export function str(array: (string | number)[]): string {
+  return `[${array.join(', ')}]`
+}

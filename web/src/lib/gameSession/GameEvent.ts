@@ -1,15 +1,16 @@
-import type { PlayerActionName } from '../codesync/PlayerActionPayload'
+import type { PlayerActionPayload } from '../codesync/PlayerActionPayload'
 
-export type GameEvent<T extends GameEventType = GameEventType> = {
+export type GameEvent<TPayload extends GameEventPayload = GameEventPayload> = {
   readonly Id: number
   readonly Turn: number
-  readonly Type: T
-  readonly Name: GameEventName<T>
-  readonly Description: string
+  readonly Payload: TPayload
 }
 
-export type GameEventType = 'PlayerAction' | 'WorldEvent'
+export type GameEventPayload = PlayerActionPayload | WorldEventPayload
 
-export type GameEventName<T extends GameEventType> = T extends 'PlayerAction'
-  ? PlayerActionName
-  : 'WorldEventName'
+export type WorldEventPayload = {
+  readonly Id: number
+}
+
+export type GameEventDisplayedKind<T extends GameEventPayload> =
+  T extends PlayerActionPayload ? 'Player action' : 'World event'

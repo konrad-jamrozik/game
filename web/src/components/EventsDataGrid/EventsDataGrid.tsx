@@ -1,12 +1,17 @@
 import { Box } from '@mui/material'
 import { DataGrid, type GridColDef } from '@mui/x-data-grid'
 import _ from 'lodash'
+import type { PlayerActionPayload } from '../../lib/codesync/PlayerActionPayload'
 import type {
   GameEvent,
-  GameEventName,
-  GameEventType,
+  GameEventDisplayedKind,
+  GameEventPayload,
 } from '../../lib/gameSession/GameEvent'
 import { useGameSessionContext } from '../../lib/gameSession/GameSession'
+import {
+  getDisplayedDetails,
+  getDisplayedType,
+} from '../../lib/rendering/renderPlayerActionPayload'
 import {
   defaultComponentHeight,
   defaultComponentMinWidth,
@@ -23,9 +28,9 @@ export function EventsDataGrid(): React.JSX.Element {
     _.map(gameEvents, (event) => ({
       id: event.Id,
       turn: event.Turn,
-      type: event.Type,
-      name: event.Name,
-      description: event.Description,
+      kind: 'Player action',
+      type: getDisplayedType(event.Payload as PlayerActionPayload),
+      details: getDisplayedDetails(event.Payload as PlayerActionPayload),
     })),
   )
 
@@ -35,7 +40,7 @@ export function EventsDataGrid(): React.JSX.Element {
         {
           height: defaultComponentHeight,
           minWidth: defaultComponentMinWidth,
-          maxWidth: 745,
+          maxWidth: 845,
           width: '100%',
         },
       ]}
@@ -59,12 +64,12 @@ export function EventsDataGrid(): React.JSX.Element {
   )
 }
 
-export type GameEventRow<T extends GameEventType = GameEventType> = {
+export type GameEventRow<T extends GameEventPayload = GameEventPayload> = {
   readonly id: number
   readonly turn: number
-  readonly type: T
-  readonly name: GameEventName<T>
-  readonly description: string
+  readonly kind: GameEventDisplayedKind<T>
+  readonly type: string
+  readonly details: string
 }
 
 const columns: GridColDef<GameEventRow>[] = [
@@ -80,21 +85,21 @@ const columns: GridColDef<GameEventRow>[] = [
     disableColumnMenu: true,
   },
   {
-    field: 'name',
-    headerName: 'Name',
-    width: 140,
+    field: 'kind',
+    headerName: 'Kind',
+    width: 110,
     disableColumnMenu: true,
   },
   {
     field: 'type',
     headerName: 'Type',
-    width: 130,
+    width: 190,
     disableColumnMenu: true,
   },
   {
-    field: 'description',
-    headerName: 'Description',
-    width: 500,
+    field: 'details',
+    headerName: 'Details',
+    width: 350,
     disableColumnMenu: true,
   },
 ]

@@ -93,6 +93,7 @@ export class GameSession {
   public async hireAgents(count: number): Promise<boolean> {
     /* c8 ignore start */
     if (count !== 1) {
+      // See playerActionsPayloadsProviders.HireAgents
       throw new Error(
         'Currently hiring of only exactly 1 agent at a time is supported. See playerActionsPayloadsProviders for details.',
       )
@@ -334,16 +335,14 @@ export class GameSession {
     this.setError('')
   }
 
-  public upsertGameEvents(playerActionPayload: PlayerActionPayload): void {
+  public upsertGameEvent(playerActionPayload: PlayerActionPayload): void {
     const gameEvents = this.getGameEvents()
     const gameEventMaxId = gameEvents.at(-1)?.Id ?? 0
     const newGameEventId = gameEventMaxId + 1
-    const newGameEvent: GameEvent = {
+    const newGameEvent: GameEvent<PlayerActionPayload> = {
       Id: newGameEventId,
       Turn: this.getCurrentTurn(),
-      Type: 'PlayerAction',
-      Name: playerActionPayload.Action,
-      Description: playerActionPayload.Action,
+      Payload: playerActionPayload,
     }
     const newGameEvents: GameEvent[] = [...gameEvents, newGameEvent]
     this.data.setGameEvents(newGameEvents)
@@ -362,7 +361,7 @@ export class GameSession {
 
     if (!_.isUndefined(newGameState)) {
       this.upsertGameStates([newGameState], true)
-      this.upsertGameEvents(playerActionPayload)
+      this.upsertGameEvent(playerActionPayload)
       return true
     }
     return false
