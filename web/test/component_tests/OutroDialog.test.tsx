@@ -21,16 +21,14 @@ describe('Test suite for OutroDialog.tsx', () => {
     outroDialog.assertVisibility('not present')
 
     // Given:
-    // - The game is about to be lost when turn is advanced
+    // - The game is about to be lost when turn is advanced,
+    //   which is forced by hiring enough agents to run out of money.
     // - The 'show outro' is enabled
     // When:
     // - The turn is advanced
     // Then:
     // - The game is lost and the outro dialog appears
-    for await (const agentIdx of _.range(0, 10)) {
-      console.log(`Hiring agent ${agentIdx + 1}`)
-      await agentsDataGrid.hireAgent()
-    }
+    await agentsDataGrid.hire10Agents()
     await controlPanel.advance1Turn(true, true)
     outroDialog.assertVisibility('visible', true)
 
