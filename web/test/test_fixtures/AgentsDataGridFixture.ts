@@ -12,6 +12,6 @@ export class AgentsDataGridFixture {
   }
 
   public async setAgentsToHireCount(agentsToHire: number): Promise<void> {
-    await typeIntoElement('spinbutton', 'count', agentsToHire.toString())
+    await typeIntoElement('spinbutton', 'Count', agentsToHire.toString())
   }
 }

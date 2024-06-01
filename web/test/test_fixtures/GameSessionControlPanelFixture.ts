@@ -50,11 +50,11 @@ export class GameSessionControlPanelFixture {
   }
 
   public async setStartTurn(startTurn: number): Promise<void> {
-    await typeIntoElement('spinbutton', 'start', startTurn.toString())
+    await typeIntoElement('spinbutton', 'Start', startTurn.toString())
   }
 
   public async setTargetTurn(targetTurn: number): Promise<void> {
-    await typeIntoElement('spinbutton', 'target', targetTurn.toString())
+    await typeIntoElement('spinbutton', 'Target', targetTurn.toString())
   }
 
   public async clickDelegateTurnToAi(expectGameOver = false): Promise<void> {
