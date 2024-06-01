@@ -12,7 +12,10 @@ export const playerActionsPayloadsProviders: {
   // Note: currently Cap always buys 1 capacity. See PlayerActionPayload.cs in backend.
   BuyTransportCap: () => ({ Action: 'BuyTransportCap' as PlayerActionName }),
   // Note: currently HireAgents always hires 1 agent. See PlayerActionPayload.cs in backend.
-  HireAgents: () => ({ Action: 'HireAgents' as PlayerActionName }),
+  HireAgents: (TargetId: number) => ({
+    Action: 'HireAgents' as PlayerActionName,
+    TargetId,
+  }),
   SackAgents: (Ids: number[]) => ({
     Action: 'SackAgents' as PlayerActionName,
     Ids,
@@ -47,6 +50,7 @@ export type PayloadProvider =
 
 export type PayloadFromNothing = () => PlayerActionPayload
 export type PayloadFromIds = (Ids: number[]) => PlayerActionPayload
+export type PayloadFromTargetId = (TargetId: number) => PlayerActionPayload
 export type PayloadFromIdsAndTargetId = (
   Ids: number[],
   TargetId: number,
@@ -55,6 +59,7 @@ export type PayloadFromIdsAndTargetId = (
 type PayloadProviderMap = {
   [key in PlayerActionName]:
     | PayloadFromIdsAndTargetId
+    | PayloadFromTargetId
     | PayloadFromIds
     | PayloadFromNothing
 } & {
@@ -67,7 +72,7 @@ type PayloadProviderMap = {
   // and the actual implementation would take no parameters, then this would not catch that.
   AdvanceTime: PayloadFromNothing
   BuyTransportCap: PayloadFromNothing
-  HireAgents: PayloadFromNothing
+  HireAgents: PayloadFromTargetId
   SackAgents: PayloadFromIds
   SendAgentsToIncomeGeneration: PayloadFromIds
   SendAgentsToIntelGathering: PayloadFromIds

@@ -94,16 +94,8 @@ export class GameSession {
   }
 
   public async hireAgents(count: number): Promise<boolean> {
-    /* c8 ignore start */
-    if (count !== 1) {
-      // See playerActionsPayloadsProviders.HireAgents
-      throw new Error(
-        'Currently hiring of only exactly 1 agent at a time is supported. See playerActionsPayloadsProviders for details.',
-      )
-    }
-    /* c8 ignore stop */
     const payloadProvider = playerActionsPayloadsProviders.HireAgents
-    const payload = payloadProvider()
+    const payload = payloadProvider(count)
     return this.applyPlayerAction(payload)
   }
 
@@ -167,11 +159,11 @@ export class GameSession {
     this.data.resetData()
   }
 
-  public canHire1Agent(): boolean {
+  public canHireAgents(count: number): boolean {
     return (
       this.isInProgress() &&
       !this.loading &&
-      this.getAssets().Money >= agentHireCost
+      this.getAssets().Money >= agentHireCost * count
     )
   }
 

@@ -13,8 +13,7 @@ export function getDisplayedType(action: PlayerActionPayload): string {
       return 'Buy transport capacity'
     }
     case 'HireAgents': {
-      // Note: currently UI supports hiring only one agent. See playerActionsPayloadsProviders.HireAgents
-      return 'Hire agent'
+      return 'Hire agents'
     }
     case 'LaunchMission': {
       return `Launch mission`
@@ -46,10 +45,10 @@ export function getDisplayedDetails(action: PlayerActionPayload): string {
       return ''
     }
     case 'HireAgents': {
-      return ''
+      return `Count: ${action.TargetId}`
     }
     case 'LaunchMission': {
-      return `Agent IDs: ${logIds(action)}, Site: ${action.TargetId!}`
+      return `Agent IDs: ${logIds(action)}, Site: ${action.TargetId}`
     }
     case 'SackAgents': {
       return `Agent IDs: ${logIds(action)}`

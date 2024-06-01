@@ -6,7 +6,7 @@ import { agentStateColors } from './renderAgentState'
 import { assetNameColors } from './renderAssets'
 import { missionStateColors } from './renderMissionState'
 
-export const defaultComponentHeight = 500
+export const defaultComponentHeight = 600
 
 // In Chrome DevTools Settings / Devices:
 // Legend: Width x Height (pixel ratio)

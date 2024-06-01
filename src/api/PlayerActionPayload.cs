@@ -39,7 +39,7 @@ public class PlayerActionPayload(string action, int[]? ids, int? targetId)
         {
             "AdvanceTime" => controller.AdvanceTime,
             "BuyTransportCap" => () => controller.TurnController.BuyTransportCapacity(1),
-            "HireAgents" => () => controller.TurnController.HireAgents(1),
+            "HireAgents" => () => controller.TurnController.HireAgents(TargetId!.Value),
             "SackAgents" => () => controller.TurnController.SackAgents(Ids!),
             "SendAgentsToIncomeGeneration" => () => controller.TurnController.SendAgentsToGenerateIncome(Ids!),
             "SendAgentsToIntelGathering" => () => controller.TurnController.SendAgentsToGatherIntel(Ids!),

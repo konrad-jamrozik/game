@@ -43,7 +43,7 @@ public static class ApplyPlayerActionRoute
         var gameSession = ApiUtils.NewGameSession(gameState);
         var controller = new GameSessionController(config, log, gameSession);
 
-        if (playerAction.Action != "AdvanceTime" || gameState is not null)
+        if (!(playerAction.Action == "AdvanceTime" && gameState is null))
             playerAction.Apply(controller);
         else
         {

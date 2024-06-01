@@ -90,7 +90,6 @@ export function GameSessionControlPanel(
               {resetGameSessionButton(props.gameSession, props.setShowIntro)}
             </Grid>
           </Grid>
-
           <Grid>
             {delegateTurnsToAiButton(
               advanceTurns,
@@ -140,6 +139,7 @@ function startTurnInputTextField(
       id="textfield-start-turn"
       label="start"
       type="number"
+      size="small"
       value={startTurn}
       onChange={(event: React.ChangeEvent) => {
         const target = event.target as HTMLInputElement
@@ -168,6 +168,7 @@ function targetTurnInputTextField(
       id="textfield-target-turn"
       label="target"
       type="number"
+      size="small"
       value={targetTurn}
       onChange={(event: React.ChangeEvent) => {
         const target = event.target as HTMLInputElement
