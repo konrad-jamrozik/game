@@ -86,7 +86,7 @@ function load<T extends StoredDataTypeName>(
   }
 }
 
-// Future work issue when trying to store 300 turns:
+// future work issue when trying to store 300 turns:
 // Uncaught (in promise) DOMException: Failed to execute 'setItem' on 'Storage': Setting the value of 'gameSessionData' exceeded the quota.
 // https://stackoverflow.com/questions/23977690/setting-the-value-of-dataurl-exceeded-the-quota
 

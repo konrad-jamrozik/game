@@ -84,10 +84,7 @@ export class GameSession {
       if (delegateToAi === false) {
         this.upsertAdvanceTurnGameEvent()
       }
-      // kja next: upsert here game events as computed based on game state diff. E.g. mission completed/failed
-      // Note these events should disappear when reverting to previous turn. As these are events from "non-player" turn.
-      // So the game events can happen "between" player turns.
-      // Once this is done, I will have to implement WorldEvent type in GameEvent.ts
+      // future work: upsert here game world events, once callAdvanceTurnsApi returns them.
       return true
     }
     return false
@@ -362,6 +359,8 @@ export class GameSession {
 
     if (!_.isUndefined(newGameState)) {
       this.upsertGameStates([newGameState], true)
+      // future work: here player action game events should instead be upserted
+      // from the returned value from callApplyPlayerActionApi once the API returns them.
       this.upsertGameEvent(playerActionPayload)
       return true
     }

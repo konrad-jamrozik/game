@@ -140,7 +140,7 @@ export class GameSessionData {
   }
 
   public setGameEvents(gameEvents: GameEvent[]): void {
-    // kja to add GameSessionData.verify(gameEvents)
+    // future work: add here GameSessionData.verify(gameEvents)
     // GameSessionData.verify(gameEvents)
     const newData: GameSessionDataType = {
       ...this._data,
@@ -161,8 +161,7 @@ export class GameSessionData {
   }
 }
 
-// Future work: Consider for later:
-// using a reducer to manage game sates:
+// future work: Consider for later: using a reducer to manage game sates:
 // https://react.dev/learn/extracting-state-logic-into-a-reducer
 // using immer:
 // https://react.dev/learn/extracting-state-logic-into-a-reducer#writing-concise-reducers-with-immer

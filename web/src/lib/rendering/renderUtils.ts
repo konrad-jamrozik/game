@@ -48,7 +48,7 @@ export function sxClassesFromColors(
   return sxClasses as SystemStyleObject<Theme>
 }
 
-// Future work: I might like to have a list of all the GameState type property keys
+// future work: I might like to have a list of all the GameState type property keys
 // (recursively over all its children, including Assets property keys etc.)
 // for compile-time exhaustiveness checking to ensure all GameState properties
 // have rendering logic defined for them.
