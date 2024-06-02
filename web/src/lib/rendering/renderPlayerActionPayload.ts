@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/consistent-return */
-/* eslint-disable default-case */
 import _ from 'lodash'
 import type {
   PlayerActionName,
