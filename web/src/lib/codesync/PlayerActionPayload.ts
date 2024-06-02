@@ -1,7 +1,7 @@
 // codesync: UfoGameLib.Api.PlayerActionPayload
 
 export type PlayerActionPayload = {
-  readonly Action: PlayerActionName // kja this prop. should be named ActionName
+  readonly ActionName: PlayerActionName
   readonly Ids?: number[]
   readonly TargetId?: number
 }

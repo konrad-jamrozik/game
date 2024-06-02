@@ -48,15 +48,15 @@ const playerActionNameToDisplayMap: {
   },
 }
 
-export function getDisplayedType(action: PlayerActionPayload): string {
-  return playerActionNameToDisplayMap[action.Action].displayedType
+export function getDisplayedType(payload: PlayerActionPayload): string {
+  return playerActionNameToDisplayMap[payload.ActionName].displayedType
 }
 
-export function getDisplayedDetails(action: PlayerActionPayload): string {
+export function getDisplayedDetails(payload: PlayerActionPayload): string {
   return formatString(
-    playerActionNameToDisplayMap[action.Action].displayedDetails,
-    logIds(action),
-    action.TargetId,
+    playerActionNameToDisplayMap[payload.ActionName].displayedDetails,
+    logIds(payload),
+    payload.TargetId,
   )
 }
 

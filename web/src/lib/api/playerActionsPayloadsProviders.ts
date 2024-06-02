@@ -8,36 +8,38 @@ import type {
 export const playerActionsPayloadsProviders: {
   [actionName in PlayerActionName]: PayloadProviderMap[actionName]
 } = {
-  AdvanceTime: () => ({ Action: 'AdvanceTime' as PlayerActionName }),
+  AdvanceTime: () => ({ ActionName: 'AdvanceTime' as PlayerActionName }),
   // Note: currently Cap always buys 1 capacity. See PlayerActionPayload.cs in backend.
-  BuyTransportCap: () => ({ Action: 'BuyTransportCap' as PlayerActionName }),
+  BuyTransportCap: () => ({
+    ActionName: 'BuyTransportCap' as PlayerActionName,
+  }),
   // Note: currently HireAgents always hires 1 agent. See PlayerActionPayload.cs in backend.
   HireAgents: (TargetId: number) => ({
-    Action: 'HireAgents' as PlayerActionName,
+    ActionName: 'HireAgents' as PlayerActionName,
     TargetId,
   }),
   SackAgents: (Ids: number[]) => ({
-    Action: 'SackAgents' as PlayerActionName,
+    ActionName: 'SackAgents' as PlayerActionName,
     Ids,
   }),
   SendAgentsToIncomeGeneration: (Ids: number[]) => ({
-    Action: 'SendAgentsToIncomeGeneration' as PlayerActionName,
+    ActionName: 'SendAgentsToIncomeGeneration' as PlayerActionName,
     Ids,
   }),
   SendAgentsToIntelGathering: (Ids: number[]) => ({
-    Action: 'SendAgentsToIntelGathering' as PlayerActionName,
+    ActionName: 'SendAgentsToIntelGathering' as PlayerActionName,
     Ids,
   }),
   SendAgentsToTraining: (Ids: number[]) => ({
-    Action: 'SendAgentsToTraining' as PlayerActionName,
+    ActionName: 'SendAgentsToTraining' as PlayerActionName,
     Ids,
   }),
   RecallAgents: (Ids: number[]) => ({
-    Action: 'RecallAgents' as PlayerActionName,
+    ActionName: 'RecallAgents' as PlayerActionName,
     Ids,
   }),
   LaunchMission: (Ids: number[], TargetId: number) => ({
-    Action: 'LaunchMission' as PlayerActionName,
+    ActionName: 'LaunchMission' as PlayerActionName,
     Ids,
     TargetId,
   }),
