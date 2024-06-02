@@ -31,20 +31,20 @@ public static class ApplyPlayerActionRoute
     }
 
     private static JsonHttpResult<GameState> ApplyPlayerActionInternal(
-        PlayerActionPayload playerAction,
+        PlayerActionPayload playerActionPayload,
         GameState? gameState)
     {
         Console.Out.WriteLine(
             $"Invoked ApplyPlayerActionInternal. " +
-            $"playerAction: {playerAction.ToIndentedUnsafeJsonString()}");
+            $"playerAction: {playerActionPayload.ToIndentedUnsafeJsonString()}");
 
         var config = new Configuration(new SimulatedFileSystem());
         var log = new Log(config);
         var gameSession = ApiUtils.NewGameSession(gameState);
         var controller = new GameSessionController(config, log, gameSession);
 
-        if (!(playerAction.Action == "AdvanceTime" && gameState is null))
-            playerAction.Apply(controller);
+        if (!(playerActionPayload.ActionName == "AdvanceTime" && gameState is null))
+            playerActionPayload.Apply(controller);
         else
         {
             // If the player action is "AdvanceTime" and the gameState is null,

@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Serialization;
+﻿// codesync: UfoGameLib.Api.PlayerActionPayload
+using System.Text.Json.Serialization;
 using UfoGameLib.Controller;
 
 namespace UfoGameLib.Api;
@@ -10,11 +11,11 @@ namespace UfoGameLib.Api;
 /// The payload can be applied to a GameSessionController. See the Apply() method.
 /// </summary>
 [method: JsonConstructor]
-public class PlayerActionPayload(string action, int[]? ids, int? targetId)
+public class PlayerActionPayload(string actionName, int[]? ids, int? targetId)
 {
     // ReSharper disable MemberCanBePrivate.Global
     // Reason for 'ReSharper disable MemberCanBePrivate.Global': these fields are used by the deserializer.
-    public readonly string Action = action;
+    public readonly string ActionName = actionName;
     public readonly int[]? Ids = ids;
     public readonly int? TargetId = targetId;
 
@@ -35,7 +36,7 @@ public class PlayerActionPayload(string action, int[]? ids, int? targetId)
     private Action TranslatePlayerActionToControllerAction(GameSessionController controller)
         // https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/operators/patterns#property-pattern
         // https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/operators/patterns#positional-pattern
-        => Action switch
+        => ActionName switch
         {
             "AdvanceTime" => controller.AdvanceTime,
             "BuyTransportCap" => () => controller.TurnController.BuyTransportCapacity(1),
@@ -46,6 +47,6 @@ public class PlayerActionPayload(string action, int[]? ids, int? targetId)
             "SendAgentsToTraining" => () => controller.TurnController.SendAgentsToTraining(Ids!),
             "RecallAgents" => () => controller.TurnController.RecallAgents(Ids!),
             "LaunchMission" => () => controller.TurnController.LaunchMission(TargetId!.Value, Ids!),
-            _ => () => throw new ArgumentException($"Unsupported player action of '{Action}'")
+            _ => () => throw new ArgumentException($"Unsupported player action of '{ActionName}'")
         };
 }
