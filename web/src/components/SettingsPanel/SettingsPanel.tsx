@@ -1,8 +1,13 @@
-/* eslint-disable sonarjs/no-duplicate-string */
-import { Button, Card, CardContent, CardHeader, Switch } from '@mui/material'
-import Grid from '@mui/material/Unstable_Grid2'
-import { type Settings, useSettingsContext } from '../../lib/settings/Settings'
-import { Label } from '../Label'
+import {
+  Button,
+  Card,
+  CardHeader,
+  List,
+  ListItem,
+  ListItemText,
+  Switch,
+} from '@mui/material'
+import { useSettingsContext, type Settings } from '../../lib/settings/Settings'
 
 // kja redo settings panel using list:
 // https://mui.com/material-ui/react-list/#switch
@@ -30,73 +35,53 @@ export function SettingsPanel(): React.JSX.Element {
   return (
     <Card variant="outlined">
       <CardHeader title="Settings" sx={{ paddingBottom: '0px' }} />
-      <CardContent sx={{ padding: '14px', maxWidth: '250px' }}>
-        <Grid container spacing={1}>
-          <Grid
-            xs={12}
-            sx={{
-              display: 'flex',
-              alignItems: 'center',
-              width: '100%',
-              justifyContent: 'space-between',
-              //backgroundColor: 'rgb(64, 0, 0)',
+      <List sx={{ width: '100%', maxWidth: 360, paddingTop: '0px' }}>
+        <ListItem>
+          <ListItemText id="switch-list-introEnabled" primary="Show intro" />
+          <Switch
+            edge="end"
+            checked={settings.introEnabled}
+            onChange={handleIntroEnabledChange}
+            inputProps={{
+              'aria-labelledby': 'switch-list-introEnabled',
+            }}
+          />
+        </ListItem>
+        <ListItem>
+          <ListItemText id="switch-list-outroEnabled" primary="Show outro" />
+          <Switch
+            edge="end"
+            checked={settings.outroEnabled}
+            onChange={handleOutroEnabledChange}
+            inputProps={{
+              'aria-labelledby': 'switch-list-outroEnabled',
+            }}
+          />
+        </ListItem>
+        <ListItem>
+          <ListItemText id="switch-list-chartsEnabled" primary="Show charts" />
+          <Switch
+            edge="end"
+            checked={settings.chartsEnabled}
+            onChange={handleChartsEnabledChange}
+            inputProps={{
+              'aria-labelledby': 'switch-list-chartsEnabled',
+            }}
+          />
+        </ListItem>
+        <ListItem>
+          <Button
+            variant="outlined"
+            color="error"
+            onClick={() => {
+              localStorage.clear()
+              console.log('Cleared local storage')
             }}
           >
-            <Label typographyVariant="body1">Show intro</Label>
-            <Switch
-              checked={settings.introEnabled}
-              onChange={handleIntroEnabledChange}
-              inputProps={{ 'aria-label': 'Show Intro' }}
-            />
-          </Grid>
-          <Grid
-            xs={12}
-            sx={{
-              display: 'flex',
-              alignItems: 'center',
-              width: '100%',
-              justifyContent: 'space-between',
-              //backgroundColor: 'rgb(64, 32, 0)',
-            }}
-          >
-            <Label typographyVariant="body1">Show outro</Label>
-            <Switch
-              checked={settings.outroEnabled}
-              onChange={handleOutroEnabledChange}
-              inputProps={{ 'aria-label': 'Show Outro' }}
-            />
-          </Grid>
-          <Grid
-            xs={12}
-            sx={{
-              display: 'flex',
-              alignItems: 'center',
-              width: '100%',
-              justifyContent: 'space-between',
-              //backgroundColor: 'rgb(64, 32, 0)',
-            }}
-          >
-            <Label typographyVariant="body1">Show charts</Label>
-            <Switch
-              checked={settings.chartsEnabled}
-              onChange={handleChartsEnabledChange}
-              inputProps={{ 'aria-label': 'Show charts' }}
-            />
-          </Grid>
-          <Grid xs={12} sx={{ display: 'flex', justifyContent: 'center' }}>
-            <Button
-              variant="outlined"
-              color="error"
-              onClick={() => {
-                localStorage.clear()
-                console.log('Cleared local storage')
-              }}
-            >
-              Clear local storage
-            </Button>
-          </Grid>
-        </Grid>
-      </CardContent>
+            Clear local storage
+          </Button>
+        </ListItem>
+      </List>
     </Card>
   )
 }
