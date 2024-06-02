@@ -20,7 +20,7 @@ export class SettingsPanelFixture {
   }
 
   public assertShowIntro(isChecked: boolean): void {
-    getElementCheckState('checkbox', 'Show outro', isChecked)
+    getElementCheckState('checkbox', 'Show intro', isChecked)
   }
 
   public assertShowOutro(isChecked: boolean): void {

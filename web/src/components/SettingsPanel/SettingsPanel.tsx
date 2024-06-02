@@ -9,8 +9,6 @@ import {
 } from '@mui/material'
 import { useSettingsContext, type Settings } from '../../lib/settings/Settings'
 
-// kja redo settings panel using list:
-// https://mui.com/material-ui/react-list/#switch
 export function SettingsPanel(): React.JSX.Element {
   const settings: Settings = useSettingsContext()
 
@@ -32,6 +30,7 @@ export function SettingsPanel(): React.JSX.Element {
     settings.setChartsEnabled(event.target.checked)
   }
 
+  // MUI components usage based on: https://mui.com/material-ui/react-list/#switch
   return (
     <Card variant="outlined">
       <CardHeader title="Settings" sx={{ paddingBottom: '0px' }} />
