@@ -5,21 +5,24 @@ namespace Lib.Contracts;
 
 public static class Contract
 {
-    public static void Assert(int subject, string subjectName, Range range, string upperBoundReason)
+    public static void AssertInRange(
+        int subject,
+        Range range,
+        [CallerArgumentExpression("subject")] string? subjectName = null)
     {
         if (!(subject >= range.Start.Value))
             throw new InvariantException(
                 $"{subjectName}: Expected value >= {range.Start.Value}; value = {subject}");
         if (!(subject <= range.End.Value))
             throw new InvariantException(
-                $"{subjectName}: Expected value <= {range.End.Value}. value = {subject}. " +
-                $"Reason: {upperBoundReason}");
+                $"{subjectName}: Expected value <= {range.End.Value}. value = {subject}. ");
     }
 
     // kja include in the exception the name of the caller
     public static void Assert(
         [DoesNotReturnIf(false)] bool condition,
-        [CallerArgumentExpression("condition")] string? message = null)
+        [CallerArgumentExpression("condition")]
+        string? message = null)
     {
         if (!condition)
             throw message != null ? new InvariantException(message) : new InvariantException();
@@ -57,6 +60,7 @@ public static class Contract
     ///   Contract.Assert(values.Length GEQ 0);
     /// </summary>
     // ReSharper disable once UnusedParameter.Global
-    public static void Assert(string comment) {}
-
+    public static void Assert(string comment)
+    {
+    }
 }

@@ -34,7 +34,7 @@ public class LaunchMissionPlayerAction : PlayerAction
         int missionId = state.NextMissionId;
         var mission = new Mission(missionId, _site, state.Timeline.CurrentTurn, _agents.Count);
 
-        Contract.Assert(_agents.All(agent => Ruleset.AgentCanSurvive(agent, mission)));
+        Contract.Assert(_agents.All(agent => AgentSurvivalRoll.AgentCanSurvive(agent, mission)));
 
         state.Missions.Add(mission);
 

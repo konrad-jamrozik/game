@@ -136,7 +136,7 @@ public class AdvanceTimePlayerAction : PlayerAction
 
         foreach (Agent agent in agentsOnMission)
         {
-            (bool survived, int recoversIn) = Ruleset.RollForAgentSurvival(agent, mission, _randomGen, _log);
+            (bool survived, int? recoversIn) = Ruleset.RollForAgentSurvival(_log, _randomGen, agent, mission);
 
             if (survived)
             {

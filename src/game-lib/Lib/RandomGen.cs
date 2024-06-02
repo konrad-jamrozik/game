@@ -1,4 +1,6 @@
+using Lib.Contracts;
 using MoreLinq;
+using System;
 
 namespace UfoGameLib.Lib;
 
@@ -13,11 +15,28 @@ public class RandomGen
         _random = random;
     }
 
-    public int Roll1To(int n) => _random.Next(n) + 1;
+    public int Roll1To(int n)
+    {
+        Contract.Assert(n >= 1);
+        return _random.Next(n) + 1;
+    }
 
-    public int Roll0To(int n) => _random.Next(n+1);
+    public int Roll0To(int n)
+    {
+        Contract.Assert(n >= 0);
+        return _random.Next(n + 1);
+    }
 
-    public int Roll(int min, int max) => min + Roll0To(max - min);
+    public int Roll(int min, int max)
+    {
+        Contract.Assert(min <= max);
+        return min + Roll0To(max - min);
+    }
+
+    public int Roll(Range range)
+    {
+        return Roll(range.Start.Value, range.End.Value);
+    }
 
     // ReSharper disable once MemberCanBePrivate.Global
     public T Pick<T>(List<T> items)

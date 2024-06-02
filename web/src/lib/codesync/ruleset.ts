@@ -30,11 +30,9 @@ const skillFromEachFirstMission = [18, 15, 12, 9, 6]
 const skillFromEachMissionBeyondFirstMissions =
   skillFromEachFirstMission.at(-1)!
 
-const minSurvivalThreshold = 1
-
-const agentSurvivalRollUpperBound = 100
-
 const baseMissionSiteDifficulty = 30
+
+const agentBaseSurvivalSkill = 100
 
 export function isActive(missionSite: MissionSite): boolean {
   return (
@@ -52,7 +50,9 @@ export function missionLaunched(mission: Mission): boolean {
 
 export function getSurvivalSkill(agent: Agent): number {
   return (
-    agent.TurnsInTraining * agentTrainingCoefficient + skillFromMissions(agent)
+    agentBaseSurvivalSkill +
+    agent.TurnsInTraining * agentTrainingCoefficient +
+    skillFromMissions(agent)
   )
 }
 
@@ -63,13 +63,6 @@ export function transportCapBuyingCost(cap: number): number {
 export function canBeSentOnMission(agent: Agent): boolean {
   const validAgentStates: AgentState[] = ['Available', 'Training']
   return _.includes(validAgentStates, agent.CurrentState)
-}
-
-export function getSurvivalChanceNonNegative(
-  agent: Agent,
-  missionSite: MissionSite,
-): number {
-  return _.max([getSurvivalChance(agent, missionSite), 0])!
 }
 
 export function requiredSurvivingAgentsForSuccess(site: MissionSite): number {
@@ -145,17 +138,6 @@ function canBeSacked(agent: Agent): boolean {
 function canBeSentToTraining(agent: Agent): boolean {
   const validStates: AgentState[] = ['Available']
   return _.includes(validStates, agent.CurrentState)
-}
-
-function getSurvivalChance(agent: Agent, missionSite: MissionSite): number {
-  return (
-    agentSurvivalRollUpperBound -
-    agentSurvivalThreshold(agent, missionSite.Difficulty)
-  )
-}
-
-function agentSurvivalThreshold(agent: Agent, difficulty: number): number {
-  return _.max([difficulty - getSurvivalSkill(agent), minSurvivalThreshold])!
 }
 
 function skillFromMissions(agent: Agent): number {

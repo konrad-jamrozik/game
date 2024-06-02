@@ -19,9 +19,9 @@ import type {
 import {
   agentPlayerActionConditionMap,
   canBeSentOnMission,
-  getSurvivalChanceNonNegative,
   getSurvivalSkill,
 } from '../../lib/codesync/ruleset'
+import { getSurvivalChance } from '../../lib/codesync/agentSurvivalRoll'
 import {
   useGameSessionContext,
   type GameSession,
@@ -245,7 +245,7 @@ function getRow(agent: Agent, missionSite?: MissionSite | undefined): AgentRow {
     missionsSurvived: agent.MissionsSurvived,
     survivalSkill: getSurvivalSkill(agent),
     survivalChance: !_.isUndefined(missionSite)
-      ? getSurvivalChanceNonNegative(agent, missionSite)
+      ? getSurvivalChance(agent, missionSite)
       : undefined,
   }
 }

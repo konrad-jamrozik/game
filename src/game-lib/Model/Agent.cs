@@ -80,7 +80,7 @@ public class Agent
     [JsonIgnore]
     public int SurvivalSkill => Ruleset.AgentSurvivalSkill(this);
 
-    public int SurvivalChance(int difficulty) => Ruleset.AgentSurvivalChance(this, difficulty);
+    public int SurvivalChance(int difficulty) => AgentSurvivalRoll.ComputeSurvivalChance(this, difficulty);
 
     [JsonIgnore]
     public int TurnsInOps => TurnsGeneratingIncome + TurnsGatheringIntel;
@@ -195,7 +195,7 @@ public class Agent
         AssertMissionInvariants();
     }
 
-    public void SetRecoversIn(int recoversIn)
+    public void SetRecoversIn(int? recoversIn)
     {
         Contract.Assert(recoversIn >= 1);
         
