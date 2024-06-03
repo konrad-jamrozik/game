@@ -18,7 +18,7 @@ public static class Contract
                 $"{subjectName}: Expected value <= {range.End.Value}. value = {subject}. ");
     }
 
-    // kja include in the exception the name of the caller
+    // kja2 include in the exception the name of the caller
     public static void Assert(
         [DoesNotReturnIf(false)] bool condition,
         [CallerArgumentExpression("condition")]

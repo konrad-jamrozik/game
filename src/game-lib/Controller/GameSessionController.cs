@@ -90,6 +90,7 @@ public class GameSessionController
             // This persists the game state at the player turn beginning.
             GameSession.AppendCurrentStateToPastStates();
 
+            // kja this should return a collection of player action game events
             player.PlayGameTurn(CurrentGameStatePlayerView, TurnController);
 
             Contract.Assert(!state.IsGameOver);
@@ -101,6 +102,7 @@ public class GameSessionController
             // but before the turn time was advanced.
             GameSession.AppendCurrentStateToPastStates();
 
+            // kja this should return a collection of world game events
             AdvanceTime();
 
             // This state diff shows the result of the action the player took in their turn.

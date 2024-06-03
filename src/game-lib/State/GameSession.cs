@@ -16,7 +16,9 @@ public class GameSession
 {
     public readonly RandomGen RandomGen;
 
+    // kja this should be List<GameSessionTurn> where GameSessionTurn is (GameState, List<PlayerActionGameEvent>, List<WorldGameEvent>)
     public readonly List<GameState> PastGameStates = new List<GameState>();
+    // kja CurrentGameState should become a component of CurrentGameSessionTurn
     public GameState CurrentGameState;
 
     public GameSession(RandomGen randomGen, GameState? currentGameState = null)

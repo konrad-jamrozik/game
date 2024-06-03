@@ -78,7 +78,7 @@ public class GameSessionTests
         turnController.LaunchMission(site, agentCount: 3);
         controller.AdvanceTime();
 
-        var finalState = session.CurrentGameState;
+        GameState finalState = session.CurrentGameState;
 
         Assert.Multiple(() => {
             Assert.That(finalState.Timeline.CurrentTurn, Is.EqualTo(4), "currentTurn");
@@ -104,8 +104,8 @@ public class GameSessionTests
     ///   That game state is saved, modified (by advancing time) and then the
     ///   game state is loaded.
     /// Then:
-    ///   - Advancing time does not modify reference to the game session current game state
-    ///   - Advancing time does modify the game session current game state
+    ///   - Advancing time does not modify reference to the game session current game state.
+    ///   - Advancing time does modify the game session current game state.
     ///   - Loading the game restores the game session current game state to how it was at the time it was saved.
     /// </summary>
     [Test]
