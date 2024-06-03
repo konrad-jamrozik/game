@@ -16,12 +16,12 @@ import type {
   AgentState,
   MissionSite,
 } from '../../lib/codesync/GameState'
+import { getSurvivalChance } from '../../lib/codesync/agentSurvivalRoll'
 import {
   agentPlayerActionConditionMap,
   canBeSentOnMission,
   getSurvivalSkill,
 } from '../../lib/codesync/ruleset'
-import { getSurvivalChance } from '../../lib/codesync/agentSurvivalRoll'
 import {
   useGameSessionContext,
   type GameSession,
