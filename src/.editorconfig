@@ -309,6 +309,7 @@ resharper_suggest_var_or_type_simple_types_highlighting = none
 
 # IDE0090: Use 'new(...)'
 dotnet_diagnostic.IDE0090.severity = silent
+csharp_style_prefer_primary_constructors = true:silent
 
 [*.{cs,vb}]
 dotnet_style_coalesce_expression = true:suggestion
