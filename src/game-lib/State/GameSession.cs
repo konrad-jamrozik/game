@@ -1,4 +1,6 @@
+using Lib.Json;
 using Lib.Primitives;
+using UfoGameLib.Events;
 using UfoGameLib.Lib;
 
 namespace UfoGameLib.State;
@@ -16,15 +18,21 @@ public class GameSession
 {
     public readonly RandomGen RandomGen;
 
-    // kja this should be List<GameSessionTurn> where GameSessionTurn is (GameState, List<PlayerActionGameEvent>, List<WorldGameEvent>)
-    public readonly List<GameState> PastGameStates = new List<GameState>();
-    // kja CurrentGameState should become a component of CurrentGameSessionTurn
-    public GameState CurrentGameState;
+    public GameSessionTurn CurrentGameSessionTurn;
+
+    public readonly List<GameSessionTurn> PastGameSessionTurns = new List<GameSessionTurn>();
+
+    public IReadOnlyList<GameState> PastGameStates
+        => PastGameSessionTurns.Select(turn => turn.GameState).ToList().AsReadOnly();
+
+    public GameState CurrentGameState => CurrentGameSessionTurn.GameState;
+
+    public List<GameEvent> CurrentGameEvents => CurrentGameSessionTurn.GameEvents;
 
     public GameSession(RandomGen randomGen, GameState? currentGameState = null)
     {
         RandomGen = randomGen;
-        CurrentGameState = currentGameState ?? GameState.NewInitialGameState();
+        CurrentGameSessionTurn = new GameSessionTurn(currentGameState);
     }
 
     public List<GameState> AllGameStates => PastGameStates.Concat(CurrentGameState.WrapInList()).ToList();
@@ -36,10 +44,11 @@ public class GameSession
 
     public GameState? PreviousGameState => PastGameStates.Any() ? PastGameStates.Last() : null;
 
-    public void AppendCurrentStateToPastStates()
+    public void AppendCurrentTurnToPastTurns()
     {
-        // We have to clone the game state as the CurrentGameState may be mutated downstream.
-        // Without the cloning, the past game state would also be mutated as it is the same object.
-        PastGameStates.Add(CurrentGameState.Clone());
+        // We have to clone the game session turn as the CurrentGameSessionTurn may be mutated downstream.
+        // Notably, its game state.
+        // Without the cloning, the past game session turn game state would also be mutated as it is the same object.
+        PastGameSessionTurns.Add(CurrentGameSessionTurn.Clone());
     }
 }

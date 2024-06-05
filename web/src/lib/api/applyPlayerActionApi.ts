@@ -1,3 +1,4 @@
+import type { GameSessionTurn } from '../codesync/GameSessionTurn'
 import type { GameState } from '../codesync/GameState'
 import type { PlayerActionPayload } from '../codesync/PlayerActionPayload'
 import {
@@ -12,7 +13,7 @@ export async function callApplyPlayerActionApi(
     currentGameState: GameState | undefined
     playerActionPayload: PlayerActionPayload
   },
-): Promise<GameState | undefined> {
+): Promise<GameSessionTurn | undefined> {
   const apiPath = 'applyPlayerAction'
   const apiQuery = ''
   const jsonBody: string = JSON.stringify(
@@ -23,7 +24,7 @@ export async function callApplyPlayerActionApi(
   )
   const apiUrl = getApiUrl(apiPath, apiQuery)
   const request = getPostJsonRequest(apiUrl, jsonBody)
-  return callApi<GameState>({ ...params, request })
+  return callApi<GameSessionTurn>({ ...params, request })
 }
 
 function getApplyPlayerActionBody(

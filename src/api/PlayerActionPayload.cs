@@ -1,6 +1,7 @@
 ﻿// codesync: UfoGameLib.Api.PlayerActionPayload
 using System.Text.Json.Serialization;
 using UfoGameLib.Controller;
+using UfoGameLib.Events;
 
 namespace UfoGameLib.Api;
 
@@ -27,13 +28,13 @@ public class PlayerActionPayload(string actionName, int[]? ids, int? targetId)
     /// The output of this method is a mutation of the controller.GameSession.CurrentGameState,
     /// per the applied player action as captured by this payload.
     /// </returns>
-    public void Apply(GameSessionController controller)
+    public PlayerActionEvent Apply(GameSessionController controller)
     {
-        Action apply = TranslatePlayerActionToControllerAction(controller);
-        apply();
+        Func<PlayerActionEvent> apply = TranslatePlayerActionToControllerAction(controller);
+        return apply();
     }
 
-    private Action TranslatePlayerActionToControllerAction(GameSessionController controller)
+    private Func<PlayerActionEvent> TranslatePlayerActionToControllerAction(GameSessionController controller)
         // https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/operators/patterns#property-pattern
         // https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/operators/patterns#positional-pattern
         => ActionName switch

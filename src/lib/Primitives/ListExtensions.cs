@@ -2,6 +2,6 @@
 
 public static class ListExtensions
 {
-    public static IList<TValue> WrapInList<TValue>(this TValue source) => 
+    public static List<TValue> WrapInList<TValue>(this TValue source) => 
         new List<TValue> { source };
 }

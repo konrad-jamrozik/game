@@ -1,4 +1,5 @@
 using Lib.Contracts;
+using UfoGameLib.Events;
 using UfoGameLib.State;
 using Timeline = UfoGameLib.Model.Timeline;
 
@@ -87,23 +88,34 @@ public class GameSessionController
             _log.Info($"===== Turn {state.Timeline.CurrentTurn}");
             _log.Info("");
 
-            // This persists the game state at the player turn beginning.
-            GameSession.AppendCurrentStateToPastStates();
+            // This persists the game session turn at the player turn beginning. 
+            // As such, the game session turn will have the game state at the player turn beginning,
+            // as well as following game events: "advance time" player action event from previous turn
+            // to current turn, followed by list of all world events that happened during the time advancement
+            // leading up to the current player turn start.
+            GameSession.AppendCurrentTurnToPastTurns();
 
-            // kja this should return a collection of player action game events
             player.PlayGameTurn(CurrentGameStatePlayerView, TurnController);
+
+            List<PlayerActionEvent> playerActionEvents = TurnController.GetAndDeleteRecordedPlayerActionEvents();
+            GameSession.CurrentGameEvents.AddRange(playerActionEvents);
 
             Contract.Assert(!state.IsGameOver);
 
             // This state diff shows what actions the player took.
             DiffPreviousAndCurrentGameState();
 
-            // This persists the game state after the player took their actions in their turn,
+            // This persists the game session turn after the player took their actions in their turn,
             // but before the turn time was advanced.
-            GameSession.AppendCurrentStateToPastStates();
+            // As such, the game session turn will include a list of all player action event
+            // that player took in their turn.
+            GameSession.AppendCurrentTurnToPastTurns();
 
-            // kja this should return a collection of world game events
-            AdvanceTime();
+            PlayerActionEvent advanceTimePlayerActionEvent = AdvanceTime();
+            GameSession.CurrentGameEvents.Add(advanceTimePlayerActionEvent);
+
+            List<WorldEvent> worldEvents = GetAndDeleteRecordedWorldEvents();
+            GameSession.CurrentGameEvents.AddRange(worldEvents);
 
             // This state diff shows the result of the action the player took in their turn.
             DiffPreviousAndCurrentGameState();
@@ -143,8 +155,14 @@ public class GameSessionController
         _log.Flush();
     }
 
-    public void AdvanceTime()
-        => PlayerActions.Apply(new AdvanceTimePlayerAction(_log, GameSession.RandomGen), GameSession.CurrentGameState);
+    private List<WorldEvent> GetAndDeleteRecordedWorldEvents()
+    {
+        // kja to implement GetAndDeleteRecordedWorldEvents
+        return new List<WorldEvent>();
+    }
+
+    public PlayerActionEvent AdvanceTime()
+        => new AdvanceTimePlayerAction(_log, GameSession.RandomGen).Apply(GameSession.CurrentGameState);
 
     public GameState SaveCurrentGameStateToFile()
     {
@@ -155,8 +173,9 @@ public class GameSessionController
 
     public GameState LoadCurrentGameStateFromFile()
     {
-        GameSession.AppendCurrentStateToPastStates();
-        GameSession.CurrentGameState = GameState.FromJsonFile(_config.SaveFile);
+        GameSession.AppendCurrentTurnToPastTurns();
+        GameState loadedGameState = GameState.FromJsonFile(_config.SaveFile);
+        GameSession.CurrentGameSessionTurn = new GameSessionTurn(loadedGameState);
         _log.Info($"Loaded game state from {_config.SaveFile.FullPath}");
         return GameSession.CurrentGameState;
     }

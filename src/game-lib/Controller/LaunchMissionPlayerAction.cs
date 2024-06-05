@@ -1,4 +1,5 @@
 using Lib.Contracts;
+using UfoGameLib.Events;
 using UfoGameLib.Lib;
 using UfoGameLib.Model;
 using UfoGameLib.State;
@@ -19,7 +20,7 @@ public class LaunchMissionPlayerAction : PlayerAction
         _agents = agents;
     }
 
-    public override void Apply(GameState state)
+    protected override PlayerActionEvent ApplyImpl(GameState state)
     {
         Contract.Assert(state.MissionSites.Contains(_site));
         Contract.Assert(_site.IsActive);
@@ -43,5 +44,7 @@ public class LaunchMissionPlayerAction : PlayerAction
         state.Assets.CurrentTransportCapacity -= _agents.Count;
 
         _log.Info($"Launch {mission.LogString}, {_site.LogString}, AgentCount: {_agents.Count}");
+
+        return new PlayerActionEvent("Launch mission", "TODO");
     }
 }

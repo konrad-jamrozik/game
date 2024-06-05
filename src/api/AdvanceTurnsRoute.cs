@@ -71,7 +71,7 @@ public static class AdvanceTurnsRoute
 
         controller.PlayGameSession(turnLimit: parsedTurnLimit, aiPlayer);
 
-        // kja here got to return all the world events and player action events (the latter made by AI player)
+        // kja return CurrentGameSessionTurn instead of CurrentGameState.
         AdvanceTurnsSuccessResponse result = includeAllStates == true
             ? ApiUtils.ToJsonHttpResult(
                 SkipFirstTurn(gameSession.AllGameStatesAtTurnStarts(), newGameSession: initialGameState is null))

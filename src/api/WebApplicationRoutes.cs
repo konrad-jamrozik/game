@@ -27,7 +27,7 @@ public class WebApplicationRoutes
 
         app.MapPost("/applyPlayerAction", ApplyPlayerActionRoute.ApplyPlayerAction)
             .Accepts<ApplyPlayerActionRequestBody>("application/json")
-            .Produces<GameState>()
+            .Produces<GameSessionTurn>()
             .WithTags("API");
     }
 

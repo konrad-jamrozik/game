@@ -1,24 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace UfoGameLib.Events;
 
-namespace UfoGameLib.Events;
-
-internal class GameEvent
+public abstract class GameEvent
 {
-    public readonly int Turn;
-    public readonly string Description;
+    public readonly string Type;
+    public readonly string Details;
 
-    public GameEvent(int turn, string description)
+    public GameEvent(string type, string details)
     {
-        Turn = turn;
-        Description = description;
+        Type = type;
+        Details = details;
     }
 
-    public override string ToString()
-    {
-        return $"Turn {Turn}: {Description}";
-    }
+    public abstract GameEvent Clone();
 }

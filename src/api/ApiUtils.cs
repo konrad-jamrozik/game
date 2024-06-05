@@ -10,7 +10,7 @@ namespace UfoGameLib.Api;
 public static class ApiUtils
 {
     public static async Task<Results<T, BadRequest<string>>> TryProcessRoute<T>(
-        Func<Task<T>> routeFunc) where T: IResult
+        Func<Task<T>> routeFunc) where T : IResult
     {
         try
         {
@@ -94,6 +94,9 @@ public static class ApiUtils
         var gameStatePlayerView = new GameStatePlayerView(() => gameSession.CurrentGameState);
         return ToJsonHttpResult(gameStatePlayerView);
     }
+
+    public static JsonHttpResult<GameSessionTurn> ToJsonHttpResult(GameSessionTurn gst)
+        => TypedResults.Json(gst, GameState.StateJsonSerializerOptions);
 
     public static JsonHttpResult<GameState> ToJsonHttpResult(GameState gs)
         => TypedResults.Json(gs, GameState.StateJsonSerializerOptions);

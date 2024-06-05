@@ -9,6 +9,7 @@ import { GameSessionContext } from '../../components/GameSessionProvider'
 import { callAdvanceTurnsApi } from '../api/advanceTurnsApi'
 import { callApplyPlayerActionApi } from '../api/applyPlayerActionApi'
 import { playerActionsPayloadsProviders } from '../api/playerActionsPayloadsProviders'
+import type { GameSessionTurn } from '../codesync/GameSessionTurn'
 import { initialTurn, type Assets, type GameState } from '../codesync/GameState'
 import type {
   AgentPlayerActionName,
@@ -350,17 +351,17 @@ export class GameSession {
     playerActionPayload: PlayerActionPayload,
   ): Promise<boolean> {
     const currentGameState = this.getCurrentGameState()
-    const newGameState = await callApplyPlayerActionApi({
-      setLoading: this.setLoading,
-      setError: this.setError,
-      currentGameState,
-      playerActionPayload,
-    })
-
-    if (!_.isUndefined(newGameState)) {
+    const newGameSessionTurn: GameSessionTurn | undefined =
+      await callApplyPlayerActionApi({
+        setLoading: this.setLoading,
+        setError: this.setError,
+        currentGameState,
+        playerActionPayload,
+      })
+    if (!_.isUndefined(newGameSessionTurn)) {
+      const newGameState = newGameSessionTurn.GameState
       this.upsertGameStates([newGameState], true)
-      // future work: here player action game events should instead be upserted
-      // from the returned value from callApplyPlayerActionApi once the API returns them.
+      // kja upsert newGameSessionTurn.GameEvents[0] here
       this.upsertGameEvent(playerActionPayload)
       return true
     }

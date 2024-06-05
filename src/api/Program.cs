@@ -68,7 +68,7 @@ new WebApplicationRoutes().Register(app);
 app.Run();
 return;
 
-// See /docs/cors/cors.md
+// See /docs/cors.md
 // Among others, that doc mentions:
 // https://learn.microsoft.com/en-us/aspnet/core/security/cors?view=aspnetcore-8.0
 string UseCorsForLocalhost(WebApplicationBuilder builder)
