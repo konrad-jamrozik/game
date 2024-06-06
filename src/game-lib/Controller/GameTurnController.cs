@@ -53,6 +53,9 @@ public class GameTurnController
         LaunchMission(site, agents);
     }
 
+    // kja need to add assertions everywhere here so the actions are not empty, like count = 0, or empty ids.
+    // Then the basic AI needs to be updated to handle this.
+
     public PlayerActionEvent HireAgents(int count)
         => RecordPlayerActionEvent(new HireAgentsPlayerAction(_log, count));
 

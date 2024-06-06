@@ -83,9 +83,9 @@ export class GameSession {
     })
     if (!_.isUndefined(newGameSessionTurns)) {
       this.upsertGameStates(_.map(newGameSessionTurns, (gs) => gs.GameState))
-      // kja probably need this.upsertGameSessionTurns(newGameSessionTurns) abstraction.
-      // Also, need to verify that this won't differ when delegateToAi is true or false.
-      //
+      // kja NEEDS FIX. need this.upsertGameSessionTurns(newGameSessionTurns) abstraction.
+      // Doing flatMap doesn't work because the turn resetting functionality needs to know which game events
+      // to remove when resetting turn.
       // This doesn't really work. Reverting / resetting turn is completely scrambled.
       this.upsertGameEvents(
         _.flatMap(newGameSessionTurns, (gs) => gs.GameEvents),

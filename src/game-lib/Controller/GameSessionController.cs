@@ -94,6 +94,7 @@ public class GameSessionController
             // to current turn, followed by list of all world events that happened during the time advancement
             // leading up to the current player turn start.
             GameSession.AppendCurrentTurnToPastTurns();
+            GameSession.CurrentGameEvents.Clear();
 
             player.PlayGameTurn(CurrentGameStatePlayerView, TurnController);
 
@@ -110,6 +111,7 @@ public class GameSessionController
             // As such, the game session turn will include a list of all player action event
             // that player took in their turn.
             GameSession.AppendCurrentTurnToPastTurns();
+            GameSession.CurrentGameEvents.Clear();
 
             PlayerActionEvent advanceTimePlayerActionEvent = AdvanceTime();
             GameSession.CurrentGameEvents.Add(advanceTimePlayerActionEvent);
