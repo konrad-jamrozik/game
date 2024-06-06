@@ -73,7 +73,7 @@ function Remove-FrontendPortUsage([string]$Port = "5173") {
             Write-Output "Number not found in the line."
         }
     } else {
-        Write-Output ":5173 not found in netstat output."
+        Write-Output ":$Port not found in netstat output."
     }
 }
 New-Alias game-clear-frontend-port Remove-FrontendPortUsage

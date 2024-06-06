@@ -1,18 +1,12 @@
 import { Box } from '@mui/material'
 import { DataGrid, type GridColDef } from '@mui/x-data-grid'
 import _ from 'lodash'
-import type { PlayerActionPayload } from '../../lib/codesync/PlayerActionPayload'
 import type {
-  GameEventFromPayload,
   GameEventDisplayedKind,
   GameEventPayload,
 } from '../../lib/gameSession/GameEventFromPayload'
 import { useGameSessionContext } from '../../lib/gameSession/GameSession'
 import type { RenderedGameEvent } from '../../lib/gameSession/RenderedGameEvent'
-import {
-  getDisplayedDetails,
-  getDisplayedType,
-} from '../../lib/rendering/renderPlayerActionPayload'
 import {
   defaultComponentHeight,
   defaultComponentMinWidth,
@@ -107,14 +101,14 @@ const columns: GridColDef<GameEventRow>[] = [
 
 // kja this will come in play once I fix the game event content formatting
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function getRowFromGameEventFromPayload(
-  event: GameEventFromPayload,
-): GameEventRow {
-  return {
-    id: event.Id,
-    turn: event.Turn,
-    kind: 'Player action',
-    type: getDisplayedType(event.Payload as PlayerActionPayload),
-    details: getDisplayedDetails(event.Payload as PlayerActionPayload),
-  }
-}
+// function getRowFromGameEventFromPayload(
+//   event: GameEventFromPayload,
+// ): GameEventRow {
+//   return {
+//     id: event.Id,
+//     turn: event.Turn,
+//     kind: 'Player action',
+//     type: getDisplayedType(event.Payload as PlayerActionPayload),
+//     details: getDisplayedDetails(event.Payload as PlayerActionPayload),
+//   }
+// }

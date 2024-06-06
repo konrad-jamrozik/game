@@ -22,7 +22,7 @@ public class WebApplicationRoutes
 
         app.MapPost("/advanceTurns", AdvanceTurnsRoute.AdvanceTurns)
             .Accepts<GameState>("application/json")
-            .Produces<GameState>()
+            .Produces<GameSessionTurn>()
             .WithTags("API");
 
         app.MapPost("/applyPlayerAction", ApplyPlayerActionRoute.ApplyPlayerAction)

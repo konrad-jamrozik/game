@@ -74,19 +74,22 @@ export class GameSession {
   ): Promise<boolean> {
     const startGameState: GameState | undefined =
       this.getGameStateAtTurnEndUnsafe(startTurn)
-    const newGameStates = await callAdvanceTurnsApi({
+    const newGameSessionTurns = await callAdvanceTurnsApi({
       setLoading: this.setLoading,
       setError: this.setError,
       startGameState,
       targetTurn,
       delegateToAi,
     })
-    if (!_.isUndefined(newGameStates)) {
-      this.upsertGameStates(newGameStates)
-      if (delegateToAi === false) {
-        // kja restore this once AdvanceTurns API call returns game events
-      }
-      // future work: upsert here game world events, once callAdvanceTurnsApi returns them.
+    if (!_.isUndefined(newGameSessionTurns)) {
+      this.upsertGameStates(_.map(newGameSessionTurns, (gs) => gs.GameState))
+      // kja probably need this.upsertGameSessionTurns(newGameSessionTurns) abstraction.
+      // Also, need to verify that this won't differ when delegateToAi is true or false.
+      //
+      // This doesn't really work. Reverting / resetting turn is completely scrambled.
+      this.upsertGameEvents(
+        _.flatMap(newGameSessionTurns, (gs) => gs.GameEvents),
+      )
       return true
     }
     return false
@@ -330,6 +333,9 @@ export class GameSession {
   }
 
   public upsertGameEvents(inputGameEvents: GameEvent[]): void {
+    if (inputGameEvents.length === 0) {
+      return // kja IF won't be necessary once I loop over events below.
+    }
     const gameEvents: readonly RenderedGameEvent[] = this.getGameEvents()
     const gameEventMaxId = gameEvents.at(-1)?.Id ?? 0
     const newGameEventId = gameEventMaxId + 1

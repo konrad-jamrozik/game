@@ -37,6 +37,8 @@ public class GameSession
 
     public List<GameState> AllGameStates => PastGameStates.Concat(CurrentGameState.WrapInList()).ToList();
 
+    public List<GameSessionTurn> AllGameSessionTurns => PastGameSessionTurns.Concat(CurrentGameSessionTurn.WrapInList()).ToList();
+
     public List<GameState> AllGameStatesAtTurnStarts()
         => AllGameStates
             .AtTurnStarts()

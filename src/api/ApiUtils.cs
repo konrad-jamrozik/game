@@ -98,6 +98,9 @@ public static class ApiUtils
     public static JsonHttpResult<GameSessionTurn> ToJsonHttpResult(GameSessionTurn gst)
         => TypedResults.Json(gst, GameState.StateJsonSerializerOptions);
 
+    public static JsonHttpResult<List<GameSessionTurn>> ToJsonHttpResult(List<GameSessionTurn> gsts)
+        => TypedResults.Json(gsts, GameState.StateJsonSerializerOptions);
+
     public static JsonHttpResult<GameState> ToJsonHttpResult(GameState gs)
         => TypedResults.Json(gs, GameState.StateJsonSerializerOptions);
 

@@ -1,4 +1,5 @@
 import _ from 'lodash'
+import type { GameSessionTurn } from '../codesync/GameSessionTurn'
 import type { GameState } from '../codesync/GameState'
 import {
   callApi,
@@ -13,7 +14,7 @@ export async function callAdvanceTurnsApi(
     targetTurn: number
     delegateToAi?: boolean | undefined
   },
-): Promise<GameState[] | undefined> {
+): Promise<GameSessionTurn[] | undefined> {
   const { startGameState, targetTurn, delegateToAi } = params
 
   const apiUrl = getAdvanceTurnsApiUrl(targetTurn, delegateToAi ?? false)
@@ -22,7 +23,7 @@ export async function callAdvanceTurnsApi(
     !_.isUndefined(startGameState) ? JSON.stringify(startGameState) : '',
   )
 
-  return callApi<GameState[]>({ ...params, request })
+  return callApi<GameSessionTurn[]>({ ...params, request })
 }
 
 function getAdvanceTurnsApiUrl(
@@ -35,6 +36,6 @@ function getAdvanceTurnsApiUrl(
 
   return getApiUrl(
     `advanceTurns`,
-    `includeAllStates=true&turnLimit=${targetTurn}${delegateToAiQueryParam}`,
+    `includeAllTurns=true&turnLimit=${targetTurn}${delegateToAiQueryParam}`,
   )
 }
