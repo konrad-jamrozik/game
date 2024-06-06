@@ -4,7 +4,6 @@ using UfoGameLib.State;
 
 namespace UfoGameLib.Controller;
 
-// kja address TODOs in all ctors of PlayerAction inheritors
 public abstract class PlayerAction
 {
     public PlayerActionEvent Apply(GameState state)

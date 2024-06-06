@@ -28,6 +28,6 @@ public class SackAgentsPlayerAction : PlayerAction
             _log.Info($"Sacked {agent.LogString}.");
         }
 
-        return new PlayerActionEvent("Sack agents", "TODO");
+        return new PlayerActionEvent("Sack agents", $"IDs: {_agents.IdsLogString}");
     }
 }

@@ -24,6 +24,6 @@ public class SendAgentsToTrainingPlayerAction : PlayerAction
             agent.SendToTraining();
         });
 
-        return new PlayerActionEvent("Send agents to training", "TODO");
+        return new PlayerActionEvent("Send agents to training", $"IDs: {_agents.IdsLogString}");
     }
 }

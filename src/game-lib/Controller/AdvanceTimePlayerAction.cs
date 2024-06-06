@@ -58,7 +58,7 @@ public class AdvanceTimePlayerAction : PlayerAction
 
         CreateMissionSites(state);
 
-        return new PlayerActionEvent("Advance time", "TODO");
+        return new PlayerActionEvent("Advance time", $"Turn {state.Timeline.CurrentTurn-1} -> {state.Timeline.CurrentTurn}");
     }
 
     private (int successfulMissions, int failedMissions) EvaluateMissions(GameState state)

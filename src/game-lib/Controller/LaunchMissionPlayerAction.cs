@@ -27,7 +27,8 @@ public class LaunchMissionPlayerAction : PlayerAction
         Contract.Assert(_agents.Count > 0);
         _agents.ForEach(agent => Contract.Assert(agent.CanBeSentOnMission));
         Contract.Assert(state.Assets.CurrentTransportCapacity >= _agents.Count);
-        Contract.Assert(_agents.Count >= _site.RequiredSurvivingAgentsForSuccess, 
+        Contract.Assert(
+            _agents.Count >= _site.RequiredSurvivingAgentsForSuccess,
             $"Cannot launch a mission with not enough agents to win it! " +
             $"_agents.Count: {_agents.Count} " +
             $">= _site.RequiredSurvivingAgentsForSuccess: {_site.RequiredSurvivingAgentsForSuccess}");
@@ -45,6 +46,9 @@ public class LaunchMissionPlayerAction : PlayerAction
 
         _log.Info($"Launch {mission.LogString}, {_site.LogString}, AgentCount: {_agents.Count}");
 
-        return new PlayerActionEvent("Launch mission", "TODO");
+        return new PlayerActionEvent(
+            "Launch mission",
+            $"Mission ID: {mission.Id} " +
+            $"Site ID: {_site.Id}, Agent IDs: {_agents.IdsLogString}");
     }
 }

@@ -24,6 +24,6 @@ public class RecallAgentsPlayerAction : PlayerAction
             agent.Recall();
         });
 
-        return new PlayerActionEvent("Recall agents", "TODO");
+        return new PlayerActionEvent("Recall agents", $"IDs: {_agents.IdsLogString}");
     }
 }

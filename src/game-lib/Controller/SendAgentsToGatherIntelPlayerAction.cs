@@ -24,6 +24,6 @@ public class SendAgentsToGatherIntelPlayerAction : PlayerAction
             agent.GatherIntel();
         });
 
-        return new PlayerActionEvent("Send agents to gath. intel", "TODO");
+        return new PlayerActionEvent("Send agents to gath. intel", $"IDs: {_agents.IdsLogString}");
     }
 }

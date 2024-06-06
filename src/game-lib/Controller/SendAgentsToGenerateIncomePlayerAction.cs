@@ -24,6 +24,6 @@ public class SendAgentsToGenerateIncomePlayerAction : PlayerAction
             agent.GenerateIncome();
         });
 
-        return new PlayerActionEvent("Send agents to gen. inc.", "TODO");
+        return new PlayerActionEvent("Send agents to gen. inc.", $"IDs: {_agents.IdsLogString}");
     }
 }

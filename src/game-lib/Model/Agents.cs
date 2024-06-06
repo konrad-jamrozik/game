@@ -79,6 +79,8 @@ public class Agents : List<Agent>
     public Agents GetByIds(int[] ids) =>
         this.Where(agent => ids.Contains(agent.Id)).ToAgents();
 
+    public string IdsLogString => $"[{string.Join(", ", this.Select(agent => agent.Id))}]";
+
     public Agents DeepClone(Missions clonedMissions, bool terminated)
     {
         return new Agents(this.Select(agent =>

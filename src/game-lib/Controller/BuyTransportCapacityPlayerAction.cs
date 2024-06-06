@@ -25,6 +25,9 @@ public class BuyTransportCapacityPlayerAction : PlayerAction
         state.Assets.Money -= buyingCost;
         state.Assets.MaxTransportCapacity += _capacity;
 
-        return new PlayerActionEvent("Buy transport capacity", "TODO");
+        return new PlayerActionEvent(
+            "Buy transport capacity",
+            $"Capacity: +${_capacity} | " +
+            $"{state.Assets.MaxTransportCapacity - _capacity} -> {state.Assets.MaxTransportCapacity}");
     }
 }
