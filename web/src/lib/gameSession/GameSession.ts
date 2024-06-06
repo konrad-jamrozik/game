@@ -9,6 +9,7 @@ import { GameSessionContext } from '../../components/GameSessionProvider'
 import { callAdvanceTurnsApi } from '../api/advanceTurnsApi'
 import { callApplyPlayerActionApi } from '../api/applyPlayerActionApi'
 import { playerActionsPayloadsProviders } from '../api/playerActionsPayloadsProviders'
+import type { GameEvent } from '../codesync/GameEvent'
 import type { GameSessionTurn } from '../codesync/GameSessionTurn'
 import { initialTurn, type Assets, type GameState } from '../codesync/GameState'
 import type {
@@ -17,12 +18,12 @@ import type {
 } from '../codesync/PlayerActionPayload'
 import { agentHireCost, transportCapBuyingCost } from '../codesync/ruleset'
 import type { StoredData } from '../storedData/StoredData'
-import type { GameEvent } from './GameEvent'
 import {
   GameSessionData,
   initialGameSessionData,
   type GameSessionDataType,
 } from './GameSessionData'
+import type { RenderedGameEvent } from './RenderedGameEvent'
 
 export function useGameSessionContext(): GameSession {
   return useContext(GameSessionContext)
@@ -83,7 +84,7 @@ export class GameSession {
     if (!_.isUndefined(newGameStates)) {
       this.upsertGameStates(newGameStates)
       if (delegateToAi === false) {
-        this.upsertAdvanceTurnGameEvent()
+        // kja restore this once AdvanceTurns API call returns game events
       }
       // future work: upsert here game world events, once callAdvanceTurnsApi returns them.
       return true
@@ -270,7 +271,7 @@ export class GameSession {
     return this.data.getCurrentGameState()
   }
 
-  public getGameEvents(): readonly GameEvent[] {
+  public getGameEvents(): readonly RenderedGameEvent[] {
     return this.data.getGameEvents()
   }
 
@@ -328,23 +329,19 @@ export class GameSession {
     this.setError('')
   }
 
-  public upsertGameEvent(playerActionPayload: PlayerActionPayload): void {
-    const gameEvents = this.getGameEvents()
+  public upsertGameEvents(inputGameEvents: GameEvent[]): void {
+    const gameEvents: readonly RenderedGameEvent[] = this.getGameEvents()
     const gameEventMaxId = gameEvents.at(-1)?.Id ?? 0
     const newGameEventId = gameEventMaxId + 1
-    const newGameEvent: GameEvent<PlayerActionPayload> = {
+    // kja add all events, not only 0
+    const newGameEvent: RenderedGameEvent = {
       Id: newGameEventId,
       Turn: this.getCurrentTurn(),
-      Payload: playerActionPayload,
+      Type: inputGameEvents[0]!.Type,
+      Details: inputGameEvents[0]!.Details,
     }
-    const newGameEvents: GameEvent[] = [...gameEvents, newGameEvent]
+    const newGameEvents: RenderedGameEvent[] = [...gameEvents, newGameEvent]
     this.data.setGameEvents(newGameEvents)
-  }
-
-  public upsertAdvanceTurnGameEvent(): void {
-    const payloadProvider = playerActionsPayloadsProviders.AdvanceTime
-    const payload = payloadProvider()
-    this.upsertGameEvent(payload)
   }
 
   private async applyPlayerAction(
@@ -361,8 +358,7 @@ export class GameSession {
     if (!_.isUndefined(newGameSessionTurn)) {
       const newGameState = newGameSessionTurn.GameState
       this.upsertGameStates([newGameState], true)
-      // kja upsert newGameSessionTurn.GameEvents[0] here
-      this.upsertGameEvent(playerActionPayload)
+      this.upsertGameEvents(newGameSessionTurn.GameEvents)
       return true
     }
     return false

@@ -1,6 +1,8 @@
 import type { PlayerActionPayload } from '../codesync/PlayerActionPayload'
 
-export type GameEvent<TPayload extends GameEventPayload = GameEventPayload> = {
+export type GameEventFromPayload<
+  TPayload extends GameEventPayload = GameEventPayload,
+> = {
   readonly Id: number
   readonly Turn: number
   readonly Payload: TPayload

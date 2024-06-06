@@ -27,7 +27,7 @@ public class BuyTransportCapacityPlayerAction : PlayerAction
 
         return new PlayerActionEvent(
             "Buy transport capacity",
-            $"Capacity: +${_capacity} | " +
+            $"Capacity: +{_capacity} | " +
             $"{state.Assets.MaxTransportCapacity - _capacity} -> {state.Assets.MaxTransportCapacity}");
     }
 }

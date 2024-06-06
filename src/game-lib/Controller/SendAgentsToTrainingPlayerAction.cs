@@ -12,18 +12,22 @@ public class SendAgentsToTrainingPlayerAction : PlayerAction
 
     public SendAgentsToTrainingPlayerAction(ILog log, Agents agents)
     {
-        _log = log; 
+        _log = log;
         _agents = agents;
     }
 
     protected override PlayerActionEvent ApplyImpl(GameState state)
     {
-        _agents.ForEach(agent =>
-        {
-            _log.Info($"Send {agent.LogString} to training. Was in state: {agent.CurrentState}.");
-            agent.SendToTraining();
-        });
+        _agents.ForEach(
+            agent =>
+            {
+                _log.Info($"Send {agent.LogString} to training. Was in state: {agent.CurrentState}.");
+                agent.SendToTraining();
+            });
 
-        return new PlayerActionEvent("Send agents to training", $"IDs: {_agents.IdsLogString}");
+        return new PlayerActionEvent(
+            "Send agents to training",
+            $"Count: {_agents.Count}, " +
+            $"IDs: {_agents.IdsLogString}");
     }
 }

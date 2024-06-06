@@ -18,12 +18,16 @@ public class SendAgentsToGatherIntelPlayerAction : PlayerAction
 
     protected override PlayerActionEvent ApplyImpl(GameState state)
     {
-        _agents.ForEach(agent =>
-        {
-            _log.Info($"Send {agent.LogString} to gather intel. Was in state: {agent.CurrentState}.");
-            agent.GatherIntel();
-        });
+        _agents.ForEach(
+            agent =>
+            {
+                _log.Info($"Send {agent.LogString} to gather intel. Was in state: {agent.CurrentState}.");
+                agent.GatherIntel();
+            });
 
-        return new PlayerActionEvent("Send agents to gath. intel", $"IDs: {_agents.IdsLogString}");
+        return new PlayerActionEvent(
+            "Send agents to gath. intel",
+            $"Count: {_agents.Count}, " +
+            $"IDs: {_agents.IdsLogString}");
     }
 }

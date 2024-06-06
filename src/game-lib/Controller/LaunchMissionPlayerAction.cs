@@ -48,7 +48,7 @@ public class LaunchMissionPlayerAction : PlayerAction
 
         return new PlayerActionEvent(
             "Launch mission",
-            $"Mission ID: {mission.Id} " +
+            $"Mission ID: {mission.Id}, " +
             $"Site ID: {_site.Id}, Agent IDs: {_agents.IdsLogString}");
     }
 }

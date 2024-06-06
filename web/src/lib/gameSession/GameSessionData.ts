@@ -4,11 +4,11 @@
 import _ from 'lodash'
 import { initialTurn, type GameState } from '../codesync/GameState'
 import type { StoredData } from '../storedData/StoredData'
-import type { GameEvent } from './GameEvent'
+import type { RenderedGameEvent } from './RenderedGameEvent'
 
 export type GameSessionDataType = {
   readonly gameStates: readonly GameState[]
-  readonly gameEvents: readonly GameEvent[]
+  readonly gameEvents: readonly RenderedGameEvent[]
 }
 
 export const initialGameSessionData: GameSessionDataType = {
@@ -78,7 +78,7 @@ export class GameSessionData {
     return this._data.gameStates
   }
 
-  public getGameEvents(): readonly GameEvent[] {
+  public getGameEvents(): readonly RenderedGameEvent[] {
     return this._data.gameEvents
   }
 
@@ -116,9 +116,12 @@ export class GameSessionData {
     return this.getGameStates().slice(0, sliceEnd)
   }
 
-  public getEventsUntilPreviousTurn(): GameEvent[] {
+  public getEventsUntilPreviousTurn(): RenderedGameEvent[] {
     const currentTurn = this.getCurrentTurn()
-    return _.filter(this.getGameEvents(), (event) => event.Turn < currentTurn)
+    return _.filter(
+      this.getGameEvents(),
+      (event: RenderedGameEvent) => event.Turn < currentTurn,
+    )
   }
 
   public resetCurrentTurn(): void {
@@ -139,7 +142,7 @@ export class GameSessionData {
     this.setData(newData)
   }
 
-  public setGameEvents(gameEvents: GameEvent[]): void {
+  public setGameEvents(gameEvents: RenderedGameEvent[]): void {
     // future work: add here GameSessionData.verify(gameEvents)
     // GameSessionData.verify(gameEvents)
     const newData: GameSessionDataType = {

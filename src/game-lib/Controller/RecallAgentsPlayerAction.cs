@@ -18,12 +18,16 @@ public class RecallAgentsPlayerAction : PlayerAction
 
     protected override PlayerActionEvent ApplyImpl(GameState state)
     {
-        _agents.ForEach(agent =>
-        {
-            _log.Info($"Recall {agent.LogString}. Was in state: {agent.CurrentState}.");
-            agent.Recall();
-        });
+        _agents.ForEach(
+            agent =>
+            {
+                _log.Info($"Recall {agent.LogString}. Was in state: {agent.CurrentState}.");
+                agent.Recall();
+            });
 
-        return new PlayerActionEvent("Recall agents", $"IDs: {_agents.IdsLogString}");
+        return new PlayerActionEvent(
+            "Recall agents",
+            $"Count: {_agents.Count}, " +
+            $"IDs: {_agents.IdsLogString}");
     }
 }

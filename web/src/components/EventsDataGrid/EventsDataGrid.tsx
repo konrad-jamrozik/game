@@ -3,11 +3,12 @@ import { DataGrid, type GridColDef } from '@mui/x-data-grid'
 import _ from 'lodash'
 import type { PlayerActionPayload } from '../../lib/codesync/PlayerActionPayload'
 import type {
-  GameEvent,
+  GameEventFromPayload,
   GameEventDisplayedKind,
   GameEventPayload,
-} from '../../lib/gameSession/GameEvent'
+} from '../../lib/gameSession/GameEventFromPayload'
 import { useGameSessionContext } from '../../lib/gameSession/GameSession'
+import type { RenderedGameEvent } from '../../lib/gameSession/RenderedGameEvent'
 import {
   getDisplayedDetails,
   getDisplayedType,
@@ -20,17 +21,17 @@ import {
 export function EventsDataGrid(): React.JSX.Element {
   const gameSession = useGameSessionContext()
 
-  const gameEvents: readonly GameEvent[] = gameSession.isInitialized()
+  const gameEvents: readonly RenderedGameEvent[] = gameSession.isInitialized()
     ? gameSession.getGameEvents()
     : []
 
   const rows: GameEventRow[] = _.reverse(
-    _.map(gameEvents, (event) => ({
+    _.map(gameEvents, (event: RenderedGameEvent) => ({
       id: event.Id,
       turn: event.Turn,
-      kind: 'Player action',
-      type: getDisplayedType(event.Payload as PlayerActionPayload),
-      details: getDisplayedDetails(event.Payload as PlayerActionPayload),
+      kind: 'Player action', // kja currently just assuming this is player action event
+      type: event.Type,
+      details: event.Details,
     })),
   )
 
@@ -103,3 +104,17 @@ const columns: GridColDef<GameEventRow>[] = [
     disableColumnMenu: true,
   },
 ]
+
+// kja this will come in play once I fix the game event content formatting
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+function getRowFromGameEventFromPayload(
+  event: GameEventFromPayload,
+): GameEventRow {
+  return {
+    id: event.Id,
+    turn: event.Turn,
+    kind: 'Player action',
+    type: getDisplayedType(event.Payload as PlayerActionPayload),
+    details: getDisplayedDetails(event.Payload as PlayerActionPayload),
+  }
+}

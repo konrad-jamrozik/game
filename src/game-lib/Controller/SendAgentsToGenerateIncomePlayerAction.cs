@@ -18,12 +18,16 @@ public class SendAgentsToGenerateIncomePlayerAction : PlayerAction
 
     protected override PlayerActionEvent ApplyImpl(GameState state)
     {
-        _agents.ForEach(agent =>
-        {
-            _log.Info($"Send {agent.LogString} to generate income. Was in state: {agent.CurrentState}.");
-            agent.GenerateIncome();
-        });
+        _agents.ForEach(
+            agent =>
+            {
+                _log.Info($"Send {agent.LogString} to generate income. Was in state: {agent.CurrentState}.");
+                agent.GenerateIncome();
+            });
 
-        return new PlayerActionEvent("Send agents to gen. inc.", $"IDs: {_agents.IdsLogString}");
+        return new PlayerActionEvent(
+            "Send agents to gen. inc.",
+            $"Count: {_agents.Count}, " +
+            $"IDs: {_agents.IdsLogString}");
     }
 }

@@ -30,7 +30,7 @@ public class HireAgentsPlayerAction : PlayerAction
 
         return new PlayerActionEvent(
             "Hire agents",
-            $"Agents: +{_count} " +
+            $"Count: +{_count} " +
             $"| {state.Assets.Agents.Count - _count} -> {state.Assets.Agents.Count}");
     }
 }
