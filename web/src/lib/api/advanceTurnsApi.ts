@@ -39,3 +39,60 @@ function getAdvanceTurnsApiUrl(
     `includeAllTurns=true&turnLimit=${targetTurn}${delegateToAiQueryParam}`,
   )
 }
+
+// kja need to update to new backend. JSON returned on first advance turn:
+//
+// [
+//   {
+//     "EventsUntilStartState": [],
+//     "StartState": {
+//       "IsGameOver": false,
+//       "IsGameLost": false,
+//       "IsGameWon": false,
+//       "NextAgentId": 0,
+//       "NextMissionId": 0,
+//       "NextMissionSiteId": 0,
+//       "Timeline": {
+//         "CurrentTurn": 1
+//       },
+//       "Assets": {
+//         "Money": 500,
+//         "Intel": 0,
+//         "Funding": 20,
+//         "Support": 30,
+//         "CurrentTransportCapacity": 4,
+//         "MaxTransportCapacity": 4,
+//         "Agents": []
+//       },
+//       "MissionSites": [],
+//       "Missions": [],
+//       "TerminatedAgents": [],
+//       "UpdateCount": 0
+//     },
+//     "EventsInTurn": [],
+//     "EndState": {
+//       "IsGameOver": false,
+//       "IsGameLost": false,
+//       "IsGameWon": false,
+//       "NextAgentId": 0,
+//       "NextMissionId": 0,
+//       "NextMissionSiteId": 0,
+//       "Timeline": {
+//         "CurrentTurn": 1
+//       },
+//       "Assets": {
+//         "Money": 500,
+//         "Intel": 0,
+//         "Funding": 20,
+//         "Support": 30,
+//         "CurrentTransportCapacity": 4,
+//         "MaxTransportCapacity": 4,
+//         "Agents": []
+//       },
+//       "MissionSites": [],
+//       "Missions": [],
+//       "TerminatedAgents": [],
+//       "UpdateCount": 0
+//     }
+//   }
+// ]

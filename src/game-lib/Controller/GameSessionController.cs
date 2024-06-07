@@ -137,16 +137,16 @@ public class GameSessionController
             // This state diff shows the result of advancing time.
             DiffGameStates(GameSession.CurrentGameState, nextTurnStartState);
 
-            CurrentTurnController = NewTurn(advanceTimePlayerActionEvent, worldEvents, nextTurnStartState);
+            NewTurn(advanceTimePlayerActionEvent, worldEvents, nextTurnStartState);
         }
     }
 
-    private GameTurnController NewTurn(PlayerActionEvent advanceTimePlayerActionEvent, List<WorldEvent> worldEvents, GameState nextTurnStartState)
+    private void NewTurn(PlayerActionEvent advanceTimePlayerActionEvent, List<WorldEvent> worldEvents, GameState nextTurnStartState)
     {
         GameSession.Turns.Add(new GameSessionTurn(
             eventsUntilStartState: [advanceTimePlayerActionEvent, ..worldEvents],
             startState: nextTurnStartState));
-        return new GameTurnController(_log, GameSession.RandomGen, GameSession.CurrentGameState);
+        CurrentTurnController = new GameTurnController(_log, GameSession.RandomGen, GameSession.CurrentGameState);
     }
 
     private List<WorldEvent> GetAndDeleteRecordedWorldEvents()
