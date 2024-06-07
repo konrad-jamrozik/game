@@ -1,5 +1,4 @@
 using Lib.Contracts;
-using UfoGameLib.Events;
 using UfoGameLib.Lib;
 using UfoGameLib.Model;
 using UfoGameLib.State;
@@ -20,7 +19,7 @@ public class LaunchMissionPlayerAction : PlayerAction
         _agents = agents;
     }
 
-    protected override PlayerActionEvent ApplyImpl(GameState state)
+    protected override string ApplyImpl(GameState state)
     {
         Contract.Assert(state.MissionSites.Contains(_site));
         Contract.Assert(_site.IsActive);
@@ -46,9 +45,7 @@ public class LaunchMissionPlayerAction : PlayerAction
 
         _log.Info($"Launch {mission.LogString}, {_site.LogString}, AgentCount: {_agents.Count}");
 
-        return new PlayerActionEvent(
-            "Launch mission",
-            $"Mission ID: {mission.Id}, " +
-            $"Site ID: {_site.Id}, Agent IDs: {_agents.IdsLogString}");
+        return $"Mission ID: {mission.Id}, " +
+               $"Site ID: {_site.Id}, Agent IDs: {_agents.IdsLogString}";
     }
 }

@@ -1,5 +1,4 @@
 using Lib.Contracts;
-using UfoGameLib.Events;
 using UfoGameLib.Lib;
 using UfoGameLib.Model;
 using UfoGameLib.State;
@@ -17,7 +16,7 @@ public class HireAgentsPlayerAction : PlayerAction
         _count = count;
     }
 
-    protected override PlayerActionEvent ApplyImpl(GameState state)
+    protected override string ApplyImpl(GameState state)
     {
         _log.Info($"Hire agents. Count: {_count}");
         int totalHireCost = Ruleset.AgentHireCost * _count;
@@ -28,9 +27,7 @@ public class HireAgentsPlayerAction : PlayerAction
             state.Assets.Agents.Add(new Agent(state.NextAgentId, state.Timeline.CurrentTurn));
         }
 
-        return new PlayerActionEvent(
-            "Hire agents",
-            $"Count: +{_count} " +
-            $"| {state.Assets.Agents.Count - _count} -> {state.Assets.Agents.Count}");
+        return $"Count: +{_count} " +
+               $"| {state.Assets.Agents.Count - _count} -> {state.Assets.Agents.Count}";
     }
 }

@@ -1,5 +1,4 @@
 using Lib.Contracts;
-using UfoGameLib.Events;
 using UfoGameLib.Lib;
 using UfoGameLib.Model;
 using UfoGameLib.State;
@@ -17,7 +16,7 @@ public class BuyTransportCapacityPlayerAction : PlayerAction
         _capacity = capacity;
     }
 
-    protected override PlayerActionEvent ApplyImpl(GameState state)
+    protected override string ApplyImpl(GameState state)
     {
         int buyingCost = Ruleset.TransportCapacityBuyingCost(_capacity);
         Contract.Assert(state.Assets.Money >= buyingCost);
@@ -25,9 +24,7 @@ public class BuyTransportCapacityPlayerAction : PlayerAction
         state.Assets.Money -= buyingCost;
         state.Assets.MaxTransportCapacity += _capacity;
 
-        return new PlayerActionEvent(
-            "Buy transport capacity",
-            $"Capacity: +{_capacity} | " +
-            $"{state.Assets.MaxTransportCapacity - _capacity} -> {state.Assets.MaxTransportCapacity}");
+        return $"Capacity: +{_capacity} | " +
+               $"{state.Assets.MaxTransportCapacity - _capacity} -> {state.Assets.MaxTransportCapacity}";
     }
 }

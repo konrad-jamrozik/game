@@ -1,4 +1,3 @@
-using UfoGameLib.Events;
 using UfoGameLib.Lib;
 using UfoGameLib.Model;
 using UfoGameLib.State;
@@ -16,7 +15,7 @@ public class SendAgentsToTrainingPlayerAction : PlayerAction
         _agents = agents;
     }
 
-    protected override PlayerActionEvent ApplyImpl(GameState state)
+    protected override string ApplyImpl(GameState state)
     {
         _agents.ForEach(
             agent =>
@@ -25,9 +24,6 @@ public class SendAgentsToTrainingPlayerAction : PlayerAction
                 agent.SendToTraining();
             });
 
-        return new PlayerActionEvent(
-            "Send agents to training",
-            $"Count: {_agents.Count}, " +
-            $"IDs: {_agents.IdsLogString}");
+        return $"Count: {_agents.Count}, IDs: {_agents.IdsLogString}";
     }
 }

@@ -13,7 +13,7 @@ public abstract class PlayerAction
             $"funding: {state.Assets.Funding} " +
             $"support: {state.Assets.Support}");
 
-        PlayerActionEvent playerActionEvent = ApplyImpl(state);
+        string applyResultDetails = ApplyImpl(state);
         // This UpdateCount is tricky, because sometimes given action can do multiple operations,
         // for example, 10 agents can be hired by invoking "Hire agents" action 10 times with 1 agent,
         // 5 times with 2 agents or 1 time with 10 agents.
@@ -28,9 +28,9 @@ public abstract class PlayerAction
                 $"support: {state.Assets.Support}");
         }
 
-        return playerActionEvent;
+        return new PlayerActionEvent(GetType().Name, applyResultDetails);
 
     }
-    protected abstract PlayerActionEvent ApplyImpl(GameState state);
+    protected abstract string ApplyImpl(GameState state);
 
 }

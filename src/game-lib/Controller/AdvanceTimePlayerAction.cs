@@ -1,5 +1,4 @@
 using Lib.Contracts;
-using UfoGameLib.Events;
 using UfoGameLib.Lib;
 using UfoGameLib.Model;
 using UfoGameLib.State;
@@ -17,7 +16,7 @@ public class AdvanceTimePlayerAction : PlayerAction
         _randomGen = randomGen;
     }
 
-    protected override PlayerActionEvent ApplyImpl(GameState state)
+    protected override string ApplyImpl(GameState state)
     {
         _log.Info("");
         _log.Info("----- Advancing time");
@@ -58,7 +57,7 @@ public class AdvanceTimePlayerAction : PlayerAction
 
         CreateMissionSites(state);
 
-        return new PlayerActionEvent("Advance time", $"Turn {state.Timeline.CurrentTurn-1} -> {state.Timeline.CurrentTurn}");
+        return "Turn {state.Timeline.CurrentTurn-1} -> {state.Timeline.CurrentTurn}";
     }
 
     private (int successfulMissions, int failedMissions) EvaluateMissions(GameState state)

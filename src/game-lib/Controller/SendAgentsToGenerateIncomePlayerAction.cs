@@ -1,4 +1,3 @@
-using UfoGameLib.Events;
 using UfoGameLib.Lib;
 using UfoGameLib.Model;
 using UfoGameLib.State;
@@ -16,7 +15,7 @@ public class SendAgentsToGenerateIncomePlayerAction : PlayerAction
         _agents = agents;
     }
 
-    protected override PlayerActionEvent ApplyImpl(GameState state)
+    protected override string ApplyImpl(GameState state)
     {
         _agents.ForEach(
             agent =>
@@ -25,9 +24,6 @@ public class SendAgentsToGenerateIncomePlayerAction : PlayerAction
                 agent.GenerateIncome();
             });
 
-        return new PlayerActionEvent(
-            "Send agents to gen. inc.",
-            $"Count: {_agents.Count}, " +
-            $"IDs: {_agents.IdsLogString}");
+        return $"Count: {_agents.Count}, IDs: {_agents.IdsLogString}";
     }
 }

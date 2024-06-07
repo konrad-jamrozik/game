@@ -1,4 +1,3 @@
-using UfoGameLib.Events;
 using UfoGameLib.Lib;
 using UfoGameLib.Model;
 using UfoGameLib.State;
@@ -19,7 +18,7 @@ public class SackAgentsPlayerAction : PlayerAction
         _agents = agents;
     }
 
-    protected override PlayerActionEvent ApplyImpl(GameState state)
+    protected override string ApplyImpl(GameState state)
     {
         _log.Info($"Sack agents. Count: {_agents.Count}");
         foreach (Agent agent in _agents)
@@ -28,9 +27,6 @@ public class SackAgentsPlayerAction : PlayerAction
             _log.Info($"Sacked {agent.LogString}.");
         }
 
-        return new PlayerActionEvent(
-            "Sack agents",
-            $"Count: {_agents.Count}, " +
-            $"IDs: {_agents.IdsLogString}");
+        return $"Count: {_agents.Count}, IDs: {_agents.IdsLogString}";
     }
 }
