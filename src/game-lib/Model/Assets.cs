@@ -33,10 +33,13 @@ public class Assets
         int maxTransportCapacity,
         Agents agents)
     {
-        Contract.Assert(money >= 0);
+        // We cannot make these assumptions here because we may be calling this ctor while
+        // cloning a game state of a game that is over.
+        // See GameState.IsGameOver
+        // Contract.Assert(money >= 0);
+        // Contract.Assert(support >= 0);
+        // Contract.Assert(funding >= 0);
         Contract.Assert(intel >= 0);
-        Contract.Assert(funding >= 0);
-        Contract.Assert(support >= 0);
         Contract.Assert(currentTransportCapacity >= 0 && currentTransportCapacity <= maxTransportCapacity);
         Money = money;
         Intel = intel;
