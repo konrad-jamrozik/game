@@ -28,27 +28,27 @@ public class PlayerActionPayload(string actionName, int[]? ids, int? targetId)
     /// The output of this method is a mutation of the controller.GameSession.CurrentGameState,
     /// per the applied player action as captured by this payload.
     /// </returns>
-    public PlayerActionEvent Apply(GameSessionController controller)
+    public PlayerActionEvent Apply(GameSessionController2 controller)
     {
         Func<PlayerActionEvent> apply = TranslatePlayerActionToControllerAction(controller);
         return apply();
     }
 
-    private Func<PlayerActionEvent> TranslatePlayerActionToControllerAction(GameSessionController controller)
+    private Func<PlayerActionEvent> TranslatePlayerActionToControllerAction(GameSessionController2 controller)
         // https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/operators/patterns#property-pattern
         // https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/operators/patterns#positional-pattern
         => ActionName switch
         {
             // kja these should be nameof(derived PlayerAction). In frontend they will be consumed by getDisplayedType()
-            "AdvanceTime" => controller.AdvanceTime,
-            "BuyTransportCap" => () => controller.TurnController.BuyTransportCapacity(1),
-            "HireAgents" => () => controller.TurnController.HireAgents(TargetId!.Value),
-            "SackAgents" => () => controller.TurnController.SackAgents(Ids!),
-            "SendAgentsToIncomeGeneration" => () => controller.TurnController.SendAgentsToGenerateIncome(Ids!),
-            "SendAgentsToIntelGathering" => () => controller.TurnController.SendAgentsToGatherIntel(Ids!),
-            "SendAgentsToTraining" => () => controller.TurnController.SendAgentsToTraining(Ids!),
-            "RecallAgents" => () => controller.TurnController.RecallAgents(Ids!),
-            "LaunchMission" => () => controller.TurnController.LaunchMission(TargetId!.Value, Ids!),
+            "AdvanceTime" => () => controller.AdvanceTime(),
+            "BuyTransportCap" => () => controller.CurrentTurnController.BuyTransportCapacity(1),
+            "HireAgents" => () => controller.CurrentTurnController.HireAgents(TargetId!.Value),
+            "SackAgents" => () => controller.CurrentTurnController.SackAgents(Ids!),
+            "SendAgentsToIncomeGeneration" => () => controller.CurrentTurnController.SendAgentsToGenerateIncome(Ids!),
+            "SendAgentsToIntelGathering" => () => controller.CurrentTurnController.SendAgentsToGatherIntel(Ids!),
+            "SendAgentsToTraining" => () => controller.CurrentTurnController.SendAgentsToTraining(Ids!),
+            "RecallAgents" => () => controller.CurrentTurnController.RecallAgents(Ids!),
+            "LaunchMission" => () => controller.CurrentTurnController.LaunchMission(TargetId!.Value, Ids!),
             _ => () => throw new ArgumentException($"Unsupported player action of '{ActionName}'")
         };
 }

@@ -74,13 +74,13 @@ public static class ApiUtils
         return (parsedGameState, error);
     }
 
-    public static GameSession NewGameSession(GameState? initialGameState = null)
+    public static GameSession2 NewGameSession(GameState? initialGameState = null)
     {
-        var gameSession = new GameSession(new RandomGen(new Random()), initialGameState);
+        var gameSession = new GameSession2(new RandomGen(new Random()), [new GameSessionTurn2(startState: initialGameState)]);
         return gameSession;
     }
 
-    public static JsonHttpResult<GameState> GetCurrentStateResponse(GameSession gameSession)
+    public static JsonHttpResult<GameState> GetCurrentStateResponse(GameSessionDeprecated gameSession)
     {
         // This will be serialized to JSON per:
         // https://learn.microsoft.com/en-us/aspnet/core/tutorials/min-web-api?view=aspnetcore-8.0&tabs=visual-studio#return-values
@@ -89,16 +89,22 @@ public static class ApiUtils
         return ToJsonHttpResult(gs);
     }
 
-    public static JsonHttpResult<GameStatePlayerView> GetCurrentStatePlayerViewResponse(GameSession gameSession)
+    public static JsonHttpResult<GameStatePlayerView> GetCurrentStatePlayerViewResponse(GameSessionDeprecated gameSession)
     {
         var gameStatePlayerView = new GameStatePlayerView(() => gameSession.CurrentGameState);
         return ToJsonHttpResult(gameStatePlayerView);
     }
 
-    public static JsonHttpResult<GameSessionTurn> ToJsonHttpResult(GameSessionTurn gst)
+    public static JsonHttpResult<GameSessionTurnDeprecated> ToJsonHttpResult(GameSessionTurnDeprecated gst)
         => TypedResults.Json(gst, GameState.StateJsonSerializerOptions);
 
-    public static JsonHttpResult<List<GameSessionTurn>> ToJsonHttpResult(List<GameSessionTurn> gsts)
+    public static JsonHttpResult<List<GameSessionTurnDeprecated>> ToJsonHttpResult(List<GameSessionTurnDeprecated> gsts)
+        => TypedResults.Json(gsts, GameState.StateJsonSerializerOptions);
+
+    public static JsonHttpResult<GameSessionTurn2> ToJsonHttpResult(GameSessionTurn2 gst)
+        => TypedResults.Json(gst, GameState.StateJsonSerializerOptions);
+
+    public static JsonHttpResult<List<GameSessionTurn2>> ToJsonHttpResult(List<GameSessionTurn2> gsts)
         => TypedResults.Json(gsts, GameState.StateJsonSerializerOptions);
 
     public static JsonHttpResult<GameState> ToJsonHttpResult(GameState gs)

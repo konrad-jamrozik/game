@@ -13,13 +13,13 @@ namespace UfoGameLib.State;
 ///
 /// GameSession must be accessed directly only by GameSessionController.
 /// </summary>
-public class GameSession
+public class GameSessionDeprecated
 {
     public readonly RandomGen RandomGen;
 
-    public GameSessionTurn CurrentGameSessionTurn;
+    public GameSessionTurnDeprecated CurrentGameSessionTurn;
 
-    public readonly List<GameSessionTurn> PastGameSessionTurns = new List<GameSessionTurn>();
+    public readonly List<GameSessionTurnDeprecated> PastGameSessionTurns = new List<GameSessionTurnDeprecated>();
 
     public IReadOnlyList<GameState> PastGameStates
         => PastGameSessionTurns.Select(turn => turn.GameState).ToList().AsReadOnly();
@@ -28,15 +28,15 @@ public class GameSession
 
     public List<GameEvent> CurrentGameEvents => CurrentGameSessionTurn.GameEvents;
 
-    public GameSession(RandomGen randomGen, GameState? currentGameState = null)
+    public GameSessionDeprecated(RandomGen randomGen, GameState? currentGameState = null)
     {
         RandomGen = randomGen;
-        CurrentGameSessionTurn = new GameSessionTurn(currentGameState);
+        CurrentGameSessionTurn = new GameSessionTurnDeprecated(currentGameState);
     }
 
     public List<GameState> AllGameStates => PastGameStates.Concat(CurrentGameState.WrapInList()).ToList();
 
-    public List<GameSessionTurn> AllGameSessionTurns => PastGameSessionTurns.Concat(CurrentGameSessionTurn.WrapInList()).ToList();
+    public List<GameSessionTurnDeprecated> AllGameSessionTurns => PastGameSessionTurns.Concat(CurrentGameSessionTurn.WrapInList()).ToList();
 
     public List<GameState> AllGameStatesAtTurnStarts()
         => AllGameStates

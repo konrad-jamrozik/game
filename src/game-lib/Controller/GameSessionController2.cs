@@ -155,8 +155,8 @@ public class GameSessionController2
         return new List<WorldEvent>();
     }
 
-    public PlayerActionEvent AdvanceTime(GameState state)
-        => new AdvanceTimePlayerAction(_log, GameSession.RandomGen).Apply(state);
+    public PlayerActionEvent AdvanceTime(GameState? state = null)
+        => new AdvanceTimePlayerAction(_log, GameSession.RandomGen).Apply(state ?? GameSession.CurrentGameState);
 
     public GameState SaveCurrentGameStateToFile()
     {

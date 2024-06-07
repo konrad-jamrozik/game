@@ -4,19 +4,19 @@ using File = Lib.OS.File;
 
 namespace UfoGameLib.Reports;
 
-public class GameSessionStatsReport
+public class GameSessionStatsReportDeprecated
 {
     private readonly ILog _log;
-    private readonly GameSession _gameSession;
+    private readonly GameSessionDeprecated _gameSession;
     private readonly File _turnReportCsvFile;
     private readonly File _agentReportCsvFile;
     private readonly File _missionSiteReportCsvFile;
     private readonly int _lastTurn;
 
 
-    public GameSessionStatsReport(
+    public GameSessionStatsReportDeprecated(
         ILog log,
-        GameSession gameSession,
+        GameSessionDeprecated gameSession,
         File turnReportCsvFile,
         File agentReportCsvFile,
         File missionSiteReportCsvFile,

@@ -9,12 +9,12 @@ using UfoGameLib.State;
 namespace UfoGameLib.Api;
 
 using AdvanceTurnsSuccessResponse = Results<
-    JsonHttpResult<List<GameSessionTurn>>,
-    JsonHttpResult<GameSessionTurn>>;
+    JsonHttpResult<List<GameSessionTurn2>>,
+    JsonHttpResult<GameSessionTurn2>>;
 
 using AdvanceTurnsResponse = Results<
-    Results<JsonHttpResult<List<GameSessionTurn>>,
-        JsonHttpResult<GameSessionTurn>>,
+    Results<JsonHttpResult<List<GameSessionTurn2>>,
+        JsonHttpResult<GameSessionTurn2>>,
     BadRequest<string>>;
 
 public static class AdvanceTurnsRoute
@@ -61,8 +61,8 @@ public static class AdvanceTurnsRoute
 
         var config = new Configuration(new SimulatedFileSystem());
         var log = new Log(config);
-        var gameSession = ApiUtils.NewGameSession(initialGameState);
-        var controller = new GameSessionController(config, log, gameSession);
+        GameSession2 gameSession = ApiUtils.NewGameSession(initialGameState);
+        var controller = new GameSessionController2(config, log, gameSession);
         var aiPlayer = new AIPlayer(
             log,
             delegateToAi == true
@@ -72,18 +72,15 @@ public static class AdvanceTurnsRoute
         controller.PlayGameSession(turnLimit: parsedTurnLimit, aiPlayer);
 
         AdvanceTurnsSuccessResponse result = includeAllTurns == true
-            ? ApiUtils.ToJsonHttpResult(SkipFirstTurn(gameSession.AllGameSessionTurns, initialGameState == null))
-            : ApiUtils.ToJsonHttpResult(gameSession.CurrentGameSessionTurn);
+            ? ApiUtils.ToJsonHttpResult(SkipFirstTurn(gameSession.Turns, initialGameState == null))
+            : ApiUtils.ToJsonHttpResult(gameSession.CurrentTurn);
 
         Console.Out.WriteLine($"AdvanceTurnsInternal runtime: {stopwatch.Elapsed}");
         return result;
     }
 
-    
-    
-
     // kja not sure why this was needed. Need to test and document.
-    private static List<GameSessionTurn> SkipFirstTurn(List<GameSessionTurn> gameSessionTurns, bool newGameSession)
+    private static List<GameSessionTurn2> SkipFirstTurn(List<GameSessionTurn2> gameSessionTurns, bool newGameSession)
         => !newGameSession && gameSessionTurns.Count >= 2
             ? gameSessionTurns.Skip(1).ToList()
             : gameSessionTurns;

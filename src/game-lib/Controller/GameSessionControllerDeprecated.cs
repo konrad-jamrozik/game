@@ -39,15 +39,15 @@ namespace UfoGameLib.Controller;
 /// 4. Automated player -- CLI executable -- Program -- AIPlayer -- GameSessionController -- GameSession
 /// ```
 /// </summary>
-public class GameSessionController
+public class GameSessionControllerDeprecated
 {
     public readonly GameTurnController TurnController;
 
-    protected readonly GameSession GameSession;
+    protected readonly GameSessionDeprecated GameSession;
     private readonly Configuration _config;
     private readonly ILog _log;
 
-    public GameSessionController(Configuration config, ILog log, GameSession gameSession)
+    public GameSessionControllerDeprecated(Configuration config, ILog log, GameSessionDeprecated gameSession)
     {
         _config = config;
         _log = log;
@@ -145,7 +145,7 @@ public class GameSessionController
 
         SaveCurrentGameStateToFile();
 
-        new GameSessionStatsReport(
+        new GameSessionStatsReportDeprecated(
                 _log,
                 GameSession,
                 _config.TurnReportCsvFile,
@@ -177,7 +177,7 @@ public class GameSessionController
     {
         GameSession.AppendCurrentTurnToPastTurns();
         GameState loadedGameState = GameState.FromJsonFile(_config.SaveFile);
-        GameSession.CurrentGameSessionTurn = new GameSessionTurn(loadedGameState);
+        GameSession.CurrentGameSessionTurn = new GameSessionTurnDeprecated(loadedGameState);
         _log.Info($"Loaded game state from {_config.SaveFile.FullPath}");
         return GameSession.CurrentGameState;
     }
