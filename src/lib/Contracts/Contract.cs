@@ -28,6 +28,16 @@ public static class Contract
             throw message != null ? new InvariantException(message) : new InvariantException();
     }
 
+    public static void AssertImplication(
+        bool predicate,
+        bool condition,
+        [CallerArgumentExpression("condition")]
+        string? message = null)
+    {
+        if (predicate)
+            Assert(condition, message);
+    }
+
     public static void AssertEqual<T>(IEnumerable<T> first, IEnumerable<T> second)
         where T : IEquatable<T>
     {
