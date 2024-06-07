@@ -58,7 +58,7 @@ public class GameSessionTests
     {
         var session = new GameSession2(_randomGen);
         var controller = new GameSessionController2(_config, _log, session);
-        var turnController = controller.TurnController;
+        var turnController = controller.CurrentTurnController;
 
         GameState state = session.CurrentGameState;
 
@@ -159,7 +159,7 @@ public class GameSessionTests
     {
         var session = new GameSession2(_randomGen);
         var controller = new GameSessionController2(_config, _log, session);
-        var turnController = controller.TurnController;
+        var turnController = controller.CurrentTurnController;
 
         controller.AdvanceTime(session.CurrentGameState);
         controller.AdvanceTime(session.CurrentGameState);
@@ -222,7 +222,7 @@ public class GameSessionTests
     {
         var session = new GameSession2(_randomGen);
         var controller = new GameSessionController2(_config, _log, session);
-        var turnController = controller.TurnController;
+        var turnController = controller.CurrentTurnController;
         GameStatePlayerView state = controller.CurrentGameStatePlayerView;
 
         controller.AdvanceTime(session.CurrentGameState);

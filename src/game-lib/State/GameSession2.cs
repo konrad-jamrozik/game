@@ -18,8 +18,7 @@ public class GameSession2
 {
     public readonly RandomGen RandomGen;
 
-    public List<GameSessionTurn2> Turns;
-
+    public readonly List<GameSessionTurn2> Turns;
 
     public GameSessionTurn2 CurrentTurn => Turns.Last();
 

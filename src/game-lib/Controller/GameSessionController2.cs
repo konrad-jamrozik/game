@@ -40,18 +40,17 @@ namespace UfoGameLib.Controller;
 /// </summary>
 public class GameSessionController2
 {
-    public readonly GameTurnController TurnController;
-
     protected readonly GameSession2 GameSession;
     private readonly Configuration _config;
     private readonly ILog _log;
+    public GameTurnController CurrentTurnController { get; private set; }
 
     public GameSessionController2(Configuration config, ILog log, GameSession2 gameSession)
     {
         _config = config;
         _log = log;
         GameSession = gameSession;
-        TurnController = new GameTurnController(_log, GameSession.RandomGen, GameSession.CurrentGameState);
+        CurrentTurnController = new GameTurnController(_log, GameSession.RandomGen, GameSession.CurrentGameState);
     }
 
     public GameStatePlayerView CurrentGameStatePlayerView 
@@ -117,9 +116,9 @@ public class GameSessionController2
             _log.Info($"===== Turn {GameSession.CurrentGameState.Timeline.CurrentTurn}");
             _log.Info("");
 
-            player.PlayGameTurn(CurrentGameStatePlayerView, TurnController);
+            player.PlayGameTurn(CurrentGameStatePlayerView, CurrentTurnController);
 
-            List<PlayerActionEvent> playerActionEvents = TurnController.GetAndDeleteRecordedPlayerActionEvents();
+            List<PlayerActionEvent> playerActionEvents = CurrentTurnController.GetAndDeleteRecordedPlayerActionEvents();
             GameSession.CurrentGameEvents.AddRange(playerActionEvents);
 
             if (GameSession.CurrentGameState.IsGameOver)
@@ -138,10 +137,16 @@ public class GameSessionController2
             // This state diff shows the result of advancing time.
             DiffGameStates(GameSession.CurrentGameState, nextTurnStartState);
 
-            GameSession.Turns.Add(new GameSessionTurn2(
-                eventsUntilStartState: [advanceTimePlayerActionEvent, ..worldEvents],
-                startState: nextTurnStartState));
+            CurrentTurnController = NewTurn(advanceTimePlayerActionEvent, worldEvents, nextTurnStartState);
         }
+    }
+
+    private GameTurnController NewTurn(PlayerActionEvent advanceTimePlayerActionEvent, List<WorldEvent> worldEvents, GameState nextTurnStartState)
+    {
+        GameSession.Turns.Add(new GameSessionTurn2(
+            eventsUntilStartState: [advanceTimePlayerActionEvent, ..worldEvents],
+            startState: nextTurnStartState));
+        return new GameTurnController(_log, GameSession.RandomGen, GameSession.CurrentGameState);
     }
 
     private List<WorldEvent> GetAndDeleteRecordedWorldEvents()

@@ -20,27 +20,24 @@ public class GameSessionControllerTests
         _log = new Log(_config);
     }
 
-
     [Test]
-    public void TurnControllerAdvancesTurns()
+    public void CurrentTurnControllerKeepsTrackOfTheTurn()
     {
         var session = new GameSession2(_randomGen);
         var controller = new GameSessionController2(_config, _log, session);
-        var turnController = controller.TurnController;
 
         int initialTurn = session.CurrentGameState.Timeline.CurrentTurn;
 
-        Assert.That(turnController.CurrentTurn, Is.EqualTo(session.CurrentGameState.Timeline.CurrentTurn));
+        Assert.That(controller.CurrentTurnController.CurrentTurn, Is.EqualTo(initialTurn));
 
         // Act
         controller.PlayGameSession(2, new AIPlayer(_log, AIPlayer.Intellect.DoNothing));
 
-        int newTurn = session.CurrentGameState.Timeline.CurrentTurn;
+        int nextTurn = session.CurrentGameState.Timeline.CurrentTurn;
+        Contract.Assert(initialTurn + 1 == nextTurn);
 
-        Contract.Assert(initialTurn + 1 == newTurn);
-        Assert.That(turnController.CurrentTurn, Is.EqualTo(session.CurrentGameState.Timeline.CurrentTurn));
+        Assert.That(controller.CurrentTurnController.CurrentTurn, Is.EqualTo(nextTurn));
     }
-
     
     [TearDown]
     public void TearDown()
