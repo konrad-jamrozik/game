@@ -57,28 +57,28 @@ public class GameTurnController
     // Then the basic AI needs to be updated to handle this.
 
     public PlayerActionEvent HireAgents(int count)
-        => RecordPlayerActionEvent(new HireAgentsPlayerAction(_log, count));
+        => ExecuteAndRecordAction(new HireAgentsPlayerAction(_log, count));
 
     public PlayerActionEvent BuyTransportCapacity(int capacity)
-        => RecordPlayerActionEvent(new BuyTransportCapacityPlayerAction(_log, capacity));
+        => ExecuteAndRecordAction(new BuyTransportCapacityPlayerAction(_log, capacity));
 
     public PlayerActionEvent SackAgents(Agents agents)
-        => RecordPlayerActionEvent(new SackAgentsPlayerAction(_log, agents));
+        => ExecuteAndRecordAction(new SackAgentsPlayerAction(_log, agents));
 
     public PlayerActionEvent SendAgentsToTraining(Agents agents)
-        => RecordPlayerActionEvent(new SendAgentsToTrainingPlayerAction(_log, agents));
+        => ExecuteAndRecordAction(new SendAgentsToTrainingPlayerAction(_log, agents));
 
     public PlayerActionEvent SendAgentsToGenerateIncome(Agents agents)
-        => RecordPlayerActionEvent(new SendAgentsToGenerateIncomePlayerAction(_log, agents));
+        => ExecuteAndRecordAction(new SendAgentsToGenerateIncomePlayerAction(_log, agents));
 
     public PlayerActionEvent SendAgentsToGatherIntel(Agents agents)
-        => RecordPlayerActionEvent(new SendAgentsToGatherIntelPlayerAction(_log, agents));
+        => ExecuteAndRecordAction(new SendAgentsToGatherIntelPlayerAction(_log, agents));
 
     public PlayerActionEvent RecallAgents(Agents agents)
-        => RecordPlayerActionEvent(new RecallAgentsPlayerAction(_log, agents));
+        => ExecuteAndRecordAction(new RecallAgentsPlayerAction(_log, agents));
 
     public PlayerActionEvent LaunchMission(MissionSite site, Agents agents)
-        => RecordPlayerActionEvent(new LaunchMissionPlayerAction(_log, site, agents));
+        => ExecuteAndRecordAction(new LaunchMissionPlayerAction(_log, site, agents));
 
     public List<PlayerActionEvent> GetAndDeleteRecordedPlayerActionEvents()
     {
@@ -93,8 +93,10 @@ public class GameTurnController
     private Agents GetAgentsByIds(int[] agentsIds) =>
         _gameState.Assets.Agents.GetByIds(agentsIds);
 
-    private PlayerActionEvent RecordPlayerActionEvent(PlayerAction action)
+    private PlayerActionEvent ExecuteAndRecordAction(PlayerAction action)
     {
+        // This assertion is here to prevent the player of doing anything if they caused the game to be over.
+        Contract.Assert(!_gameState.IsGameOver);
         PlayerActionEvent playerActionEvent = action.Apply(_gameState);
         _recordedPlayerActionEvents.Add(playerActionEvent);
         return playerActionEvent;

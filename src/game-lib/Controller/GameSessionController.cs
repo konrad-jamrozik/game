@@ -119,7 +119,7 @@ public class GameSessionController
             List<WorldEvent> worldEvents = GetAndDeleteRecordedWorldEvents();
             GameSession.CurrentGameEvents.AddRange(worldEvents);
 
-            // This state diff shows the result of the action the player took in their turn.
+            // This state diff shows the result of advancing time.
             DiffPreviousAndCurrentGameState();
         }
 
