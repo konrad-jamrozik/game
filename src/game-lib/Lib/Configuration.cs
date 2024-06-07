@@ -21,7 +21,7 @@ public class Configuration
 
     public readonly bool LoggingEnabled;
 
-    public Configuration(IFileSystem fs, bool loggingEnabled = false)
+    public Configuration(IFileSystem fs, bool loggingEnabled = true)
     {
         // Given expected starting path on .NET 8, using the Simplified Output Paths [1]
         //   [repo_root]/artifacts/bin/game-lib/debug/.

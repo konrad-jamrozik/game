@@ -21,6 +21,8 @@ public class GameTurnController
 
     public RandomGen RandomGen { get; }
 
+    public int CurrentTurn => _gameState.Timeline.CurrentTurn;
+
     public PlayerActionEvent SackAgents(int[] agentsIds) => SackAgents(GetAgentsByIds(agentsIds));
 
     public PlayerActionEvent SendAgentsToTraining(int[] agentsIds)

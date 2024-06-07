@@ -76,7 +76,7 @@ public class BasicAIPlayerIntellect : IPlayer
         if (NoMissionsAvailable(state) || NoAgentsCanBeSentOnMission(state) || NoTransportCapacityAvailable(state))
             return;
 
-        var missionSitesOrdByDifficulty = state.MissionSites.Active.OrderBy(site => site.Difficulty).ToMissionSites();
+        MissionSites missionSitesOrdByDifficulty = state.MissionSites.Active.OrderBy(site => site.Difficulty).ToMissionSites();
 
         while (missionSitesOrdByDifficulty.Any() && TransportCapacityAvailable(state))
         {

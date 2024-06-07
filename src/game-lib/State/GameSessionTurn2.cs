@@ -28,15 +28,16 @@ public class GameSessionTurn2
 
     private void AssertInvariants()
     {
-        Contract.AssertImplication(
-            EventsUntilStartState.Any(),
-            EventsUntilStartState.First().Type == nameof(AdvanceTimePlayerAction),
-            "If there are any events leading up to the start game state, the first one must be the Advance Time player action.");
+        if (EventsUntilStartState.Any())
+        {
+            Contract.Assert(
+                EventsUntilStartState.First().Type == nameof(AdvanceTimePlayerAction),
+                "If there are any events leading up to the start game state, the first one must be the Advance Time player action.");
 
-        Contract.AssertImplication(
-            EventsUntilStartState.Any(),
-            EventsUntilStartState.Skip(1).All(gameEvent => gameEvent is WorldEvent),
-            "If there are any events leading up to the start game state, all of them except the first one must be world events.");
+            Contract.Assert(
+                EventsUntilStartState.Skip(1).All(gameEvent => gameEvent is WorldEvent),
+                "If there are any events leading up to the start game state, all of them except the first one must be world events.");
+        }
 
         Contract.Assert(
             StartState.Timeline.CurrentTurn == EndState.Timeline.CurrentTurn,

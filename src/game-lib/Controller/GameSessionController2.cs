@@ -66,7 +66,6 @@ public class GameSessionController2
         Contract.Assert(turnLimit <= GameState.MaxTurnLimit);
         Contract.Assert(turnLimit >= CurrentGameStatePlayerView.CurrentTurn);
 
-
         PlayGameUntilOver(player, turnLimit);
 
         var endState = GameSession.CurrentGameState;

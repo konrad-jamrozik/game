@@ -56,27 +56,27 @@ public class GameSessionTests
     [Test]
     public void BasicHappyPathGameSessionWorks()
     {
-        var session = new GameSession(_randomGen);
-        var controller = new GameSessionController(_config, _log, session);
+        var session = new GameSession2(_randomGen);
+        var controller = new GameSessionController2(_config, _log, session);
         var turnController = controller.TurnController;
 
-        GameState startingState = session.CurrentGameState;
+        GameState state = session.CurrentGameState;
 
         Assert.Multiple(
             () =>
             {
-                Assert.That(startingState.Timeline.CurrentTurn, Is.EqualTo(1));
-                Assert.That(startingState.Assets.Agents, Has.Count.EqualTo(0));
-                Assert.That(startingState.Missions, Has.Count.EqualTo(0));
+                Assert.That(state.Timeline.CurrentTurn, Is.EqualTo(1));
+                Assert.That(state.Assets.Agents, Has.Count.EqualTo(0));
+                Assert.That(state.Missions, Has.Count.EqualTo(0));
             });
 
         // Act
         turnController.HireAgents(count: 3);
-        controller.AdvanceTime();
-        controller.AdvanceTime();
+        controller.AdvanceTime(state);
+        controller.AdvanceTime(state);
         MissionSite site = controller.CurrentGameStatePlayerView.MissionSites.First();
         turnController.LaunchMission(site, agentCount: 3);
-        controller.AdvanceTime();
+        controller.AdvanceTime(state);
 
         GameState finalState = session.CurrentGameState;
 
@@ -89,13 +89,14 @@ public class GameSessionTests
             Assert.That(finalState.Missions, Has.Count.EqualTo(1), "missionsLaunchedCount");
 
             Assert.That(
-                startingState,
+                state,
                 Is.EqualTo(finalState),
                 "starting state should be equal to final state");
-            Assert.That(startingState.Assets.Agents, Is.EqualTo(finalState.Assets.Agents));
-            Assert.That(startingState.Missions, Is.EqualTo(finalState.Missions));
+            Assert.That(state.Assets.Agents, Is.EqualTo(finalState.Assets.Agents));
+            Assert.That(state.Missions, Is.EqualTo(finalState.Missions));
         });
     }
+
 
     /// <summary>
     /// Given:
@@ -111,8 +112,8 @@ public class GameSessionTests
     [Test]
     public void LoadingPreviousGameStateOverridesCurrentState()
     {
-        var session = new GameSession(_randomGen);
-        var controller = new GameSessionController(_config, _log, session);
+        var session = new GameSession2(_randomGen);
+        var controller = new GameSessionController2(_config, _log, session);
 
         GameStatePlayerView stateView = controller.CurrentGameStatePlayerView;
         int savedTurn = stateView.CurrentTurn;
@@ -122,7 +123,7 @@ public class GameSessionTests
         controller.SaveCurrentGameStateToFile();
 
         // Act 2: Advance time, thus modifying the current game state
-        controller.AdvanceTime();
+        controller.AdvanceTime(session.CurrentGameState);
 
         // Assert that advancing time didn't modify reference to the current game state
         Assert.That(stateView.StateReferenceEquals(controller.CurrentGameStatePlayerView));
@@ -156,16 +157,16 @@ public class GameSessionTests
     [Test]
     public void RoundTrippingSavingAndLoadingGameStateBehavesCorrectly()
     {
-        var session = new GameSession(_randomGen);
-        var controller = new GameSessionController(_config, _log, session);
+        var session = new GameSession2(_randomGen);
+        var controller = new GameSessionController2(_config, _log, session);
         var turnController = controller.TurnController;
 
-        controller.AdvanceTime();
-        controller.AdvanceTime();
+        controller.AdvanceTime(session.CurrentGameState);
+        controller.AdvanceTime(session.CurrentGameState);
         turnController.HireAgents(5);
         // Need to advance time here so that hired agents are no longer InTransit and can be
         // sent on a mission.
-        controller.AdvanceTime();
+        controller.AdvanceTime(session.CurrentGameState);
         turnController.SackAgents(agentsIds: [0]);
 
         GameStatePlayerView state = controller.CurrentGameStatePlayerView;
@@ -173,12 +174,12 @@ public class GameSessionTests
             state.MissionSites.Active.First(),
             agentCount: state.Assets.CurrentTransportCapacity);
 
-        controller.AdvanceTime();
-        controller.AdvanceTime();
-        controller.AdvanceTime();
-        controller.AdvanceTime();
-        controller.AdvanceTime();
-        controller.AdvanceTime();
+        controller.AdvanceTime(session.CurrentGameState);
+        controller.AdvanceTime(session.CurrentGameState);
+        controller.AdvanceTime(session.CurrentGameState);
+        controller.AdvanceTime(session.CurrentGameState);
+        controller.AdvanceTime(session.CurrentGameState);
+        controller.AdvanceTime(session.CurrentGameState);
         
         Assert.Multiple(
             () =>
@@ -219,16 +220,16 @@ public class GameSessionTests
     [Test]
     public void RoundTrippingSavingAndLoadingGameStateWithActiveMissionBehavesCorrectly()
     {
-        var session = new GameSession(_randomGen);
-        var controller = new GameSessionController(_config, _log, session);
+        var session = new GameSession2(_randomGen);
+        var controller = new GameSessionController2(_config, _log, session);
         var turnController = controller.TurnController;
         GameStatePlayerView state = controller.CurrentGameStatePlayerView;
 
-        controller.AdvanceTime();
+        controller.AdvanceTime(session.CurrentGameState);
         turnController.HireAgents(5);
         // Need to advance time here so that hired agents are no longer InTransit and can be
         // sent on a mission.
-        controller.AdvanceTime();
+        controller.AdvanceTime(session.CurrentGameState);
         
         Assert.That(state.MissionSites.Active.Any(), Is.True);
         
@@ -242,7 +243,7 @@ public class GameSessionTests
         VerifyGameSatesByJsonDiff(controller);
     }
 
-    private static void VerifyGameSatesByJsonDiff(GameSessionController controller)
+    private static void VerifyGameSatesByJsonDiff(GameSessionController2 controller)
     {
         // Act 1/2 and 2/2
         var lastSavedGameState = controller.SaveCurrentGameStateToFile();
