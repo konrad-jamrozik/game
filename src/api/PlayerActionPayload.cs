@@ -39,6 +39,7 @@ public class PlayerActionPayload(string actionName, int[]? ids, int? targetId)
         // https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/operators/patterns#positional-pattern
         => ActionName switch
         {
+            // kja these should be nameof(derived PlayerAction). In frontend they will be consumed by getDisplayedType()
             "AdvanceTime" => controller.AdvanceTime,
             "BuyTransportCap" => () => controller.TurnController.BuyTransportCapacity(1),
             "HireAgents" => () => controller.TurnController.HireAgents(TargetId!.Value),

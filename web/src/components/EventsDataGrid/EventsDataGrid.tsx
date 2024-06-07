@@ -24,7 +24,7 @@ export function EventsDataGrid(): React.JSX.Element {
       id: event.Id,
       turn: event.Turn,
       kind: 'Player action', // kja currently just assuming this is player action event
-      type: event.Type,
+      type: event.Type, // kja now that this is runtime class name of corresponding C# class, need to restore and adapt use of getDisplayedType()
       details: event.Details,
     })),
   )
