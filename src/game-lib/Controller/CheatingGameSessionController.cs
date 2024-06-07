@@ -8,9 +8,9 @@ namespace UfoGameLib.Controller;
 /// - View entire game state, even parts that the player should not have access to.
 /// - Do actions that are invalid by standard game rules, like adding money.
 /// </summary>
-public class CheatingGameSessionController : GameSessionControllerDeprecated
+public class CheatingGameSessionController : GameSessionController
 {
-    public CheatingGameSessionController(Configuration config, ILog log, RandomGen randomGen, GameSessionDeprecated gameSession)
+    public CheatingGameSessionController(Configuration config, ILog log, RandomGen randomGen, GameSession gameSession)
         : base(
             config,
             log,

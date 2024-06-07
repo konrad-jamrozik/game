@@ -80,7 +80,7 @@ public static class ApiUtils
         return gameSession;
     }
 
-    public static JsonHttpResult<GameState> GetCurrentStateResponse(GameSessionDeprecated gameSession)
+    public static JsonHttpResult<GameState> GetCurrentStateResponse(GameSession gameSession)
     {
         // This will be serialized to JSON per:
         // https://learn.microsoft.com/en-us/aspnet/core/tutorials/min-web-api?view=aspnetcore-8.0&tabs=visual-studio#return-values
@@ -89,17 +89,11 @@ public static class ApiUtils
         return ToJsonHttpResult(gs);
     }
 
-    public static JsonHttpResult<GameStatePlayerView> GetCurrentStatePlayerViewResponse(GameSessionDeprecated gameSession)
+    public static JsonHttpResult<GameStatePlayerView> GetCurrentStatePlayerViewResponse(GameSession gameSession)
     {
         var gameStatePlayerView = new GameStatePlayerView(() => gameSession.CurrentGameState);
         return ToJsonHttpResult(gameStatePlayerView);
     }
-
-    public static JsonHttpResult<GameSessionTurnDeprecated> ToJsonHttpResult(GameSessionTurnDeprecated gst)
-        => TypedResults.Json(gst, GameState.StateJsonSerializerOptions);
-
-    public static JsonHttpResult<List<GameSessionTurnDeprecated>> ToJsonHttpResult(List<GameSessionTurnDeprecated> gsts)
-        => TypedResults.Json(gsts, GameState.StateJsonSerializerOptions);
 
     public static JsonHttpResult<GameSessionTurn> ToJsonHttpResult(GameSessionTurn gst)
         => TypedResults.Json(gst, GameState.StateJsonSerializerOptions);

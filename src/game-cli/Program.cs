@@ -15,7 +15,7 @@ internal static class Program
         using var log = new Log(config);
         var randomGen = new RandomGen(new Random());
 
-        var controller = new GameSessionControllerDeprecated(config, log, new GameSessionDeprecated(randomGen));
+        var controller = new GameSessionController(config, log, new GameSession(randomGen));
 
         // Need to support here the various scenarios described in GameSessionController comment.
 
@@ -27,27 +27,27 @@ internal static class Program
             .WithParsed<FireAgentsOptions>(options => InvokeFireAgents(controller, options.AgentNames));
     }
 
-    private static void InvokeAdvanceTime(GameSessionControllerDeprecated controller)
+    private static void InvokeAdvanceTime(GameSessionController controller)
     {
 
         controller.AdvanceTime();
         Console.WriteLine("Time advanced.");
     }
 
-    private static void InvokeHireAgents(GameSessionControllerDeprecated controller, int count)
+    private static void InvokeHireAgents(GameSessionController controller, int count)
     {
-        controller.TurnController.HireAgents(count);
+        controller.CurrentTurnController.HireAgents(count);
         Console.WriteLine($"Hired {count} agents.");
     }
 
-    private static void InvokeLaunchMission(GameSessionControllerDeprecated controller, int siteId, int count, string region)
+    private static void InvokeLaunchMission(GameSessionController controller, int siteId, int count, string region)
     {
         MissionSite site = controller.CurrentGameStatePlayerView.MissionSites.Single(site => site.Id == siteId);
-        controller.TurnController.LaunchMission(site, count);
+        controller.CurrentTurnController.LaunchMission(site, count);
         Console.WriteLine($"Launched mission with {count} agents in region {region}.");
     }
 
-    private static void InvokeFireAgents(GameSessionControllerDeprecated game, IEnumerable<string> agentNames)
+    private static void InvokeFireAgents(GameSessionController game, IEnumerable<string> agentNames)
     {
         // not implemented; commented below is obsolete generated code.
         // game.SackAgents(agentNames);

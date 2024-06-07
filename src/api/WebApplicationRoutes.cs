@@ -22,12 +22,12 @@ public class WebApplicationRoutes
 
         app.MapPost("/advanceTurns", AdvanceTurnsRoute.AdvanceTurns)
             .Accepts<GameState>("application/json")
-            .Produces<GameSessionTurnDeprecated>()
+            .Produces<GameSessionTurn>()
             .WithTags("API");
 
         app.MapPost("/applyPlayerAction", ApplyPlayerActionRoute.ApplyPlayerAction)
             .Accepts<ApplyPlayerActionRequestBody>("application/json")
-            .Produces<GameSessionTurnDeprecated>()
+            .Produces<GameSessionTurn>()
             .WithTags("API");
     }
 
