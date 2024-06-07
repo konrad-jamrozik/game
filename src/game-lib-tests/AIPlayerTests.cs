@@ -45,7 +45,7 @@ public class AIPlayerTests
         var log = new Log(config);
         var randomGen = new RandomGen(new Random());
         var intellect = AIPlayer.Intellect.Basic;
-        var controller = new GameSessionController(config, log, new GameSession(randomGen));
+        var controller = new GameSessionController2(config, log, new GameSession2(randomGen));
         var aiPlayer = new AIPlayer(log, intellect);
 
         // Act
