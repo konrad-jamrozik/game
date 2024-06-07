@@ -56,8 +56,8 @@ public class GameSessionTests
     [Test]
     public void BasicHappyPathGameSessionWorks()
     {
-        var session = new GameSession2(_randomGen);
-        var controller = new GameSessionController2(_config, _log, session);
+        var session = new GameSession(_randomGen);
+        var controller = new GameSessionController(_config, _log, session);
         var turnController = controller.CurrentTurnController;
 
         GameState state = session.CurrentGameState;
@@ -112,8 +112,8 @@ public class GameSessionTests
     [Test]
     public void LoadingPreviousGameStateOverridesCurrentState()
     {
-        var session = new GameSession2(_randomGen);
-        var controller = new GameSessionController2(_config, _log, session);
+        var session = new GameSession(_randomGen);
+        var controller = new GameSessionController(_config, _log, session);
 
         GameStatePlayerView stateView = controller.CurrentGameStatePlayerView;
         int savedTurn = stateView.CurrentTurn;
@@ -157,8 +157,8 @@ public class GameSessionTests
     [Test]
     public void RoundTrippingSavingAndLoadingGameStateBehavesCorrectly()
     {
-        var session = new GameSession2(_randomGen);
-        var controller = new GameSessionController2(_config, _log, session);
+        var session = new GameSession(_randomGen);
+        var controller = new GameSessionController(_config, _log, session);
         var turnController = controller.CurrentTurnController;
 
         controller.AdvanceTime(session.CurrentGameState);
@@ -220,8 +220,8 @@ public class GameSessionTests
     [Test]
     public void RoundTrippingSavingAndLoadingGameStateWithActiveMissionBehavesCorrectly()
     {
-        var session = new GameSession2(_randomGen);
-        var controller = new GameSessionController2(_config, _log, session);
+        var session = new GameSession(_randomGen);
+        var controller = new GameSessionController(_config, _log, session);
         var turnController = controller.CurrentTurnController;
         GameStatePlayerView state = controller.CurrentGameStatePlayerView;
 
@@ -243,7 +243,7 @@ public class GameSessionTests
         VerifyGameSatesByJsonDiff(controller);
     }
 
-    private static void VerifyGameSatesByJsonDiff(GameSessionController2 controller)
+    private static void VerifyGameSatesByJsonDiff(GameSessionController controller)
     {
         // Act 1/2 and 2/2
         var lastSavedGameState = controller.SaveCurrentGameStateToFile();

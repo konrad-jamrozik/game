@@ -74,9 +74,9 @@ public static class ApiUtils
         return (parsedGameState, error);
     }
 
-    public static GameSession2 NewGameSession(GameState? initialGameState = null)
+    public static GameSession NewGameSession(GameState? initialGameState = null)
     {
-        var gameSession = new GameSession2(new RandomGen(new Random()), [new GameSessionTurn2(startState: initialGameState)]);
+        var gameSession = new GameSession(new RandomGen(new Random()), [new GameSessionTurn(startState: initialGameState)]);
         return gameSession;
     }
 
@@ -101,10 +101,10 @@ public static class ApiUtils
     public static JsonHttpResult<List<GameSessionTurnDeprecated>> ToJsonHttpResult(List<GameSessionTurnDeprecated> gsts)
         => TypedResults.Json(gsts, GameState.StateJsonSerializerOptions);
 
-    public static JsonHttpResult<GameSessionTurn2> ToJsonHttpResult(GameSessionTurn2 gst)
+    public static JsonHttpResult<GameSessionTurn> ToJsonHttpResult(GameSessionTurn gst)
         => TypedResults.Json(gst, GameState.StateJsonSerializerOptions);
 
-    public static JsonHttpResult<List<GameSessionTurn2>> ToJsonHttpResult(List<GameSessionTurn2> gsts)
+    public static JsonHttpResult<List<GameSessionTurn>> ToJsonHttpResult(List<GameSessionTurn> gsts)
         => TypedResults.Json(gsts, GameState.StateJsonSerializerOptions);
 
     public static JsonHttpResult<GameState> ToJsonHttpResult(GameState gs)

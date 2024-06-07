@@ -45,7 +45,7 @@ public class AIPlayerTests
         var log = new Log(config);
         var randomGen = new RandomGen(new Random());
         var intellect = AIPlayer.Intellect.Basic;
-        var controller = new GameSessionController2(config, log, new GameSession2(randomGen));
+        var controller = new GameSessionController(config, log, new GameSession(randomGen));
         var aiPlayer = new AIPlayer(log, intellect);
 
         // Act
@@ -73,7 +73,7 @@ public class AIPlayerTests
 
     private void AIPlayerPlaysGameUntilConclusion(AIPlayer.Intellect intellect, int turnLimit)
     {
-        var controller = new GameSessionController2(_config, _log, new GameSession2(_randomGen));
+        var controller = new GameSessionController(_config, _log, new GameSession(_randomGen));
         var aiPlayer = new AIPlayer(_log, intellect);
 
         // Act

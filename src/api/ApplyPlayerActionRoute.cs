@@ -8,7 +8,7 @@ using UfoGameLib.State;
 namespace UfoGameLib.Api;
 
 using ApplyPlayerActionResponse = Results<
-    JsonHttpResult<GameSessionTurn2>,
+    JsonHttpResult<GameSessionTurn>,
     BadRequest<string>>;
 
 public static class ApplyPlayerActionRoute
@@ -18,7 +18,7 @@ public static class ApplyPlayerActionRoute
     {
         return ApiUtils.TryProcessRoute(RouteFunc);
 
-        async Task<JsonHttpResult<GameSessionTurn2>> RouteFunc()
+        async Task<JsonHttpResult<GameSessionTurn>> RouteFunc()
         {
             await Console.Out.WriteLineAsync("Invoked ApplyPlayerAction!");
 
@@ -30,7 +30,7 @@ public static class ApplyPlayerActionRoute
         }
     }
 
-    private static JsonHttpResult<GameSessionTurn2> ApplyPlayerActionInternal(
+    private static JsonHttpResult<GameSessionTurn> ApplyPlayerActionInternal(
         PlayerActionPayload playerActionPayload,
         GameState? gameState)
     {
@@ -40,8 +40,8 @@ public static class ApplyPlayerActionRoute
 
         var config = new Configuration(new SimulatedFileSystem());
         var log = new Log(config);
-        GameSession2 gameSession = ApiUtils.NewGameSession(gameState);
-        var controller = new GameSessionController2(config, log, gameSession);
+        GameSession gameSession = ApiUtils.NewGameSession(gameState);
+        var controller = new GameSessionController(config, log, gameSession);
 
         if (!(playerActionPayload.ActionName == "AdvanceTime" && gameState is null))
             gameSession.CurrentGameEvents.Add(playerActionPayload.Apply(controller));
@@ -52,7 +52,7 @@ public static class ApplyPlayerActionRoute
             // hence we just return the current game session turn.
         }
 
-        JsonHttpResult<GameSessionTurn2> result =
+        JsonHttpResult<GameSessionTurn> result =
             ApiUtils.ToJsonHttpResult(gameSession.CurrentTurn);
         return result;
     }

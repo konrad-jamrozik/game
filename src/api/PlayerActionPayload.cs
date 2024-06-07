@@ -28,13 +28,13 @@ public class PlayerActionPayload(string actionName, int[]? ids, int? targetId)
     /// The output of this method is a mutation of the controller.GameSession.CurrentGameState,
     /// per the applied player action as captured by this payload.
     /// </returns>
-    public PlayerActionEvent Apply(GameSessionController2 controller)
+    public PlayerActionEvent Apply(GameSessionController controller)
     {
         Func<PlayerActionEvent> apply = TranslatePlayerActionToControllerAction(controller);
         return apply();
     }
 
-    private Func<PlayerActionEvent> TranslatePlayerActionToControllerAction(GameSessionController2 controller)
+    private Func<PlayerActionEvent> TranslatePlayerActionToControllerAction(GameSessionController controller)
         // https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/operators/patterns#property-pattern
         // https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/operators/patterns#positional-pattern
         => ActionName switch

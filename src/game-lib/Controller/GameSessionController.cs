@@ -38,14 +38,14 @@ namespace UfoGameLib.Controller;
 /// 4. Automated player -- CLI executable -- Program -- AIPlayer -- GameSessionController -- GameSession
 /// ```
 /// </summary>
-public class GameSessionController2
+public class GameSessionController
 {
-    protected readonly GameSession2 GameSession;
+    protected readonly GameSession GameSession;
     private readonly Configuration _config;
     private readonly ILog _log;
     public GameTurnController CurrentTurnController { get; private set; }
 
-    public GameSessionController2(Configuration config, ILog log, GameSession2 gameSession)
+    public GameSessionController(Configuration config, ILog log, GameSession gameSession)
     {
         _config = config;
         _log = log;
@@ -89,7 +89,7 @@ public class GameSessionController2
 
         SaveCurrentGameStateToFile();
 
-        new GameSessionStatsReport2(
+        new GameSessionStatsReport(
                 _log,
                 GameSession,
                 _config.TurnReportCsvFile,
@@ -143,7 +143,7 @@ public class GameSessionController2
 
     private GameTurnController NewTurn(PlayerActionEvent advanceTimePlayerActionEvent, List<WorldEvent> worldEvents, GameState nextTurnStartState)
     {
-        GameSession.Turns.Add(new GameSessionTurn2(
+        GameSession.Turns.Add(new GameSessionTurn(
             eventsUntilStartState: [advanceTimePlayerActionEvent, ..worldEvents],
             startState: nextTurnStartState));
         return new GameTurnController(_log, GameSession.RandomGen, GameSession.CurrentGameState);
@@ -168,7 +168,7 @@ public class GameSessionController2
     public GameState LoadCurrentGameStateFromFile()
     {
         GameState loadedGameState = GameState.FromJsonFile(_config.SaveFile);
-        GameSession.Turns.Add(new GameSessionTurn2(startState: loadedGameState));
+        GameSession.Turns.Add(new GameSessionTurn(startState: loadedGameState));
         _log.Info($"Loaded game state from {_config.SaveFile.FullPath}");
         return GameSession.CurrentGameState;
     }

@@ -14,26 +14,26 @@ namespace UfoGameLib.State;
 ///
 /// GameSession must be accessed directly only by GameSessionController.
 /// </summary>
-public class GameSession2
+public class GameSession
 {
     public readonly RandomGen RandomGen;
 
-    public readonly List<GameSessionTurn2> Turns;
+    public readonly List<GameSessionTurn> Turns;
 
-    public GameSessionTurn2 CurrentTurn => Turns.Last();
+    public GameSessionTurn CurrentTurn => Turns.Last();
 
     public GameState CurrentGameState => CurrentTurn.EndState;
 
     public List<GameEvent> CurrentGameEvents => CurrentTurn.EventsInTurn;
 
-    public GameSession2(RandomGen randomGen, List<GameSessionTurn2>? turns = null)
+    public GameSession(RandomGen randomGen, List<GameSessionTurn>? turns = null)
     {
         RandomGen = randomGen;
-        Turns = turns ?? [new GameSessionTurn2()];
+        Turns = turns ?? [new GameSessionTurn()];
     }
 
     public IReadOnlyList<GameState> GameStates
-        => Turns.SelectMany<GameSessionTurn2, GameState>(turn => [turn.StartState, turn.EndState])
+        => Turns.SelectMany<GameSessionTurn, GameState>(turn => [turn.StartState, turn.EndState])
             .ToList()
             .AsReadOnly();
 }

@@ -4,7 +4,7 @@ using UfoGameLib.Events;
 
 namespace UfoGameLib.State;
 
-public class GameSessionTurn2
+public class GameSessionTurn
 {
     public readonly List<GameEvent> EventsUntilStartState;
     public readonly GameState StartState;
@@ -12,7 +12,7 @@ public class GameSessionTurn2
     public readonly List<GameEvent> EventsInTurn;
     public readonly GameState EndState;
 
-    public GameSessionTurn2(
+    public GameSessionTurn(
         List<GameEvent>? eventsUntilStartState = null,
         GameState? startState = null,
         List<GameEvent>? eventsInTurn = null,

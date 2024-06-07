@@ -23,8 +23,8 @@ public class GameSessionControllerTests
     [Test]
     public void CurrentTurnControllerKeepsTrackOfTheTurn()
     {
-        var session = new GameSession2(_randomGen);
-        var controller = new GameSessionController2(_config, _log, session);
+        var session = new GameSession(_randomGen);
+        var controller = new GameSessionController(_config, _log, session);
 
         int initialTurn = session.CurrentGameState.Timeline.CurrentTurn;
 
