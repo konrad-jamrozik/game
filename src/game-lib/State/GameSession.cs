@@ -24,7 +24,7 @@ public class GameSession
 
     public GameState CurrentGameState => CurrentTurn.EndState;
 
-    public List<GameEvent> CurrentGameEvents => CurrentTurn.EventsInTurn;
+    public List<PlayerActionEvent> CurrentPlayerActionEvents => CurrentTurn.EventsInTurn;
 
     public GameSession(RandomGen randomGen, List<GameSessionTurn>? turns = null)
     {

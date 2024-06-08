@@ -44,7 +44,7 @@ public static class ApplyPlayerActionRoute
         var controller = new GameSessionController(config, log, gameSession);
 
         if (!(playerActionPayload.ActionName == "AdvanceTime" && gameState is null))
-            gameSession.CurrentGameEvents.Add(playerActionPayload.Apply(controller));
+            gameSession.CurrentPlayerActionEvents.Add(playerActionPayload.Apply(controller));
         else
         {
             // If the player action is "AdvanceTime" and the gameState is null,

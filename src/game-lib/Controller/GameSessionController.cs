@@ -119,7 +119,7 @@ public class GameSessionController
             player.PlayGameTurn(CurrentGameStatePlayerView, CurrentTurnController);
 
             List<PlayerActionEvent> playerActionEvents = CurrentTurnController.GetAndDeleteRecordedPlayerActionEvents();
-            GameSession.CurrentGameEvents.AddRange(playerActionEvents);
+            GameSession.CurrentPlayerActionEvents.AddRange(playerActionEvents);
 
             if (GameSession.CurrentGameState.IsGameOver)
                 break;
@@ -131,20 +131,20 @@ public class GameSessionController
 
             GameState nextTurnStartState = GameSession.CurrentGameState.Clone();
 
-            PlayerActionEvent advanceTimePlayerActionEvent = AdvanceTime(nextTurnStartState);
+            GameSession.CurrentTurn.AdvanceTimeEvent = AdvanceTime(nextTurnStartState);
             List<WorldEvent> worldEvents = GetAndDeleteRecordedWorldEvents();
 
             // This state diff shows the result of advancing time.
             DiffGameStates(GameSession.CurrentGameState, nextTurnStartState);
 
-            NewTurn(advanceTimePlayerActionEvent, worldEvents, nextTurnStartState);
+            NewTurn(worldEvents, nextTurnStartState);
         }
     }
 
-    private void NewTurn(PlayerActionEvent advanceTimePlayerActionEvent, List<WorldEvent> worldEvents, GameState nextTurnStartState)
+    private void NewTurn(List<WorldEvent> worldEvents, GameState nextTurnStartState)
     {
         GameSession.Turns.Add(new GameSessionTurn(
-            eventsUntilStartState: [advanceTimePlayerActionEvent, .. worldEvents],
+            eventsUntilStartState: worldEvents,
             startState: nextTurnStartState));
         CurrentTurnController = new GameTurnController(_log, GameSession.RandomGen, GameSession.CurrentGameState);
     }
