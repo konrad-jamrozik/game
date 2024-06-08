@@ -16,7 +16,7 @@ export function EventsDataGrid(): React.JSX.Element {
   const gameSession = useGameSessionContext()
 
   const gameEvents: readonly RenderedGameEvent[] = gameSession.isInitialized()
-    ? gameSession.getGameEvents()
+    ? gameSession.getRenderedGameEvents()
     : []
 
   const rows: GameEventRow[] = _.reverse(

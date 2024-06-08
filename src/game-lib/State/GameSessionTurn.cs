@@ -30,6 +30,7 @@ public class GameSessionTurn
     {
         if (EventsUntilStartState.Any())
         {
+            // kja instead, the AdvanceTimePlayerAction should be the last event, after endstate. This way turn number will be correct.
             Contract.Assert(
                 EventsUntilStartState.First().Type == nameof(AdvanceTimePlayerAction),
                 "If there are any events leading up to the start game state, the first one must be the Advance Time player action.");

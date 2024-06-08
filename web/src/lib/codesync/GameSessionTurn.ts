@@ -3,6 +3,8 @@ import type { GameEvent } from './GameEvent'
 import type { GameState } from './GameState'
 
 export type GameSessionTurn = {
-  readonly GameState: GameState
-  readonly GameEvents: GameEvent[]
+  readonly EventsUntilStartState: GameEvent[]
+  readonly StartState: GameState
+  readonly EventsInTurn: GameEvent[]
+  readonly EndState: GameState
 }

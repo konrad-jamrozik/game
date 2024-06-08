@@ -53,7 +53,7 @@ public class GameSessionController
         CurrentTurnController = new GameTurnController(_log, GameSession.RandomGen, GameSession.CurrentGameState);
     }
 
-    public GameStatePlayerView CurrentGameStatePlayerView 
+    public GameStatePlayerView CurrentGameStatePlayerView
         => new GameStatePlayerView(() => GameSession.CurrentGameState);
 
     public void PlayGameSession(int turnLimit, IPlayer player)
@@ -84,7 +84,7 @@ public class GameSessionController
                   $"Missions failed: {endState.Missions.Failed.Count}, " +
                   $"Mission sites expired: {endState.MissionSites.Expired.Count}, " +
                   $"Agents: {endState.Assets.Agents.Count}, " +
-                  $"Terminated agents: {endState.TerminatedAgents.Count}, " + 
+                  $"Terminated agents: {endState.TerminatedAgents.Count}, " +
                   $"Turn: {endState.Timeline.CurrentTurn} / {turnLimit}.");
 
         SaveCurrentGameStateToFile();
@@ -144,7 +144,7 @@ public class GameSessionController
     private void NewTurn(PlayerActionEvent advanceTimePlayerActionEvent, List<WorldEvent> worldEvents, GameState nextTurnStartState)
     {
         GameSession.Turns.Add(new GameSessionTurn(
-            eventsUntilStartState: [advanceTimePlayerActionEvent, ..worldEvents],
+            eventsUntilStartState: [advanceTimePlayerActionEvent, .. worldEvents],
             startState: nextTurnStartState));
         CurrentTurnController = new GameTurnController(_log, GameSession.RandomGen, GameSession.CurrentGameState);
     }
