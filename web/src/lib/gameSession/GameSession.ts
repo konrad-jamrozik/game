@@ -354,7 +354,7 @@ export class GameSession {
   }
 
   private getRetainedTurns(
-    resultOfPlayerAction: boolean | undefined,
+    // resultOfPlayerAction: boolean | undefined,
     firstUpsertedTurn: number,
   ): GameSessionTurn[] {
     return _.takeWhile(
