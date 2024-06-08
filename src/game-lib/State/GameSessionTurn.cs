@@ -25,6 +25,22 @@ public class GameSessionTurn
     // 2. Next event ID is not stored in game state; it is stored in GameSession,
     // which is ephemerally created upon each API call to backend, so frontend needs to pass this value.
     // This is not a problem with other IDs as they are stored within game states which are always passed.
+    //
+    // OK new idea for API route:
+    // Non-advance time player action.
+    // Inputs:
+    // - current GameSessionTurn, 
+    // - player action to apply except advance time
+    // Output:
+    // - new current GameSessionTurn, to be replaced.
+    //
+    // Advance time player action:
+    // Inputs:
+    // - current GameSessionTurn or nothing
+    // - turn limit to advance to
+    // - AI intellect to use if any
+    // Output:
+    // - all the game session turns, including the modified current one, to replace.
     public GameSessionTurn(
         List<WorldEvent>? eventsUntilStartState = null,
         GameState? startState = null,
