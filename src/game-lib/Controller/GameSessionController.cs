@@ -50,7 +50,11 @@ public class GameSessionController
         _config = config;
         _log = log;
         GameSession = gameSession;
-        CurrentTurnController = new GameTurnController(_log, GameSession.RandomGen, GameSession.CurrentGameState);
+        CurrentTurnController = new GameTurnController(
+            _log,
+            GameSession.RandomGen,
+            GameSession.CurrentGameState,
+            GameSession.NextEventId);
     }
 
     public GameStatePlayerView CurrentGameStatePlayerView
@@ -137,6 +141,7 @@ public class GameSessionController
             // This state diff shows the result of advancing time.
             DiffGameStates(GameSession.CurrentGameState, nextTurnStartState);
 
+            GameSession.CurrentTurn.AssertInvariants();
             NewTurn(worldEvents, nextTurnStartState);
         }
     }
@@ -146,7 +151,11 @@ public class GameSessionController
         GameSession.Turns.Add(new GameSessionTurn(
             eventsUntilStartState: worldEvents,
             startState: nextTurnStartState));
-        CurrentTurnController = new GameTurnController(_log, GameSession.RandomGen, GameSession.CurrentGameState);
+        CurrentTurnController = new GameTurnController(
+            _log,
+            GameSession.RandomGen,
+            GameSession.CurrentGameState,
+            GameSession.NextEventId);
     }
 
     private List<WorldEvent> GetAndDeleteRecordedWorldEvents()
@@ -156,7 +165,7 @@ public class GameSessionController
     }
 
     public PlayerActionEvent AdvanceTime(GameState? state = null)
-        => new AdvanceTimePlayerAction(_log, GameSession.RandomGen).Apply(state ?? GameSession.CurrentGameState);
+        => new AdvanceTimePlayerAction(_log, GameSession.RandomGen).Apply(state ?? GameSession.CurrentGameState, GameSession.NextEventId);
 
     public GameState SaveCurrentGameStateToFile()
     {

@@ -52,7 +52,7 @@ public class GameSessionControllerDeprecated
         _config = config;
         _log = log;
         GameSession = gameSession;
-        TurnController = new GameTurnController(_log, GameSession.RandomGen, GameSession.CurrentGameState);
+        TurnController = new GameTurnController(_log, GameSession.RandomGen, GameSession.CurrentGameState, 0);
     }
 
     public GameStatePlayerView CurrentGameStatePlayerView 
@@ -164,7 +164,7 @@ public class GameSessionControllerDeprecated
     }
 
     public PlayerActionEvent AdvanceTime()
-        => new AdvanceTimePlayerAction(_log, GameSession.RandomGen).Apply(GameSession.CurrentGameState);
+        => new AdvanceTimePlayerAction(_log, GameSession.RandomGen).Apply(GameSession.CurrentGameState, 0);
 
     public GameState SaveCurrentGameStateToFile()
     {

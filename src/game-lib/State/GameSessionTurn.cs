@@ -1,4 +1,5 @@
 using Lib.Contracts;
+using Lib.Primitives;
 using UfoGameLib.Controller;
 using UfoGameLib.Events;
 
@@ -30,7 +31,7 @@ public class GameSessionTurn
         AssertInvariants();
     }
 
-    private void AssertInvariants()
+    public void AssertInvariants()
     {
         Contract.Assert(
             StartState.Timeline.CurrentTurn == EndState.Timeline.CurrentTurn,
@@ -55,7 +56,25 @@ public class GameSessionTurn
         Contract.Assert(
             EventsInTurn.Count == EndState.UpdateCount - StartState.UpdateCount,
             "Number of events in turn must match the number of updates between the game states.");
+
+        IReadOnlyList<GameEvent> events = GameEvents;
+        if (events.Any())
+        {
+            int firstId = events[0].Id;
+            for (int i = 0; i < events.Count; i++)
+            {
+                int expectedId = firstId + i;
+                Contract.Assert(
+                    events[i].Id == expectedId,
+                    $"Event id {events[i].Id} is not equal to expected {expectedId}.");
+            }
+        }
     }
+
+    public IReadOnlyList<GameEvent> GameEvents 
+        => ((List<GameEvent>) [..EventsUntilStartState, ..EventsInTurn])
+        .Concat((AdvanceTimeEvent as GameEvent)?.WrapInList() ?? [])
+        .ToList().AsReadOnly();
 
     public GameSessionTurn Clone()
         => DeepClone();

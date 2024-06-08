@@ -20,6 +20,8 @@ public class GameSession
 
     public readonly List<GameSessionTurn> Turns;
 
+    public int NextEventId => GameEvents.Count;
+
     public GameSessionTurn CurrentTurn => Turns.Last();
 
     public GameState CurrentGameState => CurrentTurn.EndState;
@@ -34,6 +36,11 @@ public class GameSession
 
     public IReadOnlyList<GameState> GameStates
         => Turns.SelectMany<GameSessionTurn, GameState>(turn => [turn.StartState, turn.EndState])
+            .ToList()
+            .AsReadOnly();
+
+    public IReadOnlyList<GameEvent> GameEvents
+        => Turns.SelectMany<GameSessionTurn, GameEvent>(turn => turn.GameEvents)
             .ToList()
             .AsReadOnly();
 }

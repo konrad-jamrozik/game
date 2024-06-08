@@ -6,7 +6,7 @@ namespace UfoGameLib.Controller;
 
 public abstract class PlayerAction
 {
-    public PlayerActionEvent Apply(GameState state)
+    public PlayerActionEvent Apply(GameState state, int nextEventId)
     {
         Contract.Assert(!state.IsGameOver, 
             $"money: {state.Assets.Money} " +
@@ -28,7 +28,7 @@ public abstract class PlayerAction
                 $"support: {state.Assets.Support}");
         }
 
-        return new PlayerActionEvent(GetType().Name, applyResultDetails);
+        return new PlayerActionEvent(nextEventId, GetType().Name, applyResultDetails);
 
     }
     protected abstract string ApplyImpl(GameState state);

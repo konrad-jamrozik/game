@@ -10,13 +10,15 @@ public class GameTurnController
 {
     private readonly ILog _log;
     private readonly GameState _gameState;
+    private int _nextEventId;
     private readonly List<PlayerActionEvent> _recordedPlayerActionEvents = new();
 
-    public GameTurnController(ILog log, RandomGen randomGen, GameState gameState)
+    public GameTurnController(ILog log, RandomGen randomGen, GameState gameState, int nextEventId)
     {
         _log = log;
         RandomGen = randomGen;
         _gameState = gameState;
+        _nextEventId = nextEventId;
     }
 
     public RandomGen RandomGen { get; }
@@ -97,9 +99,9 @@ public class GameTurnController
 
     private PlayerActionEvent ExecuteAndRecordAction(PlayerAction action)
     {
-        // This assertion is here to prevent the player of doing anything if they caused the game to be over.
+        // This assertion is here to prevent the player from doing anything if they caused the game to be over.
         Contract.Assert(!_gameState.IsGameOver);
-        PlayerActionEvent playerActionEvent = action.Apply(_gameState);
+        PlayerActionEvent playerActionEvent = action.Apply(_gameState, _nextEventId++);
         _recordedPlayerActionEvents.Add(playerActionEvent);
         return playerActionEvent;
     }

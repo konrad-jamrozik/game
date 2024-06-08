@@ -2,9 +2,10 @@
 
 public class WorldEvent : GameEvent
 {
-    public WorldEvent(string type, string details) : base(type, details)
+    public WorldEvent(int id, string type, string details) : base(id, type, details)
     {
     }
+
     public override WorldEvent Clone()
-        => new(Type, Details);
+        => new(Id, Type, Details);
 }

@@ -2,10 +2,10 @@
 
 public class PlayerActionEvent : GameEvent
 {
-    public PlayerActionEvent(string type, string details) : base(type, details)
+    public PlayerActionEvent(int id, string type, string details) : base(id, type, details)
     {
     }
 
     public override PlayerActionEvent Clone()
-        => new(Type, Details);
+        => new(Id, Type, Details);
 }
