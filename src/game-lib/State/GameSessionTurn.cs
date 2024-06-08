@@ -15,6 +15,16 @@ public class GameSessionTurn
 
     public PlayerActionEvent? AdvanceTimeEvent;
 
+    // kja two problems:
+    // 1. when turn is advanced, two GameSessionTurn instances need to change:
+    // - the one *from* which turn is advanced: the advanceTimeEvent must be set
+    // - the one *into* which turn is advanced.
+    // This is an issue from frontend point of view. When user clicks "advance turn"
+    // and passes as input the current turn game state, the backend needs to return not only the new
+    //  gameSessionTurn, but also the advanceTurn player event.
+    // 2. Next event ID is not stored in game state; it is stored in GameSession,
+    // which is ephemerally created upon each API call to backend, so frontend needs to pass this value.
+    // This is not a problem with other IDs as they are stored within game states which are always passed.
     public GameSessionTurn(
         List<WorldEvent>? eventsUntilStartState = null,
         GameState? startState = null,

@@ -7,4 +7,5 @@ export type GameSessionTurn = {
   readonly StartState: GameState
   readonly EventsInTurn: GameEvent[]
   readonly EndState: GameState
+  readonly AdvanceTimeEvent?: GameEvent
 }

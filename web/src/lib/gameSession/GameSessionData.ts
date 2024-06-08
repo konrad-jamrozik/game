@@ -1,3 +1,4 @@
+/* eslint-disable max-statements */
 /* eslint-disable sonarjs/no-inverted-boolean-check */
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable @typescript-eslint/parameter-properties */
@@ -39,11 +40,18 @@ export class GameSessionData {
       throw new Error('EventsUntilStartState must be empty for first turn')
     }
 
-    // kja this will no longer hold once 'advance turn' player action is moved to different collection
     for (const turn of turns.slice(1)) {
       if (turn.EventsUntilStartState.length === 0) {
         throw new Error(
           'EventsUntilStartState must not be empty for all but first turn',
+        )
+      }
+    }
+
+    for (const turn of turns.slice(0, -1)) {
+      if (_.isUndefined(turn.AdvanceTimeEvent)) {
+        throw new TypeError(
+          'AdvanceTimeEvent must not be nil for all but first turn',
         )
       }
     }
@@ -88,6 +96,8 @@ export class GameSessionData {
       },
       turns.at(0)!,
     )
+
+    // kja need to verify IDs of events are consecutive
     /* c8 ignore stop */
   }
 

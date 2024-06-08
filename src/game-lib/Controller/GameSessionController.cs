@@ -165,7 +165,9 @@ public class GameSessionController
     }
 
     public PlayerActionEvent AdvanceTime(GameState? state = null)
-        => new AdvanceTimePlayerAction(_log, GameSession.RandomGen).Apply(state ?? GameSession.CurrentGameState, GameSession.NextEventId);
+        => new AdvanceTimePlayerAction(_log, GameSession.RandomGen).Apply(
+            state ?? GameSession.CurrentGameState,
+            GameSession.NextEventId);
 
     public GameState SaveCurrentGameStateToFile()
     {
