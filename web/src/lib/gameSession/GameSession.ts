@@ -74,15 +74,15 @@ export class GameSession {
   ): Promise<boolean> {
     const startGameState: GameState | undefined =
       this.getGameStateAtTurnEndUnsafe(startTurn)
-    const newGameSessionTurns = await callAdvanceTurnsApi({
+    const newTurns = await callAdvanceTurnsApi({
       setLoading: this.setLoading,
       setError: this.setError,
       startGameState,
       targetTurn,
       delegateToAi,
     })
-    if (!_.isUndefined(newGameSessionTurns)) {
-      this.upsertTurns(newGameSessionTurns)
+    if (!_.isUndefined(newTurns)) {
+      this.upsertTurns(newTurns)
       return true
     }
     return false

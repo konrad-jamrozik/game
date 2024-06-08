@@ -4,7 +4,7 @@
 import _ from 'lodash'
 import type { GameEvent } from '../codesync/GameEvent'
 import type { GameSessionTurn } from '../codesync/GameSessionTurn'
-import type { GameState } from '../codesync/GameState'
+import { initialTurn, type GameState } from '../codesync/GameState'
 import type { StoredData } from '../storedData/StoredData'
 import type { RenderedGameEvent } from './RenderedGameEvent'
 
@@ -24,6 +24,72 @@ export class GameSessionData {
       React.SetStateAction<GameSessionDataType>
     >,
   ) {}
+
+  private static verify(turns: readonly GameSessionTurn[]): void {
+    /* c8 ignore start */
+    if (_.isEmpty(turns)) {
+      throw new Error('Turns must not be empty')
+    }
+    const firstTurnNo = turns.at(0)!.StartState.Timeline.CurrentTurn
+    if (firstTurnNo !== initialTurn) {
+      throw new Error(`First turn must be initialTurn of ${initialTurn}`)
+    }
+
+    if (turns.at(0)!.EventsUntilStartState.length > 0) {
+      throw new Error('EventsUntilStartState must be empty for first turn')
+    }
+
+    // kja this will no longer hold once 'advance turn' player action is moved to different collection
+    for (const turn of turns.slice(1)) {
+      if (turn.EventsUntilStartState.length === 0) {
+        throw new Error(
+          'EventsUntilStartState must not be empty for all but first turn',
+        )
+      }
+    }
+
+    for (const turn of turns) {
+      if (
+        !(
+          turn.StartState.Timeline.CurrentTurn ===
+          turn.EndState.Timeline.CurrentTurn
+        )
+      ) {
+        throw new Error(
+          'All game states in any given turn must have the same turn number',
+        )
+      }
+      if (!(turn.EndState.UpdateCount >= turn.StartState.UpdateCount)) {
+        throw new Error(
+          'End state must have same or more updates than start state.',
+        )
+      }
+      if (
+        !(
+          turn.EventsInTurn.length ===
+          turn.EndState.UpdateCount - turn.StartState.UpdateCount
+        )
+      ) {
+        throw new Error(
+          'The number of events in turn must match the number of update count between start and end state.',
+        )
+      }
+    }
+    // eslint-disable-next-line lodash/collection-method-value
+    _.reduce(
+      turns.slice(1),
+      (currTurn, nextTurn) => {
+        const currTurnNo = currTurn.StartState.Timeline.CurrentTurn
+        const nextTurnNo = nextTurn.StartState.Timeline.CurrentTurn
+        if (!(nextTurnNo === currTurnNo + 1)) {
+          throw new Error('Turn numbers must be consecutive')
+        }
+        return nextTurn
+      },
+      turns.at(0)!,
+    )
+    /* c8 ignore stop */
+  }
 
   public getTurns(): readonly GameSessionTurn[] {
     return this._data.turns
@@ -99,9 +165,9 @@ export class GameSessionData {
     const currentTurn: GameSessionTurn = this.getCurrentTurn()
     const currentTurnAfterReset: GameSessionTurn = {
       EventsUntilStartState: currentTurn.EventsUntilStartState,
-      StartState: currentTurn.StartState, // kja deep clone?
+      StartState: currentTurn.StartState,
       EventsInTurn: [],
-      EndState: currentTurn.StartState, // kja deep clone?
+      EndState: currentTurn.StartState,
     }
 
     const newData: GameSessionDataType = {
@@ -119,8 +185,7 @@ export class GameSessionData {
   }
 
   public setTurns(turns: readonly GameSessionTurn[]): void {
-    // kja
-    // GameSessionData.verify(turns)
+    GameSessionData.verify(turns)
     const newData: GameSessionDataType = {
       turns,
     }
@@ -143,53 +208,3 @@ export class GameSessionData {
 // https://react.dev/learn/extracting-state-logic-into-a-reducer
 // using immer:
 // https://react.dev/learn/extracting-state-logic-into-a-reducer#writing-concise-reducers-with-immer
-
-// kja to adapt
-// private static verify(gameStates: readonly GameState[]): void {
-//   /* c8 ignore start */
-//   if (_.isEmpty(gameStates)) {
-//     throw new Error('gameStates must not be empty')
-//   }
-//   const firstTurn = gameStates.at(0)!.Timeline.CurrentTurn
-//   if (firstTurn !== initialTurn) {
-//     throw new Error(`first turn must be initialTurn of ${initialTurn}`)
-//   }
-//   // eslint-disable-next-line lodash/collection-method-value
-//   _.reduce(
-//     gameStates,
-//     (currGs, nextGs) => {
-//       const currTurn = currGs.Timeline.CurrentTurn
-//       const nextTurn = nextGs.Timeline.CurrentTurn
-//       if (!(currTurn <= nextTurn && nextTurn <= currTurn + 1)) {
-//         throw new Error('gameStates turns must increment by 0 or 1')
-//       }
-//       if (
-//         /* The 'currTurn !== initialTurn' check is needed to because of the
-//         initial accumulator value the currGs and nextGs will be the same state at first. */
-//         currTurn !== initialTurn &&
-//         currTurn === nextTurn &&
-//         !(currGs.UpdateCount < nextGs.UpdateCount)
-//       ) {
-//         throw new Error(
-//           'If there are 2 game states with the same turn, the later state must have higher UpdateCount',
-//         )
-//       }
-//       return nextGs
-//     },
-//     gameStates[0]!,
-//   )
-//   const gssByCurrentTurn = _.groupBy(
-//     gameStates,
-//     (gs) => gs.Timeline.CurrentTurn,
-//   )
-//   const maxOccurrencesOfAnyTurn = _.maxBy(
-//     _.values(gssByCurrentTurn),
-//     (gss) => gss.length,
-//   )!.length
-//   if (!(maxOccurrencesOfAnyTurn <= 2)) {
-//     throw new Error(
-//       'There can be no more than two gameStates with given currentTurn',
-//     )
-//   }
-//   /* c8 ignore stop */
-// }
