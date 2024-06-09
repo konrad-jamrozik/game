@@ -7,7 +7,6 @@ import { GameSessionContext } from '../../components/GameSessionProvider'
 import { callAdvanceTurnsApi } from '../api/advanceTurnsApi'
 import { callApplyPlayerActionApi } from '../api/applyPlayerActionApi'
 import { playerActionsPayloadsProviders } from '../api/playerActionsPayloadsProviders'
-import type { GameEvent } from '../codesync/GameEvent'
 import {
   removeAdvanceTimeEvent,
   resetTurn,
