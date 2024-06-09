@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using Lib.Contracts;
 using Lib.Primitives;
 using UfoGameLib.Controller;
@@ -42,14 +43,17 @@ public class GameSessionTurn
     // Output:
     // - all the game session turns, including the modified current one, to replace.
     public GameSessionTurn(
+        // Note: at least one param must be mandatory; otherwise JSON deserialization would implicitly call ctor with no args, circumventing validation.
+        // Specifically I mean this line in ApiUtils.ParseGameSessionTurn
+        // parsedTurn = (requestBody.FromJsonTo<GameSessionTurn>(GameState.StateJsonSerializerOptions));
+        GameState startState,  
         List<WorldEvent>? eventsUntilStartState = null,
-        GameState? startState = null,
         List<PlayerActionEvent>? eventsInTurn = null,
         GameState? endState = null,
         PlayerActionEvent? advanceTimeEvent = null)
     {
         EventsUntilStartState = eventsUntilStartState ?? new List<WorldEvent>();
-        StartState = startState ?? GameState.NewInitialGameState();
+        StartState = startState;
         EventsInTurn = eventsInTurn ?? new List<PlayerActionEvent>();
         EndState = endState ?? StartState.Clone();
         AdvanceTimeEvent = advanceTimeEvent;
@@ -97,6 +101,7 @@ public class GameSessionTurn
         }
     }
 
+    [JsonIgnore]
     public IReadOnlyList<GameEvent> GameEvents 
         => ((List<GameEvent>) [..EventsUntilStartState, ..EventsInTurn])
         .Concat((AdvanceTimeEvent as GameEvent)?.WrapInList() ?? [])
@@ -107,8 +112,8 @@ public class GameSessionTurn
     
     private GameSessionTurn DeepClone()
         => new(
-            EventsUntilStartState.Select(gameEvent => gameEvent.Clone()).ToList(),
             StartState.Clone(),
+            EventsUntilStartState.Select(gameEvent => gameEvent.Clone()).ToList(),
             EventsInTurn.Select(gameEvent => gameEvent.Clone()).ToList(),
             EndState.Clone(),
             AdvanceTimeEvent?.Clone()

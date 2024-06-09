@@ -1,3 +1,4 @@
+using Lib.Contracts;
 using Lib.Primitives;
 using MoreLinq;
 using UfoGameLib.Events;
@@ -31,7 +32,9 @@ public class GameSession
     public GameSession(RandomGen randomGen, List<GameSessionTurn>? turns = null)
     {
         RandomGen = randomGen;
-        Turns = turns ?? [new GameSessionTurn()];
+        Turns = turns ?? [new GameSessionTurn(startState: GameState.NewInitialGameState())];
+        Contract.Assert(Turns.Count >= 1);
+        Turns[0].AssertInvariants();
     }
 
     public IReadOnlyList<GameState> GameStates

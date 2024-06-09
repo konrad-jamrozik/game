@@ -310,10 +310,7 @@ export class GameSession {
       upsertedTurns.at(0)!.StartState.Timeline.CurrentTurn
     const lastUpsertedTurn = upsertedTurns.at(-1)!.EndState.Timeline.CurrentTurn
 
-    const retainedTurns = this.getRetainedTurns(
-      resultOfPlayerAction,
-      firstUpsertedTurn,
-    )
+    const retainedTurns = this.getRetainedTurns(firstUpsertedTurn)
 
     const firstRetainedTurn =
       retainedTurns.at(0)?.StartState.Timeline.CurrentTurn

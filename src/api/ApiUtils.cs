@@ -74,9 +74,54 @@ public static class ApiUtils
         return (parsedGameState, error);
     }
 
+    public static async Task<(GameSessionTurn? turn, string? error)> ParseGameSessionTurn(HttpRequest req)
+    {
+        string? error;
+        GameSessionTurn? parsedTurn;
+        if (req.HasJsonContentType())
+        {
+            string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
+
+            if (string.IsNullOrEmpty(requestBody) || EmptyJson(requestBody))
+            {
+                parsedTurn = null;
+                error = null;
+            }
+            else
+            {
+                // Deserialization method invocation and configuration as explained by:
+                // https://learn.microsoft.com/en-us/aspnet/core/fundamentals/minimal-apis/parameter-binding?view=aspnetcore-8.0#configure-json-deserialization-options-for-an-endpoint
+                parsedTurn = (requestBody.FromJsonTo<GameSessionTurn>(GameState.StateJsonSerializerOptions));
+                error = null;
+            }
+        }
+        else
+        {
+            parsedTurn = null;
+            error = "Expected GameSessionTurn to be passed in the request body";
+        }
+
+        return (parsedTurn, error);
+    }
+
+    private static bool EmptyJson(string requestBody)
+    {
+        var jsonDoc = JsonDocument.Parse(requestBody);
+        return jsonDoc.RootElement.ValueKind == JsonValueKind.Object &&
+               jsonDoc.RootElement.EnumerateObject().MoveNext() == false;
+    }
+
     public static GameSession NewGameSession(GameState? initialGameState = null)
     {
-        var gameSession = new GameSession(new RandomGen(new Random()), [new GameSessionTurn(startState: initialGameState)]);
+        List<GameSessionTurn>? turnList = initialGameState != null ? [new GameSessionTurn(startState: initialGameState)] : null;
+        var gameSession = new GameSession(new RandomGen(new Random()), turnList);
+        return gameSession;
+    }
+
+    public static GameSession NewGameSessionFromTurn(GameSessionTurn? initialTurn = null)
+    {
+        List<GameSessionTurn>? turnList = initialTurn != null ? [initialTurn] : null;
+        var gameSession = new GameSession(new RandomGen(new Random()), turnList);
         return gameSession;
     }
 

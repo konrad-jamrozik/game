@@ -36,6 +36,6 @@ function getAdvanceTurnsApiUrl(
 
   return getApiUrl(
     `advanceTurns`,
-    `includeAllTurns=true&turnLimit=${targetTurn}${delegateToAiQueryParam}`,
+    `turnLimit=${targetTurn}${delegateToAiQueryParam}`,
   )
 }

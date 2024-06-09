@@ -20,9 +20,9 @@ public class WebApplicationRoutes
             .Produces<GameStatePlayerView>()
             .WithTags("API");
 
-        app.MapPost("/advanceTurns", AdvanceTurnsRoute.AdvanceTurns)
-            .Accepts<GameState>("application/json")
-            .Produces<GameSessionTurn>()
+        app.MapPost("/advanceTurns", AdvanceTurnsRoute2.AdvanceTurns)
+            .Accepts<GameSessionTurn>("application/json")
+            .Produces<List<GameSessionTurn>>()
             .WithTags("API");
 
         app.MapPost("/applyPlayerAction", ApplyPlayerActionRoute.ApplyPlayerAction)
