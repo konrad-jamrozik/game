@@ -102,6 +102,6 @@ export class GameSessionControlPanelFixture {
   }
 
   public assertNoError(): void {
-    expectDiv(`Error:`, `not visible`)
+    expectDiv(`Error:`, `not present`)
   }
 }

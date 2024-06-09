@@ -1,5 +1,4 @@
 /* eslint-disable max-lines */
-/* eslint-disable max-statements */
 /* eslint-disable @typescript-eslint/parameter-properties */
 import _ from 'lodash'
 import { useContext, useState } from 'react'
