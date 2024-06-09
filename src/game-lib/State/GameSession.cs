@@ -37,16 +37,21 @@ public class GameSession
         Turns = turns ?? [new GameSessionTurn(startState: GameState.NewInitialGameState())];
         Contract.Assert(Turns.Count >= 1);
         Turns.ForEach(turn => turn.AssertInvariants());
+
+        // To compute event ID offset we first need to determine if there are any events in the input
+        // game session turns. If yes, we consider as offset the event ID of the first event.
+        // If not, we consider as offset the NextEventId of the last turn, if set.
+        // Otherwise, we assume no offset, meaning it is equal to zero.
+        //
+        // Notably we must rely on last turn NextEventID when calling REST API to advance turn
+        // from a turn that has no events. This may happen e.g. when advancing from turn 1 to 2
+        // when player action made no actions.
+        // In such case:
+        // - There will be no "before turn" world events, as this is the first turn.
+        // - There will be no events in the turn, as the player did nothing.
+        // - There will be no "advance turn" event, as the player is advancing turn just right now.
         GameEvent? firstGameEvent = Turns.SelectMany(turn => turn.GameEvents).FirstOrDefault();
-        // kja this will not work if game has no events
-        // If there are no events, the offset will be zero and event IDs will count from 0.
-        // If there is at least one event:
-        //   If the first event has ID of 0 then the offset will remain zero, and the 
-        //   standard way of counting event IDs by summing their number applies.
-        //   If the first event has ID > 0, e.g. 1, then the offset will be 1.
-        //   For example, if there are 3 events and offset is 1, then existing events have IDs:
-        //   [1,2,3] and the 4th event will get ID of Count([,1,2,3]) + 1 = 4, as expected.
-        _eventIdOffset = firstGameEvent?.Id ?? 0;
+        _eventIdOffset = firstGameEvent?.Id ?? Turns.Last().NextEventId ?? 0;
     }
 
     public IReadOnlyList<GameState> GameStates

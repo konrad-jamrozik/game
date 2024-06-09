@@ -96,8 +96,9 @@ export class GameSessionData {
     const gameEvents: readonly GameEvent[] = getGameEvents(turns)
     if (!_.isEmpty(gameEvents)) {
       const firstEventId = gameEvents.at(0)!.Id
-      for (const event of gameEvents.slice(1)) {
-        if (event.Id !== firstEventId + 1) {
+      for (const eventIndex of _.range(1, gameEvents.length)) {
+        const event = gameEvents[eventIndex]!
+        if (event.Id !== firstEventId + eventIndex) {
           throw new Error('Event IDs must be consecutive')
         }
       }

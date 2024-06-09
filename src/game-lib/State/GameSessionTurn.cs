@@ -1,6 +1,5 @@
 using System.Text.Json.Serialization;
 using Lib.Contracts;
-using Lib.Primitives;
 using UfoGameLib.Controller;
 using UfoGameLib.Events;
 
@@ -16,32 +15,13 @@ public class GameSessionTurn
 
     public PlayerActionEvent? AdvanceTimeEvent;
 
-    // kja two problems:
-    // 1. when turn is advanced, two GameSessionTurn instances need to change:
-    // - the one *from* which turn is advanced: the advanceTimeEvent must be set
-    // - the one *into* which turn is advanced.
-    // This is an issue from frontend point of view. When user clicks "advance turn"
-    // and passes as input the current turn game state, the backend needs to return not only the new
-    //  gameSessionTurn, but also the advanceTurn player event.
-    // 2. Next event ID is not stored in game state; it is stored in GameSession,
-    // which is ephemerally created upon each API call to backend, so frontend needs to pass this value.
-    // This is not a problem with other IDs as they are stored within game states which are always passed.
-    //
-    // OK new idea for API route:
-    // Non-advance time player action.
-    // Inputs:
-    // - current GameSessionTurn, 
-    // - player action to apply except advance time
-    // Output:
-    // - new current GameSessionTurn, to be replaced.
-    //
-    // Advance time player action:
-    // Inputs:
-    // - current GameSessionTurn or nothing
-    // - turn limit to advance to
-    // - AI intellect to use if any
-    // Output:
-    // - all the game session turns, including the modified current one, to replace.
+    /// <summary>
+    /// ID of the next event to generate. Must be ignored if this game session turn
+    /// has at least one game event in it.
+    /// </summary>
+    public readonly int? NextEventId;
+
+    [JsonConstructor]
     public GameSessionTurn(
         // Note: at least one param must be mandatory; otherwise JSON deserialization would implicitly call ctor with no args, circumventing validation.
         // Specifically I mean this line in ApiUtils.ParseGameSessionTurn
@@ -50,13 +30,15 @@ public class GameSessionTurn
         List<WorldEvent>? eventsUntilStartState = null,
         List<PlayerActionEvent>? eventsInTurn = null,
         GameState? endState = null,
-        PlayerActionEvent? advanceTimeEvent = null)
+        PlayerActionEvent? advanceTimeEvent = null,
+        int? nextEventId = null)
     {
         EventsUntilStartState = eventsUntilStartState ?? new List<WorldEvent>();
         StartState = startState;
         EventsInTurn = eventsInTurn ?? new List<PlayerActionEvent>();
         EndState = endState ?? StartState.Clone();
         AdvanceTimeEvent = advanceTimeEvent;
+        NextEventId = nextEventId ?? 0;
 
         AssertInvariants();
     }
@@ -120,6 +102,7 @@ public class GameSessionTurn
             EventsUntilStartState.Select(gameEvent => gameEvent.Clone()).ToList(),
             EventsInTurn.Select(gameEvent => gameEvent.Clone()).ToList(),
             EndState.Clone(),
-            AdvanceTimeEvent?.Clone()
+            AdvanceTimeEvent?.Clone(),
+            NextEventId
         );
 }

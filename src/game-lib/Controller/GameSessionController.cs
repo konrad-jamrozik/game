@@ -150,7 +150,8 @@ public class GameSessionController
     {
         GameSession.Turns.Add(new GameSessionTurn(
             eventsUntilStartState: worldEvents,
-            startState: nextTurnStartState));
+            startState: nextTurnStartState,
+            nextEventId: GameSession.NextEventId));
         CurrentTurnController = new GameTurnController(
             _log,
             GameSession.RandomGen,
