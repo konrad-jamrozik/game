@@ -25,3 +25,27 @@ export function getGameEvents(
 ): readonly GameEvent[] {
   return _.flatMap(turns, (turn) => getEvents(turn))
 }
+
+export function removeAdvanceTimeEvent(
+  turn: GameSessionTurn | undefined,
+): GameSessionTurn | undefined {
+  if (_.isUndefined(turn)) {
+    return undefined
+  }
+
+  return {
+    ...turn,
+    AdvanceTimeEvent: undefined,
+  }
+}
+
+export function resetTurn(turn: GameSessionTurn): GameSessionTurn {
+  return {
+    EventsUntilStartState: turn.EventsUntilStartState,
+    StartState: turn.StartState,
+    EventsInTurn: [],
+    EndState: turn.StartState,
+    AdvanceTimeEvent: turn.AdvanceTimeEvent,
+    NextEventId: turn.NextEventId,
+  }
+}

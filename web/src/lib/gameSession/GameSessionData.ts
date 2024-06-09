@@ -7,6 +7,8 @@ import type { GameEvent } from '../codesync/GameEvent'
 import {
   getEvents,
   getGameEvents,
+  removeAdvanceTimeEvent,
+  resetTurn,
   type GameSessionTurn,
 } from '../codesync/GameSessionTurn'
 import { initialTurn, type GameState } from '../codesync/GameState'
@@ -161,15 +163,9 @@ export class GameSessionData {
 
   public revertToPreviousTurn(): void {
     const turnsBeforeCurrentTurn = this.getTurnsBeforeCurrentTurn()
-    const turnBeforeCurrentTurn = {
-      EventsUntilStartState:
-        turnsBeforeCurrentTurn.at(-1)!.EventsUntilStartState,
-      StartState: turnsBeforeCurrentTurn.at(-1)!.StartState,
-      EventsInTurn: turnsBeforeCurrentTurn.at(-1)!.EventsInTurn,
-      EndState: turnsBeforeCurrentTurn.at(-1)!.EndState,
-      AdvanceTimeEvent: undefined,
-      NextEventId: turnsBeforeCurrentTurn.at(-1)!.NextEventId,
-    }
+    const turnBeforeCurrentTurn = removeAdvanceTimeEvent(
+      turnsBeforeCurrentTurn.at(-1),
+    )!
     const newData: GameSessionDataType = {
       turns: [...turnsBeforeCurrentTurn.slice(0, -1), turnBeforeCurrentTurn],
     }
@@ -178,14 +174,7 @@ export class GameSessionData {
 
   public resetCurrentTurn(): void {
     const currentTurn: GameSessionTurn = this.getCurrentTurn()
-    const currentTurnAfterReset: GameSessionTurn = {
-      EventsUntilStartState: currentTurn.EventsUntilStartState,
-      StartState: currentTurn.StartState,
-      EventsInTurn: [],
-      EndState: currentTurn.StartState,
-      AdvanceTimeEvent: currentTurn.AdvanceTimeEvent,
-      NextEventId: currentTurn.NextEventId,
-    }
+    const currentTurnAfterReset: GameSessionTurn = resetTurn(currentTurn)
 
     const newData: GameSessionDataType = {
       turns: [...this.getTurnsBeforeCurrentTurn(), currentTurnAfterReset],

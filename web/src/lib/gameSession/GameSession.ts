@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 /* eslint-disable max-statements */
 /* eslint-disable @typescript-eslint/parameter-properties */
 import _ from 'lodash'
@@ -8,7 +9,10 @@ import { callAdvanceTurnsApi } from '../api/advanceTurnsApi'
 import { callApplyPlayerActionApi } from '../api/applyPlayerActionApi'
 import { playerActionsPayloadsProviders } from '../api/playerActionsPayloadsProviders'
 import type { GameEvent } from '../codesync/GameEvent'
-import type { GameSessionTurn } from '../codesync/GameSessionTurn'
+import {
+  removeAdvanceTimeEvent,
+  type GameSessionTurn,
+} from '../codesync/GameSessionTurn'
 import { initialTurn, type Assets, type GameState } from '../codesync/GameState'
 import type {
   AgentPlayerActionName,
@@ -70,8 +74,10 @@ export class GameSession {
     targetTurn: number,
     delegateToAi?: boolean | undefined,
   ): Promise<boolean> {
-    const startGameTurn: GameSessionTurn | undefined =
-      this.getTurnAtUnsafe(startTurn)
+    const startGameTurn: GameSessionTurn | undefined = removeAdvanceTimeEvent(
+      this.getTurnAtUnsafe(startTurn),
+    )
+
     const newTurns = await callAdvanceTurnsApi({
       setLoading: this.setLoading,
       setError: this.setError,
@@ -294,7 +300,6 @@ export class GameSession {
       throw new Error('newTurns must not be empty')
     }
     if (this.isGameOverUnsafe() === true) {
-      // kja this may block scenarios when reverting from a game that is over. Need to investigate.
       throw new Error('Cannot upsert turns to game that is over')
     }
     if (resultOfPlayerAction === true && !this.isInitialized()) {

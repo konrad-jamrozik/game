@@ -92,7 +92,11 @@ public static class ApiUtils
                 // Deserialization method invocation and configuration as explained by:
                 // https://learn.microsoft.com/en-us/aspnet/core/fundamentals/minimal-apis/parameter-binding?view=aspnetcore-8.0#configure-json-deserialization-options-for-an-endpoint
                 parsedTurn = (requestBody.FromJsonTo<GameSessionTurn>(GameState.StateJsonSerializerOptions));
-                error = null;
+                // If the input game session turn would have advance time event, besides conceptually not making sense,
+                // it would throw off the NextEventId calculation, as game session could start appending player action events to current turn
+                // counting from event ID beyond AdvanceTurnEvent, but all player action events must have consecutive IDs, with no
+                // IDs taken away from the middle due to advance time event.
+                error = (parsedTurn.AdvanceTimeEvent == null) ? null : "The input turn cannot have advance time event";
             }
         }
         else

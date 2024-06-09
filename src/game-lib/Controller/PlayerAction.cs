@@ -8,7 +8,7 @@ public abstract class PlayerAction
 {
     public PlayerActionEvent Apply(GameState state, int nextEventId)
     {
-        Contract.Assert(!state.IsGameOver, 
+        Contract.Assert(!state.IsGameOver,
             $"money: {state.Assets.Money} " +
             $"funding: {state.Assets.Funding} " +
             $"support: {state.Assets.Support}");
