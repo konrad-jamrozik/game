@@ -26,6 +26,13 @@ describe('Test suite for delegating turns to AI', () => {
     await controlPanel.advance1Turn()
     await controlPanel.delegateTurnsToAi(2, 5)
   })
+
+  test('Delegate turns 1 to 2 from uninitialized game session, twice', async () => {
+    const controlPanel = setupTest()
+    await controlPanel.delegateTurnsToAi(1, 2)
+    await controlPanel.delegateTurnsToAi(1, 2)
+    controlPanel.assertNoError()
+  })
 })
 
 function setupTest(): GameSessionControlPanelFixture {

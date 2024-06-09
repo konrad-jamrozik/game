@@ -6,6 +6,7 @@ import {
   expectButtonToBeEnabled,
   expectButtonsToBeDisabled,
   expectButtonsToBeEnabled,
+  expectDiv,
   expectParagraph,
   typeIntoElement,
 } from '../test_lib/testUtils'
@@ -98,5 +99,9 @@ export class GameSessionControlPanelFixture {
     const turnReversalButton =
       playerMadeActions ?? false ? 'Reset turn' : 'Revert 1 turn'
     expectButtonsToBeEnabled('Reset game', turnReversalButton)
+  }
+
+  public assertNoError(): void {
+    expectDiv(`Error:`, `not visible`)
   }
 }

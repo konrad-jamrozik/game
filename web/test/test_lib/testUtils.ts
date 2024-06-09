@@ -41,6 +41,13 @@ export function expectParagraph(
   expectElementWithText(text, 'P', htmlElementVisibility ?? 'present')
 }
 
+export function expectDiv(
+  text: string,
+  htmlElementVisibility?: HTMLElementVisibility,
+): void {
+  expectElementWithText(text, 'DIV', htmlElementVisibility ?? 'present')
+}
+
 export function expectHeader2(
   text: string,
   htmlElementVisibility?: HTMLElementVisibility,
@@ -62,8 +69,8 @@ export function expectElementWithText(
 ): void {
   if (_.includes(presentStates, htmlElementVisibility)) {
     const htmlElement: HTMLElement | null = waitForElement
-      ? screen.queryByText(text)
-      : screen.getByText(text)
+      ? screen.queryByText(text, { exact: false }) // https://testing-library.com/docs/queries/about/#precision
+      : screen.getByText(text, { exact: false })
 
     expect(htmlElement).not.toBeNull()
     expect(htmlElement!.tagName).toBe(htmlTagName)
@@ -74,7 +81,7 @@ export function expectElementWithText(
       expect(htmlElement).not.toBeVisible()
     }
   } else {
-    expect(screen.queryByText(text)).not.toBeInTheDocument()
+    expect(screen.queryByText(text, { exact: false })).not.toBeInTheDocument()
   }
 }
 
