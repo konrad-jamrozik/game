@@ -5,13 +5,13 @@ namespace UfoGameLib.Api;
 
 public class ApplyPlayerActionRequestBody
 {
-    public readonly PlayerActionPayload PlayerAction;
-    public readonly GameState? GameState;
+    public readonly PlayerActionPayload PlayerActionPayload;
+    public readonly GameSessionTurn GameSessionTurn;
 
     [JsonConstructor]
-    public ApplyPlayerActionRequestBody(PlayerActionPayload playerAction, GameState gameState)
+    public ApplyPlayerActionRequestBody(PlayerActionPayload playerActionPayload, GameSessionTurn gameSessionTurn)
     {
-        GameState = gameState;
-        PlayerAction = playerAction;
+        PlayerActionPayload = playerActionPayload;
+        GameSessionTurn = gameSessionTurn;
     }
 }

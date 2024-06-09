@@ -1,3 +1,4 @@
+using Lib.Contracts;
 using Lib.Json;
 using Lib.OS;
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -11,7 +12,7 @@ using ApplyPlayerActionResponse = Results<
     JsonHttpResult<GameSessionTurn>,
     BadRequest<string>>;
 
-public static class ApplyPlayerActionRoute
+public static class ApplyPlayerActionRoute2
 {
     public static Task<ApplyPlayerActionResponse>
         ApplyPlayerAction(HttpRequest req)
@@ -26,34 +27,29 @@ public static class ApplyPlayerActionRoute
             if (error != null)
                 throw new ArgumentException(error);
 
-            return ApplyPlayerActionInternal(body!.PlayerActionPayload, null);
+            return ApplyPlayerActionInternal(body!.PlayerActionPayload, body.GameSessionTurn);
         }
     }
 
     private static JsonHttpResult<GameSessionTurn> ApplyPlayerActionInternal(
         PlayerActionPayload playerActionPayload,
-        GameState? gameState)
+        GameSessionTurn gameSessionTurn)
     {
         Console.Out.WriteLine(
             $"Invoked ApplyPlayerActionInternal. " +
-            $"playerAction: {playerActionPayload.ToIndentedUnsafeJsonString()}");
+            $"playerActionPayload: {playerActionPayload.ToIndentedUnsafeJsonString()}, " +
+            $"gameSessionTurn: {gameSessionTurn.StartState.Timeline.CurrentTurn}");
 
         var config = new Configuration(new SimulatedFileSystem());
         var log = new Log(config);
-        GameSession gameSession = ApiUtils.NewGameSession(gameState);
+        GameSession gameSession = ApiUtils.NewGameSessionFromTurn(gameSessionTurn);
         var controller = new GameSessionController(config, log, gameSession);
 
-        if (!(playerActionPayload.ActionName == "AdvanceTime" && gameState is null))
-            gameSession.CurrentPlayerActionEvents.Add(playerActionPayload.Apply(controller));
-        else
-        {
-            // If the player action is "AdvanceTime" and the gameState is null,
-            // then we treat this as special case of "initialize game session to initial game state",
-            // hence we just return the current game session turn.
-        }
+        Contract.Assert(playerActionPayload.ActionName != nameof(PlayerActionPayload));
 
-        JsonHttpResult<GameSessionTurn> result =
-            ApiUtils.ToJsonHttpResult(gameSession.CurrentTurn);
+        gameSession.CurrentPlayerActionEvents.Add(playerActionPayload.Apply(controller));
+
+        JsonHttpResult<GameSessionTurn> result = ApiUtils.ToJsonHttpResult(gameSession.CurrentTurn);
         return result;
     }
 
@@ -68,12 +64,14 @@ public static class ApplyPlayerActionRoute
             // https://learn.microsoft.com/en-us/aspnet/core/fundamentals/minimal-apis/parameter-binding?view=aspnetcore-8.0#configure-json-deserialization-options-for-an-endpoint
             parsedBody =
                 (await req.ReadFromJsonAsync<ApplyPlayerActionRequestBody>(GameState.StateJsonSerializerOptions))!;
-            error = null;
+            error = parsedBody.PlayerActionPayload.ActionName == nameof(AdvanceTimePlayerAction)
+                ? $"Expected PlayerActionPayload.ActionName to not be {nameof(AdvanceTimePlayerAction)}"
+                : null;
         }
         else
         {
             parsedBody = null;
-            error = "Expected GameState and PlayerActionPayload to be passed in the request body";
+            error = "Expected PlayerActionPayload and GameSessionTurn to be parseable from the request JSON body";
         }
 
         return (parsedBody, error);

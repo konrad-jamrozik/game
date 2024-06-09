@@ -14,12 +14,12 @@ export async function callAdvanceTurnsApi(
     delegateToAi?: boolean | undefined
   },
 ): Promise<GameSessionTurn[] | undefined> {
-  const { startGameTurn: startTurn, targetTurn, delegateToAi } = params
+  const { startGameTurn, targetTurn, delegateToAi } = params
 
   const apiUrl = getAdvanceTurnsApiUrl(targetTurn, delegateToAi ?? false)
   const request = getPostJsonRequest(
     apiUrl,
-    !_.isUndefined(startTurn) ? JSON.stringify(startTurn) : '',
+    !_.isUndefined(startGameTurn) ? JSON.stringify(startGameTurn) : '',
   )
 
   return callApi<GameSessionTurn[]>({ ...params, request })

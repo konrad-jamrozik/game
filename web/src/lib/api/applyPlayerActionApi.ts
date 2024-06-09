@@ -1,5 +1,4 @@
 import type { GameSessionTurn } from '../codesync/GameSessionTurn'
-import type { GameState } from '../codesync/GameState'
 import type { PlayerActionPayload } from '../codesync/PlayerActionPayload'
 import {
   type FetchCallbacks,
@@ -10,7 +9,7 @@ import {
 
 export async function callApplyPlayerActionApi(
   params: FetchCallbacks & {
-    currentGameState: GameState | undefined
+    currentGameTurn: GameSessionTurn
     playerActionPayload: PlayerActionPayload
   },
 ): Promise<GameSessionTurn | undefined> {
@@ -19,7 +18,7 @@ export async function callApplyPlayerActionApi(
   const jsonBody: string = JSON.stringify(
     getApplyPlayerActionBody(
       params.playerActionPayload,
-      params.currentGameState,
+      params.currentGameTurn,
     ),
   )
   const apiUrl = getApiUrl(apiPath, apiQuery)
@@ -29,7 +28,7 @@ export async function callApplyPlayerActionApi(
 
 function getApplyPlayerActionBody(
   playerActionPayload: PlayerActionPayload,
-  currentGameState?: GameState,
-): { PlayerAction: PlayerActionPayload; GameState: GameState | undefined } {
-  return { PlayerAction: playerActionPayload, GameState: currentGameState }
+  currentGameTurn: GameSessionTurn,
+): { PlayerAction: PlayerActionPayload; GameSessionTurn: GameSessionTurn } {
+  return { PlayerAction: playerActionPayload, GameSessionTurn: currentGameTurn }
 }

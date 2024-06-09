@@ -4,7 +4,11 @@
 /* eslint-disable @typescript-eslint/parameter-properties */
 import _ from 'lodash'
 import type { GameEvent } from '../codesync/GameEvent'
-import type { GameSessionTurn } from '../codesync/GameSessionTurn'
+import {
+  getEvents,
+  getGameEvents,
+  type GameSessionTurn,
+} from '../codesync/GameSessionTurn'
 import { initialTurn, type GameState } from '../codesync/GameState'
 import type { StoredData } from '../storedData/StoredData'
 import type { RenderedGameEvent } from './RenderedGameEvent'
@@ -89,7 +93,16 @@ export class GameSessionData {
       turns.at(0)!,
     )
 
-    // kja need to verify IDs of events are consecutive
+    const gameEvents: readonly GameEvent[] = getGameEvents(turns)
+    if (!_.isEmpty(gameEvents)) {
+      const firstEventId = gameEvents.at(0)!.Id
+      for (const event of gameEvents.slice(1)) {
+        if (event.Id !== firstEventId + 1) {
+          throw new Error('Event IDs must be consecutive')
+        }
+      }
+    }
+
     /* c8 ignore stop */
   }
 
@@ -102,7 +115,10 @@ export class GameSessionData {
   }
 
   public getTurnAtUnsafe(turn: number): GameSessionTurn | undefined {
-    return this._data.turns.at(turn)
+    return _.find(
+      this._data.turns,
+      (gameTurn) => gameTurn.StartState.Timeline.CurrentTurn === turn,
+    )
   }
 
   public getCurrentTurnUnsafe(): GameSessionTurn | undefined {
@@ -118,35 +134,20 @@ export class GameSessionData {
   }
 
   public getGameEvents(): readonly GameEvent[] {
-    return _.flatMap(this._data.turns, (turn) => [
-      ...turn.EventsUntilStartState,
-      ...turn.EventsInTurn,
-    ])
+    return getGameEvents(this._data.turns)
   }
 
   public getRenderedGameEvents(): readonly RenderedGameEvent[] {
-    return _.reduce(
-      this._data.turns,
-      (acc: RenderedGameEvent[], turn: GameSessionTurn) => {
-        const eventsInThisTurn = [
-          ...turn.EventsUntilStartState,
-          ...turn.EventsInTurn,
-          ...(turn.AdvanceTimeEvent ? [turn.AdvanceTimeEvent] : []),
-        ]
-
-        const renderedEventsInThisTurn: RenderedGameEvent[] = _.map(
-          eventsInThisTurn,
-          (event) => ({
-            Id: event.Id,
-            Turn: turn.StartState.Timeline.CurrentTurn,
-            Type: event.Type,
-            Details: event.Details,
-          }),
-        )
-        return [...acc, ...renderedEventsInThisTurn]
-      },
-      [] as RenderedGameEvent[],
-    )
+    return _.flatMap(this.getTurns(), (turn) => {
+      const eventsInThisTurn = getEvents(turn)
+      const renderedEventsInThisTurn = _.map(eventsInThisTurn, (event) => ({
+        Id: event.Id,
+        Turn: turn.StartState.Timeline.CurrentTurn,
+        Type: event.Type,
+        Details: event.Details,
+      }))
+      return renderedEventsInThisTurn
+    })
   }
 
   public getCurrentGameState(): GameState {

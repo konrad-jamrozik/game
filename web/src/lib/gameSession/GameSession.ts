@@ -339,12 +339,12 @@ export class GameSession {
   private async applyPlayerAction(
     playerActionPayload: PlayerActionPayload,
   ): Promise<boolean> {
-    const currentGameState = this.getCurrentGameState()
+    const currentGameTurn = this.getCurrentTurn()
     const newTurn: GameSessionTurn | undefined = await callApplyPlayerActionApi(
       {
         setLoading: this.setLoading,
         setError: this.setError,
-        currentGameState,
+        currentGameTurn,
         playerActionPayload,
       },
     )

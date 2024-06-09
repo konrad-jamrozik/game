@@ -21,7 +21,7 @@ public class GameSession
 
     public readonly List<GameSessionTurn> Turns;
 
-    public int NextEventId => GameEvents.Count;
+    public int NextEventId => GameEvents.Count + _eventIdOffset;
 
     public GameSessionTurn CurrentTurn => Turns.Last();
 
@@ -29,12 +29,24 @@ public class GameSession
 
     public List<PlayerActionEvent> CurrentPlayerActionEvents => CurrentTurn.EventsInTurn;
 
+    private readonly int _eventIdOffset;
+
     public GameSession(RandomGen randomGen, List<GameSessionTurn>? turns = null)
     {
         RandomGen = randomGen;
         Turns = turns ?? [new GameSessionTurn(startState: GameState.NewInitialGameState())];
         Contract.Assert(Turns.Count >= 1);
-        Turns[0].AssertInvariants();
+        Turns.ForEach(turn => turn.AssertInvariants());
+        GameEvent? firstGameEvent = Turns.SelectMany(turn => turn.GameEvents).FirstOrDefault();
+        // kja this will not work if game has no events
+        // If there are no events, the offset will be zero and event IDs will count from 0.
+        // If there is at least one event:
+        //   If the first event has ID of 0 then the offset will remain zero, and the 
+        //   standard way of counting event IDs by summing their number applies.
+        //   If the first event has ID > 0, e.g. 1, then the offset will be 1.
+        //   For example, if there are 3 events and offset is 1, then existing events have IDs:
+        //   [1,2,3] and the 4th event will get ID of Count([,1,2,3]) + 1 = 4, as expected.
+        _eventIdOffset = firstGameEvent?.Id ?? 0;
     }
 
     public IReadOnlyList<GameState> GameStates
