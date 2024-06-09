@@ -35,13 +35,13 @@ public class BasicAIPlayerIntellect : IPlayer
     }
 
     private int ComputeTransportCapacityToBuy(GameStatePlayerView state)
-        => state.Assets.Money >= MoneyThresholdToBuyTransportCapacity 
+        => state.Assets.Money >= MoneyThresholdToBuyTransportCapacity
            // The number of current agents has to be at least the current max transport capacity,
            // which is still significantly below full complement.
            // There is no point in increasing the transport capacity if we cannot even 
            // get close to the full complement of agents.
-           && state.Assets.Agents.Count >= state.Assets.MaxTransportCapacity 
-            ? 1 
+           && state.Assets.Agents.Count >= state.Assets.MaxTransportCapacity
+            ? 1
             : 0;
 
     private static bool NoMissionsAvailable(GameStatePlayerView state) => !state.MissionSites.Active.Any();

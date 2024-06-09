@@ -41,6 +41,10 @@ public static class AdvanceTurnsRoute2
                     $"Cannot advance turns with turnLimit: {turnLimit}. " +
                     $"Input game state turn is {turn.StartState.Timeline.CurrentTurn}. turnLimit must be higher than that.");
 
+            if (delegateToAi == true && (turn?.EventsInTurn.Any() == true))
+                throw new ArgumentException(
+                    "Cannot delegate to AI when there are player actions in the input turn.");
+
             return AdvanceTurnsInternal(turnLimit, delegateToAi, turn);
         }
     }

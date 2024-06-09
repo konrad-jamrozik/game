@@ -10,6 +10,7 @@ import { playerActionsPayloadsProviders } from '../api/playerActionsPayloadsProv
 import type { GameEvent } from '../codesync/GameEvent'
 import {
   removeAdvanceTimeEvent,
+  resetTurn,
   type GameSessionTurn,
 } from '../codesync/GameSessionTurn'
 import { initialTurn, type Assets, type GameState } from '../codesync/GameState'
@@ -73,9 +74,14 @@ export class GameSession {
     targetTurn: number,
     delegateToAi?: boolean | undefined,
   ): Promise<boolean> {
-    const startGameTurn: GameSessionTurn | undefined = removeAdvanceTimeEvent(
-      this.getTurnAtUnsafe(startTurn),
-    )
+    let startGameTurn: GameSessionTurn | undefined =
+      this.getTurnAtUnsafe(startTurn)
+    if (!_.isUndefined(startGameTurn)) {
+      startGameTurn = removeAdvanceTimeEvent(startGameTurn)
+      if (delegateToAi ?? true) {
+        startGameTurn = resetTurn(startGameTurn)
+      }
+    }
 
     const newTurns = await callAdvanceTurnsApi({
       setLoading: this.setLoading,

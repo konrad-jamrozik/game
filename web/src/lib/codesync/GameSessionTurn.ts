@@ -26,13 +26,7 @@ export function getGameEvents(
   return _.flatMap(turns, (turn) => getEvents(turn))
 }
 
-export function removeAdvanceTimeEvent(
-  turn: GameSessionTurn | undefined,
-): GameSessionTurn | undefined {
-  if (_.isUndefined(turn)) {
-    return undefined
-  }
-
+export function removeAdvanceTimeEvent(turn: GameSessionTurn): GameSessionTurn {
   return {
     ...turn,
     AdvanceTimeEvent: undefined,

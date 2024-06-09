@@ -164,8 +164,8 @@ export class GameSessionData {
   public revertToPreviousTurn(): void {
     const turnsBeforeCurrentTurn = this.getTurnsBeforeCurrentTurn()
     const turnBeforeCurrentTurn = removeAdvanceTimeEvent(
-      turnsBeforeCurrentTurn.at(-1),
-    )!
+      turnsBeforeCurrentTurn.at(-1)!,
+    )
     const newData: GameSessionDataType = {
       turns: [...turnsBeforeCurrentTurn.slice(0, -1), turnBeforeCurrentTurn],
     }
