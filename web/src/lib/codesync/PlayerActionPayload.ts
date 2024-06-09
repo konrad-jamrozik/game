@@ -6,6 +6,8 @@ export type PlayerActionPayload = {
   readonly TargetId?: number
 }
 
+// kja these need to be updated to reflect backend. See:
+// game\src\api\PlayerActionPayload.cs
 export type PlayerActionName =
   | 'AdvanceTime'
   | 'BuyTransportCap'

@@ -219,13 +219,6 @@ export class GameSession {
         : 'undecided'
   }
 
-  public getGameStateAtTurnEndUnsafe(turn: number): GameState | undefined {
-    return _.findLast(
-      this.data.getGameStates(),
-      (gs) => gs.Timeline.CurrentTurn === turn,
-    )
-  }
-
   public isGameOverUnsafe(): boolean | undefined {
     if (!this.isInitialized()) {
       return undefined
@@ -282,10 +275,6 @@ export class GameSession {
 
   public getCurrentGameState(): GameState {
     return this.data.getCurrentGameState()
-  }
-
-  public getGameEvents(): readonly GameEvent[] {
-    return this.data.getGameEvents()
   }
 
   public getRenderedGameEvents(): readonly RenderedGameEvent[] {
@@ -363,86 +352,10 @@ export class GameSession {
     return false
   }
 
-  private getRetainedTurns(
-    // resultOfPlayerAction: boolean | undefined,
-    firstUpsertedTurn: number,
-  ): GameSessionTurn[] {
+  private getRetainedTurns(firstUpsertedTurn: number): GameSessionTurn[] {
     return _.takeWhile(
       this.getTurns(),
       (turn) => turn.StartState.Timeline.CurrentTurn < firstUpsertedTurn,
     )
   }
-
-  // kja to adapt
-  // private getRetainedGameStates(
-  //   resultOfPlayerAction: boolean | undefined,
-  //   firstTurnInNewGameStates: number,
-  // ): GameState[] {
-  //   const gameStates = this.getGameStates()
-  //   let retainedGameStates: GameState[] = []
-  //   if (this.isInitialized()) {
-  //     if (resultOfPlayerAction === true) {
-  //       if (this.hasPlayerMadeActionsInCurrentTurn() ?? false) {
-  //         // If player already made actions in the current turn
-  //         // Then update (replace) the current state with new game state
-  //         const retainedGameStatesSliceEnd = -1
-  //         retainedGameStates = sliceRetainedGameStates(
-  //           retainedGameStatesSliceEnd,
-  //         )
-  //         /* c8 ignore start */
-  //         if (!(retainedGameStates.at(-1) === this.getGameStates().at(-2))) {
-  //           throw new Error(
-  //             'if (!(retainedGameStates.at(-1) === this.getGameStates().at(-2)))',
-  //           )
-  //         }
-  //         /* c8 ignore end */
-  //       } else {
-  //         // If player did not make actions in the current turn
-  //         // Then insert (append) the new state after the current state
-  //         const retainedGameStatesSliceEnd = undefined
-  //         retainedGameStates = sliceRetainedGameStates(
-  //           retainedGameStatesSliceEnd,
-  //         )
-  //         /* c8 ignore start */
-  //         if (!(retainedGameStates.at(-1) === this.getGameStates().at(-1))) {
-  //           throw new Error(
-  //             'if (!(retainedGameStates.at(-1) === this.getGameStates().at(-1)))',
-  //           )
-  //         }
-  //         /* c8 ignore end */
-  //       }
-  //     } else {
-  //       // If the game session is initialized and the new states are not a result of player action
-  //       // then the new states could be a result of delegating turns to AI.
-  //       // Retain all the game states up to the turn before the first turn in the new game states.
-  //       const retainedGameStatesSliceEnd = _.takeWhile(
-  //         this.getGameStates(),
-  //         (gs) => gs.Timeline.CurrentTurn < firstTurnInNewGameStates,
-  //       ).length
-  //       retainedGameStates = sliceRetainedGameStates(retainedGameStatesSliceEnd)
-  //     }
-  //   } else {
-  //     // If the game session is not initialized, i.e. there are no existing game states, insert all the new states.
-  //     const retainedGameStatesSliceEnd = 0
-  //     retainedGameStates = sliceRetainedGameStates(retainedGameStatesSliceEnd)
-  //     /* c8 ignore start */
-  //     if (!_.isEmpty(retainedGameStates)) {
-  //       throw new Error(
-  //         'Invalid state: game not initialized but retained game states are not empty',
-  //       )
-  //     }
-  //     /* c8 ignore stop */
-  //   }
-  //   return retainedGameStates
-
-  //   function sliceRetainedGameStates(
-  //     retainedGameStatesSliceEnd: number | undefined,
-  //   ): GameState[] {
-  //     const retainedGameStatesSliceStart = 0
-  //     return gameStates.slice(
-  //       retainedGameStatesSliceStart,
-  //       retainedGameStatesSliceEnd,
-  //     )
-  //   }
-  // }
 }

@@ -136,10 +136,6 @@ export class GameSessionData {
     ])
   }
 
-  public getGameEvents(): readonly GameEvent[] {
-    return getGameEvents(this._data.turns)
-  }
-
   public getRenderedGameEvents(): readonly RenderedGameEvent[] {
     return _.flatMap(this.getTurns(), (turn) => {
       const eventsInThisTurn = getEvents(turn)
