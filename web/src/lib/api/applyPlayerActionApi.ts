@@ -29,6 +29,12 @@ export async function callApplyPlayerActionApi(
 function getApplyPlayerActionBody(
   playerActionPayload: PlayerActionPayload,
   currentGameTurn: GameSessionTurn,
-): { PlayerAction: PlayerActionPayload; GameSessionTurn: GameSessionTurn } {
-  return { PlayerAction: playerActionPayload, GameSessionTurn: currentGameTurn }
+): {
+  PlayerActionPayload: PlayerActionPayload
+  GameSessionTurn: GameSessionTurn
+} {
+  return {
+    PlayerActionPayload: playerActionPayload,
+    GameSessionTurn: currentGameTurn,
+  }
 }
