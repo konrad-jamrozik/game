@@ -12,8 +12,10 @@ public class HireAgentsPlayerAction : PlayerAction
 
     public HireAgentsPlayerAction(ILog log, int count)
     {
+        Contract.Assert(count >= 1);
         _log = log;
         _count = count;
+        
     }
 
     protected override string ApplyImpl(GameState state)

@@ -1,3 +1,4 @@
+using Lib.Contracts;
 using UfoGameLib.Lib;
 using UfoGameLib.Model;
 using UfoGameLib.State;
@@ -11,6 +12,8 @@ public class RecallAgentsPlayerAction : PlayerAction
 
     public RecallAgentsPlayerAction(ILog log, Agents agents)
     {
+        // kja2 agents.AssertCanBeRecalled()
+        Contract.Assert(agents.Any());
         _log = log;
         _agents = agents;
     }

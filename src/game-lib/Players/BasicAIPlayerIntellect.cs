@@ -108,7 +108,8 @@ public class BasicAIPlayerIntellect : IPlayer
         Agents agentsToRecall = controller.RandomGen.Pick(agents.CanBeRecalled, agentsToRecallCount).ToAgents();
         int recalledGeneratingIncome = agentsToRecall.GeneratingIncome.Count;
         int recalledGatheringIntel = agentsToRecall.GatheringIntel.Count;
-        controller.RecallAgents(agentsToRecall);
+        if (agentsToRecall.Any())
+            controller.RecallAgents(agentsToRecall);
 
         _log.Info(
             $"[AI] RecallAgents: " +
@@ -239,42 +240,47 @@ public class BasicAIPlayerIntellect : IPlayer
         // possibly by recalling agents. This takes priority even above minimum reserve.
         // Also, in a pinch can sack rookie agents.
 
-        int agentsToSendToGenerateIncome = agentsToSendToOps / 2;
-        int agentsToSendToGatherIntel = agentsToSendToOps / 2;
+        int agentsToSendToGenerateIncomeCount = agentsToSendToOps / 2;
+        int agentsToSendToGatherIntelCount = agentsToSendToOps / 2;
         if (agentsToSendToOps % 2 == 1)
         {
             if (controller.RandomGen.FlipCoin())
-                agentsToSendToGenerateIncome++;
+                agentsToSendToGenerateIncomeCount++;
             else
-                agentsToSendToGatherIntel++;
+                agentsToSendToGatherIntelCount++;
         }
-        Contract.Assert(agentsToSendToGenerateIncome + agentsToSendToGatherIntel == agentsToSendToOps);
+        Contract.Assert(agentsToSendToGenerateIncomeCount + agentsToSendToGatherIntelCount == agentsToSendToOps);
 
-        controller.SendAgentsToGenerateIncome(
-            controller.RandomGen.Pick(agents.Available, agentsToSendToGenerateIncome).ToAgents());
-        controller.SendAgentsToGatherIntel(
-            controller.RandomGen.Pick(agents.Available, agentsToSendToGatherIntel).ToAgents());
+        Agents agentsToSendToGenerateIncome = controller.RandomGen.Pick(agents.Available, agentsToSendToGenerateIncomeCount).ToAgents();
+        if (agentsToSendToGenerateIncome.Any())
+            controller.SendAgentsToGenerateIncome(agentsToSendToGenerateIncome);
+        Agents agentsToSendToGatherIntel = controller.RandomGen.Pick(agents.Available, agentsToSendToGatherIntelCount).ToAgents();
+        if (agentsToSendToGatherIntel.Any())
+            controller.SendAgentsToGatherIntel(agentsToSendToGatherIntel);
 
-        int agentsSentToTraining = agents.Available.Count;
-
-        // Send all remaining agents to training. Such agents are available immediately,
-        // so they count towards the desired agent reserve.
-        controller.SendAgentsToTraining(agents.Available);
+        int agentsToSendToTrainingCount = agents.Available.Count;
+        Agents agentsToSendToTraining = agents.Available;
+        if (agentsToSendToTraining.Any())
+        {
+            // Send all remaining agents to training. Such agents are available immediately,
+            // so they count towards the desired agent reserve.
+            controller.SendAgentsToTraining(agents.Available);
+        }
 
         _log.Info(
             $"[AI] AssignAvailableAgents: " +
             $"agentsSentToOps: {agentsToSendToOps}, " +
-            $"agentsSentToGenerateIncome: {agentsToSendToGenerateIncome}, " +
-            $"agentsSentToGatherIntel: {agentsToSendToGatherIntel}, " +
-            $"agentsSentToTraining: {agentsSentToTraining} | " +
+            $"agentsSentToGenerateIncome: {agentsToSendToGenerateIncomeCount}, " +
+            $"agentsSentToGatherIntel: {agentsToSendToGatherIntelCount}, " +
+            $"agentsSentToTraining: {agentsToSendToTrainingCount} | " +
             $"desiredAgentReserve: {desiredAgentReserve}, " +
             $"availableAgents: {initialAvailableAgents}.");
 
         Contract.Assert(
-            state.Assets.Agents.GeneratingIncome.Count == initialAgentsGeneratingIncome + agentsToSendToGenerateIncome);
+            state.Assets.Agents.GeneratingIncome.Count == initialAgentsGeneratingIncome + agentsToSendToGenerateIncomeCount);
         Contract.Assert(
-            state.Assets.Agents.GatheringIntel.Count == initialAgentsGatheringIntel + agentsToSendToGatherIntel);
-        Contract.Assert(state.Assets.Agents.InTraining.Count == initialAgentsInTraining + agentsSentToTraining);
+            state.Assets.Agents.GatheringIntel.Count == initialAgentsGatheringIntel + agentsToSendToGatherIntelCount);
+        Contract.Assert(state.Assets.Agents.InTraining.Count == initialAgentsInTraining + agentsToSendToTrainingCount);
         Contract.Assert(state.Assets.Agents.Available.Count == 0);
     }
 }

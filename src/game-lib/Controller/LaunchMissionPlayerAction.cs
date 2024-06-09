@@ -13,6 +13,7 @@ public class LaunchMissionPlayerAction : PlayerAction
 
     public LaunchMissionPlayerAction(ILog log, MissionSite site, Agents agents)
     {
+        Contract.Assert(agents.Any());
         agents.AssertCanBeSentOnMission();
         _log = log;
         _site = site;

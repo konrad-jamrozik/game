@@ -1,3 +1,4 @@
+using Lib.Contracts;
 using UfoGameLib.Lib;
 using UfoGameLib.Model;
 using UfoGameLib.State;
@@ -11,6 +12,7 @@ public class SendAgentsToTrainingPlayerAction : PlayerAction
 
     public SendAgentsToTrainingPlayerAction(ILog log, Agents agents)
     {
+        Contract.Assert(agents.Any());
         _log = log;
         _agents = agents;
     }

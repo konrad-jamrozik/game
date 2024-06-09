@@ -1,3 +1,4 @@
+using Lib.Contracts;
 using UfoGameLib.Lib;
 using UfoGameLib.Model;
 using UfoGameLib.State;
@@ -13,6 +14,7 @@ public class SackAgentsPlayerAction : PlayerAction
 
     public SackAgentsPlayerAction(ILog log, Agents agents)
     {
+        Contract.Assert(agents.Any());
         agents.AssertCanBeSacked();
         _log = log;
         _agents = agents;

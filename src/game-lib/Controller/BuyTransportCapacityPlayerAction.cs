@@ -12,6 +12,7 @@ public class BuyTransportCapacityPlayerAction : PlayerAction
 
     public BuyTransportCapacityPlayerAction(ILog log, int capacity)
     {
+        Contract.Assert(capacity >= 1);
         _log = log;
         _capacity = capacity;
     }
