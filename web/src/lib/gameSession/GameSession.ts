@@ -72,12 +72,12 @@ export class GameSession {
     targetTurn: number,
     delegateToAi?: boolean | undefined,
   ): Promise<boolean> {
-    const startGameState: GameState | undefined =
-      this.getGameStateAtTurnEndUnsafe(startTurn)
+    const startGameTurn: GameSessionTurn | undefined =
+      this.getTurnAtUnsafe(startTurn)
     const newTurns = await callAdvanceTurnsApi({
       setLoading: this.setLoading,
       setError: this.setError,
-      startGameState,
+      startGameTurn,
       targetTurn,
       delegateToAi,
     })
@@ -180,6 +180,10 @@ export class GameSession {
 
   public isInitialized(): boolean {
     return !_.isEmpty(this.data.getGameStates())
+  }
+
+  public getTurnAtUnsafe(turn: number): GameSessionTurn | undefined {
+    return this.data.getTurnAtUnsafe(turn)
   }
 
   public getCurrentTurn(): GameSessionTurn {
@@ -292,6 +296,7 @@ export class GameSession {
       throw new Error('newTurns must not be empty')
     }
     if (this.isGameOverUnsafe() === true) {
+      // kja this may block scenarios when reverting from a game that is over. Need to investigate.
       throw new Error('Cannot upsert turns to game that is over')
     }
     if (resultOfPlayerAction === true && !this.isInitialized()) {

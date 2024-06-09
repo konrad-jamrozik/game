@@ -40,14 +40,6 @@ export class GameSessionData {
       throw new Error('EventsUntilStartState must be empty for first turn')
     }
 
-    for (const turn of turns.slice(1)) {
-      if (turn.EventsUntilStartState.length === 0) {
-        throw new Error(
-          'EventsUntilStartState must not be empty for all but first turn',
-        )
-      }
-    }
-
     for (const turn of turns.slice(0, -1)) {
       if (_.isUndefined(turn.AdvanceTimeEvent)) {
         throw new TypeError(
@@ -109,6 +101,10 @@ export class GameSessionData {
     return this.getCurrentTurnUnsafe()!
   }
 
+  public getTurnAtUnsafe(turn: number): GameSessionTurn | undefined {
+    return this._data.turns.at(turn)
+  }
+
   public getCurrentTurnUnsafe(): GameSessionTurn | undefined {
     return this.getTurns().at(-1)
   }
@@ -128,28 +124,25 @@ export class GameSessionData {
     ])
   }
 
-  // kja refactor getRenderedGameEvents. Event ID and turn should be returned from the backend
   public getRenderedGameEvents(): readonly RenderedGameEvent[] {
-    let eventId = 0
     return _.reduce(
       this._data.turns,
       (acc: RenderedGameEvent[], turn: GameSessionTurn) => {
         const eventsInThisTurn = [
           ...turn.EventsUntilStartState,
           ...turn.EventsInTurn,
+          ...(turn.AdvanceTimeEvent ? [turn.AdvanceTimeEvent] : []),
         ]
 
         const renderedEventsInThisTurn: RenderedGameEvent[] = _.map(
           eventsInThisTurn,
           (event) => ({
-            // eslint-disable-next-line no-plusplus
-            Id: eventId++,
+            Id: event.Id,
             Turn: turn.StartState.Timeline.CurrentTurn,
             Type: event.Type,
             Details: event.Details,
           }),
         )
-
         return [...acc, ...renderedEventsInThisTurn]
       },
       [] as RenderedGameEvent[],

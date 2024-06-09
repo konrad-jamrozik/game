@@ -102,10 +102,14 @@ public class GameSessionTurn
     }
 
     [JsonIgnore]
-    public IReadOnlyList<GameEvent> GameEvents 
-        => ((List<GameEvent>) [..EventsUntilStartState, ..EventsInTurn])
-        .Concat((AdvanceTimeEvent as GameEvent)?.WrapInList() ?? [])
-        .ToList().AsReadOnly();
+    public IReadOnlyList<GameEvent> GameEvents
+        => ((List<GameEvent>)
+            [
+                ..EventsUntilStartState,
+                ..EventsInTurn,
+                ..(AdvanceTimeEvent != null ? (List<GameEvent>) [AdvanceTimeEvent] : [])
+            ])
+            .ToList().AsReadOnly();
 
     public GameSessionTurn Clone()
         => DeepClone();

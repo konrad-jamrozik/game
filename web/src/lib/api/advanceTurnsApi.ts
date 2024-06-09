@@ -1,6 +1,5 @@
 import _ from 'lodash'
 import type { GameSessionTurn } from '../codesync/GameSessionTurn'
-import type { GameState } from '../codesync/GameState'
 import {
   callApi,
   getPostJsonRequest,
@@ -10,17 +9,17 @@ import {
 
 export async function callAdvanceTurnsApi(
   params: FetchCallbacks & {
-    startGameState: GameState | undefined
+    startGameTurn: GameSessionTurn | undefined
     targetTurn: number
     delegateToAi?: boolean | undefined
   },
 ): Promise<GameSessionTurn[] | undefined> {
-  const { startGameState, targetTurn, delegateToAi } = params
+  const { startGameTurn: startTurn, targetTurn, delegateToAi } = params
 
   const apiUrl = getAdvanceTurnsApiUrl(targetTurn, delegateToAi ?? false)
   const request = getPostJsonRequest(
     apiUrl,
-    !_.isUndefined(startGameState) ? JSON.stringify(startGameState) : '',
+    !_.isUndefined(startTurn) ? JSON.stringify(startTurn) : '',
   )
 
   return callApi<GameSessionTurn[]>({ ...params, request })
