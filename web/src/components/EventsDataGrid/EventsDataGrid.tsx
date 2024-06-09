@@ -100,7 +100,6 @@ const columns: GridColDef<GameEventRow>[] = [
 ]
 
 // kja this will come in play once I fix the game event content formatting
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 // function getRowFromGameEventFromPayload(
 //   event: GameEventFromPayload,
 // ): GameEventRow {
