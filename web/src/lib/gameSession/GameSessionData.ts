@@ -160,8 +160,18 @@ export class GameSessionData {
   }
 
   public revertToPreviousTurn(): void {
+    const turnsBeforeCurrentTurn = this.getTurnsBeforeCurrentTurn()
+    const turnBeforeCurrentTurn = {
+      EventsUntilStartState:
+        turnsBeforeCurrentTurn.at(-1)!.EventsUntilStartState,
+      StartState: turnsBeforeCurrentTurn.at(-1)!.StartState,
+      EventsInTurn: turnsBeforeCurrentTurn.at(-1)!.EventsInTurn,
+      EndState: turnsBeforeCurrentTurn.at(-1)!.EndState,
+      AdvanceTimeEvent: undefined,
+      NextEventId: turnsBeforeCurrentTurn.at(-1)!.NextEventId,
+    }
     const newData: GameSessionDataType = {
-      turns: this.getTurnsBeforeCurrentTurn(),
+      turns: [...turnsBeforeCurrentTurn.slice(0, -1), turnBeforeCurrentTurn],
     }
     this.setData(newData)
   }
@@ -173,6 +183,8 @@ export class GameSessionData {
       StartState: currentTurn.StartState,
       EventsInTurn: [],
       EndState: currentTurn.StartState,
+      AdvanceTimeEvent: currentTurn.AdvanceTimeEvent,
+      NextEventId: currentTurn.NextEventId,
     }
 
     const newData: GameSessionDataType = {

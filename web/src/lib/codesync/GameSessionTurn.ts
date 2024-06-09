@@ -8,8 +8,8 @@ export type GameSessionTurn = {
   readonly StartState: GameState
   readonly EventsInTurn: GameEvent[]
   readonly EndState: GameState
-  readonly AdvanceTimeEvent?: GameEvent
-  readonly NextEventId: number
+  readonly AdvanceTimeEvent?: GameEvent | undefined
+  readonly NextEventId?: number | undefined
 }
 
 export function getEvents(turn: GameSessionTurn): GameEvent[] {
