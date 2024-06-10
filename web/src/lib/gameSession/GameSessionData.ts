@@ -5,7 +5,7 @@
 import _ from 'lodash'
 import {
   addTurnToGameEvent,
-  type GameEventBase,
+  type GameEvent,
   type GameEventWithTurn,
 } from '../codesync/GameEvent'
 import {
@@ -99,7 +99,7 @@ export class GameSessionData {
       turns.at(0)!,
     )
 
-    const gameEvents: readonly GameEventBase[] = getGameEvents(turns)
+    const gameEvents: readonly GameEvent[] = getGameEvents(turns)
     if (!_.isEmpty(gameEvents)) {
       const firstEventId = gameEvents.at(0)!.Id
       for (const eventIndex of _.range(1, gameEvents.length)) {

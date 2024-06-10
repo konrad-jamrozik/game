@@ -1,18 +1,20 @@
 // codesync: UfoGameLib.State.GameSessionTurn
 import _ from 'lodash'
-import type { GameEventBase } from './GameEvent'
+import type { GameEvent } from './GameEvent'
 import type { GameState } from './GameState'
+import type { PlayerActionEvent } from './PlayerActionEvent'
+import type { WorldEvent } from './WorldEvent'
 
 export type GameSessionTurn = {
-  readonly EventsUntilStartState: GameEventBase[]
+  readonly EventsUntilStartState: WorldEvent[]
   readonly StartState: GameState
-  readonly EventsInTurn: GameEventBase[]
+  readonly EventsInTurn: PlayerActionEvent[]
   readonly EndState: GameState
-  readonly AdvanceTimeEvent?: GameEventBase | undefined
+  readonly AdvanceTimeEvent?: PlayerActionEvent | undefined
   readonly NextEventId?: number | undefined
 }
 
-export function getEvents(turn: GameSessionTurn): GameEventBase[] {
+export function getEvents(turn: GameSessionTurn): GameEvent[] {
   return [
     ...turn.EventsUntilStartState,
     ...turn.EventsInTurn,
@@ -22,7 +24,7 @@ export function getEvents(turn: GameSessionTurn): GameEventBase[] {
 
 export function getGameEvents(
   turns: readonly GameSessionTurn[],
-): readonly GameEventBase[] {
+): readonly GameEvent[] {
   return _.flatMap(turns, (turn) => getEvents(turn))
 }
 
