@@ -54,12 +54,12 @@ public class GameSessionController
         CurrentTurnController = new GameTurnController(
             _log,
             GameSession.RandomGen,
-            GameSession.CurrentGameState,
-            GameSession.NextEventId);
+            GameSession.EventIdGen,
+            GameSession.CurrentGameState);
         _timeAdvancementController = new TimeAdvancementController(
             _log,
             GameSession.RandomGen,
-            GameSession.NextEventId,
+            GameSession.EventIdGen,
             GameSession.CurrentGameState);
     }
 
@@ -159,18 +159,18 @@ public class GameSessionController
             new GameSessionTurn(
                 eventsUntilStartState: worldEvents,
                 startState: nextTurnStartState,
-                nextEventId: GameSession.NextEventId));
+                nextEventId: GameSession.EventIdGen.Value));
         // kja I need to revisit this idea of redoing GameTurnControllers.
         // Maybe really it is better just to update the CurrentGameState and use NextEventIdGen class.
         CurrentTurnController = new GameTurnController(
             _log,
             GameSession.RandomGen,
-            GameSession.CurrentGameState,
-            GameSession.NextEventId);
+            GameSession.EventIdGen,
+            GameSession.CurrentGameState);
         _timeAdvancementController = new TimeAdvancementController(
             _log,
             GameSession.RandomGen,
-            GameSession.NextEventId,
+            GameSession.EventIdGen,
             GameSession.CurrentGameState);
     }
 

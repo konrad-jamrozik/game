@@ -11,15 +11,14 @@ public class TimeAdvancementController
     private readonly ILog _log;
     private readonly RandomGen _randomGen;
     private readonly List<WorldEvent> _worldEvents;
-    // kja I think I need a class like EventIdGen because this is getting silly
-    private int _nextEventId;
+    private EventIdGen _eventIdGen;
     private readonly GameState _state;
 
-    public TimeAdvancementController(ILog log, RandomGen randomGen, int nextEventId, GameState state)
+    public TimeAdvancementController(ILog log, RandomGen randomGen, EventIdGen eventIdGen, GameState state)
     {
         _log = log;
         _randomGen = randomGen;
-        _nextEventId = nextEventId;
+        _eventIdGen = eventIdGen;
         _state = state;
         _worldEvents = new List<WorldEvent>();
     }
@@ -68,7 +67,7 @@ public class TimeAdvancementController
         CreateMissionSites(state);
 
         string details =  $"Turn {state.Timeline.CurrentTurn-1} -> {state.Timeline.CurrentTurn}";
-        PlayerActionEvent advanceTimeEvent = new PlayerActionEvent(_nextEventId++, "AdvanceTimePlayerAction", details);
+        PlayerActionEvent advanceTimeEvent = new PlayerActionEvent(_eventIdGen.Generate, "AdvanceTimePlayerAction", details);
         var worldEvents = new List<WorldEvent>(_worldEvents);
         _worldEvents.Clear();
         return (advanceTimeEvent, worldEvents);
@@ -198,7 +197,7 @@ public class TimeAdvancementController
                 if (expired)
                 {
                     expiredMissions++;
-                    _worldEvents.Add(new MissionSiteExpiredEvent(_nextEventId++, missionSite.Id));
+                    _worldEvents.Add(new MissionSiteExpiredEvent(_eventIdGen.Generate, missionSite.Id));
                     _log.Info($"{missionSite.LogString} expired!");
                 }
             }
