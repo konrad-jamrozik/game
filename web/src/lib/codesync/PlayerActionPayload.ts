@@ -1,4 +1,5 @@
 // codesync: UfoGameLib.Api.PlayerActionPayload
+// codesync: UfoGameLib.Controller.PlayerAction
 
 export type PlayerActionPayload = {
   readonly ActionName: PlayerActionName
@@ -6,18 +7,16 @@ export type PlayerActionPayload = {
   readonly TargetId?: number
 }
 
-// kja these need to be updated to reflect backend. See:
-// game\src\api\PlayerActionPayload.cs
 export type PlayerActionName =
-  | 'AdvanceTime'
-  | 'BuyTransportCap'
-  | 'HireAgents'
-  | 'LaunchMission'
+  | 'AdvanceTimePlayerAction'
+  | 'BuyTransportCapacityPlayerAction'
+  | 'HireAgentsPlayerAction'
+  | 'LaunchMissionPlayerAction'
   | AgentPlayerActionName
 
 export type AgentPlayerActionName =
-  | 'SackAgents'
-  | 'SendAgentsToIncomeGeneration'
-  | 'SendAgentsToIntelGathering'
-  | 'SendAgentsToTraining'
-  | 'RecallAgents'
+  | 'SackAgentsPlayerAction'
+  | 'SendAgentsToGenerateIncomePlayerAction'
+  | 'SendAgentsToGatherIntelPlayerAction'
+  | 'SendAgentsToTrainingPlayerAction'
+  | 'RecallAgentsPlayerAction'

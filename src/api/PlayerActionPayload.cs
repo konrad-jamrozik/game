@@ -39,16 +39,15 @@ public class PlayerActionPayload(string actionName, int[]? ids, int? targetId)
         // https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/operators/patterns#positional-pattern
         => ActionName switch
         {
-            // kja these should be nameof(derived PlayerAction). In frontend they will be consumed by getDisplayedType()
-            "AdvanceTime" => () => controller.AdvanceTime(),
-            "BuyTransportCap" => () => controller.CurrentTurnController.BuyTransportCapacity(1),
-            "HireAgents" => () => controller.CurrentTurnController.HireAgents(TargetId!.Value),
-            "SackAgents" => () => controller.CurrentTurnController.SackAgents(Ids!),
-            "SendAgentsToIncomeGeneration" => () => controller.CurrentTurnController.SendAgentsToGenerateIncome(Ids!),
-            "SendAgentsToIntelGathering" => () => controller.CurrentTurnController.SendAgentsToGatherIntel(Ids!),
-            "SendAgentsToTraining" => () => controller.CurrentTurnController.SendAgentsToTraining(Ids!),
-            "RecallAgents" => () => controller.CurrentTurnController.RecallAgents(Ids!),
-            "LaunchMission" => () => controller.CurrentTurnController.LaunchMission(TargetId!.Value, Ids!),
+            nameof(AdvanceTimePlayerAction) => () => controller.AdvanceTime(),
+            nameof(BuyTransportCapacityPlayerAction) => () => controller.CurrentTurnController.BuyTransportCapacity(1),
+            nameof(HireAgentsPlayerAction) => () => controller.CurrentTurnController.HireAgents(TargetId!.Value),
+            nameof(SackAgentsPlayerAction) => () => controller.CurrentTurnController.SackAgents(Ids!),
+            nameof(SendAgentsToGenerateIncomePlayerAction) => () => controller.CurrentTurnController.SendAgentsToGenerateIncome(Ids!),
+            nameof(SendAgentsToGatherIntelPlayerAction) => () => controller.CurrentTurnController.SendAgentsToGatherIntel(Ids!),
+            nameof(SendAgentsToTrainingPlayerAction) => () => controller.CurrentTurnController.SendAgentsToTraining(Ids!),
+            nameof(RecallAgentsPlayerAction) => () => controller.CurrentTurnController.RecallAgents(Ids!),
+            nameof(LaunchMissionPlayerAction) => () => controller.CurrentTurnController.LaunchMission(TargetId!.Value, Ids!),
             _ => () => throw new ArgumentException($"Unsupported player action of '{ActionName}'")
         };
 }

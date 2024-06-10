@@ -97,7 +97,8 @@ export class GameSession {
   }
 
   public async hireAgents(count: number): Promise<boolean> {
-    const payloadProvider = playerActionsPayloadsProviders.HireAgents
+    const payloadProvider =
+      playerActionsPayloadsProviders.HireAgentsPlayerAction
     const payload = payloadProvider(count)
     return this.applyPlayerAction(payload)
   }
@@ -110,7 +111,8 @@ export class GameSession {
       )
     }
     /* c8 ignore stop */
-    const payloadProvider = playerActionsPayloadsProviders.BuyTransportCap
+    const payloadProvider =
+      playerActionsPayloadsProviders.BuyTransportCapacityPlayerAction
     const payload = payloadProvider()
     return this.applyPlayerAction(payload)
   }
@@ -119,7 +121,8 @@ export class GameSession {
     agentsIds: number[],
     missionSiteId: number,
   ): Promise<boolean> {
-    const payloadProvider = playerActionsPayloadsProviders.LaunchMission
+    const payloadProvider =
+      playerActionsPayloadsProviders.LaunchMissionPlayerAction
     const payload = payloadProvider(agentsIds, missionSiteId)
     return this.applyPlayerAction(payload)
   }
