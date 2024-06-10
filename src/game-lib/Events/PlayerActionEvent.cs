@@ -1,4 +1,7 @@
-﻿namespace UfoGameLib.Events;
+﻿// ReSharper disable MemberCanBePrivate.Global
+// Reason: public fields are being serialized and sent over the wire as part of GameSessionTurn
+// being given as input to ApiUtils.ToJsonHttpResult.
+namespace UfoGameLib.Events;
 
 public class PlayerActionEvent : GameEvent
 {
