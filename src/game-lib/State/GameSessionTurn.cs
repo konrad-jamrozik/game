@@ -15,10 +15,14 @@ public class GameSessionTurn
     public PlayerActionEvent? AdvanceTimeEvent;
 
     /// <summary>
-    /// ID of the next event to generate. Must be ignored if this game session turn
-    /// has at least one game event in it.
+    /// ID of the next event to generate. This is required when:
+    /// - This is not the first turn in game session, and there was at least one event in previous turns.
+    /// - This turn has no events.
+    /// - This turn and this turn only is used as a starting point to continue evaluating game session.
+    /// Must be ignored if this game session turn has at least one game event in it.
+    /// See EventIdGen for more details.
     /// </summary>
-    public readonly int? NextEventId;
+    public int? NextEventId;
 
     [JsonConstructor]
     public GameSessionTurn(

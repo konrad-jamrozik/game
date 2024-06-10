@@ -151,6 +151,10 @@ public class GameSessionController
             GameSession.CurrentTurn.AssertInvariants();
             NewTurn(worldEvents, nextTurnStartState);
         }
+
+        // Ensure NextEventId is set to right value in case we end up in special case of no events -
+        // see comment on NextEventId for details.
+        GameSession.CurrentTurn.NextEventId = GameSession.EventIdGen.Value;
     }
 
     private void NewTurn(List<WorldEvent> worldEvents, GameState nextTurnStartState)
