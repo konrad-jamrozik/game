@@ -190,7 +190,7 @@ export class GameSession {
   }
 
   public isInitialized(): boolean {
-    return !_.isEmpty(this.data.getGameStates())
+    return !_.isEmpty(this.data.getTurns())
   }
 
   public getTurnAtUnsafe(turn: number): GameSessionTurn | undefined {
@@ -213,10 +213,10 @@ export class GameSession {
   }
 
   public getGameResult(): GameResult {
-    const lastGameState = this.getCurrentGameState()
-    return lastGameState.IsGameWon
+    const currentGameState = this.getCurrentGameState()
+    return currentGameState.IsGameWon
       ? 'won'
-      : lastGameState.IsGameLost
+      : currentGameState.IsGameLost
         ? 'lost'
         : 'undecided'
   }
@@ -236,12 +236,8 @@ export class GameSession {
     if (!this.isInitialized()) {
       return undefined
     }
-
-    const currentGameState = this.getCurrentGameState()
-    const getGameStateAtCurrentTurnStart = this.getGameStateAtCurrentTurnStart()
-    return (
-      currentGameState.UpdateCount > getGameStateAtCurrentTurnStart.UpdateCount
-    )
+    const currentTurn = this.getCurrentTurn()
+    return currentTurn.EndState.UpdateCount > currentTurn.StartState.UpdateCount
   }
 
   public canAdvanceTime(): boolean {
@@ -275,12 +271,12 @@ export class GameSession {
     return this.getCurrentGameStateUnsafe()?.Assets
   }
 
-  public getCurrentGameState(): GameState {
-    return this.data.getCurrentGameState()
-  }
-
   public getRenderedGameEvents(): readonly RenderedGameEvent[] {
     return this.data.getRenderedGameEvents()
+  }
+
+  public getCurrentGameState(): GameState {
+    return this.data.getCurrentGameStateUnsafe()!
   }
 
   public getCurrentGameStateUnsafe(): GameState | undefined {

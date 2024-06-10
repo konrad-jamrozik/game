@@ -149,12 +149,8 @@ export class GameSessionData {
     })
   }
 
-  public getCurrentGameState(): GameState {
-    return this.getCurrentGameStateUnsafe()!
-  }
-
   public getCurrentGameStateUnsafe(): GameState | undefined {
-    return this.getGameStates().at(-1)
+    return this.getCurrentTurnUnsafe()?.EndState
   }
 
   public revertToPreviousTurn(): void {
