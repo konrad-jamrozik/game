@@ -13,6 +13,7 @@ public class GameTurnController
     private int _nextEventId;
     private readonly List<PlayerActionEvent> _recordedPlayerActionEvents = new();
 
+    // kja nextEventId should be passed before gameState
     public GameTurnController(ILog log, RandomGen randomGen, GameState gameState, int nextEventId)
     {
         _log = log;

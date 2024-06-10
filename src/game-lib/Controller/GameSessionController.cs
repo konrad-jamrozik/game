@@ -44,6 +44,7 @@ public class GameSessionController
     private readonly Configuration _config;
     private readonly ILog _log;
     public GameTurnController CurrentTurnController { get; private set; }
+    private TimeAdvancementController _timeAdvancementController;
 
     public GameSessionController(Configuration config, ILog log, GameSession gameSession)
     {
@@ -55,6 +56,11 @@ public class GameSessionController
             GameSession.RandomGen,
             GameSession.CurrentGameState,
             GameSession.NextEventId);
+        _timeAdvancementController = new TimeAdvancementController(
+            _log,
+            GameSession.RandomGen,
+            GameSession.NextEventId,
+            GameSession.CurrentGameState);
     }
 
     public GameStatePlayerView CurrentGameStatePlayerView
@@ -77,19 +83,20 @@ public class GameSessionController
         _log.Info(
             $"===== Game over! " +
             $"Game result: {(endState.IsGameLost ? "lost" : endState.IsGameWon ? "won" : "undecided")}");
-        _log.Info($"Money: {endState.Assets.Money}, " +
-                  $"Intel: {endState.Assets.Intel}, " +
-                  $"Funding: {endState.Assets.Funding}, " +
-                  $"Upkeep: {endState.Assets.Agents.UpkeepCost}, " +
-                  $"Support: {endState.Assets.Support}, " +
-                  $"Transport cap.: {endState.Assets.MaxTransportCapacity}, " +
-                  $"Missions launched: {endState.Missions.Count}, " +
-                  $"Missions successful: {endState.Missions.Successful.Count}, " +
-                  $"Missions failed: {endState.Missions.Failed.Count}, " +
-                  $"Mission sites expired: {endState.MissionSites.Expired.Count}, " +
-                  $"Agents: {endState.Assets.Agents.Count}, " +
-                  $"Terminated agents: {endState.TerminatedAgents.Count}, " +
-                  $"Turn: {endState.Timeline.CurrentTurn} / {turnLimit}.");
+        _log.Info(
+            $"Money: {endState.Assets.Money}, " +
+            $"Intel: {endState.Assets.Intel}, " +
+            $"Funding: {endState.Assets.Funding}, " +
+            $"Upkeep: {endState.Assets.Agents.UpkeepCost}, " +
+            $"Support: {endState.Assets.Support}, " +
+            $"Transport cap.: {endState.Assets.MaxTransportCapacity}, " +
+            $"Missions launched: {endState.Missions.Count}, " +
+            $"Missions successful: {endState.Missions.Successful.Count}, " +
+            $"Missions failed: {endState.Missions.Failed.Count}, " +
+            $"Mission sites expired: {endState.MissionSites.Expired.Count}, " +
+            $"Agents: {endState.Assets.Agents.Count}, " +
+            $"Terminated agents: {endState.TerminatedAgents.Count}, " +
+            $"Turn: {endState.Timeline.CurrentTurn} / {turnLimit}.");
 
         SaveCurrentGameStateToFile();
 
@@ -135,8 +142,8 @@ public class GameSessionController
 
             GameState nextTurnStartState = GameSession.CurrentGameState.Clone();
 
-            GameSession.CurrentTurn.AdvanceTimeEvent = AdvanceTime(nextTurnStartState);
-            List<WorldEvent> worldEvents = GetAndDeleteRecordedWorldEvents();
+            (PlayerActionEvent advanceTimeEvent, List<WorldEvent> worldEvents) = AdvanceTime(nextTurnStartState);
+            GameSession.CurrentTurn.AdvanceTimeEvent = advanceTimeEvent;
 
             // This state diff shows the result of advancing time.
             DiffGameStates(GameSession.CurrentGameState, nextTurnStartState);
@@ -148,27 +155,33 @@ public class GameSessionController
 
     private void NewTurn(List<WorldEvent> worldEvents, GameState nextTurnStartState)
     {
-        GameSession.Turns.Add(new GameSessionTurn(
-            eventsUntilStartState: worldEvents,
-            startState: nextTurnStartState,
-            nextEventId: GameSession.NextEventId));
+        GameSession.Turns.Add(
+            new GameSessionTurn(
+                eventsUntilStartState: worldEvents,
+                startState: nextTurnStartState,
+                nextEventId: GameSession.NextEventId));
+        // kja I need to revisit this idea of redoing GameTurnControllers.
+        // Maybe really it is better just to update the CurrentGameState and use NextEventIdGen class.
         CurrentTurnController = new GameTurnController(
             _log,
             GameSession.RandomGen,
             GameSession.CurrentGameState,
             GameSession.NextEventId);
+        _timeAdvancementController = new TimeAdvancementController(
+            _log,
+            GameSession.RandomGen,
+            GameSession.NextEventId,
+            GameSession.CurrentGameState);
     }
 
-    private List<WorldEvent> GetAndDeleteRecordedWorldEvents()
+    // kja AdvanceTime should not accept state as input. Why it does? Obsolete test code?
+    public (PlayerActionEvent advaceTimeEvent, List<WorldEvent> worldEvents) AdvanceTime(GameState? state = null)
     {
-        // kja to implement GetAndDeleteRecordedWorldEvents
-        return new List<WorldEvent>();
+        return _timeAdvancementController.AdvanceTime(state);
     }
 
-    public PlayerActionEvent AdvanceTime(GameState? state = null)
-        => new AdvanceTimePlayerAction(_log, GameSession.RandomGen).Apply(
-            state ?? GameSession.CurrentGameState,
-            GameSession.NextEventId);
+    public PlayerActionEvent AdvanceTimeNoWorldEvents()
+        => _timeAdvancementController.AdvanceTime().advanceTimeEvent;
 
     public GameState SaveCurrentGameStateToFile()
     {

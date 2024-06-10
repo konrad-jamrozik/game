@@ -45,7 +45,7 @@ public static class ApplyPlayerActionRoute
         GameSession gameSession = ApiUtils.NewGameSessionFromTurn(gameSessionTurn);
         var controller = new GameSessionController(config, log, gameSession);
 
-        Contract.Assert(playerActionPayload.ActionName != nameof(PlayerActionPayload));
+        Contract.Assert(playerActionPayload.ActionName != nameof(AdvanceTimePlayerAction));
 
         gameSession.CurrentPlayerActionEvents.Add(playerActionPayload.Apply(controller));
 
