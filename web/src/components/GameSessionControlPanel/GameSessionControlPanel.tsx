@@ -33,7 +33,7 @@ export function GameSessionControlPanel(
   const [targetTurn, setTargetTurn] = useState<number>(defaultTargetTurn)
 
   function gameRunMsg(): string {
-    return `Game ran until turn ${props.gameSession.getCurrentTurn().StartState.Timeline.CurrentTurn}. Result: ${props.gameSession.getGameResult()}`
+    return `Game ran until turn ${props.gameSession.getCurrentTurnNo()}. Result: ${props.gameSession.getGameResult()}`
   }
 
   async function advanceTurns(
@@ -43,7 +43,7 @@ export function GameSessionControlPanel(
     const { resolvedStartTurn, resolvedTargetTurn } = resolveStartAndTargetTurn(
       startTurn,
       targetTurn,
-      props.gameSession.getCurrentTurnUnsafe()?.StartState.Timeline.CurrentTurn,
+      props.gameSession.getCurrentTurnNoUnsafe(),
       turnsToAdvance,
     )
     const turnAdvanced = await props.gameSession.advanceTurns(
@@ -125,7 +125,7 @@ export function GameSessionControlPanel(
 }
 
 function currentTurnLabel(gameSession: GameSession): string {
-  return `Current turn: ${gameSession.getCurrentTurnUnsafe()?.StartState.Timeline.CurrentTurn ?? 'N/A'}`
+  return `Current turn: ${gameSession.getCurrentTurnNoUnsafe() ?? 'N/A'}`
 }
 
 function startTurnInputTextField(
@@ -248,8 +248,7 @@ function resetCurrentTurnButton(gameSession: GameSession): React.JSX.Element {
   const isDisabled =
     !gameSession.isInitialized() ||
     gameSession.loading ||
-    (gameSession.getCurrentTurn().StartState.Timeline.CurrentTurn ===
-      initialTurn &&
+    (gameSession.getCurrentTurnNo() === initialTurn &&
       !(playerMadeActions ?? false))
 
   const label =

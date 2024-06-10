@@ -9,6 +9,8 @@ import { callApplyPlayerActionApi } from '../api/applyPlayerActionApi'
 import { playerActionsPayloadsProviders } from '../api/playerActionsPayloadsProviders'
 import type { GameEventWithTurn } from '../codesync/GameEvent'
 import {
+  getTurnNo,
+  getTurnNoUnsafe,
   removeAdvanceTimeEvent,
   resetTurn,
   type GameSessionTurn,
@@ -143,7 +145,7 @@ export class GameSession {
         'Cannot revert turn when player has made actions or game is not initialized',
       )
     }
-    if (this.getCurrentTurn().StartState.Timeline.CurrentTurn === initialTurn) {
+    if (this.getCurrentTurnNo() === initialTurn) {
       throw new Error(
         `Cannot revert turn when current turn is initialTurn of ${initialTurn}`,
       )
@@ -201,8 +203,16 @@ export class GameSession {
     return this.data.getCurrentTurn()
   }
 
+  public getCurrentTurnNo(): number {
+    return getTurnNo(this.data.getCurrentTurn())
+  }
+
   public getCurrentTurnUnsafe(): GameSessionTurn | undefined {
     return this.data.getCurrentTurnUnsafe()
+  }
+
+  public getCurrentTurnNoUnsafe(): number | undefined {
+    return getTurnNoUnsafe(this.data.getCurrentTurnUnsafe())
   }
 
   public getGameResultUnsafe(): GameResult | undefined {
@@ -306,20 +316,17 @@ export class GameSession {
     }
     /* c8 ignore stop */
 
-    const firstUpsertedTurn =
-      upsertedTurns.at(0)!.StartState.Timeline.CurrentTurn
+    const firstUpsertedTurn = getTurnNo(upsertedTurns.at(0)!)
     const lastUpsertedTurn = upsertedTurns.at(-1)!.EndState.Timeline.CurrentTurn
 
     const retainedTurns = this.getRetainedTurns(firstUpsertedTurn)
 
-    const firstRetainedTurn =
-      retainedTurns.at(0)?.StartState.Timeline.CurrentTurn
-    const lastRetainedTurn =
-      retainedTurns.at(-1)?.StartState.Timeline.CurrentTurn
+    const firstRetainedTurn = getTurnNoUnsafe(retainedTurns.at(0))
+    const lastRetainedTurn = getTurnNoUnsafe(retainedTurns.at(-1))
 
     console.log(
       `Upserting game session turns. ` +
-        `currentTurn: ${this.getCurrentTurnUnsafe()?.StartState.Timeline.CurrentTurn}, ` +
+        `currentTurn: ${this.getCurrentTurnNoUnsafe()}, ` +
         `firstUpsertedTurn: ${firstUpsertedTurn}, ` +
         `retained turns: [ ${firstRetainedTurn} - ${lastRetainedTurn} ], ` +
         `upserted turns: [ ${firstUpsertedTurn} - ${lastUpsertedTurn} ]`,
@@ -353,7 +360,7 @@ export class GameSession {
   private getRetainedTurns(firstUpsertedTurn: number): GameSessionTurn[] {
     return _.takeWhile(
       this.getTurns(),
-      (turn) => turn.StartState.Timeline.CurrentTurn < firstUpsertedTurn,
+      (turn) => getTurnNo(turn) < firstUpsertedTurn,
     )
   }
 }

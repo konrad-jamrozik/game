@@ -26,6 +26,19 @@ export function getGameEvents(
   return _.flatMap(turns, (turn) => getEvents(turn))
 }
 
+export function getTurnNo(turn: GameSessionTurn): number {
+  return turn.StartState.Timeline.CurrentTurn
+}
+
+export function getTurnNoUnsafe(
+  turn: GameSessionTurn | undefined,
+): number | undefined {
+  if (_.isUndefined(turn)) {
+    return undefined
+  }
+  return getTurnNo(turn)
+}
+
 export function removeAdvanceTimeEvent(turn: GameSessionTurn): GameSessionTurn {
   return {
     ...turn,
@@ -43,5 +56,3 @@ export function resetTurn(turn: GameSessionTurn): GameSessionTurn {
     NextEventId: turn.NextEventId,
   }
 }
-
-// kja need to add function for getting current turn number: turn.StartState.Timeline.CurrentTurn

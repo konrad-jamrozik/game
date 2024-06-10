@@ -11,6 +11,7 @@ import {
 import {
   getEvents,
   getGameEvents,
+  getTurnNo,
   removeAdvanceTimeEvent,
   resetTurn,
   type GameSessionTurn,
@@ -40,7 +41,7 @@ export class GameSessionData {
     if (_.isEmpty(turns)) {
       throw new Error('Turns must not be empty')
     }
-    const firstTurnNo = turns.at(0)!.StartState.Timeline.CurrentTurn
+    const firstTurnNo = getTurnNo(turns.at(0)!)
     if (firstTurnNo !== initialTurn) {
       throw new Error(`First turn must be initialTurn of ${initialTurn}`)
     }
@@ -88,8 +89,8 @@ export class GameSessionData {
     _.reduce(
       turns.slice(1),
       (currTurn, nextTurn) => {
-        const currTurnNo = currTurn.StartState.Timeline.CurrentTurn
-        const nextTurnNo = nextTurn.StartState.Timeline.CurrentTurn
+        const currTurnNo = getTurnNo(currTurn)
+        const nextTurnNo = getTurnNo(nextTurn)
         if (!(nextTurnNo === currTurnNo + 1)) {
           throw new Error('Turn numbers must be consecutive')
         }
@@ -120,10 +121,10 @@ export class GameSessionData {
     return this.getCurrentTurnUnsafe()!
   }
 
-  public getTurnAtUnsafe(turn: number): GameSessionTurn | undefined {
+  public getTurnAtUnsafe(turnToFind: number): GameSessionTurn | undefined {
     return _.find(
       this._data.turns,
-      (gameTurn) => gameTurn.StartState.Timeline.CurrentTurn === turn,
+      (gameTurn) => getTurnNo(gameTurn) === turnToFind,
     )
   }
 

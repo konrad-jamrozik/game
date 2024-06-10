@@ -1,6 +1,6 @@
 // codesync: UfoGameLib.Events.GameEvent
 
-import type { GameSessionTurn } from './GameSessionTurn'
+import { getTurnNo, type GameSessionTurn } from './GameSessionTurn'
 
 export type GameEvent = {
   readonly Id: number
@@ -18,7 +18,7 @@ export function addTurnToGameEvent(
 ): GameEventWithTurn {
   return {
     Id: event.Id,
-    Turn: turn.StartState.Timeline.CurrentTurn,
+    Turn: getTurnNo(turn),
     Type: event.Type,
     Details: event.Details,
   }
