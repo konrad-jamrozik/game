@@ -31,8 +31,10 @@ public class TimeAdvancementController
 
         GameState state = inputState ?? _state;
 
-        string details =  $"Turn {state.Timeline.CurrentTurn} -> {state.Timeline.CurrentTurn + 1}";
-        PlayerActionEvent advanceTimeEvent = new PlayerActionEvent(_eventIdGen.Generate, "AdvanceTimePlayerAction", details);
+        PlayerActionEvent advanceTimeEvent = new PlayerActionEvent(
+            _eventIdGen.Generate,
+            "AdvanceTimePlayerAction",
+            targetId: state.Timeline.CurrentTurn);
 
         // Agents cost upkeep. Note we compute upkeep before evaluating missions.
         // This means that if an agent is lost during the mission, we still pay for their upkeep.

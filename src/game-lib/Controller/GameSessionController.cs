@@ -164,7 +164,7 @@ public class GameSessionController
                 eventsUntilStartState: worldEvents,
                 startState: nextTurnStartState,
                 nextEventId: GameSession.EventIdGen.Value));
-        // kja I need to revisit this idea of redoing GameTurnControllers.
+        // kja I need to revisit this idea of re-constructing GameTurnControllers.
         // Maybe really it is better just to update the CurrentGameState and use NextEventIdGen class.
         CurrentTurnController = new GameTurnController(
             _log,

@@ -17,7 +17,7 @@ public class SendAgentsToTrainingPlayerAction : PlayerAction
         _agents = agents;
     }
 
-    protected override string ApplyImpl(GameState state)
+    protected override (List<int>? ids, int? targetId) ApplyImpl(GameState state)
     {
         _agents.ForEach(
             agent =>
@@ -26,6 +26,6 @@ public class SendAgentsToTrainingPlayerAction : PlayerAction
                 agent.SendToTraining();
             });
 
-        return $"Count: {_agents.Count}, IDs: {_agents.IdsLogString}";
+        return (_agents.Ids, targetId: null);
     }
 }

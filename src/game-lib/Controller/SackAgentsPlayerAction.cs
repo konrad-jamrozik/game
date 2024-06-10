@@ -20,7 +20,7 @@ public class SackAgentsPlayerAction : PlayerAction
         _agents = agents;
     }
 
-    protected override string ApplyImpl(GameState state)
+    protected override (List<int>? ids, int? targetId) ApplyImpl(GameState state)
     {
         _log.Info($"Sack agents. Count: {_agents.Count}");
         foreach (Agent agent in _agents)
@@ -29,6 +29,6 @@ public class SackAgentsPlayerAction : PlayerAction
             _log.Info($"Sacked {agent.LogString}.");
         }
 
-        return $"Count: {_agents.Count}, IDs: {_agents.IdsLogString}";
+        return (_agents.Ids, targetId: null);
     }
 }

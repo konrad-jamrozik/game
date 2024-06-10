@@ -186,7 +186,7 @@ public class Agent
     public void MakeAvailable()
     {
         Contract.Assert(!IsAvailable);
-        // kja2 for better assertions, make special method for making agent available from mission
+        // kja2-assert: for better assertions, make special method for making agent available from mission
         // Think about this as a different edge in the state transition diagram, originating from different
         // node but targeting the same node.
         if (IsOnMission)
@@ -264,7 +264,7 @@ public class Agent
         // missions succeeded or failed, that's why this comparison allows the difference of 1.
         Contract.Assert(MissionsSucceeded + MissionsFailed >= MissionsSurvived);
         Contract.Assert(MissionsSucceeded + MissionsFailed <= MissionsSurvived + 1);
-        // kja2 add invariant that terminated agent is not on a mission
+        // kja2-assert: add invariant that terminated agent is not on a mission
     }
 
     public Agent DeepClone(Mission? clonedMission)

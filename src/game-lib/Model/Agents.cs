@@ -75,11 +75,13 @@ public class Agents : List<Agent>
         => this.OrderBy(orderBy).TakePercent(percentile).Last();
 
     
-    // kja2 add assertions that all searched agents were found
+    // kja2-assert: add assertions that all searched agents were found
     public Agents GetByIds(int[] ids) =>
         this.Where(agent => ids.Contains(agent.Id)).ToAgents();
 
-    public string IdsLogString => $"[{string.Join(", ", this.Select(agent => agent.Id))}]";
+    public List<int> Ids => this.Select(agent => agent.Id).ToList();
+
+    public string IdsLogString => $"[{string.Join(", ", Ids)}]";
 
     public Agents DeepClone(Missions clonedMissions, bool terminated)
     {

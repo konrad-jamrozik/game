@@ -18,7 +18,7 @@ public class HireAgentsPlayerAction : PlayerAction
         
     }
 
-    protected override string ApplyImpl(GameState state)
+    protected override (List<int>? ids, int? targetId) ApplyImpl(GameState state)
     {
         _log.Info($"Hire agents. Count: {_count}");
         int totalHireCost = Ruleset.AgentHireCost * _count;
@@ -29,7 +29,6 @@ public class HireAgentsPlayerAction : PlayerAction
             state.Assets.Agents.Add(new Agent(state.NextAgentId, state.Timeline.CurrentTurn));
         }
 
-        return $"Count: +{_count} " +
-               $"| {state.Assets.Agents.Count - _count} -> {state.Assets.Agents.Count}";
+        return (ids: [state.Assets.Agents.Count], targetId: _count);
     }
 }

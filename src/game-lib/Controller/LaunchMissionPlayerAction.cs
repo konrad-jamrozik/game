@@ -20,7 +20,7 @@ public class LaunchMissionPlayerAction : PlayerAction
         _agents = agents;
     }
 
-    protected override string ApplyImpl(GameState state)
+    protected override (List<int>? ids, int? targetId) ApplyImpl(GameState state)
     {
         Contract.Assert(state.MissionSites.Contains(_site));
         Contract.Assert(_site.IsActive);
@@ -46,7 +46,6 @@ public class LaunchMissionPlayerAction : PlayerAction
 
         _log.Info($"Launch {mission.LogString}, {_site.LogString}, AgentCount: {_agents.Count}");
 
-        return $"Mission ID: {mission.Id}, " +
-               $"Site ID: {_site.Id}, Agent IDs: {_agents.IdsLogString}";
+        return ([mission.Id, .._agents.Ids], targetId: _site.Id);
     }
 }

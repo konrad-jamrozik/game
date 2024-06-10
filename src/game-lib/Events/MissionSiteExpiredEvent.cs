@@ -4,7 +4,7 @@ public class MissionSiteExpiredEvent : WorldEvent
 {
     public readonly int SiteId;
 
-    public MissionSiteExpiredEvent(int id, int siteId) : base(id, nameof(MissionSiteExpiredEvent), "No details")
+    public MissionSiteExpiredEvent(int id, int siteId) : base(id, nameof(MissionSiteExpiredEvent))
     {
         SiteId = siteId;
     }

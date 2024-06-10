@@ -12,13 +12,13 @@ public class RecallAgentsPlayerAction : PlayerAction
 
     public RecallAgentsPlayerAction(ILog log, Agents agents)
     {
-        // kja2 agents.AssertCanBeRecalled()
+        // kja2-assert: agents.AssertCanBeRecalled()
         Contract.Assert(agents.Any());
         _log = log;
         _agents = agents;
     }
 
-    protected override string ApplyImpl(GameState state)
+    protected override (List<int>? ids, int? targetId) ApplyImpl(GameState state)
     {
         _agents.ForEach(
             agent =>
@@ -27,6 +27,6 @@ public class RecallAgentsPlayerAction : PlayerAction
                 agent.Recall();
             });
 
-        return $"Count: {_agents.Count}, IDs: {_agents.IdsLogString}";
+        return (_agents.Ids, targetId: null);
     }
 }

@@ -26,7 +26,8 @@ public class EventIdGen
         int? nextEventIdFromLastTurn = turns.Last().NextEventId;
         Contract.Assert(
             nextEventIdFromLastEvent is null || nextEventIdFromLastTurn is null ||
-            nextEventIdFromLastEvent == nextEventIdFromLastTurn);
+            nextEventIdFromLastEvent == nextEventIdFromLastTurn,
+            $"nextEventIdFromLastEvent: {nextEventIdFromLastEvent}, nextEventIdFromLastTurn: {nextEventIdFromLastTurn}");
         _nextEventId = nextEventIdFromLastEvent ?? nextEventIdFromLastTurn ?? 0;
     }
     

@@ -14,19 +14,19 @@ const playerActionNameToDisplayMap: {
 } = {
   AdvanceTimePlayerAction: {
     displayedType: 'Advance time',
-    displayedDetails: '',
+    displayedDetails: 'Turn: $TargetID -> $TargetID+1',
   },
   BuyTransportCapacityPlayerAction: {
     displayedType: 'Buy transport capacity',
-    displayedDetails: '',
+    displayedDetails: 'Capacity: +$TargetID = $IDs[0]',
   },
   HireAgentsPlayerAction: {
     displayedType: 'Hire agents',
-    displayedDetails: `Count: $TargetID`,
+    displayedDetails: `Count: +$TargetID = $IDs[0]`,
   },
   LaunchMissionPlayerAction: {
     displayedType: 'Launch mission',
-    displayedDetails: `Agent IDs: $IDs, Site: $TargetID`,
+    displayedDetails: `Site ID: $TargetID, Mission ID: $IDs[0], Agent IDs: $IDs[1..]`,
   },
   SackAgentsPlayerAction: {
     displayedType: 'Sack agents',
@@ -65,38 +65,32 @@ export function getDisplayedType(event: GameEventWithTurn): string {
 }
 
 export function getDisplayedDetails(event: GameEventWithTurn): string {
-  if (!_.isEmpty(event.Details)) {
-    return event.Details
-  }
   return formatString(
     playerActionNameToDisplayMap[event.Type as PlayerActionName]
       .displayedDetails,
-    logIds(event),
-    event.Id, // kja this is fake and wrong; it should be "event.targetId", but currently backend doesn't return targetId in the GameEvent.
+    event.Ids,
+    event.TargetId,
   )
 }
 
 function formatString(
   template: string,
-  ids: string | undefined,
+  ids: number[] | undefined,
   targetId: number | undefined,
 ): string {
   let formatted = template
-  if (!_.isUndefined(ids)) {
-    formatted = _.replace(formatted, '$IDs', ids)
+  if (!_.isNil(ids)) {
+    formatted = _.replace(formatted, '$IDs[0]', ids[0]!.toString())
+    formatted = _.replace(formatted, '$IDs[1..]', logIds(ids.slice(1)))
+    formatted = _.replace(formatted, '$IDs', logIds(ids))
   }
-  if (!_.isUndefined(targetId)) {
+  if (!_.isNil(targetId)) {
+    formatted = _.replace(formatted, '$TargetID+1', (targetId + 1).toString())
     formatted = _.replace(formatted, '$TargetID', targetId.toString())
   }
   return formatted
 }
 
-function logIds(event: GameEventWithTurn): string | undefined {
-  // kja this is fake and wrong; instead of "eventIds" it should be "event.Ids";
-  // but currently backend doesn't return Ids in the GameEvent, just Details string.
-  const eventIds = [event.Id]
-  if (_.isUndefined(eventIds)) {
-    return undefined
-  }
-  return str(eventIds.sort((left, right) => left - right))
+function logIds(ids: number[]): string {
+  return str(ids.sort((left, right) => left - right))
 }

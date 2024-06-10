@@ -2,11 +2,13 @@
 
 import { getTurnNo, type GameSessionTurn } from './GameSessionTurn'
 import type { PlayerActionName } from './PlayerActionPayload'
+import type { WorldEventName } from './WorldEventName'
 
 export type GameEvent = {
   readonly Id: number
   readonly Type: GameEventName
-  readonly Details: string
+  readonly Ids?: number[] | undefined
+  readonly TargetId?: number | undefined
 }
 
 export type GameEventWithTurn = GameEvent & {
@@ -21,12 +23,9 @@ export function addTurnToGameEvent(
     Id: event.Id,
     Turn: getTurnNo(turn),
     Type: event.Type,
-    Details: event.Details,
+    Ids: event.Ids,
+    TargetId: event.TargetId,
   }
 }
 
 export type GameEventName = PlayerActionName | WorldEventName
-
-export type WorldEvent = GameEvent
-
-export type WorldEventName = 'MissionSiteExpiredEvent'

@@ -47,7 +47,7 @@ public class Assets
         Support = support;
         CurrentTransportCapacity = currentTransportCapacity;
         MaxTransportCapacity = maxTransportCapacity;
-        // kja2 assert here none of the agents are terminated?
+        // kja2-assert: here none of the agents are terminated?
         Agents = agents;
     }
 
