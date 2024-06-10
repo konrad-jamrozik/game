@@ -1,6 +1,5 @@
 using System.Text.Json.Serialization;
 using Lib.Contracts;
-using UfoGameLib.Controller;
 using UfoGameLib.Events;
 
 namespace UfoGameLib.State;
@@ -52,18 +51,6 @@ public class GameSessionTurn
         Contract.Assert(
             EndState.UpdateCount >= StartState.UpdateCount,
             "End state must have same or more updates than start state.");
-
-        Contract.Assert(
-            EventsInTurn.All(
-                gameEvent => gameEvent.Type != nameof(AdvanceTimePlayerAction)),
-            "All events in turn must be player actions and none of them can be time advancement.");
-
-        if (AdvanceTimeEvent != null)
-        {
-            Contract.Assert(
-                AdvanceTimeEvent.Type == nameof(AdvanceTimePlayerAction),
-                "AdvanceTimeEvent must be of type AdvanceTimePlayerAction.");
-        }
 
         Contract.Assert(
             EventsInTurn.Count == EndState.UpdateCount - StartState.UpdateCount,

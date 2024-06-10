@@ -19,14 +19,11 @@ public abstract class PlayerAction
         // 5 times with 2 agents or 1 time with 10 agents.
         state.UpdateCount += 1;
 
-        if (this is not AdvanceTimePlayerAction)
-        {
-            Contract.Assert(
-                !state.IsGameOver,
-                $"money: {state.Assets.Money} " +
-                $"funding: {state.Assets.Funding} " +
-                $"support: {state.Assets.Support}");
-        }
+        Contract.Assert(
+            !state.IsGameOver,
+            $"money: {state.Assets.Money} " +
+            $"funding: {state.Assets.Funding} " +
+            $"support: {state.Assets.Support}");
 
         return new PlayerActionEvent(nextEventId, GetType().Name, applyResultDetails);
 

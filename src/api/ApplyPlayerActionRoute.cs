@@ -45,7 +45,8 @@ public static class ApplyPlayerActionRoute
         GameSession gameSession = ApiUtils.NewGameSessionFromTurn(gameSessionTurn);
         var controller = new GameSessionController(config, log, gameSession);
 
-        Contract.Assert(playerActionPayload.ActionName != nameof(AdvanceTimePlayerAction));
+        // kja make this check stronger, for membership in valid action name. See https://chatgpt.com/c/fb0a4197-4397-4f3f-bc13-2e0468141b0b        
+        Contract.Assert(playerActionPayload.ActionName != "AdvanceTimePlayerAction");
 
         gameSession.CurrentPlayerActionEvents.Add(playerActionPayload.Apply(controller));
 
@@ -64,9 +65,8 @@ public static class ApplyPlayerActionRoute
             // https://learn.microsoft.com/en-us/aspnet/core/fundamentals/minimal-apis/parameter-binding?view=aspnetcore-8.0#configure-json-deserialization-options-for-an-endpoint
             parsedBody =
                 (await req.ReadFromJsonAsync<ApplyPlayerActionRequestBody>(GameState.StateJsonSerializerOptions))!;
-            error = parsedBody.PlayerActionPayload.ActionName == nameof(AdvanceTimePlayerAction)
-                ? $"Expected PlayerActionPayload.ActionName to not be {nameof(AdvanceTimePlayerAction)}"
-                : null;
+            // kja check here for correctness of  parsedBody.PlayerActionPayload.ActionName
+            error = null;
         }
         else
         {

@@ -16,6 +16,8 @@ public class PlayerActionPayload(string actionName, int[]? ids, int? targetId)
 {
     // ReSharper disable MemberCanBePrivate.Global
     // Reason for 'ReSharper disable MemberCanBePrivate.Global': these fields are used by the deserializer.
+    // kja instead of string this should be an enum or something. See https://chatgpt.com/c/fb0a4197-4397-4f3f-bc13-2e0468141b0b
+    // kja put this constraint in JsonCtor (currently primary ctor, so: weird)
     public readonly string ActionName = actionName;
     public readonly int[]? Ids = ids;
     public readonly int? TargetId = targetId;
@@ -39,7 +41,7 @@ public class PlayerActionPayload(string actionName, int[]? ids, int? targetId)
         // https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/operators/patterns#positional-pattern
         => ActionName switch
         {
-            nameof(AdvanceTimePlayerAction) => controller.AdvanceTimeNoWorldEvents,
+            "AdvanceTimePlayerAction" => controller.AdvanceTimeNoWorldEvents,
             nameof(BuyTransportCapacityPlayerAction) => () => controller.CurrentTurnController.BuyTransportCapacity(1),
             nameof(HireAgentsPlayerAction) => () => controller.CurrentTurnController.HireAgents(TargetId!.Value),
             nameof(SackAgentsPlayerAction) => () => controller.CurrentTurnController.SackAgents(Ids!),
