@@ -42,7 +42,7 @@ export function AgentsDataGridToolbar(
       action,
       selectedRowIds,
     )
-    if (success && action === 'SackAgents') {
+    if (success && action === 'SackAgentsPlayerAction') {
       console.log(`props.clearSelectedRows()`)
       props.clearSelectedRows()
     }

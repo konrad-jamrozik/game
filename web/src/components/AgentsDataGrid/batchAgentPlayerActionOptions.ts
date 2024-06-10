@@ -5,10 +5,10 @@ export type BatchAgentPlayerActionOption = AgentPlayerActionName | 'None'
 export const batchAgentPlayerActionOptionLabel: {
   [key in BatchAgentPlayerActionOption]: string
 } = {
-  SendAgentsToIncomeGeneration: 'Send to gen. income',
-  SendAgentsToIntelGathering: 'Send to gather intel',
-  SendAgentsToTraining: 'Send to training',
-  RecallAgents: 'Recall',
-  SackAgents: 'Sack',
+  SendAgentsToGenerateIncomePlayerAction: 'Send to gen. income',
+  SendAgentsToGatherIntelPlayerAction: 'Send to gather intel',
+  SendAgentsToTrainingPlayerAction: 'Send to training',
+  RecallAgentsPlayerAction: 'Recall',
+  SackAgentsPlayerAction: 'Sack',
   None: 'None',
 }

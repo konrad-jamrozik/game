@@ -75,11 +75,11 @@ export function requiredSurvivingAgentsForSuccess(site: MissionSite): number {
 export const agentPlayerActionConditionMap: {
   [action in AgentPlayerActionName]: (agent: Agent) => boolean
 } = {
-  SendAgentsToIncomeGeneration: canBeSentOnMission,
-  SendAgentsToIntelGathering: canBeSentOnMission,
-  SendAgentsToTraining: canBeSentToTraining,
-  RecallAgents: canBeRecalled,
-  SackAgents: canBeSacked,
+  SendAgentsToGenerateIncomePlayerAction: canBeSentOnMission,
+  SendAgentsToGatherIntelPlayerAction: canBeSentOnMission,
+  SendAgentsToTrainingPlayerAction: canBeSentToTraining,
+  RecallAgentsPlayerAction: canBeRecalled,
+  SackAgentsPlayerAction: canBeSacked,
 }
 
 type EstimatableAssets = Pick<Assets, 'Money' | 'Intel'>
