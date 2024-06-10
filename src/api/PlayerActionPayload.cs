@@ -41,7 +41,7 @@ public class PlayerActionPayload(string actionName, int[]? ids, int? targetId)
         // https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/operators/patterns#positional-pattern
         => ActionName switch
         {
-            "AdvanceTimePlayerAction" => controller.AdvanceTimeNoWorldEvents,
+            EventNames.AdvanceTimePlayerAction => controller.AdvanceTimeNoWorldEvents,
             nameof(BuyTransportCapacityPlayerAction) => () => controller.CurrentTurnController.BuyTransportCapacity(TargetId!.Value),
             nameof(HireAgentsPlayerAction) => () => controller.CurrentTurnController.HireAgents(TargetId!.Value),
             nameof(SackAgentsPlayerAction) => () => controller.CurrentTurnController.SackAgents(Ids!),

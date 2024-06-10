@@ -3,6 +3,7 @@ using Lib.Json;
 using Lib.OS;
 using Microsoft.AspNetCore.Http.HttpResults;
 using UfoGameLib.Controller;
+using UfoGameLib.Events;
 using UfoGameLib.Lib;
 using UfoGameLib.State;
 
@@ -46,7 +47,7 @@ public static class ApplyPlayerActionRoute
         var controller = new GameSessionController(config, log, gameSession);
 
         // kja2-assert: make this check stronger, for membership in valid action name. See https://chatgpt.com/c/fb0a4197-4397-4f3f-bc13-2e0468141b0b        
-        Contract.Assert(playerActionPayload.ActionName != "AdvanceTimePlayerAction");
+        Contract.Assert(playerActionPayload.ActionName != GameEventName.AdvanceTimePlayerAction);
 
         gameSession.CurrentPlayerActionEvents.Add(playerActionPayload.Apply(controller));
         // See analogous line in UfoGameLib.Controller.GameSessionController.PlayGameUntilOver

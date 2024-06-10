@@ -2,13 +2,15 @@
 
 namespace UfoGameLib.Events;
 
-[JsonDerivedType(typeof(MissionSiteExpiredEvent))]
 public class WorldEvent : GameEvent
 {
-    public WorldEvent(int id, string type) : base(id, type)
+    public readonly int TargetId;
+
+    public WorldEvent(int id, string type, int targetId) : base(id, type)
     {
+        TargetId = targetId;    
     }
 
     public override WorldEvent Clone()
-        => new(Id, Type);
+        => new(Id, Type, TargetId);
 }

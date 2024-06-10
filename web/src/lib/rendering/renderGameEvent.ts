@@ -68,7 +68,7 @@ export function getDisplayedDetails(event: GameEventWithTurn): string {
   return formatString(
     playerActionNameToDisplayMap[event.Type as PlayerActionName]
       .displayedDetails,
-    event.Ids,
+    'Ids' in event ? event.Ids : undefined,
     event.TargetId,
   )
 }
