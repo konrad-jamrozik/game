@@ -42,7 +42,7 @@ public class PlayerActionPayload(string actionName, int[]? ids, int? targetId)
         => ActionName switch
         {
             "AdvanceTimePlayerAction" => controller.AdvanceTimeNoWorldEvents,
-            nameof(BuyTransportCapacityPlayerAction) => () => controller.CurrentTurnController.BuyTransportCapacity(1),
+            nameof(BuyTransportCapacityPlayerAction) => () => controller.CurrentTurnController.BuyTransportCapacity(TargetId!.Value),
             nameof(HireAgentsPlayerAction) => () => controller.CurrentTurnController.HireAgents(TargetId!.Value),
             nameof(SackAgentsPlayerAction) => () => controller.CurrentTurnController.SackAgents(Ids!),
             nameof(SendAgentsToGenerateIncomePlayerAction) => () => controller.CurrentTurnController.SendAgentsToGenerateIncome(Ids!),

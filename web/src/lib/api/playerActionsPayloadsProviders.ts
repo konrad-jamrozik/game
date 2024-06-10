@@ -1,59 +1,56 @@
 // The a bit more advanced typing done in this file was figured out with the help of ChatGPT:
 // https://chat.openai.com/share/af4ac2cb-c221-4c7f-a5c6-e3cac23916c0
 import type {
-  PlayerActionName,
+  PlayerActionNameInTurn,
   PlayerActionPayload,
 } from '../codesync/PlayerActionPayload'
 
 export const playerActionsPayloadsProviders: {
-  [actionName in PlayerActionName]: PayloadProviderMap[actionName]
+  [actionName in PlayerActionNameInTurn]: PayloadProviderMap[actionName]
 } = {
-  AdvanceTimePlayerAction: () => ({
-    ActionName: 'AdvanceTimePlayerAction' as PlayerActionName,
-  }),
   // Note: currently Cap always buys 1 capacity. See PlayerActionPayload.cs in backend.
-  BuyTransportCapacityPlayerAction: () => ({
-    ActionName: 'BuyTransportCapacityPlayerAction' as PlayerActionName,
+  BuyTransportCapacityPlayerAction: (TargetId: number) => ({
+    ActionName: 'BuyTransportCapacityPlayerAction' as PlayerActionNameInTurn,
+    TargetId,
   }),
   // Note: currently HireAgents always hires 1 agent. See PlayerActionPayload.cs in backend.
   HireAgentsPlayerAction: (TargetId: number) => ({
-    ActionName: 'HireAgentsPlayerAction' as PlayerActionName,
+    ActionName: 'HireAgentsPlayerAction' as PlayerActionNameInTurn,
     TargetId,
   }),
   SackAgentsPlayerAction: (Ids: number[]) => ({
-    ActionName: 'SackAgentsPlayerAction' as PlayerActionName,
+    ActionName: 'SackAgentsPlayerAction' as PlayerActionNameInTurn,
     Ids,
   }),
   SendAgentsToGenerateIncomePlayerAction: (Ids: number[]) => ({
-    ActionName: 'SendAgentsToGenerateIncomePlayerAction' as PlayerActionName,
+    ActionName:
+      'SendAgentsToGenerateIncomePlayerAction' as PlayerActionNameInTurn,
     Ids,
   }),
   SendAgentsToGatherIntelPlayerAction: (Ids: number[]) => ({
-    ActionName: 'SendAgentsToGatherIntelPlayerAction' as PlayerActionName,
+    ActionName: 'SendAgentsToGatherIntelPlayerAction' as PlayerActionNameInTurn,
     Ids,
   }),
   SendAgentsToTrainingPlayerAction: (Ids: number[]) => ({
-    ActionName: 'SendAgentsToTrainingPlayerAction' as PlayerActionName,
+    ActionName: 'SendAgentsToTrainingPlayerAction' as PlayerActionNameInTurn,
     Ids,
   }),
   RecallAgentsPlayerAction: (Ids: number[]) => ({
-    ActionName: 'RecallAgentsPlayerAction' as PlayerActionName,
+    ActionName: 'RecallAgentsPlayerAction' as PlayerActionNameInTurn,
     Ids,
   }),
   LaunchMissionPlayerAction: (Ids: number[], TargetId: number) => ({
-    ActionName: 'LaunchMissionPlayerAction' as PlayerActionName,
+    ActionName: 'LaunchMissionPlayerAction' as PlayerActionNameInTurn,
     Ids,
     TargetId,
   }),
 }
 
 export type PayloadProvider =
-  | PayloadFromNothing
   | PayloadFromIds
   | PayloadFromTargetId
   | PayloadFromIdsAndTargetId
 
-export type PayloadFromNothing = () => PlayerActionPayload
 export type PayloadFromIds = (Ids: number[]) => PlayerActionPayload
 export type PayloadFromTargetId = (TargetId: number) => PlayerActionPayload
 export type PayloadFromIdsAndTargetId = (
@@ -62,7 +59,7 @@ export type PayloadFromIdsAndTargetId = (
 ) => PlayerActionPayload
 
 type PayloadProviderMap = {
-  [key in PlayerActionName]: PayloadProvider
+  [key in PlayerActionNameInTurn]: PayloadProvider
 } & {
   // Note: this block provides type-safety only against a payload provider for given action
   // having too many parameters, but not not enough.
@@ -71,8 +68,7 @@ type PayloadProviderMap = {
   // then this would properly catch it.
   // However, if this declares "RecallAgents" should produce payload from "IDs" parameter,
   // and the actual implementation would take no parameters, then this would not catch that.
-  AdvanceTimePlayerAction: PayloadFromNothing
-  BuyTransportCapacityPlayerAction: PayloadFromNothing
+  BuyTransportCapacityPlayerAction: PayloadFromTargetId
   HireAgentsPlayerAction: PayloadFromTargetId
   SackAgentsPlayerAction: PayloadFromIds
   SendAgentsToGenerateIncomePlayerAction: PayloadFromIds

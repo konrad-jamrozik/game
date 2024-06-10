@@ -115,7 +115,7 @@ export class GameSession {
     /* c8 ignore stop */
     const payloadProvider =
       playerActionsPayloadsProviders.BuyTransportCapacityPlayerAction
-    const payload = payloadProvider()
+    const payload = payloadProvider(count)
     return this.applyPlayerAction(payload)
   }
 
