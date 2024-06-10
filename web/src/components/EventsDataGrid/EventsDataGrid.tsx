@@ -8,6 +8,10 @@ import type {
 import { useGameSessionContext } from '../../lib/gameSession/GameSession'
 import type { RenderedGameEvent } from '../../lib/gameSession/RenderedGameEvent'
 import {
+  getDisplayedDetails,
+  getDisplayedType,
+} from '../../lib/rendering/renderPlayerActionPayload'
+import {
   defaultComponentHeight,
   defaultComponentMinWidth,
 } from '../../lib/rendering/renderUtils'
@@ -23,9 +27,9 @@ export function EventsDataGrid(): React.JSX.Element {
     _.map(gameEvents, (event: RenderedGameEvent) => ({
       id: event.Id,
       turn: event.Turn,
-      kind: 'Player action', // kja currently just assuming this is player action event
-      type: event.Type, // kja now that this is runtime class name of corresponding C# class, need to restore and adapt use of getDisplayedType()
-      details: event.Details,
+      kind: 'Player action', // kja currently just assuming this is player action event. Same for impl. of the getDisplayed* functions below.
+      type: getDisplayedType(event),
+      details: getDisplayedDetails(event),
     })),
   )
 
@@ -35,7 +39,7 @@ export function EventsDataGrid(): React.JSX.Element {
         {
           height: defaultComponentHeight,
           minWidth: defaultComponentMinWidth,
-          maxWidth: 860,
+          maxWidth: 960,
           width: '100%',
         },
       ]}
@@ -94,20 +98,7 @@ const columns: GridColDef<GameEventRow>[] = [
   {
     field: 'details',
     headerName: 'Details',
-    width: 350,
+    width: 450,
     disableColumnMenu: true,
   },
 ]
-
-// kja this will come in play once I fix the game event content formatting
-// function getRowFromGameEventFromPayload(
-//   event: GameEventFromPayload,
-// ): GameEventRow {
-//   return {
-//     id: event.Id,
-//     turn: event.Turn,
-//     kind: 'Player action',
-//     type: getDisplayedType(event.Payload as PlayerActionPayload),
-//     details: getDisplayedDetails(event.Payload as PlayerActionPayload),
-//   }
-// }

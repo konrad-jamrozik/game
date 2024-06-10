@@ -43,3 +43,5 @@ export function resetTurn(turn: GameSessionTurn): GameSessionTurn {
     NextEventId: turn.NextEventId,
   }
 }
+
+// kja need to add function for getting current turn number: turn.StartState.Timeline.CurrentTurn

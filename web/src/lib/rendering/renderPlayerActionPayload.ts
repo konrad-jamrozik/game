@@ -1,8 +1,6 @@
 import _ from 'lodash'
-import type {
-  PlayerActionName,
-  PlayerActionPayload,
-} from '../codesync/PlayerActionPayload'
+import type { PlayerActionName } from '../codesync/PlayerActionPayload'
+import type { RenderedGameEvent } from '../gameSession/RenderedGameEvent'
 import { str } from '../utils'
 
 const playerActionNameToDisplayMap: {
@@ -11,50 +9,58 @@ const playerActionNameToDisplayMap: {
     displayedDetails: string
   }
 } = {
-  AdvanceTime: { displayedType: 'Advance time', displayedDetails: '' },
-  BuyTransportCap: {
+  AdvanceTimePlayerAction: {
+    displayedType: 'Advance time',
+    displayedDetails: '',
+  },
+  BuyTransportCapacityPlayerAction: {
     displayedType: 'Buy transport capacity',
     displayedDetails: '',
   },
-  HireAgents: {
+  HireAgentsPlayerAction: {
     displayedType: 'Hire agents',
     displayedDetails: `Count: $TargetID`,
   },
-  LaunchMission: {
+  LaunchMissionPlayerAction: {
     displayedType: 'Launch mission',
     displayedDetails: `Agent IDs: $IDs, Site: $TargetID`,
   },
-  SackAgents: {
+  SackAgentsPlayerAction: {
     displayedType: 'Sack agents',
     displayedDetails: `Agent IDs: $IDs`,
   },
-  SendAgentsToIncomeGeneration: {
+  SendAgentsToGenerateIncomePlayerAction: {
     displayedType: 'Send agents to gen. inc.',
     displayedDetails: `Agent IDs: $IDs`,
   },
-  SendAgentsToIntelGathering: {
+  SendAgentsToGatherIntelPlayerAction: {
     displayedType: 'Send agents to gath. intel',
     displayedDetails: `Agent IDs: $IDs`,
   },
-  SendAgentsToTraining: {
+  SendAgentsToTrainingPlayerAction: {
     displayedType: 'Send agents to training',
     displayedDetails: `Agent IDs: $IDs`,
   },
-  RecallAgents: {
+  RecallAgentsPlayerAction: {
     displayedType: 'Recall agents',
     displayedDetails: `Agent IDs: $IDs`,
   },
 }
 
-export function getDisplayedType(payload: PlayerActionPayload): string {
-  return playerActionNameToDisplayMap[payload.ActionName].displayedType
+export function getDisplayedType(event: RenderedGameEvent): string {
+  return playerActionNameToDisplayMap[event.Type as PlayerActionName]
+    .displayedType
 }
 
-export function getDisplayedDetails(payload: PlayerActionPayload): string {
+export function getDisplayedDetails(event: RenderedGameEvent): string {
+  if (!_.isEmpty(event.Details)) {
+    return event.Details
+  }
   return formatString(
-    playerActionNameToDisplayMap[payload.ActionName].displayedDetails,
-    logIds(payload),
-    payload.TargetId,
+    playerActionNameToDisplayMap[event.Type as PlayerActionName]
+      .displayedDetails,
+    logIds(event),
+    event.Id, // kja this is fake and wrong; it should be "event.targetId", but currently backend doesn't return targetId in the GameEvent.
   )
 }
 
@@ -73,9 +79,12 @@ function formatString(
   return formatted
 }
 
-function logIds(action: PlayerActionPayload): string | undefined {
-  if (_.isUndefined(action.Ids)) {
+function logIds(event: RenderedGameEvent): string | undefined {
+  // kja this is fake and wrong; instead of "eventIds" it should be "event.Ids";
+  // but currently backend doesn't return Ids in the GameEvent, just Details string.
+  const eventIds = [event.Id]
+  if (_.isUndefined(eventIds)) {
     return undefined
   }
-  return str(action.Ids.sort((left, right) => left - right))
+  return str(eventIds.sort((left, right) => left - right))
 }
