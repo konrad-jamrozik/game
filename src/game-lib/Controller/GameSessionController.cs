@@ -178,7 +178,10 @@ public class GameSessionController
             GameSession.CurrentGameState);
     }
 
-    // kja AdvanceTime should not accept state as input. Why it does? Obsolete test code?
+    // kja AdvanceTime must accept state as param per PlayGameUntilOver.
+    // But I should reduce its usage in tests and rethink if _timeAdvancementController should get Current state
+    // as ctor input, given we really only ever want to get the clone as in PlayGameUntilOver.
+    // See also the todo on reconstructing controllers.
     public (PlayerActionEvent advaceTimeEvent, List<WorldEvent> worldEvents) AdvanceTime(GameState? state = null)
     {
         return _timeAdvancementController.AdvanceTime(state);
