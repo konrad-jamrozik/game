@@ -1,9 +1,7 @@
 // The a bit more advanced typing done in this file was figured out with the help of ChatGPT:
 // https://chat.openai.com/share/af4ac2cb-c221-4c7f-a5c6-e3cac23916c0
-import type {
-  PlayerActionNameInTurn,
-  PlayerActionPayload,
-} from '../codesync/PlayerActionPayload'
+import type { PlayerActionNameInTurn } from '../codesync/PlayerActionEvent'
+import type { PlayerActionPayload } from '../codesync/PlayerActionPayload'
 
 export const playerActionsPayloadsProviders: {
   [actionName in PlayerActionNameInTurn]: PayloadProviderMap[actionName]

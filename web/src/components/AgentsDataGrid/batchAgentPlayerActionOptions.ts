@@ -1,4 +1,4 @@
-import type { AgentPlayerActionName } from '../../lib/codesync/PlayerActionPayload'
+import type { AgentPlayerActionName } from '../../lib/codesync/PlayerActionEvent'
 
 export type BatchAgentPlayerActionOption = AgentPlayerActionName | 'None'
 

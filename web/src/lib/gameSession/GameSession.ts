@@ -16,10 +16,8 @@ import {
   type GameSessionTurn,
 } from '../codesync/GameSessionTurn'
 import { initialTurn, type Assets, type GameState } from '../codesync/GameState'
-import type {
-  AgentPlayerActionName,
-  PlayerActionPayload,
-} from '../codesync/PlayerActionPayload'
+import type { AgentPlayerActionName } from '../codesync/PlayerActionEvent'
+import type { PlayerActionPayload } from '../codesync/PlayerActionPayload'
 import { agentHireCost, transportCapBuyingCost } from '../codesync/ruleset'
 import type { StoredData } from '../storedData/StoredData'
 import {

@@ -1,9 +1,9 @@
 import _ from 'lodash'
 import type { GameEventName, GameEventWithTurn } from '../codesync/GameEvent'
 import {
-  PlayerActionNameVal,
   type PlayerActionName,
-} from '../codesync/PlayerActionPayload'
+  PlayerActionNameVal,
+} from '../codesync/PlayerActionEvent'
 import { str } from '../utils'
 
 const playerActionNameToDisplayMap: {
@@ -50,7 +50,7 @@ const playerActionNameToDisplayMap: {
   },
   MissionSiteExpiredEvent: {
     displayedType: 'Mission site expired',
-    displayedDetails: `Site ID: $ID`,
+    displayedDetails: `Site ID: $TargetID`,
   },
 }
 

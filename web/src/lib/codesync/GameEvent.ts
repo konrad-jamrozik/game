@@ -1,14 +1,14 @@
 // codesync: UfoGameLib.Events.GameEvent
 
 import { getTurnNo, type GameSessionTurn } from './GameSessionTurn'
-import type { PlayerActionName } from './PlayerActionPayload'
-import type { WorldEventName } from './WorldEventName'
+import type { PlayerActionEvent, PlayerActionName } from './PlayerActionEvent'
+import type { WorldEvent, WorldEventName } from './WorldEvent'
 
-export type GameEvent = {
+export type GameEvent = PlayerActionEvent | WorldEvent
+
+export type GameEventBase = {
   readonly Id: number
   readonly Type: GameEventName
-  readonly Ids?: number[] | undefined
-  readonly TargetId?: number | undefined
 }
 
 export type GameEventWithTurn = GameEvent & {
@@ -23,8 +23,8 @@ export function addTurnToGameEvent(
     Id: event.Id,
     Turn: getTurnNo(turn),
     Type: event.Type,
-    Ids: event.Ids,
-    TargetId: event.TargetId,
+    Ids: 'Ids' in event ? event.Ids : undefined,
+    TargetId: 'TargetId' in event ? event.TargetId : undefined,
   }
 }
 
