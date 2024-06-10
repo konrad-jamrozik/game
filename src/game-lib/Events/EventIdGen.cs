@@ -25,5 +25,6 @@ public class EventIdGen
     }
     
     public int Generate => _nextEventId++;
+
     public int Value => _nextEventId;
 }

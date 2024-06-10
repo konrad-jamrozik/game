@@ -11,7 +11,7 @@ public class TimeAdvancementController
     private readonly ILog _log;
     private readonly RandomGen _randomGen;
     private readonly List<WorldEvent> _worldEvents;
-    private EventIdGen _eventIdGen;
+    private readonly EventIdGen _eventIdGen;
     private readonly GameState _state;
 
     public TimeAdvancementController(ILog log, RandomGen randomGen, EventIdGen eventIdGen, GameState state)
@@ -30,6 +30,9 @@ public class TimeAdvancementController
         _log.Info("");
 
         GameState state = inputState ?? _state;
+
+        string details =  $"Turn {state.Timeline.CurrentTurn} -> {state.Timeline.CurrentTurn + 1}";
+        PlayerActionEvent advanceTimeEvent = new PlayerActionEvent(_eventIdGen.Generate, "AdvanceTimePlayerAction", details);
 
         // Agents cost upkeep. Note we compute upkeep before evaluating missions.
         // This means that if an agent is lost during the mission, we still pay for their upkeep.
@@ -66,8 +69,6 @@ public class TimeAdvancementController
 
         CreateMissionSites(state);
 
-        string details =  $"Turn {state.Timeline.CurrentTurn-1} -> {state.Timeline.CurrentTurn}";
-        PlayerActionEvent advanceTimeEvent = new PlayerActionEvent(_eventIdGen.Generate, "AdvanceTimePlayerAction", details);
         var worldEvents = new List<WorldEvent>(_worldEvents);
         _worldEvents.Clear();
         return (advanceTimeEvent, worldEvents);
