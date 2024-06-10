@@ -3,7 +3,11 @@
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable @typescript-eslint/parameter-properties */
 import _ from 'lodash'
-import type { GameEvent } from '../codesync/GameEvent'
+import {
+  addTurnToGameEvent,
+  type GameEvent,
+  type GameEventWithTurn,
+} from '../codesync/GameEvent'
 import {
   getEvents,
   getGameEvents,
@@ -13,7 +17,6 @@ import {
 } from '../codesync/GameSessionTurn'
 import { initialTurn, type GameState } from '../codesync/GameState'
 import type { StoredData } from '../storedData/StoredData'
-import type { RenderedGameEvent } from './RenderedGameEvent'
 
 export type GameSessionDataType = {
   readonly turns: readonly GameSessionTurn[]
@@ -128,7 +131,6 @@ export class GameSessionData {
     return this.getTurns().at(-1)
   }
 
-  // kja all usages of this should be unnecessary
   public getGameStates(): readonly GameState[] {
     return _.flatMap(this._data.turns, (turn) => [
       turn.StartState,
@@ -136,15 +138,12 @@ export class GameSessionData {
     ])
   }
 
-  public getRenderedGameEvents(): readonly RenderedGameEvent[] {
+  public getGameEvents(): readonly GameEventWithTurn[] {
     return _.flatMap(this.getTurns(), (turn) => {
       const eventsInThisTurn = getEvents(turn)
-      const renderedEventsInThisTurn = _.map(eventsInThisTurn, (event) => ({
-        Id: event.Id,
-        Turn: turn.StartState.Timeline.CurrentTurn,
-        Type: event.Type,
-        Details: event.Details,
-      }))
+      const renderedEventsInThisTurn = _.map(eventsInThisTurn, (event) =>
+        addTurnToGameEvent(event, turn),
+      )
       return renderedEventsInThisTurn
     })
   }

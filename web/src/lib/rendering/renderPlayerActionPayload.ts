@@ -1,6 +1,6 @@
 import _ from 'lodash'
+import type { GameEventWithTurn } from '../codesync/GameEvent'
 import type { PlayerActionName } from '../codesync/PlayerActionPayload'
-import type { RenderedGameEvent } from '../gameSession/RenderedGameEvent'
 import { str } from '../utils'
 
 const playerActionNameToDisplayMap: {
@@ -47,12 +47,12 @@ const playerActionNameToDisplayMap: {
   },
 }
 
-export function getDisplayedType(event: RenderedGameEvent): string {
+export function getDisplayedType(event: GameEventWithTurn): string {
   return playerActionNameToDisplayMap[event.Type as PlayerActionName]
     .displayedType
 }
 
-export function getDisplayedDetails(event: RenderedGameEvent): string {
+export function getDisplayedDetails(event: GameEventWithTurn): string {
   if (!_.isEmpty(event.Details)) {
     return event.Details
   }
@@ -79,7 +79,7 @@ function formatString(
   return formatted
 }
 
-function logIds(event: RenderedGameEvent): string | undefined {
+function logIds(event: GameEventWithTurn): string | undefined {
   // kja this is fake and wrong; instead of "eventIds" it should be "event.Ids";
   // but currently backend doesn't return Ids in the GameEvent, just Details string.
   const eventIds = [event.Id]

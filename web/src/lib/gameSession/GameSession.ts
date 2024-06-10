@@ -7,6 +7,7 @@ import { GameSessionContext } from '../../components/GameSessionProvider'
 import { callAdvanceTurnsApi } from '../api/advanceTurnsApi'
 import { callApplyPlayerActionApi } from '../api/applyPlayerActionApi'
 import { playerActionsPayloadsProviders } from '../api/playerActionsPayloadsProviders'
+import type { GameEventWithTurn } from '../codesync/GameEvent'
 import {
   removeAdvanceTimeEvent,
   resetTurn,
@@ -24,7 +25,6 @@ import {
   initialGameSessionData,
   type GameSessionDataType,
 } from './GameSessionData'
-import type { RenderedGameEvent } from './RenderedGameEvent'
 
 export function useGameSessionContext(): GameSession {
   return useContext(GameSessionContext)
@@ -271,8 +271,8 @@ export class GameSession {
     return this.getCurrentGameStateUnsafe()?.Assets
   }
 
-  public getRenderedGameEvents(): readonly RenderedGameEvent[] {
-    return this.data.getRenderedGameEvents()
+  public getGameEvents(): readonly GameEventWithTurn[] {
+    return this.data.getGameEvents()
   }
 
   public getCurrentGameState(): GameState {

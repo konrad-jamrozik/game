@@ -1,12 +1,12 @@
 import { Box } from '@mui/material'
 import { DataGrid, type GridColDef } from '@mui/x-data-grid'
 import _ from 'lodash'
+import type { GameEventWithTurn } from '../../lib/codesync/GameEvent'
 import type {
   GameEventDisplayedKind,
   GameEventPayload,
 } from '../../lib/gameSession/GameEventFromPayload'
 import { useGameSessionContext } from '../../lib/gameSession/GameSession'
-import type { RenderedGameEvent } from '../../lib/gameSession/RenderedGameEvent'
 import {
   getDisplayedDetails,
   getDisplayedType,
@@ -19,12 +19,12 @@ import {
 export function EventsDataGrid(): React.JSX.Element {
   const gameSession = useGameSessionContext()
 
-  const gameEvents: readonly RenderedGameEvent[] = gameSession.isInitialized()
-    ? gameSession.getRenderedGameEvents()
+  const gameEvents: readonly GameEventWithTurn[] = gameSession.isInitialized()
+    ? gameSession.getGameEvents()
     : []
 
   const rows: GameEventRow[] = _.reverse(
-    _.map(gameEvents, (event: RenderedGameEvent) => ({
+    _.map(gameEvents, (event: GameEventWithTurn) => ({
       id: event.Id,
       turn: event.Turn,
       kind: 'Player action', // kja currently just assuming this is player action event. Same for impl. of the getDisplayed* functions below.
