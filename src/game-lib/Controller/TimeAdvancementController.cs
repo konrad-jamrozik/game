@@ -71,6 +71,7 @@ public class TimeAdvancementController
 
         CreateMissionSites(state);
 
+        _worldEvents.Add(new WorldEvent(_eventIdGen.Generate, GameEventName.ReportEvent, [fundingChange, supportChange]));
         var worldEvents = new List<WorldEvent>(_worldEvents);
         _worldEvents.Clear();
         return (advanceTimeEvent, worldEvents);
@@ -201,7 +202,10 @@ public class TimeAdvancementController
                 {
                     expiredMissions++;
                     _worldEvents.Add(
-                        new WorldEvent(_eventIdGen.Generate, GameEventName.MissionSiteExpiredEvent, missionSite.Id));
+                        new WorldEvent(
+                            _eventIdGen.Generate,
+                            GameEventName.MissionSiteExpiredEvent,
+                            targetId: missionSite.Id));
                     _log.Info($"{missionSite.LogString} expired!");
                 }
             }

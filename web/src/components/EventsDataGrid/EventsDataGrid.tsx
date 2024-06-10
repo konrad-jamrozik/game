@@ -17,7 +17,7 @@ export function EventsDataGrid(): React.JSX.Element {
   const gameSession = useGameSessionContext()
 
   const gameEvents: readonly GameEventWithTurn[] = gameSession.isInitialized()
-    ? gameSession.getGameEvents()
+    ? _.filter(gameSession.getGameEvents(), (event) => eventNotEmpty(event))
     : []
 
   const rows: GameEventRow[] = _.reverse(
@@ -99,3 +99,7 @@ const columns: GridColDef<GameEventRow>[] = [
     disableColumnMenu: true,
   },
 ]
+
+function eventNotEmpty(event: GameEventWithTurn): boolean {
+  return !(event.Type === 'ReportEvent' && _.every(event.Ids, (id) => id === 0))
+}

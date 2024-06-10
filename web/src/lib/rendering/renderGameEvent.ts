@@ -52,6 +52,10 @@ const playerActionNameToDisplayMap: {
     displayedType: 'Mission site expired',
     displayedDetails: `Site ID: $TargetID`,
   },
+  ReportEvent: {
+    displayedType: 'Report',
+    displayedDetails: `Funding change: $IDs[0], Support change: $IDs[1]`,
+  },
 }
 
 export function getDisplayedKind(event: GameEventWithTurn): string {
@@ -69,7 +73,7 @@ export function getDisplayedDetails(event: GameEventWithTurn): string {
     playerActionNameToDisplayMap[event.Type as PlayerActionName]
       .displayedDetails,
     'Ids' in event ? event.Ids : undefined,
-    event.TargetId,
+    'TargetId' in event ? event.TargetId : undefined,
   )
 }
 
@@ -80,7 +84,12 @@ function formatString(
 ): string {
   let formatted = template
   if (!_.isNil(ids)) {
-    formatted = _.replace(formatted, '$IDs[0]', ids[0]!.toString())
+    if (!_.isEmpty(ids)) {
+      formatted = _.replace(formatted, '$IDs[0]', ids[0]!.toString())
+    }
+    if (ids.length >= 2) {
+      formatted = _.replace(formatted, '$IDs[1]', ids[1]!.toString())
+    }
     formatted = _.replace(formatted, '$IDs[1..]', logIds(ids.slice(1)))
     formatted = _.replace(formatted, '$IDs', logIds(ids))
   }
