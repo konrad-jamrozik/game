@@ -2,15 +2,12 @@ import { Box } from '@mui/material'
 import { DataGrid, type GridColDef } from '@mui/x-data-grid'
 import _ from 'lodash'
 import type { GameEventWithTurn } from '../../lib/codesync/GameEvent'
-import type {
-  GameEventDisplayedKind,
-  GameEventPayload,
-} from '../../lib/gameSession/GameEventFromPayload'
 import { useGameSessionContext } from '../../lib/gameSession/GameSession'
 import {
   getDisplayedDetails,
+  getDisplayedKind,
   getDisplayedType,
-} from '../../lib/rendering/renderPlayerActionPayload'
+} from '../../lib/rendering/renderGameEvent'
 import {
   defaultComponentHeight,
   defaultComponentMinWidth,
@@ -27,7 +24,7 @@ export function EventsDataGrid(): React.JSX.Element {
     _.map(gameEvents, (event: GameEventWithTurn) => ({
       id: event.Id,
       turn: event.Turn,
-      kind: 'Player action', // kja currently just assuming this is player action event. Same for impl. of the getDisplayed* functions below.
+      kind: getDisplayedKind(event),
       type: getDisplayedType(event),
       details: getDisplayedDetails(event),
     })),
@@ -63,10 +60,10 @@ export function EventsDataGrid(): React.JSX.Element {
   )
 }
 
-export type GameEventRow<T extends GameEventPayload = GameEventPayload> = {
+export type GameEventRow = {
   readonly id: number
   readonly turn: number
-  readonly kind: GameEventDisplayedKind<T>
+  readonly kind: string
   readonly type: string
   readonly details: string
 }

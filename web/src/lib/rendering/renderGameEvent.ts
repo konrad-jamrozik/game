@@ -1,10 +1,13 @@
 import _ from 'lodash'
-import type { GameEventWithTurn } from '../codesync/GameEvent'
-import type { PlayerActionName } from '../codesync/PlayerActionPayload'
+import type { GameEventName, GameEventWithTurn } from '../codesync/GameEvent'
+import {
+  PlayerActionNameVal,
+  type PlayerActionName,
+} from '../codesync/PlayerActionPayload'
 import { str } from '../utils'
 
 const playerActionNameToDisplayMap: {
-  [name in PlayerActionName]: {
+  [name in GameEventName]: {
     displayedType: string
     displayedDetails: string
   }
@@ -45,11 +48,20 @@ const playerActionNameToDisplayMap: {
     displayedType: 'Recall agents',
     displayedDetails: `Agent IDs: $IDs`,
   },
+  MissionSiteExpiredEvent: {
+    displayedType: 'Mission site expired',
+    displayedDetails: `Site ID: $ID`,
+  },
+}
+
+export function getDisplayedKind(event: GameEventWithTurn): string {
+  return _.includes(PlayerActionNameVal, event.Type)
+    ? 'Player Action'
+    : 'World Event'
 }
 
 export function getDisplayedType(event: GameEventWithTurn): string {
-  return playerActionNameToDisplayMap[event.Type as PlayerActionName]
-    .displayedType
+  return playerActionNameToDisplayMap[event.Type].displayedType
 }
 
 export function getDisplayedDetails(event: GameEventWithTurn): string {

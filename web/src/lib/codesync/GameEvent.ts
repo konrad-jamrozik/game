@@ -1,10 +1,11 @@
 // codesync: UfoGameLib.Events.GameEvent
 
 import { getTurnNo, type GameSessionTurn } from './GameSessionTurn'
+import type { PlayerActionName } from './PlayerActionPayload'
 
 export type GameEvent = {
   readonly Id: number
-  readonly Type: string
+  readonly Type: GameEventName
   readonly Details: string
 }
 
@@ -23,3 +24,9 @@ export function addTurnToGameEvent(
     Details: event.Details,
   }
 }
+
+export type GameEventName = PlayerActionName | WorldEventName
+
+export type WorldEvent = GameEvent
+
+export type WorldEventName = 'MissionSiteExpiredEvent'

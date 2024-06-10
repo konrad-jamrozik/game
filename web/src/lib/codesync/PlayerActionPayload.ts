@@ -21,6 +21,18 @@ export type AgentPlayerActionName =
   | 'SendAgentsToTrainingPlayerAction'
   | 'RecallAgentsPlayerAction'
 
+export const PlayerActionNameVal = [
+  'AdvanceTimePlayerAction',
+  'BuyTransportCapacityPlayerAction',
+  'HireAgentsPlayerAction',
+  'LaunchMissionPlayerAction',
+  'SackAgentsPlayerAction',
+  'SendAgentsToGenerateIncomePlayerAction',
+  'SendAgentsToGatherIntelPlayerAction',
+  'SendAgentsToTrainingPlayerAction',
+  'RecallAgentsPlayerAction',
+]
+
 export type PlayerActionNameInTurn = Exclude<
   PlayerActionName,
   'AdvanceTimePlayerAction'
