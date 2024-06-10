@@ -6,6 +6,7 @@ namespace UfoGameLib.State;
 
 public class GameSessionTurn
 {
+    // kja problem: when deserializing this from API call, it will lose any derived props
     public readonly List<WorldEvent> EventsUntilStartState;
     public readonly GameState StartState;
     
