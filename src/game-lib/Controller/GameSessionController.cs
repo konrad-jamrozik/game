@@ -43,8 +43,8 @@ public class GameSessionController
     protected readonly GameSession GameSession;
     private readonly Configuration _config;
     private readonly ILog _log;
-    public GameTurnController CurrentTurnController { get; private set; }
-    private TimeAdvancementController _timeAdvancementController;
+    public GameTurnController CurrentTurnController { get; }
+    private readonly TimeAdvancementController _timeAdvancementController;
 
     public GameSessionController(Configuration config, ILog log, GameSession gameSession)
     {
@@ -55,12 +55,11 @@ public class GameSessionController
             _log,
             GameSession.RandomGen,
             GameSession.EventIdGen,
-            GameSession.CurrentGameState);
+            () => GameSession.CurrentGameState);
         _timeAdvancementController = new TimeAdvancementController(
             _log,
             GameSession.RandomGen,
-            GameSession.EventIdGen,
-            GameSession.CurrentGameState);
+            GameSession.EventIdGen);
     }
 
     public GameStatePlayerView CurrentGameStatePlayerView
@@ -164,31 +163,10 @@ public class GameSessionController
                 eventsUntilStartState: worldEvents,
                 startState: nextTurnStartState,
                 nextEventId: GameSession.EventIdGen.Value));
-        // kja I need to revisit this idea of re-constructing GameTurnControllers.
-        // Maybe really it is better just to update the CurrentGameState and use NextEventIdGen class.
-        CurrentTurnController = new GameTurnController(
-            _log,
-            GameSession.RandomGen,
-            GameSession.EventIdGen,
-            GameSession.CurrentGameState);
-        _timeAdvancementController = new TimeAdvancementController(
-            _log,
-            GameSession.RandomGen,
-            GameSession.EventIdGen,
-            GameSession.CurrentGameState);
     }
 
-    // kja AdvanceTime must accept state as param per PlayGameUntilOver.
-    // But I should reduce its usage in tests and rethink if _timeAdvancementController should get Current state
-    // as ctor input, given we really only ever want to get the clone as in PlayGameUntilOver.
-    // See also the todo on reconstructing controllers.
     public (PlayerActionEvent advaceTimeEvent, List<WorldEvent> worldEvents) AdvanceTime(GameState? state = null)
-    {
-        return _timeAdvancementController.AdvanceTime(state);
-    }
-
-    public PlayerActionEvent AdvanceTimeNoWorldEvents()
-        => _timeAdvancementController.AdvanceTime().advanceTimeEvent;
+        => _timeAdvancementController.AdvanceTime(state ?? GameSession.CurrentGameState);
 
     public GameState SaveCurrentGameStateToFile()
     {

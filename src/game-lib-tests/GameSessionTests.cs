@@ -72,11 +72,11 @@ public class GameSessionTests
 
         // Act
         turnController.HireAgents(count: 3);
-        controller.AdvanceTime(state);
-        controller.AdvanceTime(state);
+        controller.AdvanceTime();
+        controller.AdvanceTime();
         MissionSite site = controller.CurrentGameStatePlayerView.MissionSites.First();
         turnController.LaunchMission(site, agentCount: 3);
-        controller.AdvanceTime(state);
+        controller.AdvanceTime();
 
         GameState finalState = session.CurrentGameState;
 
@@ -123,7 +123,7 @@ public class GameSessionTests
         controller.SaveCurrentGameStateToFile();
 
         // Act 2: Advance time, thus modifying the current game state
-        controller.AdvanceTime(session.CurrentGameState);
+        controller.AdvanceTime();
 
         // Assert that advancing time didn't modify reference to the current game state
         Assert.That(stateView.StateReferenceEquals(controller.CurrentGameStatePlayerView));
@@ -161,12 +161,12 @@ public class GameSessionTests
         var controller = new GameSessionController(_config, _log, session);
         var turnController = controller.CurrentTurnController;
 
-        controller.AdvanceTime(session.CurrentGameState);
-        controller.AdvanceTime(session.CurrentGameState);
+        controller.AdvanceTime();
+        controller.AdvanceTime();
         turnController.HireAgents(5);
         // Need to advance time here so that hired agents are no longer InTransit and can be
         // sent on a mission.
-        controller.AdvanceTime(session.CurrentGameState);
+        controller.AdvanceTime();
         turnController.SackAgents(agentsIds: [0]);
 
         GameStatePlayerView state = controller.CurrentGameStatePlayerView;
@@ -174,12 +174,12 @@ public class GameSessionTests
             state.MissionSites.Active.First(),
             agentCount: state.Assets.CurrentTransportCapacity);
 
-        controller.AdvanceTime(session.CurrentGameState);
-        controller.AdvanceTime(session.CurrentGameState);
-        controller.AdvanceTime(session.CurrentGameState);
-        controller.AdvanceTime(session.CurrentGameState);
-        controller.AdvanceTime(session.CurrentGameState);
-        controller.AdvanceTime(session.CurrentGameState);
+        controller.AdvanceTime();
+        controller.AdvanceTime();
+        controller.AdvanceTime();
+        controller.AdvanceTime();
+        controller.AdvanceTime();
+        controller.AdvanceTime();
         
         Assert.Multiple(
             () =>
@@ -225,11 +225,11 @@ public class GameSessionTests
         var turnController = controller.CurrentTurnController;
         GameStatePlayerView state = controller.CurrentGameStatePlayerView;
 
-        controller.AdvanceTime(session.CurrentGameState);
+        controller.AdvanceTime();
         turnController.HireAgents(5);
         // Need to advance time here so that hired agents are no longer InTransit and can be
         // sent on a mission.
-        controller.AdvanceTime(session.CurrentGameState);
+        controller.AdvanceTime();
         
         Assert.That(state.MissionSites.Active.Any(), Is.True);
         

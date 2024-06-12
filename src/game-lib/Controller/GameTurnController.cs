@@ -9,11 +9,12 @@ namespace UfoGameLib.Controller;
 public class GameTurnController
 {
     private readonly ILog _log;
-    private readonly GameState _gameState;
+    private readonly Func<GameState> _gameState;
+    private GameState GameState => _gameState();
     private readonly EventIdGen _eventIdGen;
     private readonly List<PlayerActionEvent> _recordedPlayerActionEvents = new();
 
-    public GameTurnController(ILog log, RandomGen randomGen, EventIdGen eventIdGen, GameState gameState)
+    public GameTurnController(ILog log, RandomGen randomGen, EventIdGen eventIdGen, Func<GameState> gameState)
     {
         _log = log;
         RandomGen = randomGen;
@@ -23,7 +24,7 @@ public class GameTurnController
 
     public RandomGen RandomGen { get; }
 
-    public int CurrentTurn => _gameState.Timeline.CurrentTurn;
+    public int CurrentTurn => GameState.Timeline.CurrentTurn;
 
     public PlayerActionEvent SackAgents(int[] agentsIds) => SackAgents(GetAgentsByIds(agentsIds));
 
@@ -32,6 +33,7 @@ public class GameTurnController
 
     public PlayerActionEvent SendAgentsToGenerateIncome(int[] agentsIds)
         => SendAgentsToGenerateIncome(GetAgentsByIds(agentsIds));
+
     public PlayerActionEvent SendAgentsToGatherIntel(int[] agentsIds)
         => SendAgentsToGatherIntel(GetAgentsByIds(agentsIds));
 
@@ -47,7 +49,7 @@ public class GameTurnController
     /// </summary>
     public void LaunchMission(MissionSite site, int agentCount)
     {
-        Agents agents = _gameState.Assets.Agents
+        Agents agents = GameState.Assets.Agents
             .Where(agent => agent.CanBeSentOnMission)
             .Take(agentCount)
             .ToAgents();
@@ -89,16 +91,16 @@ public class GameTurnController
     }
 
     private MissionSite GetMissionSiteById(int siteId) =>
-        _gameState.MissionSites.Single(site => site.Id == siteId);
+        GameState.MissionSites.Single(site => site.Id == siteId);
 
     private Agents GetAgentsByIds(int[] agentsIds) =>
-        _gameState.Assets.Agents.GetByIds(agentsIds);
+        GameState.Assets.Agents.GetByIds(agentsIds);
 
     private PlayerActionEvent ExecuteAndRecordAction(PlayerAction action)
     {
         // This assertion is here to prevent the player from doing anything if they caused the game to be over.
-        Contract.Assert(!_gameState.IsGameOver);
-        PlayerActionEvent playerActionEvent = action.Apply(_gameState, _eventIdGen.Generate);
+        Contract.Assert(!GameState.IsGameOver);
+        PlayerActionEvent playerActionEvent = action.Apply(GameState, _eventIdGen.Generate);
         _recordedPlayerActionEvents.Add(playerActionEvent);
         return playerActionEvent;
     }

@@ -29,7 +29,6 @@ internal static class Program
 
     private static void InvokeAdvanceTime(GameSessionController controller)
     {
-
         controller.AdvanceTime();
         Console.WriteLine("Time advanced.");
     }

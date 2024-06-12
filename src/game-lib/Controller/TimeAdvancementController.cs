@@ -12,24 +12,20 @@ public class TimeAdvancementController
     private readonly RandomGen _randomGen;
     private readonly List<WorldEvent> _worldEvents;
     private readonly EventIdGen _eventIdGen;
-    private readonly GameState _state;
 
-    public TimeAdvancementController(ILog log, RandomGen randomGen, EventIdGen eventIdGen, GameState state)
+    public TimeAdvancementController(ILog log, RandomGen randomGen, EventIdGen eventIdGen)
     {
         _log = log;
         _randomGen = randomGen;
         _eventIdGen = eventIdGen;
-        _state = state;
         _worldEvents = new List<WorldEvent>();
     }
 
-    public (PlayerActionEvent advanceTimeEvent, List<WorldEvent> worldEvents) AdvanceTime(GameState? inputState = null)
+    public (PlayerActionEvent advanceTimeEvent, List<WorldEvent> worldEvents) AdvanceTime(GameState state)
     {
         _log.Info("");
         _log.Info("----- Advancing time");
         _log.Info("");
-
-        GameState state = inputState ?? _state;
 
         PlayerActionEvent advanceTimeEvent = new PlayerActionEvent(
             _eventIdGen.Generate,
