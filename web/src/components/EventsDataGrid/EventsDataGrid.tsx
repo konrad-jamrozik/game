@@ -1,5 +1,11 @@
 import { Box } from '@mui/material'
-import { DataGrid, type GridColDef } from '@mui/x-data-grid'
+import {
+  DataGrid,
+  type GridCellParams,
+  type GridValidRowModel,
+  type GridColDef,
+  gridClasses,
+} from '@mui/x-data-grid'
 import _ from 'lodash'
 import type { GameEventWithTurn } from '../../lib/codesync/GameEvent'
 import { useGameSessionContext } from '../../lib/gameSession/GameSession'
@@ -32,14 +38,13 @@ export function EventsDataGrid(): React.JSX.Element {
 
   return (
     <Box
-      sx={[
-        {
-          height: defaultComponentHeight,
-          minWidth: defaultComponentMinWidth,
-          maxWidth: 960,
-          width: '100%',
-        },
-      ]}
+      sx={{
+        height: defaultComponentHeight,
+        minWidth: defaultComponentMinWidth,
+        maxWidth: 960,
+        width: '100%',
+        [`& .${gridClasses.row}.odd`]: { backgroundColor: '#202020' },
+      }}
     >
       <DataGrid
         rows={rows}
@@ -55,6 +60,9 @@ export function EventsDataGrid(): React.JSX.Element {
         }}
         pageSizeOptions={[50]}
         sx={(theme) => ({ bgcolor: theme.palette.background.default })}
+        getRowClassName={(params) =>
+          params.row.turn % 2 === 0 ? 'even' : 'odd'
+        }
       />
     </Box>
   )
@@ -79,6 +87,12 @@ const columns: GridColDef<GameEventRow>[] = [
     headerName: 'Turn',
     width: 80,
     disableColumnMenu: true,
+    cellClassName: (
+      params: GridCellParams<GridValidRowModel, number>,
+    ): string => {
+      const turnValue: number = params.value!
+      return turnValue % 2 === 0 ? 'UNUSED-even' : 'UNUSED-odd'
+    },
   },
   {
     field: 'kind',
