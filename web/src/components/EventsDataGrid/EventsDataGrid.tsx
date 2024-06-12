@@ -38,13 +38,17 @@ export function EventsDataGrid(): React.JSX.Element {
 
   return (
     <Box
-      sx={{
+      sx={(theme) => ({
         height: defaultComponentHeight,
         minWidth: defaultComponentMinWidth,
         maxWidth: 960,
         width: '100%',
+        // future work: refactor
         [`& .${gridClasses.row}.odd`]: { backgroundColor: '#202020' },
-      }}
+        [`& .world-event`]: { color: theme.palette.secondary.dark },
+        [`& .advance-time`]: { color: theme.palette.info.main },
+        [`& .mission-site-expired`]: { color: theme.palette.error.main },
+      })}
     >
       <DataGrid
         rows={rows}
@@ -87,24 +91,36 @@ const columns: GridColDef<GameEventRow>[] = [
     headerName: 'Turn',
     width: 80,
     disableColumnMenu: true,
-    cellClassName: (
-      params: GridCellParams<GridValidRowModel, number>,
-    ): string => {
-      const turnValue: number = params.value!
-      return turnValue % 2 === 0 ? 'UNUSED-even' : 'UNUSED-odd'
-    },
   },
   {
     field: 'kind',
     headerName: 'Kind',
     width: 110,
     disableColumnMenu: true,
+    cellClassName: (
+      params: GridCellParams<GridValidRowModel, string>,
+    ): string => {
+      const kindValue: string = params.value!
+      // future work: refactor to use inverted map of playerActionNameToDisplayMap. See renderAssets for code to adapt.
+      return kindValue === 'World Event' ? 'world-event' : ''
+    },
   },
   {
     field: 'type',
     headerName: 'Type',
     width: 190,
     disableColumnMenu: true,
+    cellClassName: (
+      params: GridCellParams<GridValidRowModel, string>,
+    ): string => {
+      const typeValue: string = params.value!
+      // future work: refactor to use inverted map of playerActionNameToDisplayMap. See renderAssets for code to adapt.
+      return typeValue === 'Advance time'
+        ? 'advance-time'
+        : typeValue === 'Mission site expired'
+          ? 'mission-site-expired'
+          : ''
+    },
   },
   {
     field: 'details',
