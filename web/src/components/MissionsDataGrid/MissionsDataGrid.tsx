@@ -37,7 +37,7 @@ export function MissionsDataGrid(): React.JSX.Element {
         {
           height: defaultComponentHeight,
           minWidth: defaultComponentMinWidth,
-          maxWidth: 670,
+          maxWidth: 674,
           width: '100%',
         },
         sxClassesFromColors(missionStateColors),

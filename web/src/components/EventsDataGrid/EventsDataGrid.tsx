@@ -41,7 +41,7 @@ export function EventsDataGrid(): React.JSX.Element {
       sx={(theme) => ({
         height: defaultComponentHeight,
         minWidth: defaultComponentMinWidth,
-        maxWidth: 960,
+        maxWidth: 964,
         width: '100%',
         // future work: refactor
         [`& .${gridClasses.row}.odd`]: { backgroundColor: '#202020' },
