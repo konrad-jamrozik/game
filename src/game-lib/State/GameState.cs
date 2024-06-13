@@ -95,9 +95,8 @@ public class GameState : IEquatable<GameState>
 
     private GameState DeepClone()
     {
-        // kja these clonedFactions will need to be passed as input to MissionSites DeepClone
         Factions clonedFactions = Factions.DeepClone();
-        MissionSites clonedMissionSites = MissionSites.DeepClone();
+        MissionSites clonedMissionSites = MissionSites.DeepClone(clonedFactions);
         Missions clonedMissions = Missions.DeepClone(clonedMissionSites);
         return new GameState(
             updateCount: UpdateCount,

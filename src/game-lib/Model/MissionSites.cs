@@ -18,8 +18,12 @@ public class MissionSites : List<MissionSite>
 
     public MissionSites Expired => this.Where(missionSite => missionSite.IsExpired).ToMissionSites();
 
-    public MissionSites DeepClone()
+    public MissionSites DeepClone(Factions clonedFactions)
     {
-        return new MissionSites(this.Select(missionSite => missionSite.DeepClone()));
+        return new MissionSites(this.Select(missionSite =>
+        {
+            Faction clonedFaction = clonedFactions.Single(clonedFaction => clonedFaction.Id == missionSite.Faction.Id);
+            return missionSite.DeepClone(clonedFaction);
+        }));
     }
 }

@@ -101,8 +101,15 @@ public class MissionSite : IIdentifiable
     private void AssertStatusInvariant()
         => Contract.Assert(IsActive ^ IsExpired ^ WasLaunched);
 
-    public MissionSite DeepClone()
+    public MissionSite DeepClone(Faction clonedFaction)
     {
-        return (MissionSite) MemberwiseClone();
+        return new MissionSite(
+            id: Id,
+            faction: clonedFaction,
+            difficulty: Difficulty,
+            turnAppeared: TurnAppeared,
+            expiresIn: ExpiresIn,
+            turnDeactivated: TurnDeactivated,
+            expired: Expired);
     }
 }
