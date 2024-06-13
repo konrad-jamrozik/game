@@ -6,6 +6,8 @@ namespace UfoGameLib.Model;
 
 public class Mission : IIdentifiable
 {
+    public int Id { get; }
+
     public enum MissionState
     {
         Active,
@@ -63,8 +65,6 @@ public class Mission : IIdentifiable
 
     [JsonIgnore]
     public bool WasLaunched => IsSuccessful || IsFailed;
-
-    public int Id { get; }
 
     [JsonIgnore]
     public string LogString => $"MissionID: {Id,3}";

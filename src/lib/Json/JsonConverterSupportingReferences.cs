@@ -82,6 +82,7 @@ public abstract class JsonConverterSupportingReferences<T> : JsonConverter<T>
         int? id = obj[propName] != null ? IdFromObjPropName() : null;
         obj.Add("$Id_" + propName, id);
         obj.Remove(propName);
+        return;
 
         int? IdFromObjPropName()
         {

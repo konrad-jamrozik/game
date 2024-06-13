@@ -3,7 +3,8 @@ using Lib.Contracts;
 
 namespace UfoGameLib.Model;
 
-// kja2 should this implement IIdentifiable the same as MissionSite?
+// kja I think that yes, it should be IIdentifiable. lib\Json\JsonConverterSupportingReferences.cs:86
+// should this implement IIdentifiable the same as MissionSite?
 // I think currently it doesn't because Agents are never serialized by reference
 // by GameStateJsonConverter, so it doesn't matter if they implement IIdentifiable
 public class Agent

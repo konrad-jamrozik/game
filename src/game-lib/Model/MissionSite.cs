@@ -4,12 +4,6 @@ using Lib.Json;
 
 namespace UfoGameLib.Model;
 
-// kja add Faction with following props:
-// - Name
-// - InitialPower
-// - PowerIncrease
-// - PowerAcceleration
-
 // kja add new usage of intel:
 // - Investing intel into faction will cause missions from this faction to be generated with better modifiers.
 
@@ -18,6 +12,8 @@ namespace UfoGameLib.Model;
 
 public class MissionSite : IIdentifiable
 {
+    public int Id { get; }
+
     public readonly int Difficulty;
     public readonly int TurnAppeared;
 
@@ -62,8 +58,6 @@ public class MissionSite : IIdentifiable
 
     [JsonIgnore]
     public int RequiredSurvivingAgentsForSuccess => Ruleset.RequiredSurvivingAgentsForSuccess(this);
-
-    public int Id { get; }
 
     [JsonIgnore]
     public string LogString => $"SiteID: {Id,3}";
