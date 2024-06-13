@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using Lib.Json;
 
 namespace UfoGameLib.Model;
@@ -12,6 +13,7 @@ public class Faction : IIdentifiable
     public readonly int PowerAcceleration;
     public readonly int IntelInvested;
 
+    [JsonConstructor]
     public Faction(int id, string name, int power, int powerIncrease, int powerAcceleration, int intelInvested)
     {
         Id = id;

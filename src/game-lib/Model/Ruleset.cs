@@ -11,6 +11,16 @@ public static class Ruleset
     public const int InitialSupport = 30;
     public const int InitialMaxTransportCapacity = 4;
 
+    // For more example factions data, see:
+    // https://github.com/konrad-jamrozik/game/blob/eccb44a1d5f074e95b07aebca2c6bc5bbfdfdda8/src/ufo-game/Model/Data/FactionsData.cs#L34
+    public static Factions InitialFactions => new(
+    [
+        new Faction(0, "Black Lotus cult", 200, 5, 0, 0),
+        new Faction(1, "Red Dawn remnants", 300, 5, 0, 0),
+        new Faction(2, "EXALT", 400, 6, 0, 0),
+        new Faction(3, "Zombies", 1200, 1, 0, 0)
+    ]);
+
     public const int IntelToWin = 3000;
 
     public const int AgentHireCost = 50;
@@ -55,6 +65,8 @@ public static class Ruleset
         return skillFromFirstMissions + missionsBeyondFirstMissions * SkillFromEachMissionBeyondFirstMissions;
     }
 
+    // kja instead of RollMissionSiteDifficulty, now we will be rolling various MissionSite coefficients
+    // based on faction data and possibly other factors. And faction will have power correlating with turn.
     public static (int difficulty, int difficultyFromTurn, int roll) RollMissionSiteDifficulty(
             int currentTurn,
             RandomGen randomGen)
@@ -67,7 +79,7 @@ public static class Ruleset
         // agents would die, and any new agents would never be able to catch up with mission difficulty.
         int roll = randomGen.Roll0To(30);
         int difficultyFromTurn = currentTurn * AgentTrainingCoefficient / 2;
-        return (BaseMissionSiteDifficulty + difficultyFromTurn + roll, difficultyFromTurn, roll);
+        return (difficulty: BaseMissionSiteDifficulty + difficultyFromTurn + roll, difficultyFromTurn, roll);
     }
 
     public static int RequiredSurvivingAgentsForSuccess(MissionSite site)

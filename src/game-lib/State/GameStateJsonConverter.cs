@@ -110,6 +110,7 @@ class GameStateJsonConverter : JsonConverterSupportingReferences<GameState>
         JsonNode gameStateNode = JsonNode(ref reader);
 
         int updateCount = DeserializeInt(gameStateNode, nameof(GameState.UpdateCount));
+        Factions factions = Deserialize<Factions>(gameStateNode);
         Timeline timeline = Deserialize<Timeline>(gameStateNode);
         MissionSites missionSites = Deserialize<MissionSites>(gameStateNode);
         Agents terminatedAgents =
@@ -167,7 +168,8 @@ class GameStateJsonConverter : JsonConverterSupportingReferences<GameState>
             assets,
             missionSites,
             missions,
-            terminatedAgents);
+            terminatedAgents,
+            factions);
 
         return gameState;
     }

@@ -16,6 +16,7 @@ public class GameState : IEquatable<GameState>
     public readonly MissionSites MissionSites;
     public readonly Missions Missions;
     public readonly Agents TerminatedAgents;
+    public readonly Factions Factions;
 
     public int UpdateCount;
 
@@ -26,7 +27,8 @@ public class GameState : IEquatable<GameState>
         Assets assets,
         MissionSites missionSites,
         Missions missions,
-        Agents terminatedAgents)
+        Agents terminatedAgents,
+        Factions factions)
     {
         UpdateCount = updateCount;
         Timeline = timeline;
@@ -34,6 +36,7 @@ public class GameState : IEquatable<GameState>
         MissionSites = missionSites;
         Missions = missions;
         TerminatedAgents = terminatedAgents;
+        Factions = factions;
     }
 
     public static GameState NewInitialGameState()
@@ -49,7 +52,8 @@ public class GameState : IEquatable<GameState>
                 agents: new Agents()),
             new MissionSites(),
             new Missions(),
-            terminatedAgents: new Agents(terminated: true));
+            terminatedAgents: new Agents(terminated: true),
+            factions: Ruleset.InitialFactions);
 
     public static GameState FromJsonFile(File file)
         => file.ReadJsonInto<GameState>(StateJsonSerializerOptions);
@@ -91,6 +95,8 @@ public class GameState : IEquatable<GameState>
 
     private GameState DeepClone()
     {
+        // kja these clonedFactions will need to be passed as input to MissionSites DeepClone
+        Factions clonedFactions = Factions.DeepClone();
         MissionSites clonedMissionSites = MissionSites.DeepClone();
         Missions clonedMissions = Missions.DeepClone(clonedMissionSites);
         return new GameState(
@@ -99,7 +105,8 @@ public class GameState : IEquatable<GameState>
             assets: Assets.DeepClone(clonedMissions),
             missionSites: clonedMissionSites,
             missions: clonedMissions,
-            terminatedAgents: TerminatedAgents.DeepClone(clonedMissions, terminated: true));
+            terminatedAgents: TerminatedAgents.DeepClone(clonedMissions, terminated: true),
+            factions: clonedFactions);
     }
 
     public string ToJsonString()
