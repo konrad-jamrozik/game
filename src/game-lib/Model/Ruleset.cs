@@ -3,6 +3,7 @@ using UfoGameLib.Lib;
 
 namespace UfoGameLib.Model;
 
+// kja convert "Ruleset" class into a namespace. Maybe introduce IRuleset "marker" interface?
 public static class Ruleset
 {
     public const int InitialMoney = 500;
@@ -13,12 +14,13 @@ public static class Ruleset
 
     // For more example factions data, see:
     // https://github.com/konrad-jamrozik/game/blob/eccb44a1d5f074e95b07aebca2c6bc5bbfdfdda8/src/ufo-game/Model/Data/FactionsData.cs#L34
-    public static Factions InitialFactions => new(
+    public static Factions InitialFactions(RandomGen randomGen) => new(
     [
-        new Faction(0, "Black Lotus cult", 200, 5, 0, 0),
-        new Faction(1, "Red Dawn remnants", 300, 5, 0, 0),
-        new Faction(2, "EXALT", 400, 6, 0, 0),
-        new Faction(3, "Zombies", 1200, 1, 0, 0)
+        // Note: need to ensure here that IDs are consecutive, and from zero.
+        Faction.Init(randomGen, id: 0, "Black Lotus cult", power: 200, powerIncrease: 5),
+        Faction.Init(randomGen, id: 1, "Red Dawn remnants", power: 300, powerIncrease: 5),
+        Faction.Init(randomGen, id: 2, "EXALT", power: 400, powerIncrease: 6),
+        Faction.Init(randomGen, id: 3, "Zombies", power: 1200, powerIncrease: 1)
     ]);
 
     public const int IntelToWin = 3000;
@@ -29,6 +31,8 @@ public static class Ruleset
     public const int AgentBaseSurvivalSkill = 100;
 
     public const int BaseMissionSiteDifficulty = 30;
+    public static readonly Range FactionMissionSiteCountdown = new Range(3, 10);
+    public const int MissionSiteTurnsUntilExpiration = 3;
 
     public static (bool survived, int? recoversIn) RollForAgentSurvival(
         ILog log,
@@ -65,7 +69,7 @@ public static class Ruleset
         return skillFromFirstMissions + missionsBeyondFirstMissions * SkillFromEachMissionBeyondFirstMissions;
     }
 
-    // kja instead of RollMissionSiteDifficulty, now we will be rolling various MissionSite coefficients
+    // kja-wishlist instead of RollMissionSiteDifficulty, now we will be rolling various MissionSite coefficients
     // based on faction data and possibly other factors. And faction will have power correlating with turn.
     public static (int difficulty, int difficultyFromTurn, int roll) RollMissionSiteDifficulty(
             int currentTurn,

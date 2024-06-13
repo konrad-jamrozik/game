@@ -74,6 +74,7 @@ public class GameSessionTests
         turnController.HireAgents(count: 3);
         controller.AdvanceTime();
         controller.AdvanceTime();
+        // kja BUG ROOT CAUSE: getting no elems here because now site generation is randomized. Need to override it for testing.
         MissionSite site = controller.CurrentGameStatePlayerView.MissionSites.First();
         turnController.LaunchMission(site, agentCount: 3);
         controller.AdvanceTime();

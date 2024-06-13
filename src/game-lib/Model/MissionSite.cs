@@ -4,10 +4,10 @@ using Lib.Json;
 
 namespace UfoGameLib.Model;
 
-// kja add new usage of intel:
+// kja-wishlist add new usage of intel:
 // - Investing intel into faction will cause missions from this faction to be generated with better modifiers.
 
-// kja add new win criterion:
+// kja-wishlist add new win criterion:
 // - reduce all factions power to 0.
 
 public class MissionSite : IIdentifiable
@@ -22,7 +22,7 @@ public class MissionSite : IIdentifiable
     public bool Expired { get; private set; }
     public int? ExpiresIn { get; private set; }
 
-// kja Changes to MissionSite to make:
+// kja-wishlist Changes to MissionSite to make:
 // - add a Faction reference, serialize it properly via ref
 // - add props: DifficultyModifier, RewardAndPenaltyModifiers (money, intel, funding, support),
 //     FactionDamageModifier (power, power increase, power acceleration)
@@ -50,6 +50,7 @@ public class MissionSite : IIdentifiable
         AssertStatusInvariant();
     }
 
+    // kja shouldn't it be ExpiresIn >= 1 instead of ExpiresIn >= 0 ?
     [JsonIgnore]
     public bool IsActive => TurnDeactivated == null && !Expired && ExpiresIn >= 0;
 

@@ -30,7 +30,7 @@ public class GameSession
     public GameSession(RandomGen randomGen, List<GameSessionTurn>? turns = null)
     {
         RandomGen = randomGen;
-        Turns = turns ?? [new GameSessionTurn(startState: GameState.NewInitialGameState())];
+        Turns = turns ?? [new GameSessionTurn(startState: GameState.NewInitialGameState(randomGen))];
         Contract.Assert(Turns.Count >= 1);
         Turns.ForEach(turn => turn.AssertInvariants());
         EventIdGen = new EventIdGen(Turns);

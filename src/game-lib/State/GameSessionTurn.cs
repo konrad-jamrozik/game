@@ -62,6 +62,7 @@ public class GameSessionTurn
             EventsInTurn.Count == EndState.UpdateCount - StartState.UpdateCount,
             "Number of events in turn must match the number of updates between the game states.");
 
+        // kja extract this into "ConsecutiveId" abstraction and invariant.
         IReadOnlyList<GameEvent> events = GameEvents;
         if (events.Any())
         {

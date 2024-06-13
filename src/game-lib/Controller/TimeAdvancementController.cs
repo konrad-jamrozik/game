@@ -40,7 +40,7 @@ public class TimeAdvancementController
 
         int expiredMissionSites = UpdateActiveMissionSites(state);
 
-        // kja funding / support change must be expanded to take into account variable mission rewards:
+        // kja-wishlist funding / support change must be expanded to take into account variable mission rewards:
         // Each mission may return different amount of funding, support, money and intel.
         int fundingChange = Ruleset.ComputeFundingChange(successfulMissions, failedMissions, expiredMissionSites);
         int supportChange = Ruleset.ComputeSupportChange(successfulMissions, failedMissions, expiredMissionSites);
@@ -209,23 +209,9 @@ public class TimeAdvancementController
         );
         return expiredMissions;
     }
-
-    // kja2-simul-feat to make simulation more interesting: create easier missions from time to time and
-    // make AI player send less experienced soldiers on it.
     private void CreateMissionSites(GameState state)
     {
-        if (state.Timeline.CurrentTurn % 3 == 0)
-        {
-            int siteId = state.NextMissionSiteId;
-            (int difficulty, int difficultyFromTurn, int roll) =
-                Ruleset.RollMissionSiteDifficulty(state.Timeline.CurrentTurn, _randomGen);
-            // kja inject appropriate faction instead of state.Faction[0]
-            var site = new MissionSite(siteId, state.Factions[0], difficulty, turnAppeared: state.Timeline.CurrentTurn, expiresIn: 3);
-            state.MissionSites.Add(site);
-            _log.Info($"Add {site.LogString} : " +
-                      $"difficulty: {difficulty,3}, " +
-                      $"difficultyFromTurn: {difficultyFromTurn,3}, " +
-                      $"difficultyRoll: {roll,2}.");
-        }
+        List<MissionSite> missionSites = state.Factions.CreateMissionSites(_log, _randomGen, state);
+        state.MissionSites.AddRange(missionSites);
     }
 }

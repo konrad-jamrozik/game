@@ -24,6 +24,9 @@ public class Missions : List<Mission>
     {
         return new Missions(this.Select(mission =>
         {
+            // kja getting "more than one elem" here on BasicAIPlayer plays game test.
+            // This denotes issue with busted site IDs with the new mission generation logic
+            // Root cause identified: see UfoGameLib.Model.Faction.CreateMissionSites
             MissionSite clonedMissionSite = clonedMissionSites.Single(clonedSite => clonedSite.Id == mission.Site.Id);
             return mission.DeepClone(clonedMissionSite);
         }));

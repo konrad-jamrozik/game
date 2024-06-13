@@ -1,6 +1,7 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Lib.Json;
+using UfoGameLib.Lib;
 using UfoGameLib.Model;
 using File = Lib.OS.File;
 
@@ -39,8 +40,10 @@ public class GameState : IEquatable<GameState>
         Factions = factions;
     }
 
-    public static GameState NewInitialGameState()
-        => new GameState(
+    public static GameState NewInitialGameState(RandomGen? randomGen = null)
+    {
+        randomGen ??= new RandomGen(new Random());
+        return new GameState(
             updateCount: 0,
             new Timeline(currentTurn: Timeline.InitialTurn),
             new Assets(
@@ -53,7 +56,8 @@ public class GameState : IEquatable<GameState>
             new MissionSites(),
             new Missions(),
             terminatedAgents: new Agents(terminated: true),
-            factions: Ruleset.InitialFactions);
+            factions: Ruleset.InitialFactions(randomGen));
+    }
 
     public static GameState FromJsonFile(File file)
         => file.ReadJsonInto<GameState>(StateJsonSerializerOptions);
