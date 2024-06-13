@@ -4,6 +4,18 @@ using Lib.Json;
 
 namespace UfoGameLib.Model;
 
+// kja add Faction with following props:
+// - Name
+// - InitialPower
+// - PowerIncrease
+// - PowerAcceleration
+
+// kja add new usage of intel:
+// - Investing intel into faction will cause missions from this faction to be generated with better modifiers.
+
+// kja add new win criterion:
+// - reduce all factions power to 0.
+
 public class MissionSite : IIdentifiable
 {
     public readonly int Difficulty;
@@ -13,6 +25,12 @@ public class MissionSite : IIdentifiable
     public bool Expired { get; private set; }
     public int? ExpiresIn { get; private set; }
 
+// kja Changes to MissionSite to make:
+// - add a Faction reference, serialize it properly via ref
+// - add props: DifficultyModifier, RewardAndPenaltyModifiers (money, intel, funding, support),
+//     FactionDamageModifier (power, power increase, power acceleration)
+// 
+// - make Difficulty a computed prop based on DifficultyModifier and Faction.Power
     [JsonConstructor]
     public MissionSite(
         int id,

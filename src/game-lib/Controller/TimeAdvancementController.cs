@@ -40,10 +40,12 @@ public class TimeAdvancementController
 
         int expiredMissionSites = UpdateActiveMissionSites(state);
 
+        // kja funding / support change must be expanded to take into account variable mission rewards:
+        // Each mission may return different amount of funding, support, money and intel.
         int fundingChange = Ruleset.ComputeFundingChange(successfulMissions, failedMissions, expiredMissionSites);
         int supportChange = Ruleset.ComputeSupportChange(successfulMissions, failedMissions, expiredMissionSites);
 
-        // Note this funding change will get taken into account when computing money change this turn,
+        // Note: this funding change will get taken into account when computing money change this turn,
         // as money change is computed downstream.
         state.Assets.Funding += fundingChange;
         state.Assets.Support += supportChange;
@@ -57,7 +59,6 @@ public class TimeAdvancementController
 
         state.Assets.Money += moneyChange;
 
-        // Each agent gathers 5 intel per turn.
         int intelGathered = state.Assets.Agents.GatheringIntel.Count * Ruleset.IntelGatheredPerAgent();
         state.Assets.Intel += intelGathered;
 
