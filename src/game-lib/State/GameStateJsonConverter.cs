@@ -102,6 +102,11 @@ class GameStateJsonConverter : JsonConverterSupportingReferences<GameState>
             objJsonArrayName: nameof(Assets.Agents),
             propName: nameof(Agent.CurrentMission));
 
+        ReplaceArrayObjectsPropertiesWithRefs(
+            parent: gameStateNode,
+            objJsonArrayName: nameof(GameState.MissionSites),
+            propName: nameof(MissionSite.Faction));
+
         gameStateNode.WriteTo(writer, SerializationOptions);
     }
 
@@ -112,7 +117,22 @@ class GameStateJsonConverter : JsonConverterSupportingReferences<GameState>
         int updateCount = DeserializeInt(gameStateNode, nameof(GameState.UpdateCount));
         Factions factions = Deserialize<Factions>(gameStateNode);
         Timeline timeline = Deserialize<Timeline>(gameStateNode);
-        MissionSites missionSites = Deserialize<MissionSites>(gameStateNode);
+
+        var missionSites = new MissionSites(
+            DeserializeObjArrayWithDepRefProps(
+                objJsonArray: JsonArray(gameStateNode, nameof(GameState.MissionSites)),
+                depRefPropName: nameof(MissionSite.Faction),
+                deps: factions,
+                (missionSiteObj, faction)
+                    => new MissionSite(
+                        id: DeserializeInt(missionSiteObj, nameof(MissionSite.Id)),
+                        faction: faction!,
+                        difficulty: DeserializeInt(missionSiteObj, nameof(MissionSite.Difficulty)),
+                        turnAppeared: DeserializeInt(missionSiteObj, nameof(MissionSite.TurnAppeared)),
+                        expiresIn: DeserializeIntOrNull(missionSiteObj, nameof(MissionSite.ExpiresIn)),
+                        turnDeactivated: DeserializeIntOrNull(missionSiteObj, nameof(MissionSite.TurnDeactivated)),
+                        expired: DeserializeBool(missionSiteObj, nameof(MissionSite.Expired)))));
+
         Agents terminatedAgents =
             Deserialize<List<Agent>>(gameStateNode, nameof(GameState.TerminatedAgents)).ToAgents(terminated: true);
         

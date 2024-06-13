@@ -219,7 +219,8 @@ public class TimeAdvancementController
             int siteId = state.NextMissionSiteId;
             (int difficulty, int difficultyFromTurn, int roll) =
                 Ruleset.RollMissionSiteDifficulty(state.Timeline.CurrentTurn, _randomGen);
-            var site = new MissionSite(siteId, difficulty, turnAppeared: state.Timeline.CurrentTurn, expiresIn: 3);
+            // kja inject appropriate faction instead of state.Faction[0]
+            var site = new MissionSite(siteId, state.Factions[0], difficulty, turnAppeared: state.Timeline.CurrentTurn, expiresIn: 3);
             state.MissionSites.Add(site);
             _log.Info($"Add {site.LogString} : " +
                       $"difficulty: {difficulty,3}, " +

@@ -171,4 +171,28 @@ public class GameStateTests
 
         new JsonDiffAssertion(baseline: initialJsonString, target: deserializedJsonString).Assert();
     }
+
+    /// <summary>
+    /// Use this test to exercise correct behavior of serialization and deserialization of GameState with
+    /// GameState.StateJsonSerializerOptions which most importantly exercise
+    /// UfoGameLib.State.GameStateJsonConverter.
+    ///
+    /// This test DOES NOT assert hat data structures have not been duplicated in the serialization.
+    /// Inspect the resulting JSON in debugger to verify this.
+    /// </summary>
+    [Test]
+    public void RoundTripSerializationOnNontrivialGameState()
+    {
+        GameState gameState = GameStateFixtures.Get();
+        
+        // Act: serialize using GameState.StateJsonSerializerOptions
+        string gameStateAsJsonString = gameState.ToJsonString();
+
+        // Act: deserialize using GameState.StateJsonSerializerOptions
+        GameState deserializedGameState = JsonSerializer.Deserialize<GameState>(gameStateAsJsonString, Opts)!;
+
+        string deserializedJsonString = deserializedGameState.ToJsonString();
+
+        new JsonDiffAssertion(baseline: gameStateAsJsonString, target: deserializedJsonString).Assert();
+    }
 }

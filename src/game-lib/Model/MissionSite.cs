@@ -14,6 +14,7 @@ public class MissionSite : IIdentifiable
 {
     public int Id { get; }
 
+    public readonly Faction Faction;
     public readonly int Difficulty;
     public readonly int TurnAppeared;
 
@@ -30,6 +31,7 @@ public class MissionSite : IIdentifiable
     [JsonConstructor]
     public MissionSite(
         int id,
+        Faction faction,
         int difficulty,
         int turnAppeared,
         int? expiresIn,
@@ -39,6 +41,7 @@ public class MissionSite : IIdentifiable
         Contract.Assert(Difficulty >= 0);
         Contract.Assert(ExpiresIn == null || ExpiresIn >= 0);
         Id = id;
+        Faction = faction;
         Difficulty = difficulty;
         TurnAppeared = turnAppeared;
         TurnDeactivated = turnDeactivated;
