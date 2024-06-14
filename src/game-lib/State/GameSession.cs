@@ -34,18 +34,17 @@ public class GameSession
 
     public readonly MissionSiteIdGen MissionSiteIdGen;
 
-    public GameSession(RandomGen randomGen, List<GameSessionTurn>? turns = null)
+    public GameSession(RandomGen randomGen, List<GameSessionTurn>? turns = null, Factions? factions = null)
     {
         RandomGen = randomGen;
-        Turns = turns ?? [new GameSessionTurn(startState: GameState.NewInitialGameState(randomGen))];
+        Turns = turns ?? [new GameSessionTurn(startState: GameState.NewInitialGameState(randomGen, factions))];
         Contract.Assert(Turns.Any());
         Turns.ForEach(turn => turn.AssertInvariants());
-        
+
         EventIdGen = new EventIdGen(Turns);
         AgentIdGen = new AgentIdGen(Turns);
         MissionSiteIdGen = new MissionSiteIdGen(Turns);
         MissionIdGen = new MissionIdGen(Turns);
-        
     }
 
     public IReadOnlyList<GameState> GameStates

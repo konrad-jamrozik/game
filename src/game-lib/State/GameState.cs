@@ -40,7 +40,7 @@ public class GameState : IEquatable<GameState>
         Factions = factions;
     }
 
-    public static GameState NewInitialGameState(RandomGen? randomGen = null)
+    public static GameState NewInitialGameState(RandomGen? randomGen = null, Factions? factions = null)
     {
         randomGen ??= new RandomGen(new Random());
         return new GameState(
@@ -56,7 +56,7 @@ public class GameState : IEquatable<GameState>
             new MissionSites(),
             new Missions(),
             terminatedAgents: new Agents(terminated: true),
-            factions: Ruleset.InitialFactions(randomGen));
+            factions: factions ?? Ruleset.InitialFactions(randomGen));
     }
 
     public static GameState FromJsonFile(File file)

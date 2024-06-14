@@ -9,15 +9,19 @@ namespace UfoGameLib.Tests;
 
 public class GameSessionTests
 {
+    // Using null! as these fields will be initialized in Setup() method.
     private Configuration _config = null!;
     private ILog _log = null!;
-    private readonly RandomGen _randomGen = new RandomGen(new Random());
+    private RandomGen _randomGen = null!;
+    private Factions _factions = null!;
 
     [SetUp]
     public void Setup()
     {
         _config = new Configuration(new FileSystem());
         _log = new Log(_config);
+        _randomGen = new RandomGen(new Random());
+        _factions = FactionFixtures.SingleFaction(_randomGen);
     }
 
     // kja3 overall work plan:
@@ -56,7 +60,7 @@ public class GameSessionTests
     [Test]
     public void BasicHappyPathGameSessionWorks()
     {
-        var session = new GameSession(_randomGen);
+        var session = new GameSession(_randomGen, factions: _factions);
         var controller = new GameSessionController(_config, _log, session);
         var turnController = controller.CurrentTurnController;
 
@@ -75,6 +79,16 @@ public class GameSessionTests
         controller.AdvanceTime();
         controller.AdvanceTime();
         // kja BUG ROOT CAUSE: getting no elems here because now site generation is randomized. Need to override it for testing.
+        // To solve this:
+        // 1. introduce IRandomGen and make it implement more abstract methods so they can be overriden. Like this one:
+        //     
+        //     // class Faction:
+        //     private static int RandomizeMissionSiteCountdown(RandomGen randomGen)
+        //         => randomGen.Roll(Ruleset.FactionMissionSiteCountdown);
+        //
+        // This way for testing I can say "the countdown is always 3"
+        //
+        // 2. Allow to pass factions when initing game session
         MissionSite site = controller.CurrentGameStatePlayerView.MissionSites.First();
         turnController.LaunchMission(site, agentCount: 3);
         controller.AdvanceTime();
@@ -158,7 +172,7 @@ public class GameSessionTests
     [Test]
     public void RoundTrippingSavingAndLoadingGameStateBehavesCorrectly()
     {
-        var session = new GameSession(_randomGen);
+        var session = new GameSession(_randomGen, factions: _factions);
         var controller = new GameSessionController(_config, _log, session);
         var turnController = controller.CurrentTurnController;
 
@@ -221,7 +235,7 @@ public class GameSessionTests
     [Test]
     public void RoundTrippingSavingAndLoadingGameStateWithActiveMissionBehavesCorrectly()
     {
-        var session = new GameSession(_randomGen);
+        var session = new GameSession(_randomGen, factions: _factions);
         var controller = new GameSessionController(_config, _log, session);
         var turnController = controller.CurrentTurnController;
         GameStatePlayerView state = controller.CurrentGameStatePlayerView;
