@@ -12,12 +12,18 @@ public class TimeAdvancementController
     private readonly RandomGen _randomGen;
     private readonly List<WorldEvent> _worldEvents;
     private readonly EventIdGen _eventIdGen;
+    private readonly MissionSiteIdGen _missionSiteIdGen;
 
-    public TimeAdvancementController(ILog log, RandomGen randomGen, EventIdGen eventIdGen)
+    public TimeAdvancementController(
+        ILog log,
+        RandomGen randomGen,
+        EventIdGen eventIdGen,
+        MissionSiteIdGen missionSiteIdGen)
     {
         _log = log;
         _randomGen = randomGen;
         _eventIdGen = eventIdGen;
+        _missionSiteIdGen = missionSiteIdGen;
         _worldEvents = new List<WorldEvent>();
     }
 
@@ -211,7 +217,7 @@ public class TimeAdvancementController
     }
     private void CreateMissionSites(GameState state)
     {
-        List<MissionSite> missionSites = state.Factions.CreateMissionSites(_log, _randomGen, state);
+        List<MissionSite> missionSites = state.Factions.CreateMissionSites(_log, _randomGen, _missionSiteIdGen, state);
         state.MissionSites.AddRange(missionSites);
     }
 }

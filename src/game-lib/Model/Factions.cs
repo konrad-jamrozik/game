@@ -17,6 +17,10 @@ public class Factions : List<Faction>
     public Factions DeepClone()
         => new Factions(this.Select(faction => faction.DeepClone()));
 
-    public List<MissionSite> CreateMissionSites(ILog log, RandomGen randomGen, GameState state)
-        => this.SelectMany(faction => faction.CreateMissionSites(log, randomGen, state)).ToList();
+    public List<MissionSite> CreateMissionSites(
+        ILog log,
+        RandomGen randomGen,
+        MissionSiteIdGen missionSiteIdGen,
+        GameState state)
+        => this.SelectMany(faction => faction.CreateMissionSites(log, randomGen, missionSiteIdGen, state)).ToList();
 }

@@ -55,11 +55,14 @@ public class GameSessionController
             _log,
             GameSession.RandomGen,
             GameSession.EventIdGen,
+            GameSession.AgentIdGen,
+            GameSession.MissionIdGen,
             () => GameSession.CurrentGameState);
         _timeAdvancementController = new TimeAdvancementController(
             _log,
             GameSession.RandomGen,
-            GameSession.EventIdGen);
+            GameSession.EventIdGen,
+            GameSession.MissionSiteIdGen);
     }
 
     public GameStatePlayerView CurrentGameStatePlayerView

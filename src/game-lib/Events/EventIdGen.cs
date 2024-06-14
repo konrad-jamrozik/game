@@ -1,14 +1,14 @@
 using Lib.Contracts;
+using UfoGameLib.Lib;
 using UfoGameLib.State;
 
 namespace UfoGameLib.Events;
 
-public class EventIdGen
+public class EventIdGen : IdGen
 {
-    private int _nextEventId;
-
     public EventIdGen(List<GameSessionTurn> turns)
     {
+        Contract.Assert(turns.Any());
         // To compute starting next event ID we first need to determine if there are any events in the input
         // game session turns. If yes, we consider as the starting next event ID to be (last event ID + 1).
         // If not, we consider the last turn NextEventId value, if set.
@@ -28,10 +28,6 @@ public class EventIdGen
             nextEventIdFromLastEvent is null || nextEventIdFromLastTurn is null ||
             nextEventIdFromLastEvent == nextEventIdFromLastTurn,
             $"nextEventIdFromLastEvent: {nextEventIdFromLastEvent}, nextEventIdFromLastTurn: {nextEventIdFromLastTurn}");
-        _nextEventId = nextEventIdFromLastEvent ?? nextEventIdFromLastTurn ?? 0;
+        NextId = nextEventIdFromLastEvent ?? nextEventIdFromLastTurn ?? 0;
     }
-    
-    public int Generate => _nextEventId++;
-
-    public int Value => _nextEventId;
 }

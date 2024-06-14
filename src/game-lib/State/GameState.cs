@@ -76,10 +76,6 @@ public class GameState : IEquatable<GameState>
 
     public bool IsGameWon => Assets.Intel >= Ruleset.IntelToWin;
 
-    public int NextAgentId => AllAgents.Count;
-    public int NextMissionId => Missions.Count;
-    public int NextMissionSiteId => MissionSites.Count;
-
     public void Terminate(Agent agent, bool sack = false)
     {
         Assets.Agents.Remove(agent);

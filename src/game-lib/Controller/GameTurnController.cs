@@ -9,20 +9,30 @@ namespace UfoGameLib.Controller;
 public class GameTurnController
 {
     private readonly ILog _log;
+    public RandomGen RandomGen { get; }
+    private readonly EventIdGen _eventIdGen;
+    private readonly AgentIdGen _agentIdGen;
+    private readonly MissionIdGen _missionIdGen;
     private readonly Func<GameState> _gameState;
     private GameState GameState => _gameState();
-    private readonly EventIdGen _eventIdGen;
-    private readonly List<PlayerActionEvent> _recordedPlayerActionEvents = new();
+    private readonly List<PlayerActionEvent> _recordedPlayerActionEvents = [];
 
-    public GameTurnController(ILog log, RandomGen randomGen, EventIdGen eventIdGen, Func<GameState> gameState)
+    public GameTurnController(
+        ILog log,
+        RandomGen randomGen,
+        EventIdGen eventIdGen,
+        AgentIdGen agentIdGen,
+        MissionIdGen missionIdGen,
+        Func<GameState> gameState)
     {
         _log = log;
         RandomGen = randomGen;
-        _gameState = gameState;
         _eventIdGen = eventIdGen;
+        _agentIdGen = agentIdGen;
+        _missionIdGen = missionIdGen;
+        _gameState = gameState;
     }
 
-    public RandomGen RandomGen { get; }
 
     public int CurrentTurn => GameState.Timeline.CurrentTurn;
 
@@ -60,7 +70,7 @@ public class GameTurnController
     }
 
     public PlayerActionEvent HireAgents(int count)
-        => ExecuteAndRecordAction(new HireAgentsPlayerAction(_log, count));
+        => ExecuteAndRecordAction(new HireAgentsPlayerAction(_log, _agentIdGen, count));
 
     public PlayerActionEvent BuyTransportCapacity(int capacity)
         => ExecuteAndRecordAction(new BuyTransportCapacityPlayerAction(_log, capacity));
@@ -81,7 +91,7 @@ public class GameTurnController
         => ExecuteAndRecordAction(new RecallAgentsPlayerAction(_log, agents));
 
     public PlayerActionEvent LaunchMission(MissionSite site, Agents agents)
-        => ExecuteAndRecordAction(new LaunchMissionPlayerAction(_log, site, agents));
+        => ExecuteAndRecordAction(new LaunchMissionPlayerAction(_log, _missionIdGen, site, agents));
 
     public List<PlayerActionEvent> GetAndDeleteRecordedPlayerActionEvents()
     {

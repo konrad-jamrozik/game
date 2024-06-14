@@ -55,7 +55,11 @@ public class Faction : IIdentifiable
     public Faction DeepClone()
         => new(Id, Name, Power, MissionSiteCountdown, PowerIncrease, PowerAcceleration, IntelInvested);
 
-    public List<MissionSite> CreateMissionSites(ILog log, RandomGen randomGen, GameState state)
+    public List<MissionSite> CreateMissionSites(
+        ILog log,
+        RandomGen randomGen,
+        MissionSiteIdGen missionSiteIdGen,
+        GameState state)
     {
         Contract.Assert(MissionSiteCountdown >= 1);
 
@@ -69,8 +73,7 @@ public class Faction : IIdentifiable
         // kja2-simul-feat to make simulation more interesting: create easier missions from time to time and
         // make AI player send less experienced soldiers on it.
         List<MissionSite> sites = [];
-        // kja BUG ROOT CAUSE: this must increase the ID, right now it does not.
-        int siteId = state.NextMissionSiteId;
+        int siteId = missionSiteIdGen.Generate;
         (int difficulty, int difficultyFromTurn, int roll) =
             Ruleset.RollMissionSiteDifficulty(state.Timeline.CurrentTurn, randomGen);
 

@@ -3,7 +3,7 @@ using UfoGameLib.Lib;
 
 namespace UfoGameLib.Model;
 
-// kja convert "Ruleset" class into a namespace. Maybe introduce IRuleset "marker" interface?
+// kja2-refactor convert "Ruleset" class into a namespace. Maybe introduce IRuleset "marker" interface?
 public static class Ruleset
 {
     public const int InitialMoney = 500;
