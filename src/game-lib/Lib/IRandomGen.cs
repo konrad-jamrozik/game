@@ -9,5 +9,7 @@ public interface IRandomGen
     T Pick<T>(List<T> items);
     List<T> Pick<T>(List<T> items, int count);
     TValue Pick<TKey, TValue>(IDictionary<TKey, TValue> dict);
+    int RandomizeMissionSiteCountdown();
     bool FlipCoin();
+    
 }

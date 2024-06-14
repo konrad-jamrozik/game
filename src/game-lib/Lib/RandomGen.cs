@@ -1,5 +1,6 @@
 using Lib.Contracts;
 using MoreLinq;
+using UfoGameLib.Model;
 
 namespace UfoGameLib.Lib;
 
@@ -51,6 +52,9 @@ public class RandomGen : IRandomGen
         TKey pickedKey = Pick(keyList);
         return dict[pickedKey];
     }
+
+    public virtual int RandomizeMissionSiteCountdown()
+        => Roll(Ruleset.FactionMissionSiteCountdown);
 
     public bool FlipCoin() => _random.Next(2) == 1;
 }

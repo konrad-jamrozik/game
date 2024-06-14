@@ -20,7 +20,7 @@ public class GameSessionTests
     {
         _config = new Configuration(new FileSystem());
         _log = new Log(_config);
-        _randomGen = new RandomGen();
+        _randomGen = new DeterministicRandomGen(missionSiteCountdown: 2);
         _factions = FactionFixtures.SingleFaction(_randomGen);
     }
 

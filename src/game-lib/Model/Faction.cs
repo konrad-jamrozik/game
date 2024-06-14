@@ -11,6 +11,9 @@ public class Faction : IIdentifiable
     public int Id { get; }
     public readonly string Name;
     public readonly int Power;
+    /// <summary>
+    /// The number of times the time must be advanced for a new mission site to be generated.
+    /// </summary>
     public int MissionSiteCountdown;
     public readonly int PowerIncrease;
     public readonly int PowerAcceleration;
@@ -47,7 +50,7 @@ public class Faction : IIdentifiable
             id,
             name,
             power,
-            RandomizeMissionSiteCountdown(randomGen),
+            randomGen.RandomizeMissionSiteCountdown(),
             powerIncrease ?? 0,
             powerAcceleration ?? 0,
             0);
@@ -64,11 +67,21 @@ public class Faction : IIdentifiable
         Contract.Assert(MissionSiteCountdown >= 1);
 
         MissionSiteCountdown--;
-        if (MissionSiteCountdown > 0)
+        if (MissionSiteCountdown >= 1)
             return [];
 
         Contract.Assert(MissionSiteCountdown == 0);
-        MissionSiteCountdown = RandomizeMissionSiteCountdown(randomGen);
+        // We add + 1 to the countdown to reflect the fact the counting should start anew in
+        // a turn **after** the mission site was generated, not in the same turn.
+        // Consider what will happen if the countdown is always randomized to 2.
+        // Turn | Countdown | Mission generated?
+        // 1    | 2         | No
+        // 2    | 1         | No
+        // 3    | 0         | Yes
+        // 4    | 2         | No
+        // 5    | 1         | No
+        // 6    | 0         | Yes
+        MissionSiteCountdown = randomGen.RandomizeMissionSiteCountdown() + 1;
 
         // kja2-simul-feat to make simulation more interesting: create easier missions from time to time and
         // make AI player send less experienced soldiers on it.
@@ -97,7 +110,4 @@ public class Faction : IIdentifiable
 
         return sites;
     }
-
-    private static int RandomizeMissionSiteCountdown(IRandomGen randomGen)
-        => randomGen.Roll(Ruleset.FactionMissionSiteCountdown);
 }
