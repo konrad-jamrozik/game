@@ -11,7 +11,7 @@ public class GameSessionControllerTests
 {
     private Configuration _config = null!;
     private ILog _log = null!;
-    private readonly RandomGen _randomGen = new RandomGen(new Random());
+    private readonly IRandomGen _randomGen = new RandomGen();
 
     [SetUp]
     public void Setup()

@@ -10,7 +10,7 @@ public class AIPlayerTests
 {
     private Configuration _config = null!;
     private ILog _log = null!;
-    private readonly RandomGen _randomGen = new RandomGen(new Random());
+    private readonly IRandomGen _randomGen = new RandomGen();
 
     [SetUp]
     public void Setup()
@@ -43,7 +43,7 @@ public class AIPlayerTests
     {
         var config = new Configuration(new SimulatedFileSystem());
         var log = new Log(config);
-        var randomGen = new RandomGen(new Random());
+        var randomGen = new RandomGen();
         var intellect = AIPlayer.Intellect.Basic;
         var controller = new GameSessionController(config, log, new GameSession(randomGen));
         var aiPlayer = new AIPlayer(log, intellect);

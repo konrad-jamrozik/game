@@ -12,7 +12,7 @@ public class GameSessionTests
     // Using null! as these fields will be initialized in Setup() method.
     private Configuration _config = null!;
     private ILog _log = null!;
-    private RandomGen _randomGen = null!;
+    private IRandomGen _randomGen = null!;
     private Factions _factions = null!;
 
     [SetUp]
@@ -20,7 +20,7 @@ public class GameSessionTests
     {
         _config = new Configuration(new FileSystem());
         _log = new Log(_config);
-        _randomGen = new RandomGen(new Random());
+        _randomGen = new RandomGen();
         _factions = FactionFixtures.SingleFaction(_randomGen);
     }
 
@@ -88,7 +88,6 @@ public class GameSessionTests
         //
         // This way for testing I can say "the countdown is always 3"
         //
-        // 2. Allow to pass factions when initing game session
         MissionSite site = controller.CurrentGameStatePlayerView.MissionSites.First();
         turnController.LaunchMission(site, agentCount: 3);
         controller.AdvanceTime();

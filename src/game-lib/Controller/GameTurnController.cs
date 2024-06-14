@@ -9,7 +9,7 @@ namespace UfoGameLib.Controller;
 public class GameTurnController
 {
     private readonly ILog _log;
-    public RandomGen RandomGen { get; }
+    public IRandomGen RandomGen { get; }
     private readonly EventIdGen _eventIdGen;
     private readonly AgentIdGen _agentIdGen;
     private readonly MissionIdGen _missionIdGen;
@@ -19,7 +19,7 @@ public class GameTurnController
 
     public GameTurnController(
         ILog log,
-        RandomGen randomGen,
+        IRandomGen randomGen,
         EventIdGen eventIdGen,
         AgentIdGen agentIdGen,
         MissionIdGen missionIdGen,

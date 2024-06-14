@@ -37,7 +37,7 @@ public class Faction : IIdentifiable
     }
 
     public static Faction Init(
-        RandomGen randomGen,
+        IRandomGen randomGen,
         int id,
         string name,
         int power,
@@ -57,7 +57,7 @@ public class Faction : IIdentifiable
 
     public List<MissionSite> CreateMissionSites(
         ILog log,
-        RandomGen randomGen,
+        IRandomGen randomGen,
         MissionSiteIdGen missionSiteIdGen,
         GameState state)
     {
@@ -98,6 +98,6 @@ public class Faction : IIdentifiable
         return sites;
     }
 
-    private static int RandomizeMissionSiteCountdown(RandomGen randomGen)
+    private static int RandomizeMissionSiteCountdown(IRandomGen randomGen)
         => randomGen.Roll(Ruleset.FactionMissionSiteCountdown);
 }

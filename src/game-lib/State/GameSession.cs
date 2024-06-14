@@ -16,7 +16,7 @@ namespace UfoGameLib.State;
 /// </summary>
 public class GameSession
 {
-    public readonly RandomGen RandomGen;
+    public readonly IRandomGen RandomGen;
 
     public readonly List<GameSessionTurn> Turns;
 
@@ -34,7 +34,7 @@ public class GameSession
 
     public readonly MissionSiteIdGen MissionSiteIdGen;
 
-    public GameSession(RandomGen randomGen, List<GameSessionTurn>? turns = null, Factions? factions = null)
+    public GameSession(IRandomGen randomGen, List<GameSessionTurn>? turns = null, Factions? factions = null)
     {
         RandomGen = randomGen;
         Turns = turns ?? [new GameSessionTurn(startState: GameState.NewInitialGameState(randomGen, factions))];

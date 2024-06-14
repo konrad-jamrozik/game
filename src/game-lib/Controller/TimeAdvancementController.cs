@@ -9,14 +9,14 @@ namespace UfoGameLib.Controller;
 public class TimeAdvancementController
 {
     private readonly ILog _log;
-    private readonly RandomGen _randomGen;
+    private readonly IRandomGen _randomGen;
     private readonly List<WorldEvent> _worldEvents;
     private readonly EventIdGen _eventIdGen;
     private readonly MissionSiteIdGen _missionSiteIdGen;
 
     public TimeAdvancementController(
         ILog log,
-        RandomGen randomGen,
+        IRandomGen randomGen,
         EventIdGen eventIdGen,
         MissionSiteIdGen missionSiteIdGen)
     {

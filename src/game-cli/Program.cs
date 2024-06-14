@@ -13,7 +13,7 @@ internal static class Program
     {
         var config = new Configuration(new FileSystem());
         using var log = new Log(config);
-        var randomGen = new RandomGen(new Random());
+        var randomGen = new RandomGen();
 
         var controller = new GameSessionController(config, log, new GameSession(randomGen));
 

@@ -14,7 +14,7 @@ public static class Ruleset
 
     // For more example factions data, see:
     // https://github.com/konrad-jamrozik/game/blob/eccb44a1d5f074e95b07aebca2c6bc5bbfdfdda8/src/ufo-game/Model/Data/FactionsData.cs#L34
-    public static Factions InitialFactions(RandomGen randomGen) => new(
+    public static Factions InitialFactions(IRandomGen randomGen) => new(
     [
         // Note: need to ensure here that IDs are consecutive, and from zero.
         Faction.Init(randomGen, id: 0, "Black Lotus cult", power: 200, powerIncrease: 5),
@@ -36,7 +36,7 @@ public static class Ruleset
 
     public static (bool survived, int? recoversIn) RollForAgentSurvival(
         ILog log,
-        RandomGen randomGen,
+        IRandomGen randomGen,
         Agent agent,
         Mission mission)
     {
@@ -73,7 +73,7 @@ public static class Ruleset
     // based on faction data and possibly other factors. And faction will have power correlating with turn.
     public static (int difficulty, int difficultyFromTurn, int roll) RollMissionSiteDifficulty(
             int currentTurn,
-            RandomGen randomGen)
+            IRandomGen randomGen)
     {
         // Note that currently the only ways of increasing agents survivability of difficulty is:
         // - by surviving missions

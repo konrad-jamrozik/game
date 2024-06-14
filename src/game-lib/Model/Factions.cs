@@ -19,7 +19,7 @@ public class Factions : List<Faction>
 
     public List<MissionSite> CreateMissionSites(
         ILog log,
-        RandomGen randomGen,
+        IRandomGen randomGen,
         MissionSiteIdGen missionSiteIdGen,
         GameState state)
         => this.SelectMany(faction => faction.CreateMissionSites(log, randomGen, missionSiteIdGen, state)).ToList();

@@ -10,7 +10,7 @@ namespace UfoGameLib.Controller;
 /// </summary>
 public class CheatingGameSessionController : GameSessionController
 {
-    public CheatingGameSessionController(Configuration config, ILog log, RandomGen randomGen, GameSession gameSession)
+    public CheatingGameSessionController(Configuration config, ILog log, IRandomGen randomGen, GameSession gameSession)
         : base(
             config,
             log,

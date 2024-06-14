@@ -5,13 +5,14 @@ namespace UfoGameLib.Lib;
 
 // Note: currently upon save/load the random gets re-randomized.
 // To fix that, the Save file should include a seed used to recreate upon load.
-public class RandomGen
+
+public class RandomGen : IRandomGen
 {
     private readonly Random _random;
 
-    public RandomGen(Random random)
+    public RandomGen(Random? random = null)
     {
-        _random = random;
+        _random = random ?? new Random();
     }
 
     public int Roll1To(int n)

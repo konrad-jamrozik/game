@@ -118,14 +118,14 @@ public static class ApiUtils
     public static GameSession NewGameSession(GameState? initialGameState = null)
     {
         List<GameSessionTurn>? turnList = initialGameState != null ? [new GameSessionTurn(startState: initialGameState)] : null;
-        var gameSession = new GameSession(new RandomGen(new Random()), turnList);
+        var gameSession = new GameSession(new RandomGen(), turnList);
         return gameSession;
     }
 
     public static GameSession NewGameSessionFromTurn(GameSessionTurn? initialTurn = null)
     {
         List<GameSessionTurn>? turnList = initialTurn != null ? [initialTurn] : null;
-        var gameSession = new GameSession(new RandomGen(new Random()), turnList);
+        var gameSession = new GameSession(new RandomGen(), turnList);
         return gameSession;
     }
 

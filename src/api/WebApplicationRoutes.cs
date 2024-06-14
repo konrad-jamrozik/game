@@ -33,7 +33,7 @@ public class WebApplicationRoutes
 
     private static string HelloCoinFlip()
     {
-        var randomGen = new RandomGen(new Random());
+        var randomGen = new RandomGen();
         return $"Hello World! Coin flip: {randomGen.FlipCoin()}";
     }
 }

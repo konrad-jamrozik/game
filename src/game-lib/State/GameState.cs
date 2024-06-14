@@ -40,9 +40,9 @@ public class GameState : IEquatable<GameState>
         Factions = factions;
     }
 
-    public static GameState NewInitialGameState(RandomGen? randomGen = null, Factions? factions = null)
+    public static GameState NewInitialGameState(IRandomGen? randomGen = null, Factions? factions = null)
     {
-        randomGen ??= new RandomGen(new Random());
+        randomGen ??= new RandomGen();
         return new GameState(
             updateCount: 0,
             new Timeline(currentTurn: Timeline.InitialTurn),

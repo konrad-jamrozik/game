@@ -17,7 +17,7 @@ public class AgentSurvivalRoll
     
     public const int MaxRecoversIn = 30;
 
-    public AgentSurvivalRoll(ILog log, RandomGen randomGen, Agent agent, Mission mission)
+    public AgentSurvivalRoll(ILog log, IRandomGen randomGen, Agent agent, Mission mission)
     {
         SurvivalChance = ComputeSurvivalChance(agent, mission.Site.Difficulty);
         Roll = randomGen.Roll(RollRange);
