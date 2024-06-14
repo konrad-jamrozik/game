@@ -1,13 +1,10 @@
 using System.Text.Json.Serialization;
 using Lib.Contracts;
+using Lib.Json;
 
 namespace UfoGameLib.Model;
 
-// kja-wishlist I think that yes, it should be IIdentifiable. lib\Json\JsonConverterSupportingReferences.cs:86
-// should this implement IIdentifiable the same as MissionSite?
-// I think currently it doesn't because Agents are never serialized by reference
-// by GameStateJsonConverter, so it doesn't matter if they implement IIdentifiable
-public class Agent
+public class Agent : IIdentifiable
 {
     public enum AgentState
     {
@@ -21,7 +18,7 @@ public class Agent
         Terminated
     }
 
-    public readonly int Id;
+    public int Id { get; }
 
     public readonly int TurnHired;
     public AgentState CurrentState;

@@ -1,8 +1,10 @@
-﻿namespace UfoGameLib.Events;
+﻿using Lib.Json;
 
-public abstract class GameEvent
+namespace UfoGameLib.Events;
+
+public abstract class GameEvent : IIdentifiable
 {
-    public readonly int Id;
+    public int Id { get; }
     public readonly string Type;
 
     public GameEvent(int id, string type)
