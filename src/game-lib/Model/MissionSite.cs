@@ -50,7 +50,6 @@ public class MissionSite : IIdentifiable
         AssertStatusInvariant();
     }
 
-    // kja shouldn't it be ExpiresIn >= 1 instead of ExpiresIn >= 0 ?
     [JsonIgnore]
     public bool IsActive => TurnDeactivated == null && !Expired && ExpiresIn >= 0;
 
@@ -71,7 +70,20 @@ public class MissionSite : IIdentifiable
         Contract.Assert(IsActive);
         bool expired = false;
         if (ExpiresIn >= 1)
+        {
+            // kja note: this may tick ExpiresIn down to 0 and yet not expire.
+            // This looks nice in UI (Mission expires in ZERO turns) but is inconsistent with
+            // things like Faction.MissionSiteCountdown where if it reaches zero, it immediately generates a mission site.
+            //
+            // Perhaps the definition of Faction.MissionSiteCountdown should align with ExpiresIn counting.
+            // So change it from
+            // "The number of times the time must be advanced for a new mission site to be generated."
+            // to 
+            // "The number of times the time can be advanced before a mission site will be generated."
+            // Once I do that, I must update the comment with a table in:
+            // Faction.CreateMissionSites
             ExpiresIn--;
+        }
         else
         {
             Expire(turn);
