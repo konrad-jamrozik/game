@@ -70,7 +70,7 @@ public class MissionSite : IIdentifiable
     {
         Contract.Assert(IsActive);
         bool expired = false;
-        if (ExpiresIn > 0)
+        if (ExpiresIn >= 1)
             ExpiresIn--;
         else
         {

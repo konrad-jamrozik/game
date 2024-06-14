@@ -78,16 +78,6 @@ public class GameSessionTests
         turnController.HireAgents(count: 3);
         controller.AdvanceTime();
         controller.AdvanceTime();
-        // kja BUG ROOT CAUSE: getting no elems here because now site generation is randomized. Need to override it for testing.
-        // To solve this:
-        // 1. introduce IRandomGen and make it implement more abstract methods so they can be overriden. Like this one:
-        //     
-        //     // class Faction:
-        //     private static int RandomizeMissionSiteCountdown(RandomGen randomGen)
-        //         => randomGen.Roll(Ruleset.FactionMissionSiteCountdown);
-        //
-        // This way for testing I can say "the countdown is always 3"
-        //
         MissionSite site = controller.CurrentGameStatePlayerView.MissionSites.First();
         turnController.LaunchMission(site, agentCount: 3);
         controller.AdvanceTime();
