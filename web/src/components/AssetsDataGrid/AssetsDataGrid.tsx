@@ -23,7 +23,7 @@ export type AssetsDataGridProps = {
   readonly currentGameState: GameState | undefined
 }
 
-const gridHeight = 330
+const boxHeight = 280
 
 export function AssetsDataGrid(props: AssetsDataGridProps): React.JSX.Element {
   const rows: AssetRow[] = getRows(props.currentGameState)
@@ -32,7 +32,7 @@ export function AssetsDataGrid(props: AssetsDataGridProps): React.JSX.Element {
     <Box
       sx={[
         {
-          height: gridHeight,
+          height: boxHeight,
           minWidth: defaultComponentMinWidth,
           maxWidth: 407,
           width: '100%',
@@ -47,7 +47,7 @@ export function AssetsDataGrid(props: AssetsDataGridProps): React.JSX.Element {
         disableRowSelectionOnClick
         onRowSelectionModelChange={onRowSelectionModelChange}
         rowHeight={30}
-        hideFooterPagination={true}
+        hideFooter={true}
         sx={(theme) => ({ bgcolor: theme.palette.background.default })}
       />
     </Box>

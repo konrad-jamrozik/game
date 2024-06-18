@@ -1,10 +1,11 @@
-import { Link, Typography } from '@mui/material'
+import { Link, Stack, Typography } from '@mui/material'
 import Grid from '@mui/material/Unstable_Grid2'
 import { Fragment, useState } from 'react'
 import { AgentsDataGrid } from './components/AgentsDataGrid/AgentsDataGrid'
 import { AssetsDataGrid } from './components/AssetsDataGrid/AssetsDataGrid'
 import { Charts } from './components/Charts'
 import { EventsDataGrid } from './components/EventsDataGrid/EventsDataGrid'
+import { FactionsDataGrid } from './components/FactionsDataGrid/FactionsDataGrid'
 import { GameSessionControlPanel } from './components/GameSessionControlPanel/GameSessionControlPanel'
 import IntroDialog from './components/IntroDialog'
 import { MissionSitesDataGrid } from './components/MissionSitesDataGrid/MissionSitesDataGrid'
@@ -74,7 +75,10 @@ export default function App(): React.JSX.Element {
           <AssetsDataGrid currentGameState={currentGameState} />
         </Grid>
         <Grid sx={{ bgcolor: '#302000' }}>
-          <MissionSitesDataGrid />
+          <Stack spacing={1}>
+            <MissionSitesDataGrid />
+            <FactionsDataGrid />
+          </Stack>
         </Grid>
         <Grid sx={{ bgcolor: '#002040' }}>
           <AgentsDataGrid />
