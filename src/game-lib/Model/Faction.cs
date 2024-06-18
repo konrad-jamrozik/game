@@ -13,6 +13,7 @@ public class Faction : IIdentifiable
     public readonly int Power;
     /// <summary>
     /// The number of times the time must be advanced for a new mission site to be generated.
+    /// When it is 1 and the time is advanced, a new mission site is generated and the countdown is reset.
     /// </summary>
     public int MissionSiteCountdown;
     public readonly int PowerIncrease;
@@ -71,17 +72,18 @@ public class Faction : IIdentifiable
             return [];
 
         Contract.Assert(MissionSiteCountdown == 0);
-        // We add + 1 to the countdown to reflect the fact the counting should start anew in
-        // a turn **after** the mission site was generated, not in the same turn.
-        // Consider what will happen if the countdown is always randomized to 2.
+        // Example when countdown is always reset to 3.
+        // Observe that turn 1 is "special" as it is the only turn that reset mission
+        // countdown without having a mission itself.
         // Turn | Countdown | Mission generated?
-        // 1    | 2         | No
-        // 2    | 1         | No
-        // 3    | 0         | Yes
-        // 4    | 2         | No
-        // 5    | 1         | No
-        // 6    | 0         | Yes
-        MissionSiteCountdown = randomGen.RandomizeMissionSiteCountdown() + 1;
+        // 1    | 3         | No
+        // 2    | 2         | No
+        // 3    | 1         | No
+        // 4    | 3         | Yes
+        // 5    | 2         | No
+        // 6    | 1         | No
+        // 7    | 3         | Yes
+        MissionSiteCountdown = randomGen.RandomizeMissionSiteCountdown();
 
         // kja2-simul-feat to make simulation more interesting: create easier missions from time to time and
         // make AI player send less experienced soldiers on it.

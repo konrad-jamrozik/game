@@ -20,7 +20,7 @@ public class GameSessionTests
     {
         _config = new Configuration(new FileSystem());
         _log = new Log(_config);
-        _randomGen = new DeterministicRandomGen(missionSiteCountdown: 2);
+        _randomGen = new DeterministicRandomGen(missionSiteCountdown: 3);
         _factions = FactionFixtures.SingleFaction(_randomGen);
     }
 
@@ -78,6 +78,7 @@ public class GameSessionTests
         turnController.HireAgents(count: 3);
         controller.AdvanceTime();
         controller.AdvanceTime();
+        controller.AdvanceTime();
         MissionSite site = controller.CurrentGameStatePlayerView.MissionSites.First();
         turnController.LaunchMission(site, agentCount: 3);
         controller.AdvanceTime();
@@ -85,7 +86,7 @@ public class GameSessionTests
         GameState finalState = session.CurrentGameState;
 
         Assert.Multiple(() => {
-            Assert.That(finalState.Timeline.CurrentTurn, Is.EqualTo(4), "currentTurn");
+            Assert.That(finalState.Timeline.CurrentTurn, Is.EqualTo(5), "currentTurn");
             Assert.That(
                 finalState.AllAgents.Count,
                 Is.EqualTo(3),
@@ -180,9 +181,13 @@ public class GameSessionTests
 
         controller.AdvanceTime();
         controller.AdvanceTime();
+        Assert.That(state.MissionSites.Active.Any(), Is.False);
+        controller.AdvanceTime();
+        Assert.That(state.MissionSites.Active.Any(), Is.True);
         controller.AdvanceTime();
         controller.AdvanceTime();
         controller.AdvanceTime();
+        Assert.That(state.MissionSites.Expired.Any(), Is.False);
         controller.AdvanceTime();
         
         Assert.Multiple(
@@ -202,7 +207,7 @@ public class GameSessionTests
         Assert.Multiple(
             () =>
             {
-                Assert.That(state.CurrentTurn, Is.EqualTo(10));
+                Assert.That(state.CurrentTurn, Is.EqualTo(11));
                 Assert.That(
                     state.Assets.Agents.Count + state.TerminatedAgents.Count,
                     Is.EqualTo(5));
@@ -229,6 +234,7 @@ public class GameSessionTests
         var turnController = controller.CurrentTurnController;
         GameStatePlayerView state = controller.CurrentGameStatePlayerView;
 
+        controller.AdvanceTime();
         controller.AdvanceTime();
         turnController.HireAgents(5);
         // Need to advance time here so that hired agents are no longer InTransit and can be

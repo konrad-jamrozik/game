@@ -20,13 +20,17 @@ public class MissionSite : IIdentifiable
 
     public int? TurnDeactivated { get; private set; }
     public bool Expired { get; private set; }
+
+    /// <summary>
+    /// How many more times the time can be advanced before the mission site expires.
+    /// When ExpiresIn is 0 and the time is advanced, the mission site expires.
+    /// </summary>
     public int? ExpiresIn { get; private set; }
 
 // kja-wishlist Changes to MissionSite to make:
-// - add a Faction reference, serialize it properly via ref
+// - DONE add a Faction reference, serialize it properly via ref
 // - add props: DifficultyModifier, RewardAndPenaltyModifiers (money, intel, funding, support),
 //     FactionDamageModifier (power, power increase, power acceleration)
-// 
 // - make Difficulty a computed prop based on DifficultyModifier and Faction.Power
     [JsonConstructor]
     public MissionSite(
@@ -71,21 +75,12 @@ public class MissionSite : IIdentifiable
         bool expired = false;
         if (ExpiresIn >= 1)
         {
-            // kja note: this may tick ExpiresIn down to 0 and yet not expire.
-            // This looks nice in UI (Mission expires in ZERO turns) but is inconsistent with
-            // things like Faction.MissionSiteCountdown where if it reaches zero, it immediately generates a mission site.
-            //
-            // Perhaps the definition of Faction.MissionSiteCountdown should align with ExpiresIn counting.
-            // So change it from
-            // "The number of times the time must be advanced for a new mission site to be generated."
-            // to 
-            // "The number of times the time can be advanced before a mission site will be generated."
-            // Once I do that, I must update the comment with a table in:
-            // Faction.CreateMissionSites
             ExpiresIn--;
+            Contract.Assert(ExpiresIn >= 0);
         }
         else
         {
+            Contract.Assert(ExpiresIn == 0);
             Expire(turn);
             expired = true;
         }
