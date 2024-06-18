@@ -89,6 +89,7 @@ function load<T extends StoredDataTypeName>(
 // future work issue when trying to store 300 turns:
 // Uncaught (in promise) DOMException: Failed to execute 'setItem' on 'Storage': Setting the value of 'gameSessionData' exceeded the quota.
 // https://stackoverflow.com/questions/23977690/setting-the-value-of-dataurl-exceeded-the-quota
+// https://stackoverflow.com/questions/2989284/what-is-the-max-size-of-localstorage-values?noredirect=1&lq=1
 
 // Recommendations to use for localStorage:
 // https://chatgpt.com/share/b1109c2f-306b-441b-b690-f05435902fc2

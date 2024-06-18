@@ -11,9 +11,9 @@ import type { Faction, MissionSite } from '../../lib/codesync/GameState'
 import { getFaction } from '../../lib/codesync/dereferencing'
 import { isActive } from '../../lib/codesync/ruleset'
 import { useGameSessionContext } from '../../lib/gameSession/GameSession'
+import { factionsRenderMap } from '../../lib/rendering/renderFactions'
 import { defaultComponentMinWidth } from '../../lib/rendering/renderUtils'
 import DeployMissionDialog from './DeployMissionDialog'
-import { factionsRenderMap } from '../../lib/rendering/renderFactions'
 
 const gridHeight = 330
 

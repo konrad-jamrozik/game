@@ -17,10 +17,10 @@ public static class Ruleset
     public static Factions InitialFactions(IRandomGen randomGen) => new(
     [
         // Note: need to ensure here that IDs are consecutive, and from zero.
-        Faction.Init(randomGen, id: 0, "Black Lotus cult", power: 200, powerIncrease: 5),
-        Faction.Init(randomGen, id: 1, "Red Dawn remnants", power: 300, powerIncrease: 5),
-        Faction.Init(randomGen, id: 2, "EXALT", power: 400, powerIncrease: 6),
-        Faction.Init(randomGen, id: 3, "Zombies", power: 1200, powerIncrease: 1)
+        Faction.Init(randomGen, id: 0, "Black Lotus cult", power: 200, powerIncrease: 4, powerAcceleration: 8),
+        Faction.Init(randomGen, id: 1, "Red Dawn remnants", power: 300, powerIncrease: 5, powerAcceleration: 5),
+        Faction.Init(randomGen, id: 2, "EXALT", power: 400, powerIncrease: 6, powerAcceleration: 4),
+        Faction.Init(randomGen, id: 3, "Zombies", power: 100, powerIncrease: 1, powerAcceleration: 20)
     ]);
 
     public const int IntelToWin = 3000;

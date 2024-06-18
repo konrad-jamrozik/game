@@ -18,6 +18,7 @@ public class Faction : IIdentifiable
     public int MissionSiteCountdown;
     public int PowerIncrease;
     public readonly int PowerAcceleration;
+    public int AccumulatedPowerAcceleration;
     public readonly int IntelInvested;
 
 
@@ -29,6 +30,7 @@ public class Faction : IIdentifiable
         int missionSiteCountdown,
         int powerIncrease,
         int powerAcceleration,
+        int accumulatedPowerAcceleration,
         int intelInvested)
     {
         Id = id;
@@ -37,6 +39,7 @@ public class Faction : IIdentifiable
         MissionSiteCountdown = missionSiteCountdown;
         PowerIncrease = powerIncrease;
         PowerAcceleration = powerAcceleration;
+        AccumulatedPowerAcceleration = accumulatedPowerAcceleration;
         IntelInvested = intelInvested;
     }
 
@@ -54,10 +57,11 @@ public class Faction : IIdentifiable
             randomGen.RandomizeMissionSiteCountdown(),
             powerIncrease ?? 0,
             powerAcceleration ?? 0,
-            0);
+            accumulatedPowerAcceleration: 0,
+            intelInvested: 0);
 
     public Faction DeepClone()
-        => new(Id, Name, Power, MissionSiteCountdown, PowerIncrease, PowerAcceleration, IntelInvested);
+        => new(Id, Name, Power, MissionSiteCountdown, PowerIncrease, PowerAcceleration, AccumulatedPowerAcceleration, IntelInvested);
 
     public List<MissionSite> CreateMissionSites(
         ILog log,
@@ -116,6 +120,11 @@ public class Faction : IIdentifiable
     public void AdvanceTime()
     {
         Power += PowerIncrease;
-        PowerIncrease += PowerAcceleration;
+        AccumulatedPowerAcceleration += PowerAcceleration;
+        while (AccumulatedPowerAcceleration >= 100)
+        {
+            AccumulatedPowerAcceleration -= 100;
+            PowerIncrease += 1;
+        }
     }
 }

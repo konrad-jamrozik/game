@@ -56,6 +56,7 @@ export type Faction = {
   readonly MissionSiteCountdown: number
   readonly PowerIncrease: number
   readonly PowerAcceleration: number
+  readonly AccumulatedPowerAcceleration: number
   readonly IntelInvested: number
 }
 
