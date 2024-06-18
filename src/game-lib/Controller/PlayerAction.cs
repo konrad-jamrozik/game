@@ -18,6 +18,7 @@ public abstract class PlayerAction
         // for example, 10 agents can be hired by invoking "Hire agents" action 10 times with 1 agent,
         // 5 times with 2 agents or 1 time with 10 agents.
         state.UpdateCount += 1;
+        state.AssertInvariants();
 
         Contract.Assert(
             !state.IsGameOver,

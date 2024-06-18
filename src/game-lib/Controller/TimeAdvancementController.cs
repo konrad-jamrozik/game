@@ -77,6 +77,8 @@ public class TimeAdvancementController
         _worldEvents.Add(new WorldEvent(_eventIdGen.Generate, GameEventName.ReportEvent, [fundingChange, supportChange]));
         var worldEvents = new List<WorldEvent>(_worldEvents);
         _worldEvents.Clear();
+
+        state.AssertInvariants();
         return (advanceTimeEvent, worldEvents);
     }
 

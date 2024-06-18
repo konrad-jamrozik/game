@@ -29,6 +29,7 @@ public static class GameStateFixtures
             gs.Missions.Add(mission);
         }
 
+        gs.AssertInvariants();
         return gs;
     }
 }

@@ -38,6 +38,7 @@ public class GameState : IEquatable<GameState>
         Missions = missions;
         TerminatedAgents = terminatedAgents;
         Factions = factions;
+        AssertInvariants();
     }
 
     public static GameState NewInitialGameState(IRandomGen? randomGen = null, Factions? factions = null)
@@ -57,6 +58,13 @@ public class GameState : IEquatable<GameState>
             new Missions(),
             terminatedAgents: new Agents(terminated: true),
             factions: factions ?? Ruleset.InitialFactions(randomGen));
+    }
+
+    public void AssertInvariants()
+    {
+        IdGen.AssertConsecutiveIds(MissionSites);
+        IdGen.AssertConsecutiveIds(Missions);
+        IdGen.AssertConsecutiveIds(AllAgents.OrderBy(agent => agent.Id).ToList());
     }
 
     public static GameState FromJsonFile(File file)

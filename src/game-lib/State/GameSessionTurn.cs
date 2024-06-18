@@ -1,6 +1,7 @@
 using System.Text.Json.Serialization;
 using Lib.Contracts;
 using UfoGameLib.Events;
+using UfoGameLib.Lib;
 
 namespace UfoGameLib.State;
 
@@ -62,19 +63,10 @@ public class GameSessionTurn
             EventsInTurn.Count == EndState.UpdateCount - StartState.UpdateCount,
             "Number of events in turn must match the number of updates between the game states.");
 
-        // kja extract this into "ConsecutiveId" abstraction and invariant on IIdentifiable classes
         IReadOnlyList<GameEvent> events = GameEvents;
-        if (events.Any())
-        {
-            int firstId = events[0].Id;
-            for (int i = 0; i < events.Count; i++)
-            {
-                int expectedId = firstId + i;
-                Contract.Assert(
-                    events[i].Id == expectedId,
-                    $"Event id {events[i].Id} is not equal to expected {expectedId}.");
-            }
-        }
+        IdGen.AssertConsecutiveIds(events.ToList());
+        StartState.AssertInvariants();
+        EndState.AssertInvariants();
     }
 
     [JsonIgnore]
