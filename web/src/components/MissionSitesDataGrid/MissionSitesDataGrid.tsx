@@ -7,7 +7,8 @@ import {
   type GridRowSelectionModel,
 } from '@mui/x-data-grid'
 import _ from 'lodash'
-import type { MissionSite } from '../../lib/codesync/GameState'
+import type { Faction, MissionSite } from '../../lib/codesync/GameState'
+import { getFaction } from '../../lib/codesync/dereferencing'
 import { isActive } from '../../lib/codesync/ruleset'
 import { useGameSessionContext } from '../../lib/gameSession/GameSession'
 import { defaultComponentMinWidth } from '../../lib/rendering/renderUtils'
@@ -17,8 +18,10 @@ const gridHeight = 330
 
 export function MissionSitesDataGrid(): React.JSX.Element {
   const gameSession = useGameSessionContext()
-  const missionSites = gameSession.getCurrentGameStateUnsafe()?.MissionSites
-  const rows: MissionSiteRow[] = getRows(missionSites)
+  const gs = gameSession.getCurrentGameStateUnsafe()
+  const missionSites = gs?.MissionSites ?? []
+  const factions = gs?.Factions ?? []
+  const rows: MissionSiteRow[] = getRows(missionSites, factions)
 
   const columns: GridColDef<MissionSiteRow>[] = [
     {
@@ -26,6 +29,12 @@ export function MissionSitesDataGrid(): React.JSX.Element {
       headerName: 'Site',
       disableColumnMenu: true,
       width: 80,
+    },
+    {
+      field: 'faction',
+      headerName: 'Faction',
+      disableColumnMenu: true,
+      width: 150,
     },
     {
       field: 'difficulty',
@@ -64,7 +73,7 @@ export function MissionSitesDataGrid(): React.JSX.Element {
       sx={{
         height: gridHeight,
         minWidth: defaultComponentMinWidth,
-        maxWidth: 380,
+        maxWidth: 530,
         width: '100%',
       }}
     >
@@ -92,22 +101,27 @@ function onRowSelectionModelChange(
 
 type MissionSiteRow = {
   id: number
+  faction: string
   difficulty: number
   expiresIn: number
 }
 
-function getRows(missionSites?: MissionSite[]): MissionSiteRow[] {
-  if (_.isUndefined(missionSites)) {
-    return []
-  }
-
-  const activeMissionSites = _.filter(missionSites, (missionSite) =>
-    isActive(missionSite),
+function getRows(
+  missionSites: MissionSite[],
+  factions: Faction[],
+): MissionSiteRow[] {
+  const activeMissionSites: MissionSite[] = _.filter(
+    missionSites,
+    (missionSite) => isActive(missionSite),
   )
 
-  return _.map(activeMissionSites, (missionSite) => ({
-    id: missionSite.Id,
-    difficulty: missionSite.Difficulty,
-    expiresIn: missionSite.ExpiresIn!,
-  }))
+  return _.map(activeMissionSites, (missionSite) => {
+    const faction = getFaction(missionSite, factions)
+    return {
+      id: missionSite.Id,
+      faction: faction.Name,
+      difficulty: missionSite.Difficulty,
+      expiresIn: missionSite.ExpiresIn!,
+    }
+  })
 }

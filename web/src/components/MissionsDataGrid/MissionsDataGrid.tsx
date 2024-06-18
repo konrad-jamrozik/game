@@ -2,6 +2,7 @@ import { Box } from '@mui/material'
 import { DataGrid, type GridColDef } from '@mui/x-data-grid'
 import _ from 'lodash'
 import type { Mission, MissionSite } from '../../lib/codesync/GameState'
+import { getMissionSite } from '../../lib/codesync/dereferencing'
 import { useGameSessionContext } from '../../lib/gameSession/GameSession'
 import {
   missionStateColors,
@@ -112,22 +113,4 @@ function getRow(mission: Mission, missionSite: MissionSite): MissionRow {
     agentsSent: mission.AgentsSent,
     agentsTerminated: mission.AgentsTerminated,
   }
-}
-
-function getMissionSite(
-  mission: Mission,
-  missionSites: MissionSite[],
-): MissionSite {
-  const missionSite = _.find(
-    missionSites,
-    (site) => site.Id === mission.$Id_Site,
-  )
-
-  /* c8 ignore start */
-  if (!missionSite) {
-    throw new Error(`Mission site with id ${mission.$Id_Site} not found.`)
-  }
-  /* c8 ignore stop */
-
-  return missionSite
 }

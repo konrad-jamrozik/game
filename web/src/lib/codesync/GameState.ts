@@ -12,6 +12,7 @@ export type GameState = {
   readonly TerminatedAgents: Agent[]
   readonly MissionSites: MissionSite[]
   readonly Missions: Mission[]
+  readonly Factions: Faction[]
   readonly UpdateCount: number
 }
 
@@ -41,10 +42,21 @@ export type Mission = {
 
 export type MissionSite = {
   readonly Id: number
+  readonly $Id_Faction: number
   readonly Expired: number
   readonly ExpiresIn: number | undefined
   readonly TurnDeactivated: number | undefined
   readonly Difficulty: number
+}
+
+export type Faction = {
+  readonly Id: number
+  readonly Name: string
+  readonly Power: number
+  readonly MissionSiteCountdown: number
+  readonly PowerIncrease: number
+  readonly PowerAcceleration: number
+  readonly IntelInvested: number
 }
 
 export type AgentState =
