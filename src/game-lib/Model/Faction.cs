@@ -10,13 +10,13 @@ public class Faction : IIdentifiable
 {
     public int Id { get; }
     public readonly string Name;
-    public readonly int Power;
+    public int Power;
     /// <summary>
     /// The number of times the time must be advanced for a new mission site to be generated.
     /// When it is 1 and the time is advanced, a new mission site is generated and the countdown is reset.
     /// </summary>
     public int MissionSiteCountdown;
-    public readonly int PowerIncrease;
+    public int PowerIncrease;
     public readonly int PowerAcceleration;
     public readonly int IntelInvested;
 
@@ -111,5 +111,11 @@ public class Faction : IIdentifiable
             $"difficultyRoll: {roll,2}.");
 
         return sites;
+    }
+
+    public void AdvanceTime()
+    {
+        Power += PowerIncrease;
+        PowerIncrease += PowerAcceleration;
     }
 }
