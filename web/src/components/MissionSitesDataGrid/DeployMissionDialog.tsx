@@ -8,7 +8,7 @@ import Grid from '@mui/material/Unstable_Grid2'
 import type { GridRowId, GridRowSelectionModel } from '@mui/x-data-grid'
 import _ from 'lodash'
 import { Fragment, useState } from 'react'
-import type { MissionSite } from '../../lib/codesync/GameState'
+import type { Faction, MissionSite } from '../../lib/codesync/GameState'
 import { requiredSurvivingAgentsForSuccess } from '../../lib/codesync/ruleset'
 import {
   useGameSessionContext,
@@ -20,6 +20,7 @@ import { Label } from '../Label'
 
 export type DeployMissionDialogProps = {
   readonly missionSite: MissionSite | undefined
+  readonly faction: Faction | undefined
 }
 
 export default function DeployMissionDialog(
@@ -127,6 +128,12 @@ export default function DeployMissionDialog(
             </Grid>
             <Grid xs={4}>
               <Label>{props.missionSite?.Id}</Label>
+            </Grid>
+            <Grid xs={6}>
+              <Label>Faction</Label>
+            </Grid>
+            <Grid xs={6}>
+              <Label>{props.faction?.Name}</Label>
             </Grid>
             <Grid xs={8}>
               <Label sx={getSx('Difficulty')}>Mission site difficulty</Label>
