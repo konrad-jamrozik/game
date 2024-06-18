@@ -2,6 +2,7 @@ import Grid from '@mui/material/Unstable_Grid2'
 import { Fragment } from 'react/jsx-runtime'
 import {
   agentStatsDataSeries,
+  factionsDataSeries,
   intelStatsDataSeries,
   miscStatsDataSeries,
   missionsStatsDataSeries,
@@ -18,6 +19,20 @@ export function Charts(): React.JSX.Element {
   const gameStates = gameSession.getGameStates()
   return (
     <Fragment>
+      <Grid
+        xs={12}
+        lg={6}
+        sx={{
+          bgcolor: '#300030',
+          aspectRatio: lineChartAspectRatio,
+          maxWidth: lineChartMaxWidth,
+        }}
+      >
+        <GameStatsLineChart
+          gameStates={gameStates}
+          dataSeries={factionsDataSeries}
+        />
+      </Grid>
       <Grid
         xs={12}
         lg={6}

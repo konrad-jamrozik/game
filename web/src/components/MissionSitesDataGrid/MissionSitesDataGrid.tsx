@@ -13,6 +13,7 @@ import { isActive } from '../../lib/codesync/ruleset'
 import { useGameSessionContext } from '../../lib/gameSession/GameSession'
 import { defaultComponentMinWidth } from '../../lib/rendering/renderUtils'
 import DeployMissionDialog from './DeployMissionDialog'
+import { factionsRenderMap } from '../../lib/rendering/renderFactions'
 
 const gridHeight = 330
 
@@ -124,7 +125,7 @@ function getRows(
     const faction = getFaction(missionSite, factions)
     return {
       id: missionSite.Id,
-      faction: faction.Name,
+      faction: factionsRenderMap[faction.Id]!.label,
       difficulty: missionSite.Difficulty,
       expiresIn: missionSite.ExpiresIn!,
     }

@@ -59,6 +59,13 @@ export type Faction = {
   readonly IntelInvested: number
 }
 
+export const factionMap: { [key: number]: string } = {
+  0: 'Black Lotus cult',
+  1: 'Red Dawn remnants',
+  2: 'EXALT',
+  3: 'Zombies',
+}
+
 export type AgentState =
   | 'InTransit'
   | 'Available'

@@ -8,6 +8,7 @@ import {
 } from './codesync/ruleset'
 import { agentStateColors } from './rendering/renderAgentState'
 import { assetNameColors } from './rendering/renderAssets'
+import { factionsRenderMap } from './rendering/renderFactions'
 import { missionStateColors } from './rendering/renderMissionState'
 import { median } from './utils'
 
@@ -36,6 +37,10 @@ export type GameStatsDataSeriesKey =
   | 'missionsSuccessful'
   | 'missionsFailed'
   | 'missionSitesExpired'
+  | 'faction0'
+  | 'faction1'
+  | 'faction2'
+  | 'faction3'
   | GameStatsDerivedDataSeriesKey
 
 export type GameStatsDerivedDataSeriesKey =
@@ -216,6 +221,26 @@ export const allGameStatsDataSeriesByKey: AllStatsDataSeries = {
     label: 'Mission sites expired',
     color: 'DarkRed',
   },
+  faction0: {
+    dataFunc: (gs) => gs.Factions[0]!.Power,
+    label: factionsRenderMap[0]!.label,
+    color: factionsRenderMap[0]!.color,
+  },
+  faction1: {
+    dataFunc: (gs) => gs.Factions[1]!.Power,
+    label: factionsRenderMap[1]!.label,
+    color: factionsRenderMap[1]!.color,
+  },
+  faction2: {
+    dataFunc: (gs) => gs.Factions[2]!.Power,
+    label: factionsRenderMap[2]!.label,
+    color: factionsRenderMap[2]!.color,
+  },
+  faction3: {
+    dataFunc: (gs) => gs.Factions[3]!.Power,
+    label: factionsRenderMap[3]!.label,
+    color: factionsRenderMap[3]!.color,
+  },
 }
 
 const allGameStatsDataSeries: GameStateDataSeries[] = _.map(
@@ -264,4 +289,11 @@ export const missionsStatsDataSeries: GameStateDataSeries[] = getDataSeries([
   'missionsSuccessful',
   'missionsFailed',
   'missionSitesExpired',
+])
+
+export const factionsDataSeries: GameStateDataSeries[] = getDataSeries([
+  'faction0',
+  'faction1',
+  'faction2',
+  'faction3',
 ])

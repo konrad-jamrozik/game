@@ -3,6 +3,7 @@ import { DataGrid, type GridColDef } from '@mui/x-data-grid'
 import _ from 'lodash'
 import type { Faction } from '../../lib/codesync/GameState'
 import { useGameSessionContext } from '../../lib/gameSession/GameSession'
+import { factionsRenderMap } from '../../lib/rendering/renderFactions'
 import { defaultComponentMinWidth } from '../../lib/rendering/renderUtils'
 
 const boxHeight = 200
@@ -13,7 +14,7 @@ export function FactionsDataGrid(): React.JSX.Element {
 
   const rows: FactionRow[] = _.map(factions, (faction: Faction) => ({
     id: faction.Id,
-    name: faction.Name,
+    name: factionsRenderMap[faction.Id]!.label,
     power: faction.Power,
   }))
 
