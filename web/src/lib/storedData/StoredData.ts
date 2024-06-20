@@ -44,7 +44,23 @@ export class StoredData {
     key: T,
     value: StoredDataTypeMap[T],
   ): void {
-    localStorage.setItem(key, JSON.stringify(value))
+    const json: string = JSON.stringify(value)
+    console.log(
+      `setInLocalStorage. key: '${key}'. json.length: ${json.length}.`,
+    )
+    try {
+      // https://developer.mozilla.org/en-US/docs/Web/API/Storage/setItem
+      localStorage.setItem(key, json)
+    } catch (error: unknown) {
+      if (error instanceof DOMException) {
+        // https://developer.mozilla.org/en-US/docs/Web/API/DOMException
+        // See storage.test.ts for details.
+        console.error(
+          `Error setting item in local storage. Key: '${key}'. json.length: ${json.length}. Error: ${error.message}`,
+        )
+      }
+      throw error
+    }
   }
 
   private removeFromLocalStorage<T extends StoredDataTypeName>(key: T): void {
@@ -77,7 +93,9 @@ function load<T extends StoredDataTypeName>(
   const data: string | null = localStorage.getItem(key)
   if (!_.isNil(data)) {
     const loadedData = JSON.parse(data) as StoredDataTypeMap[T]
-    console.log(`Load from local storage data at key '${key}':`, loadedData)
+    console.log(
+      `Load from local storage data at key '${key}'. data.length: ${data.length}.`,
+    )
     return loadedData
     // eslint-disable-next-line no-else-return
   } else {
@@ -85,13 +103,3 @@ function load<T extends StoredDataTypeName>(
     return undefined
   }
 }
-
-// future work issue when trying to store 300 turns:
-// Uncaught (in promise) DOMException: Failed to execute 'setItem' on 'Storage': Setting the value of 'gameSessionData' exceeded the quota.
-// https://stackoverflow.com/questions/23977690/setting-the-value-of-dataurl-exceeded-the-quota
-// https://stackoverflow.com/questions/2989284/what-is-the-max-size-of-localstorage-values?noredirect=1&lq=1
-
-// Recommendations to use for localStorage:
-// https://chatgpt.com/share/b1109c2f-306b-441b-b690-f05435902fc2
-// https://github.com/marcuswestin/store.js#list-of-all-plugins
-// Related, from React doc: https://github.com/immerjs/immer

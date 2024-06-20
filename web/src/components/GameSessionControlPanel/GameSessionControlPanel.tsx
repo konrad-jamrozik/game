@@ -24,7 +24,7 @@ export type GameSessionControlPanelProps = {
 }
 
 const defaultStartTurn = 1
-const defaultTargetTurn = 120
+const defaultTargetTurn = 110
 
 export function GameSessionControlPanel(
   props: GameSessionControlPanelProps,
