@@ -27,11 +27,20 @@ describe('localStorage tests', () => {
 // https://stackoverflow.com/questions/23977690/setting-the-value-of-dataurl-exceeded-the-quota
 // https://stackoverflow.com/questions/2989284/what-is-the-max-size-of-localstorage-values
 // https://arty.name/localstorage.html
+// https://en.wikipedia.org/wiki/Web_storage#Storage_size
 // https://superuser.com/questions/836266/how-to-actually-change-html5-localstorage-size-in-browsers
-// https://www.rdegges.com/2018/please-stop-using-local-storage/
 // https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage
 
 // Recommendations to use for localStorage:
 // https://chatgpt.com/share/b1109c2f-306b-441b-b690-f05435902fc2
 // https://github.com/marcuswestin/store.js#list-of-all-plugins
 // Related, from React doc: https://github.com/immerjs/immer
+
+// IndexedDB:
+// https://www.rdegges.com/2018/please-stop-using-local-storage/
+// https://en.wikipedia.org/wiki/Indexed_Database_API
+// https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API
+// https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API/Using_IndexedDB
+// https://javascript.info/indexeddb
+// https://medium.com/@KevinBGreene/type-safe-indexeddb-using-typescript-declarative-schema-and-codegen-8708f16ca374
+// https://dev.to/falcosan/indexeddb-in-typescript-1nea
