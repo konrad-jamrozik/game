@@ -1,9 +1,14 @@
 import { Box } from '@mui/material'
 import { DataGrid, type GridColDef } from '@mui/x-data-grid'
 import _ from 'lodash'
-import type { Mission, MissionSite } from '../../lib/codesync/GameState'
-import { getMissionSite } from '../../lib/codesync/dereferencing'
+import type {
+  Faction,
+  Mission,
+  MissionSite,
+} from '../../lib/codesync/GameState'
+import { getFaction, getMissionSite } from '../../lib/codesync/dereferencing'
 import { useGameSessionContext } from '../../lib/gameSession/GameSession'
+import { factionsRenderMap } from '../../lib/rendering/renderFactions'
 import {
   missionStateColors,
   missionStateGridColDef,
@@ -16,19 +21,15 @@ import {
 
 export function MissionsDataGrid(): React.JSX.Element {
   const gameSession = useGameSessionContext()
-
-  const missions: Mission[] = gameSession.isInitialized()
-    ? gameSession.getCurrentGameState().Missions
-    : []
-
-  const missionSites: MissionSite[] = gameSession.isInitialized()
-    ? gameSession.getCurrentGameState().MissionSites
-    : []
+  const gs = gameSession.getCurrentGameStateUnsafe()
+  const missionSites: MissionSite[] = gs?.MissionSites ?? []
+  const missions: Mission[] = gs?.Missions ?? []
+  const factions: Faction[] = gs?.Factions ?? []
 
   const rows: MissionRow[] = _.reverse(
     _.map(missions, (mission) => {
       const missionSite = getMissionSite(mission, missionSites)
-      return getRow(mission, missionSite)
+      return getRow(mission, missionSite, factions)
     }),
   )
 
@@ -38,7 +39,7 @@ export function MissionsDataGrid(): React.JSX.Element {
         {
           height: defaultComponentHeight,
           minWidth: defaultComponentMinWidth,
-          maxWidth: 674,
+          maxWidth: 784,
           width: '100%',
         },
         sxClassesFromColors(missionStateColors),
@@ -67,6 +68,7 @@ export type MissionRow = {
   turn: number
   state: string
   difficulty: number
+  faction: string
   agentsSent: number
   agentsTerminated: number
 }
@@ -91,6 +93,11 @@ const columns: GridColDef<MissionRow>[] = [
     disableColumnMenu: true,
   },
   {
+    field: 'faction',
+    headerName: 'Faction',
+    width: 110,
+  },
+  {
     field: 'agentsSent',
     headerName: 'Agents sent',
     width: 125,
@@ -104,12 +111,17 @@ const columns: GridColDef<MissionRow>[] = [
   },
 ]
 
-function getRow(mission: Mission, missionSite: MissionSite): MissionRow {
+function getRow(
+  mission: Mission,
+  missionSite: MissionSite,
+  factions: Faction[],
+): MissionRow {
   return {
     id: mission.Id,
     turn: missionSite.TurnDeactivated!,
     state: mission.CurrentState,
     difficulty: missionSite.Difficulty,
+    faction: factionsRenderMap[getFaction(missionSite, factions).Id]!.label,
     agentsSent: mission.AgentsSent,
     agentsTerminated: mission.AgentsTerminated,
   }

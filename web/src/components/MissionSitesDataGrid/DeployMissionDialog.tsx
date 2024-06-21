@@ -14,6 +14,7 @@ import {
   useGameSessionContext,
   type GameSession,
 } from '../../lib/gameSession/GameSession'
+import { factionsRenderMap } from '../../lib/rendering/renderFactions'
 import { getSx } from '../../lib/rendering/renderUtils'
 import { AgentsDataGrid } from '../AgentsDataGrid/AgentsDataGrid'
 import { Label } from '../Label'
@@ -129,11 +130,11 @@ export default function DeployMissionDialog(
             <Grid xs={4}>
               <Label>{props.missionSite?.Id}</Label>
             </Grid>
-            <Grid xs={6}>
+            <Grid xs={8}>
               <Label>Faction</Label>
             </Grid>
-            <Grid xs={6}>
-              <Label>{props.faction?.Name}</Label>
+            <Grid xs={4}>
+              <Label>{factionsRenderMap[props.faction!.Id]!.label}</Label>
             </Grid>
             <Grid xs={8}>
               <Label sx={getSx('Difficulty')}>Mission site difficulty</Label>

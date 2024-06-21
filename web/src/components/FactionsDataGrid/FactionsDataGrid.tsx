@@ -2,6 +2,7 @@ import { Box } from '@mui/material'
 import { DataGrid, type GridColDef } from '@mui/x-data-grid'
 import _ from 'lodash'
 import type { Faction } from '../../lib/codesync/GameState'
+import { missionSiteDifficultyFactionPowerDivisor } from '../../lib/codesync/ruleset'
 import { useGameSessionContext } from '../../lib/gameSession/GameSession'
 import { factionsRenderMap } from '../../lib/rendering/renderFactions'
 import { defaultComponentMinWidth } from '../../lib/rendering/renderUtils'
@@ -15,7 +16,7 @@ export function FactionsDataGrid(): React.JSX.Element {
   const rows: FactionRow[] = _.map(factions, (faction: Faction) => ({
     id: faction.Id,
     name: factionsRenderMap[faction.Id]!.label,
-    power: faction.Power,
+    power: Math.floor(faction.Power / missionSiteDifficultyFactionPowerDivisor),
     intel: faction.IntelInvested,
   }))
 

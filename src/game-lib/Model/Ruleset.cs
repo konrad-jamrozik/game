@@ -90,7 +90,7 @@ public static class Ruleset
         int variationRoll = randomGen.Roll(MissionSiteDifficultyVariationRange);
         int difficultyModifier = precision + variationRoll;
         int difficulty = (baseDifficulty * difficultyModifier) / precision;
-        return (difficulty, baseDifficulty, variationRoll/(float)precision);
+        return (difficulty, baseDifficulty, variationRoll: variationRoll/(float)precision);
     }
 
     public static int RequiredSurvivingAgentsForSuccess(MissionSite site)

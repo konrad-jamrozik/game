@@ -30,9 +30,11 @@ const skillFromEachFirstMission = [18, 15, 12, 9, 6]
 const skillFromEachMissionBeyondFirstMissions =
   skillFromEachFirstMission.at(-1)!
 
-const baseMissionSiteDifficulty = 30
+const missionSiteSurvivalBaseDifficultyRequirement = 30
 
 const agentBaseSurvivalSkill = 100
+
+export const missionSiteDifficultyFactionPowerDivisor = 10
 
 export function isActive(missionSite: MissionSite): boolean {
   return (
@@ -66,8 +68,9 @@ export function canBeSentOnMission(agent: Agent): boolean {
 }
 
 export function requiredSurvivingAgentsForSuccess(site: MissionSite): number {
+  const baseDiff = missionSiteSurvivalBaseDifficultyRequirement
   const reqAgentsForSuccess =
-    1 + Math.floor((site.Difficulty - baseMissionSiteDifficulty) / 30)
+    1 + Math.floor((site.Difficulty - baseDiff) / baseDiff)
   console.assert(reqAgentsForSuccess >= 1)
   return reqAgentsForSuccess
 }
