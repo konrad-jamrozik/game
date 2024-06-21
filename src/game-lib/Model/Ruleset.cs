@@ -12,6 +12,9 @@ public static class Ruleset
     public const int InitialSupport = 30;
     public const int InitialMaxTransportCapacity = 4;
 
+    public const int MissionSiteDifficultyFactionPowerDivisor = 10;
+    public const int FactionPowerIncreaseAccumulationThreshold = 100;
+
     // For more example factions data, see:
     // https://github.com/konrad-jamrozik/game/blob/eccb44a1d5f074e95b07aebca2c6bc5bbfdfdda8/src/ufo-game/Model/Data/FactionsData.cs#L34
     public static Factions InitialFactions(IRandomGen randomGen) => new(
@@ -30,8 +33,10 @@ public static class Ruleset
     public const int AgentTrainingCoefficient = 1;
     public const int AgentBaseSurvivalSkill = 100;
 
-    public const int BaseMissionSiteDifficulty = 30;
-    public static readonly Range FactionMissionSiteCountdown = new Range(3, 10);
+    public const int MissionSiteSurvivalBaseDifficultyRequirement = 30;
+    public static readonly Range FactionMissionSiteCountdownRange = new Range(3, 10);
+    public const int MissionSiteDifficultyRollPrecision = 100;
+    public static readonly (int min, int max) MissionSiteDifficultyVariationRange = (min: -30, max: 30);
     public const int MissionSiteTurnsUntilExpiration = 3;
 
     public static (bool survived, int? recoversIn) RollForAgentSurvival(
@@ -62,33 +67,36 @@ public static class Ruleset
         // Note: the implicit assumption here is that if this method is called to compute if agent survived
         // a mission they are currently on, then agent.MissionsSurvived does not include
         // that mission yet. Otherwise, consider border case of first mission: the agent would
-        // immediately get the huge boost for surviving first mission, which is not intended.
+        // immediately get the huge boost for surviving first mission while on the first mission, which is not intended.
         Contract.Assert(agent.MissionsSurvived >= 0);
         int skillFromFirstMissions = SkillFromEachFirstMission.Take(agent.MissionsSurvived).Sum();
         int missionsBeyondFirstMissions = Math.Max(agent.MissionsSurvived - SkillFromEachFirstMission.Length, 0);
         return skillFromFirstMissions + missionsBeyondFirstMissions * SkillFromEachMissionBeyondFirstMissions;
     }
 
-    // kja-wishlist instead of RollMissionSiteDifficulty, now we will be rolling various MissionSite coefficients
+    // kja instead of RollMissionSiteDifficulty, now we will be rolling various MissionSite coefficients
     // based on faction data and possibly other factors. And faction will have power correlating with turn.
-    public static (int difficulty, int difficultyFromTurn, int roll) RollMissionSiteDifficulty(
-            int currentTurn,
-            IRandomGen randomGen)
+    public static (int difficulty, int baseDifficulty, float variationRoll) RollMissionSiteDifficulty(
+            IRandomGen randomGen, int factionPower)
     {
         // Note that currently the only ways of increasing agents survivability of difficulty is:
         // - by surviving missions
         // - via training
-        // As such, if difficulty due to turn would grow at least as fast as Agent.TrainingCoefficient,
+        // As such, if difficulty due to turn would grow at least as fast as Ruleset.AgentTrainingCoefficient,
         // then at some point missions would become impossible, as eventually even the most experienced
         // agents would die, and any new agents would never be able to catch up with mission difficulty.
-        int roll = randomGen.Roll0To(30);
-        int difficultyFromTurn = currentTurn * AgentTrainingCoefficient / 2;
-        return (difficulty: BaseMissionSiteDifficulty + difficultyFromTurn + roll, difficultyFromTurn, roll);
+        int precision = MissionSiteDifficultyRollPrecision;
+        int baseDifficulty = factionPower / MissionSiteDifficultyFactionPowerDivisor;
+        int variationRoll = randomGen.Roll(MissionSiteDifficultyVariationRange);
+        int difficultyModifier = precision + variationRoll;
+        int difficulty = (baseDifficulty * difficultyModifier) / precision;
+        return (difficulty, baseDifficulty, variationRoll/(float)precision);
     }
 
     public static int RequiredSurvivingAgentsForSuccess(MissionSite site)
     {
-        int reqAgentsForSuccess = 1 + (site.Difficulty - BaseMissionSiteDifficulty) / 30;
+        int baseDiff = MissionSiteSurvivalBaseDifficultyRequirement;
+        int reqAgentsForSuccess = 1 + (site.Difficulty - baseDiff) / baseDiff;
         Contract.Assert(reqAgentsForSuccess >= 1);
         return reqAgentsForSuccess;
     }

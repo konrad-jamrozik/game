@@ -34,6 +34,20 @@ public class RandomGen : IRandomGen
         return min + Roll0To(max - min);
     }
 
+    public int Roll((int min, int max) range)
+    {
+        return Roll(range.min, range.max);
+    }   
+
+    public float RollFloat(float min, float max)
+    {
+        Contract.Assert(min <= max);
+        int intMin = (int)min * 1000;
+        int intMax = (int)max * 1000;
+        int intRoll = Roll(intMin, intMax);
+        return intRoll / 1000f;
+    }
+
     public int Roll(Range range)
     {
         return Roll(range.Start.Value, range.End.Value);
@@ -54,7 +68,7 @@ public class RandomGen : IRandomGen
     }
 
     public virtual int RandomizeMissionSiteCountdown()
-        => Roll(Ruleset.FactionMissionSiteCountdown);
+        => Roll(Ruleset.FactionMissionSiteCountdownRange);
 
     public bool FlipCoin() => _random.Next(2) == 1;
 }

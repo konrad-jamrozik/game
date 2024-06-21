@@ -93,8 +93,8 @@ public class Faction : IIdentifiable
         // make AI player send less experienced soldiers on it.
         List<MissionSite> sites = [];
         int siteId = missionSiteIdGen.Generate;
-        (int difficulty, int difficultyFromTurn, int roll) =
-            Ruleset.RollMissionSiteDifficulty(state.Timeline.CurrentTurn, randomGen);
+        (int difficulty, int baseDifficulty, float variationRoll) =
+            Ruleset.RollMissionSiteDifficulty(randomGen, Power);
 
         var site = new MissionSite(
             siteId,
@@ -109,21 +109,22 @@ public class Faction : IIdentifiable
 
         log.Info(
             $"Add {site.LogString} : " +
-            $"Faction: {Name}, " +
+            $"Faction: {Name,20}, " +
             $"difficulty: {difficulty,3}, " +
-            $"difficultyFromTurn: {difficultyFromTurn,3}, " +
-            $"difficultyRoll: {roll,2}.");
+            $"baseDifficulty: {baseDifficulty,3}, " +
+            $"variationRoll: {variationRoll,5:F2}.");
 
         return sites;
     }
 
     public void AdvanceTime()
     {
+        int threshold = Ruleset.FactionPowerIncreaseAccumulationThreshold;
         Power += PowerIncrease;
         AccumulatedPowerAcceleration += PowerAcceleration;
-        while (AccumulatedPowerAcceleration >= 100)
+        while (AccumulatedPowerAcceleration >= threshold)
         {
-            AccumulatedPowerAcceleration -= 100;
+            AccumulatedPowerAcceleration -= threshold;
             PowerIncrease += 1;
         }
     }
