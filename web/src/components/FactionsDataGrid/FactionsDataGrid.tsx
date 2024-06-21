@@ -16,6 +16,7 @@ export function FactionsDataGrid(): React.JSX.Element {
     id: faction.Id,
     name: factionsRenderMap[faction.Id]!.label,
     power: faction.Power,
+    intel: faction.IntelInvested,
   }))
 
   return (
@@ -30,7 +31,6 @@ export function FactionsDataGrid(): React.JSX.Element {
       <DataGrid
         rows={rows}
         columns={columns}
-        disableRowSelectionOnClick
         rowHeight={30}
         initialState={{
           pagination: {
@@ -50,17 +50,13 @@ export type FactionRow = {
   readonly id: number
   readonly name: string
   readonly power: number
+  readonly intel: number
 }
 
 const columns: GridColDef<FactionRow>[] = [
   {
-    field: 'id',
-    headerName: 'Faction',
-    width: 80,
-  },
-  {
     field: 'name',
-    headerName: 'Name',
+    headerName: 'Faction',
     width: 150,
     disableColumnMenu: true,
   },
@@ -68,6 +64,12 @@ const columns: GridColDef<FactionRow>[] = [
     field: 'power',
     headerName: 'Power',
     width: 110,
+    disableColumnMenu: true,
+  },
+  {
+    field: 'intel',
+    headerName: 'Intel',
+    width: 80,
     disableColumnMenu: true,
   },
 ]

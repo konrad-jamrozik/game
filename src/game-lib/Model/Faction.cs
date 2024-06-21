@@ -17,7 +17,7 @@ public class Faction : IIdentifiable
     /// </summary>
     public int MissionSiteCountdown;
     public int PowerIncrease;
-    public readonly int PowerAcceleration;
+    public readonly int PowerAcceleration; // More derivatives: https://en.wikipedia.org/wiki/Fourth,_fifth,_and_sixth_derivatives_of_position
     public int AccumulatedPowerAcceleration;
     public readonly int IntelInvested;
 
