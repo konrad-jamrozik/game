@@ -74,8 +74,6 @@ public static class Ruleset
         return skillFromFirstMissions + missionsBeyondFirstMissions * SkillFromEachMissionBeyondFirstMissions;
     }
 
-    // kja instead of RollMissionSiteDifficulty, now we will be rolling various MissionSite coefficients
-    // based on faction data and possibly other factors. And faction will have power correlating with turn.
     public static (int difficulty, int baseDifficulty, float variationRoll) RollMissionSiteDifficulty(
             IRandomGen randomGen, int factionPower)
     {

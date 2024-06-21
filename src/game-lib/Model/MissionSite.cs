@@ -27,11 +27,10 @@ public class MissionSite : IIdentifiable
     /// </summary>
     public int? ExpiresIn { get; private set; }
 
-// kja-wishlist Changes to MissionSite to make:
-// - DONE add a Faction reference, serialize it properly via ref
-// - add props: DifficultyModifier, RewardAndPenaltyModifiers (money, intel, funding, support),
-//     FactionDamageModifier (power, power increase, power acceleration)
-// - make Difficulty a computed prop based on DifficultyModifier and Faction.Power
+// kja Changes to MissionSite to make:
+// - add props for (money, intel, funding, support), both reward if won and penalty if lost or expired.
+// - add props for: faction damage: reduction of (power, power increase, power acceleration), if mission won
+// Note: intel invested in faction should make these props be more favorable.
     [JsonConstructor]
     public MissionSite(
         int id,
@@ -43,7 +42,7 @@ public class MissionSite : IIdentifiable
         bool expired = false)
     {
         Contract.Assert(Difficulty >= 0);
-        Contract.Assert(ExpiresIn == null || ExpiresIn >= 0);
+        Contract.Assert(ExpiresIn is null or >= 0);
         Id = id;
         Faction = faction;
         Difficulty = difficulty;
