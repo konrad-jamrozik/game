@@ -331,9 +331,13 @@ export class GameSession {
     )
 
     const turnsAfterUpsertion = [...retainedTurns, ...upsertedTurns]
-    this.data.setTurns(turnsAfterUpsertion)
+    try {
+      this.data.setTurns(turnsAfterUpsertion)
+      this.setError('')
+    } catch (error: unknown) {
+      this.setError((error as Error).message)
+    }
     this.setLoading(false)
-    this.setError('')
   }
 
   private async applyPlayerAction(

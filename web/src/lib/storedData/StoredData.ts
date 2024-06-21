@@ -50,14 +50,15 @@ export class StoredData {
     )
     try {
       // https://developer.mozilla.org/en-US/docs/Web/API/Storage/setItem
+      // Max in Chrome is 5_000_000 bytes for the entire local storage. See storage.test.ts for details.
       localStorage.setItem(key, json)
     } catch (error: unknown) {
       if (error instanceof DOMException) {
         // https://developer.mozilla.org/en-US/docs/Web/API/DOMException
         // See storage.test.ts for details.
-        console.error(
-          `Error setting item in local storage. Key: '${key}'. json.length: ${json.length}. Error: ${error.message}`,
-        )
+        const errMsg = `Error setting item in local storage. Key: '${key}'. json.length: ${json.length}. cause.message: ${error.message}`
+        console.error(errMsg)
+        throw new Error(errMsg, { cause: error })
       }
       throw error
     }
