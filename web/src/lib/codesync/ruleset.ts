@@ -68,9 +68,9 @@ export function canBeSentOnMission(agent: Agent): boolean {
 }
 
 export function requiredSurvivingAgentsForSuccess(site: MissionSite): number {
-  const baseDiff = missionSiteSurvivalBaseDifficultyRequirement
   const reqAgentsForSuccess =
-    1 + Math.floor((site.Difficulty - baseDiff) / baseDiff)
+    1 +
+    Math.floor(site.Difficulty / missionSiteSurvivalBaseDifficultyRequirement)
   console.assert(reqAgentsForSuccess >= 1)
   return reqAgentsForSuccess
 }

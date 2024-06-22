@@ -93,8 +93,7 @@ public static class Ruleset
 
     public static int RequiredSurvivingAgentsForSuccess(MissionSite site)
     {
-        int baseDiff = MissionSiteSurvivalBaseDifficultyRequirement;
-        int reqAgentsForSuccess = 1 + (site.Difficulty - baseDiff) / baseDiff;
+        int reqAgentsForSuccess = 1 + site.Difficulty / MissionSiteSurvivalBaseDifficultyRequirement;
         Contract.Assert(reqAgentsForSuccess >= 1);
         return reqAgentsForSuccess;
     }
