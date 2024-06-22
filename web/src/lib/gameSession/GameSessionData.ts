@@ -36,7 +36,6 @@ export class GameSessionData {
     >,
   ) {}
 
-  // eslint-disable-next-line max-lines-per-function
   private static verify(turns: readonly GameSessionTurn[]): void {
     /* c8 ignore start */
     if (_.isEmpty(turns)) {
