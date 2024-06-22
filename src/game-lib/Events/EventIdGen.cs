@@ -8,7 +8,24 @@ public class EventIdGen : IdGen
 {
     public EventIdGen(List<GameSessionTurn> turns)
     {
+        (int? idFromLastEvent, int? isFromLastTurn) = AssertInvariants(turns);
+        NextId = idFromLastEvent ?? isFromLastTurn ?? 0;
+    }
+
+    public (int? idFromLastEvent, int? isFromLastTurn) AssertInvariants(List<GameSessionTurn> turns)
+    {
         Contract.Assert(turns.Any());
+        (int? idFromLastEvent, int? isFromLastTurn) = NextEventIdFromLastEvent(turns);
+        Contract.Assert(
+            idFromLastEvent is null || isFromLastTurn is null ||
+            idFromLastEvent == isFromLastTurn,
+            $"nextEventIdFromLastEvent: {idFromLastEvent}, nextEventIdFromLastTurn: {isFromLastTurn}");
+        return (idFromLastEvent, isFromLastTurn);
+    }
+
+    private static (int? idFromLastEvent, int? isFromLastTurn) NextEventIdFromLastEvent(
+        List<GameSessionTurn> turns)
+    {
         // To compute starting next event ID we first need to determine if there are any events in the input
         // game session turns. If yes, we consider as the starting next event ID to be (last event ID + 1).
         // If not, we consider the last turn NextEventId value, if set.
@@ -22,12 +39,10 @@ public class EventIdGen : IdGen
         // - There will be no events in the turn, as the player did nothing.
         // - There will be no "advance turn" event, as the player is advancing turn just right now.
         GameEvent? lastGameEvent = turns.SelectMany(turn => turn.GameEvents).LastOrDefault();
-        int? nextEventIdFromLastEvent = lastGameEvent?.Id + 1;
-        int? nextEventIdFromLastTurn = turns.Last().NextEventId;
-        Contract.Assert(
-            nextEventIdFromLastEvent is null || nextEventIdFromLastTurn is null ||
-            nextEventIdFromLastEvent == nextEventIdFromLastTurn,
-            $"nextEventIdFromLastEvent: {nextEventIdFromLastEvent}, nextEventIdFromLastTurn: {nextEventIdFromLastTurn}");
-        NextId = nextEventIdFromLastEvent ?? nextEventIdFromLastTurn ?? 0;
+        // ReSharper disable once MergeConditionalExpression
+        // Disabled because it is not equivalent. Currently null will return null but after merging null would return 1.
+        int? idFromLastEvent = lastGameEvent != null ? lastGameEvent.Id + 1 : null;
+        int? isFromLastTurn = turns.Last().NextEventId;
+        return (idFromLastEvent, isFromLastTurn);
     }
 }

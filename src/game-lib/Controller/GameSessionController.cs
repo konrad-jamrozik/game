@@ -152,6 +152,7 @@ public class GameSessionController
 
             GameSession.CurrentTurn.AssertInvariants();
             NewTurn(worldEvents, nextTurnStartState);
+            GameSession.EventIdGen.AssertInvariants(GameSession.Turns);
         }
 
         // Ensure NextEventId is set to right value in case we end up in special case of no events -

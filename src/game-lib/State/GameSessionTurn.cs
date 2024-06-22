@@ -44,6 +44,8 @@ public class GameSessionTurn
         EventsInTurn = eventsInTurn ?? new List<PlayerActionEvent>();
         EndState = endState ?? StartState.Clone();
         AdvanceTimeEvent = advanceTimeEvent;
+        // kja make GameSessionTurn.NextEventId be non-nullable. If not provided, derive from events in turn. If none, assume 0.
+        // Then update frontend to simplify its handling, e.g. removeAdvanceTimeEvent
         NextEventId = nextEventId ?? 0;
 
         AssertInvariants();
