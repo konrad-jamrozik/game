@@ -27,10 +27,6 @@ public class MissionSite : IIdentifiable
     /// </summary>
     public int? ExpiresIn { get; private set; }
 
-// kja Changes to MissionSite to make:
-// - add props for (money, intel, funding, support), both reward if won and penalty if lost or expired.
-// - add props for: faction damage: reduction of (power, power increase, power acceleration), if mission won
-// Note: intel invested in faction should make these props be more favorable.
     [JsonConstructor]
     public MissionSite(
         int id,
