@@ -44,3 +44,7 @@ describe('localStorage tests', () => {
 // https://javascript.info/indexeddb
 // https://medium.com/@KevinBGreene/type-safe-indexeddb-using-typescript-declarative-schema-and-codegen-8708f16ca374
 // https://dev.to/falcosan/indexeddb-in-typescript-1nea
+
+// Proposed approach:
+// Save upon not every turn, but upon exit
+// Always save and load gzipped stuff.

@@ -33,3 +33,10 @@ if (rootElement) {
     'Could not find #root element! Ensure that index.html has an element with id="root"',
   )
 }
+
+// kja got Error: "nextEventIdFromLastEvent: 299, nextEventIdFromLastTurn: 297"
+// when reverted turn so that mission is "Active" and then clicked next turn
+
+// kja: when local storage `quota exceeded` is reported, then "Reset game" button is disabled. Why?
+
+// kja need to add support to the new backend stuff like displaying all the mission modifiers and results
