@@ -23,7 +23,7 @@ export function EventsDataGrid(): React.JSX.Element {
   const gameSession = useGameSessionContext()
 
   const gameEvents: readonly GameEventWithTurn[] = gameSession.isInitialized()
-    ? _.filter(gameSession.getGameEvents(), (event) => eventNotEmpty(event))
+    ? gameSession.getGameEvents() // ? _.filter(gameSession.getGameEvents(), (event) => event)
     : []
 
   const rows: GameEventRow[] = _.reverse(
@@ -130,6 +130,7 @@ const columns: GridColDef<GameEventRow>[] = [
   },
 ]
 
-function eventNotEmpty(event: GameEventWithTurn): boolean {
-  return !(event.Type === 'ReportEvent' && _.every(event.Ids, (id) => id === 0))
-}
+// In case I want to filter out empty reports
+// function eventNotEmpty(event: GameEventWithTurn): boolean {
+//   return !(event.Type === 'ReportEvent' && _.every(event.Ids, (id) => id === 0))
+// }
