@@ -98,14 +98,31 @@ public static class Ruleset
         return reqAgentsForSuccess;
     }
 
-    public static int ComputeFundingChange(int successfulMissions, int failedMissions, int expiredMissionSites)
-        => successfulMissions * 5 - failedMissions * 1 - expiredMissionSites * 1;
+    public static int ComputeFundingChange(List<Mission> successfulMissions, List<Mission> failedMissions, int expiredMissionSites)
+        => successfulMissions.Sum(mission => mission.Site.Modifiers.FundingReward)
+            - failedMissions.Sum(mission => mission.Site.Modifiers.FundingPenalty)
+            - expiredMissionSites * 1; // kja dedup this const with MissionSiteModifiers into Ruleset
 
-    public static int ComputeSupportChange(int successfulMissions, int failedMissions, int expiredMissionSites)
-        => successfulMissions * 20 - failedMissions * 5 - expiredMissionSites * 5;
+    public static int ComputeSupportChange(List<Mission> successfulMissions, List<Mission> failedMissions, int expiredMissionSites)
+        => successfulMissions.Sum(mission => mission.Site.Modifiers.SupportReward)
+           - failedMissions.Sum(mission => mission.Site.Modifiers.SupportPenalty)
+           - expiredMissionSites * 1; // kja dedup this const with MissionSiteModifiers into Ruleset
 
-    public static int ComputeMoneyChange(int funding, int incomeGenerated, int agentUpkeep)
-        => funding + incomeGenerated - agentUpkeep;
+    public static int ComputeMoneyChange(Assets assets, List<Mission> successfulMissions, int agentUpkeep)
+    {
+        int funding = assets.Funding;
+        int incomeGenerated = assets.Agents.GeneratingIncome.Count * IncomeGeneratedPerAgent();
+        int moneyRewardFromMissions = successfulMissions.Sum(mission => mission.Site.Modifiers.MoneyReward);
+
+        return funding + incomeGenerated + moneyRewardFromMissions - agentUpkeep;
+    }
+
+    public static int ComputeIntelChange(Assets assets, List<Mission> successfulMissions)
+    {
+        int intelGathered = assets.Agents.GatheringIntel.Count * IntelGatheredPerAgent();
+        int intelFromMissions = successfulMissions.Sum(mission => mission.Site.Modifiers.IntelReward);
+        return intelGathered + intelFromMissions;
+    }
 
     public static int IncomeGeneratedPerAgent() => AgentUpkeepCost * 3;
 

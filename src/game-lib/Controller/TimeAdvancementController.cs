@@ -42,15 +42,18 @@ public class TimeAdvancementController
         // This means that if an agent is lost during the mission, we still pay for their upkeep.
         int agentUpkeep = state.Assets.Agents.UpkeepCost;
 
-        (int successfulMissions, int failedMissions) = EvaluateMissions(state);
+        (List<Mission> successfulMissions, List<Mission> failedMissions) = EvaluateMissions(state);
 
+        // kja need to take penalties from each mission instead of just counting downstream.
         int expiredMissionSites = UpdateActiveMissionSites(state);
 
-        // kja-wishlist funding / support change must be expanded to take into account variable mission rewards:
-        // Each mission may return different amount of funding, support, money and intel.
+        int moneyChange = Ruleset.ComputeMoneyChange(state.Assets, successfulMissions, agentUpkeep);
+        int intelChange = Ruleset.ComputeIntelChange(state.Assets, successfulMissions);
         int fundingChange = Ruleset.ComputeFundingChange(successfulMissions, failedMissions, expiredMissionSites);
         int supportChange = Ruleset.ComputeSupportChange(successfulMissions, failedMissions, expiredMissionSites);
-
+        
+        state.Assets.Money += moneyChange;
+        state.Assets.Intel += intelChange;
         // Note: this funding change will get taken into account when computing money change this turn,
         // as money change is computed downstream.
         state.Assets.Funding += fundingChange;
@@ -58,15 +61,6 @@ public class TimeAdvancementController
 
         // Each turn all transport capacity gets freed up.
         state.Assets.CurrentTransportCapacity = state.Assets.MaxTransportCapacity;
-        
-        int incomeGenerated = state.Assets.Agents.GeneratingIncome.Count * Ruleset.IncomeGeneratedPerAgent();
-
-        int moneyChange = Ruleset.ComputeMoneyChange(state.Assets.Funding, incomeGenerated, agentUpkeep);
-
-        state.Assets.Money += moneyChange;
-
-        int intelGathered = state.Assets.Agents.GatheringIntel.Count * Ruleset.IntelGatheredPerAgent();
-        state.Assets.Intel += intelGathered;
 
         UpdateAgentStates(state);
 
@@ -74,6 +68,7 @@ public class TimeAdvancementController
 
         CreateMissionSites(state);
 
+        // kja add to the report money change and intel change
         _worldEvents.Add(new WorldEvent(_eventIdGen.Generate, GameEventName.ReportEvent, [fundingChange, supportChange]));
         var worldEvents = new List<WorldEvent>(_worldEvents);
         _worldEvents.Clear();
@@ -84,19 +79,18 @@ public class TimeAdvancementController
         return (advanceTimeEvent, worldEvents);
     }
 
-    private (int successfulMissions, int failedMissions) EvaluateMissions(GameState state)
+    private (List<Mission> successful, List<Mission> failed) EvaluateMissions(GameState state)
     {
-        int successfulMissions = 0;
-        int failedMissions = 0;
+        var successfulMissions = new List<Mission>();
+        var failedMissions = new List<Mission>();
 
         foreach (Mission mission in state.Missions.Active)
         {
             bool missionSuccessful = EvaluateMission(state, mission);
-
             if (missionSuccessful)
-                successfulMissions++;
+                successfulMissions.Add(mission);
             else
-                failedMissions++;
+                failedMissions.Add(mission);
         }
 
         return (successfulMissions, failedMissions);

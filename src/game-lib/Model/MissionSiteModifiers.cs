@@ -63,6 +63,23 @@ public record MissionSiteModifiers
     {
     }
 
+    public static MissionSiteModifiers Compute()
+    {
+        // kja add randomization logic to compute the modifiers.
+        // The formula I am thinking about will be something like that:
+        // 1. Base value = Some constant + Some value from faction power
+        // 2. Roll variation from 0.7 to 1.3 (like RollMissionSiteDifficulty)
+        // 3. Return the Base value * Rolled variation
+
+        // kja move these consts to Ruleset
+        return new MissionSiteModifiers(
+            fundingReward: 5,
+            supportReward: 20,
+            fundingPenalty: 1,
+            supportPenalty: 5
+        );
+    }
+
     public MissionSiteModifiers DeepClone()
         => (MissionSiteModifiers)MemberwiseClone();
 }
