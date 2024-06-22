@@ -6,6 +6,7 @@ public interface IRandomGen
     int Roll0To(int n);
     int Roll(int min, int max);
     int Roll((int min, int max) range);
+    int Roll(int @base, int min, int max);
     float RollFloat(float min, float max);
     int Roll(Range range);
     T Pick<T>(List<T> items);

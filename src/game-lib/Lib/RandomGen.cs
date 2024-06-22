@@ -37,7 +37,12 @@ public class RandomGen : IRandomGen
     public int Roll((int min, int max) range)
     {
         return Roll(range.min, range.max);
-    }   
+    }
+
+    public int Roll(int @base, int min, int max)
+    {
+        return @base + Roll(min, max);
+    }
 
     public float RollFloat(float min, float max)
     {
@@ -77,7 +82,7 @@ public class RandomGen : IRandomGen
 
     public (int result, float variationRoll) RollVariation(int baseValue, int min, int max, int precision)
     {
-        // e.g.       -15 = Roll(-30, 30)       
+        // e.g.       -15 = Roll(-30, 30)
         int variationRoll = Roll(min, max);
         // e.g.   85 =       100 + (-15)
         int modifier = precision + variationRoll;
@@ -85,4 +90,4 @@ public class RandomGen : IRandomGen
         int result = baseValue * modifier / precision;
         return (result, variationRoll: variationRoll / (float)precision);
     }
-}
+} 

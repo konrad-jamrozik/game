@@ -1,4 +1,5 @@
 using System.Text.Json.Serialization;
+using UfoGameLib.Lib;
 
 namespace UfoGameLib.Model;
 
@@ -63,20 +64,44 @@ public record MissionSiteModifiers
     {
     }
 
-    public static MissionSiteModifiers Compute()
+    // kja introduce FactionsRuleset for this and other Faction based rules
+    public static MissionSiteModifiers Compute(IRandomGen randomGen, Faction faction)
     {
-        // kja add randomization logic to compute the modifiers.
-        // The formula I am thinking about will be something like that:
-        // 1. Base value = Some constant + Some value from faction power
-        // 2. Roll variation from 0.7 to 1.3 (like RollMissionSiteDifficulty)
-        // 3. Return the Base value * Rolled variation
+        // kja these formulas should depend on factions.
+        // E.g.:
+        // - Black Lotus is average / baseline
+        // - EXALT provides more intel than average
+        // - Red Dawn provides more money than average
+        // - Zombies provide:
+        //     - zero intel
+        //     - much less funding
+        //     - and support rewards and penalties are amplified
+        
+        int baseMoneyReward = faction.Power / Ruleset.FactionPowerPrecision;
+        (int moneyReward, _) = randomGen.RollVariation(baseMoneyReward, -50, 50, 100);
 
-        // kja move these consts to Ruleset
+        int baseIntelReward = faction.Power / Ruleset.FactionPowerPrecision;
+        (int intelReward, _) = randomGen.RollVariation(baseIntelReward, -50, 50, 100);
+
+        int baseFundingReward = 5 + faction.Power / 10 / Ruleset.FactionPowerPrecision;
+        (int fundingReward, _) = randomGen.RollVariation(baseFundingReward, -50, 50, 100);
+
+        int baseFundingPenalty = 1 + faction.Power / 10 / Ruleset.FactionPowerPrecision;
+        (int fundingPenalty, _) = randomGen.RollVariation(baseFundingPenalty, -50, 50, 100);
+
+        int baseSupportReward = 20 + faction.Power / 10 / Ruleset.FactionPowerPrecision;
+        (int supportReward, _) = randomGen.RollVariation(baseSupportReward, -50, 50, 100);
+
+        int baseSupportPenalty = 20 + faction.Power / 10 / Ruleset.FactionPowerPrecision;
+        (int supportPenalty, _) = randomGen.RollVariation(baseSupportPenalty, -50, 50, 100);
+
         return new MissionSiteModifiers(
-            fundingReward: 5,
-            supportReward: 20,
-            fundingPenalty: 1,
-            supportPenalty: 5
+            moneyReward: moneyReward,
+            intelReward: intelReward,
+            fundingReward: fundingReward,
+            supportReward: supportReward,
+            fundingPenalty: fundingPenalty,
+            supportPenalty: supportPenalty
         );
     }
 

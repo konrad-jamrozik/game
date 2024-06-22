@@ -12,7 +12,7 @@ public static class Ruleset
     public const int InitialSupport = 30;
     public const int InitialMaxTransportCapacity = 4;
 
-    public const int MissionSiteDifficultyFactionPowerDivisor = 10;
+    public const int FactionPowerPrecision = 10;
     public const int FactionPowerIncreaseAccumulationThreshold = 100;
 
     // For more example factions data, see:
@@ -75,7 +75,8 @@ public static class Ruleset
     }
 
     public static (int difficulty, int baseDifficulty, float variationRoll) RollMissionSiteDifficulty(
-            IRandomGen randomGen, int factionPower)
+        IRandomGen randomGen,
+        int factionPower)
     {
         // Note that currently the only ways of increasing agents survivability of difficulty is:
         // - by surviving missions
@@ -83,7 +84,7 @@ public static class Ruleset
         // As such, if difficulty per turn would grow at least as fast as Ruleset.AgentTrainingCoefficient,
         // then at some point missions would become impossible, as eventually even the most experienced
         // agents would die, and any new agents would never be able to catch up with mission difficulty.
-        int baseDifficulty = factionPower / MissionSiteDifficultyFactionPowerDivisor;
+        int baseDifficulty = factionPower / FactionPowerPrecision;
         (int difficulty, float variationRoll) = randomGen.RollVariation(
             baseValue: baseDifficulty,
             range: MissionSiteDifficultyVariationRange,

@@ -107,7 +107,7 @@ public class Faction : IIdentifiable
         var site = new MissionSite(
             siteId,
             this,
-            MissionSiteModifiers.Compute(),
+            MissionSiteModifiers.Compute(randomGen, this),
             difficulty,
             turnAppeared: state.Timeline.CurrentTurn,
             expiresIn: Ruleset.MissionSiteTurnsUntilExpiration);
