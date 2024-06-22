@@ -36,6 +36,7 @@ export class GameSessionData {
     >,
   ) {}
 
+  // eslint-disable-next-line max-lines-per-function
   private static verify(turns: readonly GameSessionTurn[]): void {
     /* c8 ignore start */
     if (_.isEmpty(turns)) {
@@ -110,6 +111,23 @@ export class GameSessionData {
       }
     }
 
+    const lastGameEvent: GameEvent | undefined = gameEvents.at(-1)
+    const idFromLastEvent: number | undefined = !_.isUndefined(lastGameEvent)
+      ? lastGameEvent.Id + 1
+      : undefined
+    const idFromLastTurn: number | undefined = turns.at(-1)!.NextEventId
+    if (
+      !(
+        _.isUndefined(idFromLastEvent) ||
+        _.isUndefined(idFromLastTurn) ||
+        idFromLastEvent === idFromLastTurn
+      )
+    ) {
+      throw new Error(
+        `idFromLastEvent must be equal to idFromLastTurn. But ${idFromLastEvent} != ${idFromLastTurn}`,
+      )
+    }
+
     /* c8 ignore stop */
   }
 
@@ -171,6 +189,7 @@ export class GameSessionData {
     const newData: GameSessionDataType = {
       turns: [...this.getTurnsBeforeCurrentTurn(), currentTurnAfterReset],
     }
+    // kja Error: idFromLastEvent must be equal to idFromLastTurn. But 32 != 34
     this.setData(newData)
   }
 
@@ -183,7 +202,6 @@ export class GameSessionData {
   }
 
   public setTurns(turns: readonly GameSessionTurn[]): void {
-    GameSessionData.verify(turns)
     const newData: GameSessionDataType = {
       turns,
     }
@@ -196,6 +214,7 @@ export class GameSessionData {
   }
 
   private setData(data: GameSessionDataType): void {
+    GameSessionData.verify(data.turns)
     this.storedData.persistGameSessionData(data)
     this._setData(data)
     this._data = data

@@ -45,6 +45,11 @@ export function removeAdvanceTimeEvent(turn: GameSessionTurn): GameSessionTurn {
   return {
     ...turn,
     AdvanceTimeEvent: undefined,
+    // using isNil, because it will be null, not undefined, if the turn is the latest turn
+    // received from backend.
+    NextEventId: !_.isNil(turn.AdvanceTimeEvent)
+      ? turn.AdvanceTimeEvent.Id
+      : turn.NextEventId,
   }
 }
 
