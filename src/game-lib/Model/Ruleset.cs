@@ -80,15 +80,15 @@ public static class Ruleset
         // Note that currently the only ways of increasing agents survivability of difficulty is:
         // - by surviving missions
         // - via training
-        // As such, if difficulty due to turn would grow at least as fast as Ruleset.AgentTrainingCoefficient,
+        // As such, if difficulty per turn would grow at least as fast as Ruleset.AgentTrainingCoefficient,
         // then at some point missions would become impossible, as eventually even the most experienced
         // agents would die, and any new agents would never be able to catch up with mission difficulty.
-        int precision = MissionSiteDifficultyRollPrecision;
         int baseDifficulty = factionPower / MissionSiteDifficultyFactionPowerDivisor;
-        int variationRoll = randomGen.Roll(MissionSiteDifficultyVariationRange);
-        int difficultyModifier = precision + variationRoll;
-        int difficulty = (baseDifficulty * difficultyModifier) / precision;
-        return (difficulty, baseDifficulty, variationRoll: variationRoll/(float)precision);
+        (int difficulty, float variationRoll) = randomGen.RollVariation(
+            baseValue: baseDifficulty,
+            range: MissionSiteDifficultyVariationRange,
+            precision: MissionSiteDifficultyRollPrecision);
+        return (difficulty, baseDifficulty, variationRoll);
     }
 
     public static int RequiredSurvivingAgentsForSuccess(MissionSite site)

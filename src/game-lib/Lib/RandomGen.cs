@@ -71,4 +71,18 @@ public class RandomGen : IRandomGen
         => Roll(Ruleset.FactionMissionSiteCountdownRange);
 
     public bool FlipCoin() => _random.Next(2) == 1;
+
+    public (int result, float variationRoll) RollVariation(int baseValue, (int min, int max) range, int precision)
+        => RollVariation(baseValue, range.min, range.max, precision);
+
+    public (int result, float variationRoll) RollVariation(int baseValue, int min, int max, int precision)
+    {
+        // e.g.       -15 = Roll(-30, 30)       
+        int variationRoll = Roll(min, max);
+        // e.g.   85 =       100 + (-15)
+        int modifier = precision + variationRoll;
+        // e.g. 42 =        50 *       85 / 100
+        int result = baseValue * modifier / precision;
+        return (result, variationRoll: variationRoll / (float)precision);
+    }
 }

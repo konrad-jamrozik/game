@@ -13,5 +13,9 @@ public interface IRandomGen
     TValue Pick<TKey, TValue>(IDictionary<TKey, TValue> dict);
     int RandomizeMissionSiteCountdown();
     bool FlipCoin();
-    
+
+    (int result, float variationRoll) RollVariation(int baseValue, (int min, int max) range, int precision);
+
+    (int result, float variationRoll) RollVariation(int baseValue, int min, int max, int precision);
+
 }
