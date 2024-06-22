@@ -115,6 +115,8 @@ class GameStateJsonConverter : JsonConverterSupportingReferences<GameState>
         JsonNode gameStateNode = JsonNode(ref reader);
 
         int updateCount = DeserializeInt(gameStateNode, nameof(GameState.UpdateCount));
+        // kja should this instead be Deserialize<List<Faction>> ? Like terminated agents below.
+        // I think right now factions may just be empty due to empty ctor.
         Factions factions = Deserialize<Factions>(gameStateNode);
         Timeline timeline = Deserialize<Timeline>(gameStateNode);
 
@@ -127,6 +129,7 @@ class GameStateJsonConverter : JsonConverterSupportingReferences<GameState>
                     => new MissionSite(
                         id: DeserializeInt(missionSiteObj, nameof(MissionSite.Id)),
                         faction: faction!,
+                        modifiers: Deserialize<MissionSiteModifiers>(missionSiteObj, nameof(MissionSite.Modifiers)),
                         difficulty: DeserializeInt(missionSiteObj, nameof(MissionSite.Difficulty)),
                         turnAppeared: DeserializeInt(missionSiteObj, nameof(MissionSite.TurnAppeared)),
                         expiresIn: DeserializeIntOrNull(missionSiteObj, nameof(MissionSite.ExpiresIn)),

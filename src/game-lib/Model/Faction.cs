@@ -61,7 +61,15 @@ public class Faction : IIdentifiable
             intelInvested: 0);
 
     public Faction DeepClone()
-        => new(Id, Name, Power, MissionSiteCountdown, PowerIncrease, PowerAcceleration, AccumulatedPowerAcceleration, IntelInvested);
+        => new Faction(
+            Id,
+            Name,
+            Power,
+            MissionSiteCountdown,
+            PowerIncrease,
+            PowerAcceleration,
+            AccumulatedPowerAcceleration,
+            IntelInvested);
 
     public List<MissionSite> CreateMissionSites(
         ILog log,
@@ -99,6 +107,7 @@ public class Faction : IIdentifiable
         var site = new MissionSite(
             siteId,
             this,
+            new MissionSiteModifiers(1),
             difficulty,
             turnAppeared: state.Timeline.CurrentTurn,
             expiresIn: Ruleset.MissionSiteTurnsUntilExpiration);

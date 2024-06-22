@@ -16,7 +16,8 @@ public static class GameStateFixtures
             bool isExpired = i % 2 == 0;
             var missionSite = new MissionSite(
                 id: i,
-                gs.Factions[i % gs.Factions.Count],
+                faction: gs.Factions[i % gs.Factions.Count],
+                modifiers: new MissionSiteModifiers(),
                 difficulty: 1,
                 turnAppeared: 1,
                 expiresIn: isExpired ? null : 1,

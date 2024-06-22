@@ -43,8 +43,8 @@ public abstract class JsonConverterSupportingReferences<T> : JsonConverter<T>
     protected TItem Deserialize<TItem>(JsonNode parent)
         => parent[typeof(TItem).Name].Deserialize<TItem>(SerializationOptions)!;
 
-    protected TItem Deserialize<TItem>(JsonNode parent, string name)
-        => parent[name].Deserialize<TItem>(SerializationOptions)!;
+    protected TItem Deserialize<TItem>(JsonNode parent, string propName)
+        => parent[propName].Deserialize<TItem>(SerializationOptions)!;
 
     protected List<TItem> DeserializeList<TItem>(JsonNode parent, string propName)
         => parent[propName].Deserialize<List<TItem>>(SerializationOptions)!;

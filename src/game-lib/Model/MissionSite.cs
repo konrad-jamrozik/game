@@ -15,6 +15,8 @@ public class MissionSite : IIdentifiable
     public int Id { get; }
 
     public readonly Faction Faction;
+
+    public readonly MissionSiteModifiers Modifiers;
     public readonly int Difficulty;
     public readonly int TurnAppeared;
 
@@ -31,6 +33,7 @@ public class MissionSite : IIdentifiable
     public MissionSite(
         int id,
         Faction faction,
+        MissionSiteModifiers modifiers,
         int difficulty,
         int turnAppeared,
         int? expiresIn,
@@ -41,6 +44,7 @@ public class MissionSite : IIdentifiable
         Contract.Assert(ExpiresIn is null or >= 0);
         Id = id;
         Faction = faction;
+        Modifiers = modifiers;
         Difficulty = difficulty;
         TurnAppeared = turnAppeared;
         TurnDeactivated = turnDeactivated;
@@ -109,6 +113,7 @@ public class MissionSite : IIdentifiable
         return new MissionSite(
             id: Id,
             faction: clonedFaction,
+            modifiers: Modifiers.DeepClone(),
             difficulty: Difficulty,
             turnAppeared: TurnAppeared,
             expiresIn: ExpiresIn,
