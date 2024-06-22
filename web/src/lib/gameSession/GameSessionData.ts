@@ -189,7 +189,6 @@ export class GameSessionData {
     const newData: GameSessionDataType = {
       turns: [...this.getTurnsBeforeCurrentTurn(), currentTurnAfterReset],
     }
-    // kja Error: idFromLastEvent must be equal to idFromLastTurn. But 32 != 34
     this.setData(newData)
   }
 

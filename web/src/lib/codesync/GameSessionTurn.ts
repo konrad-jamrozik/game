@@ -54,12 +54,19 @@ export function removeAdvanceTimeEvent(turn: GameSessionTurn): GameSessionTurn {
 }
 
 export function resetTurn(turn: GameSessionTurn): GameSessionTurn {
+  const eventsRemoved =
+    turn.EventsInTurn.length + (!_.isNil(turn.AdvanceTimeEvent) ? 1 : 0)
+  const newNextEventId =
+    eventsRemoved === 0 ? turn.NextEventId : turn.NextEventId! - eventsRemoved
+  console.log(
+    `eventsRemoved: ${eventsRemoved}, turn.NextEventId: ${turn.NextEventId}, newNextEventId: ${newNextEventId}`,
+  )
   return {
     EventsUntilStartState: turn.EventsUntilStartState,
     StartState: turn.StartState,
     EventsInTurn: [],
     EndState: turn.StartState,
     AdvanceTimeEvent: turn.AdvanceTimeEvent,
-    NextEventId: turn.NextEventId,
+    NextEventId: newNextEventId,
   }
 }
