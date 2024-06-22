@@ -16,7 +16,7 @@ const inputDataStr =
 
 describe('compression tests', () => {
   // eslint-disable-next-line max-statements
-  test.only('test json-gzip compression file round-trip', async () => {
+  test('test json-gzip compression file round-trip', async () => {
     const repoDir = path.normalize(`${import.meta.dirname}/../../..`)
     const inputFilePath = path.normalize(`${repoDir}/input.json`)
     const outputFilePath = path.normalize(`${repoDir}/output.gzip`)
@@ -30,6 +30,8 @@ describe('compression tests', () => {
       console.log(
         `input file: '${inputFilePath}', minifiedData.length: ${minInputData.length}`,
       )
+
+      // Act
       // Compress the JSON data using gzip
       const compressedData: Buffer = await gzip(minInputData)
 
@@ -41,6 +43,13 @@ describe('compression tests', () => {
       // minifiedData.length: 3533324
       // compressedData.length: 129308
       // reduction to: 3.66 %
+      //
+      // or
+      // minifiedData.length: 4963132
+      // compressedData.length: 231230
+      // reduction to: 4.66 %
+      // With test runtime of:
+      // Duration  3.29s (transform 150ms, setup 776ms, collect 33ms, tests 351ms, environment 1.48s, prepare 239ms)
       console.log(
         `reduction to: ${((compressedData.length / minInputData.length) * 100).toFixed(2)} %`,
       )
