@@ -18,6 +18,7 @@ import { factionsRenderMap } from '../../lib/rendering/renderFactions'
 import { getSx } from '../../lib/rendering/renderUtils'
 import { AgentsDataGrid } from '../AgentsDataGrid/AgentsDataGrid'
 import { Label } from '../Label'
+import { Stack } from '@mui/material'
 
 export type DeployMissionDialogProps = {
   readonly missionSite: MissionSite | undefined
@@ -74,24 +75,20 @@ export default function DeployMissionDialog(
         <DialogContent
           sx={{
             // bgcolor: '#205050',
-            width: '1000px',
+            width: '1400px',
             padding: '10px',
           }}
         >
-          <Grid
-            container
-            spacing={1}
-            // bgcolor="rgba(100,100,100,0.5)"
-          >
-            {missionDetailsFragment(props, assets)}
-            {agentsGridFragment(
+          <Stack direction={'row'} spacing={2} alignItems={'flex-start'}>
+            {missionDetailsGrid(props, assets)}
+            {agentsGridGrid(
               props,
               gameSession,
               assets,
               rowSelectionModel,
               setRowSelectionModel,
             )}
-          </Grid>
+          </Stack>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Close</Button>
@@ -101,12 +98,12 @@ export default function DeployMissionDialog(
   )
 }
 
-function missionDetailsFragment(
+function missionDetailsGrid(
   props: DeployMissionDialogProps,
   assets: Assets | undefined,
 ): React.JSX.Element {
   return (
-    <Fragment>
+    <Grid container spacing={1} bgcolor="rgba(100,200,100,0.5)" width={'500px'}>
       <Grid xs={8}>
         <Label>Mission site ID</Label>
       </Grid>
@@ -151,11 +148,11 @@ function missionDetailsFragment(
       <Grid xs={4}>
         <Label>{assets?.CurrentTransportCapacity}</Label>
       </Grid>
-    </Fragment>
+    </Grid>
   )
 }
 
-function agentsGridFragment(
+function agentsGridGrid(
   props: DeployMissionDialogProps,
   gameSession: GameSession,
   assets: Assets | undefined,
@@ -205,7 +202,7 @@ function agentsGridFragment(
   }
 
   return (
-    <Fragment>
+    <Grid container spacing={1} bgcolor="rgba(100,100,100,0.5)" width={'500px'}>
       <Grid xs={12} display="flex" justifyContent="center">
         <AgentsDataGrid
           missionSiteToDeploy={props.missionSite}
@@ -221,6 +218,6 @@ function agentsGridFragment(
           {getLaunchMissionButtonText()[1]}
         </Button>
       </Grid>
-    </Fragment>
+    </Grid>
   )
 }
