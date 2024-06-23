@@ -50,9 +50,6 @@ public static class ApplyPlayerActionRoute
         Contract.Assert(playerActionPayload.ActionName != GameEventName.AdvanceTimePlayerAction);
 
         gameSession.CurrentPlayerActionEvents.Add(playerActionPayload.Apply(controller));
-        // See analogous line in UfoGameLib.Controller.GameSessionController.PlayGameUntilOver
-        // for explanation why this is needed.
-        gameSession.CurrentTurn.NextEventId = gameSession.EventIdGen.Value;
 
         JsonHttpResult<GameSessionTurn> result = ApiUtils.ToJsonHttpResult(gameSession.CurrentTurn);
         return result;

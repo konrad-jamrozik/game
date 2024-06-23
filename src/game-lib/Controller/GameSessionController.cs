@@ -152,12 +152,7 @@ public class GameSessionController
 
             GameSession.CurrentTurn.AssertInvariants();
             NewTurn(worldEvents, nextTurnStartState);
-            GameSession.EventIdGen.AssertInvariants(GameSession.Turns);
         }
-
-        // Ensure NextEventId is set to right value in case we end up in special case of no events -
-        // see comment on NextEventId for details.
-        GameSession.CurrentTurn.NextEventId = GameSession.EventIdGen.Value;
     }
 
     private void NewTurn(List<WorldEvent> worldEvents, GameState nextTurnStartState)
@@ -165,8 +160,7 @@ public class GameSessionController
         GameSession.Turns.Add(
             new GameSessionTurn(
                 eventsUntilStartState: worldEvents,
-                startState: nextTurnStartState,
-                nextEventId: GameSession.EventIdGen.Value));
+                startState: nextTurnStartState));
     }
 
     public (PlayerActionEvent advaceTimeEvent, List<WorldEvent> worldEvents) AdvanceTime(GameState? state = null)

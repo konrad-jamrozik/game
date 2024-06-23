@@ -17,36 +17,20 @@ public class GameSessionTurn
 
     public PlayerActionEvent? AdvanceTimeEvent;
 
-    /// <summary>
-    /// ID of the next event to generate. This is required when:
-    /// - This is not the first turn in game session, and there was at least one event in previous turns.
-    /// - This turn has no events.
-    /// - This turn and this turn only is used as a starting point to continue evaluating game session.
-    /// Must be ignored if this game session turn has at least one game event in it.
-    /// See EventIdGen for more details.
-    /// </summary>
-    public int? NextEventId;
-
     [JsonConstructor]
     public GameSessionTurn(
-        // Note: at least one param must be mandatory; otherwise JSON deserialization would implicitly call ctor with no args, circumventing validation.
-        // Specifically I mean this line in ApiUtils.ParseGameSessionTurn
-        // parsedTurn = (requestBody.FromJsonTo<GameSessionTurn>(GameState.StateJsonSerializerOptions));
+        // Note: at least one param must be mandatory; see docs/serialization.md for details.
         GameState startState,  
         List<WorldEvent>? eventsUntilStartState = null,
         List<PlayerActionEvent>? eventsInTurn = null,
         GameState? endState = null,
-        PlayerActionEvent? advanceTimeEvent = null,
-        int? nextEventId = null)
+        PlayerActionEvent? advanceTimeEvent = null)
     {
-        EventsUntilStartState = eventsUntilStartState ?? new List<WorldEvent>();
+        EventsUntilStartState = eventsUntilStartState ?? [new WorldEvent(0, GameEventName.ReportEvent, [0, 0])];
         StartState = startState;
         EventsInTurn = eventsInTurn ?? new List<PlayerActionEvent>();
         EndState = endState ?? StartState.Clone();
         AdvanceTimeEvent = advanceTimeEvent;
-        // kja make GameSessionTurn.NextEventId be non-nullable. If not provided, derive from events in turn. If none, assume 0.
-        // Then update frontend to simplify its handling, e.g. removeAdvanceTimeEvent
-        NextEventId = nextEventId ?? 0;
 
         AssertInvariants();
     }
@@ -66,6 +50,7 @@ public class GameSessionTurn
             "Number of events in turn must match the number of updates between the game states.");
 
         IReadOnlyList<GameEvent> events = GameEvents;
+        Contract.Assert(events.First().Type == GameEventName.ReportEvent);
         IdGen.AssertConsecutiveIds(events.ToList());
         StartState.AssertInvariants();
         EndState.AssertInvariants();
@@ -90,7 +75,6 @@ public class GameSessionTurn
             EventsUntilStartState.Select(gameEvent => gameEvent.Clone()).ToList(),
             EventsInTurn.Select(gameEvent => gameEvent.Clone()).ToList(),
             EndState.Clone(),
-            AdvanceTimeEvent?.Clone(),
-            NextEventId
+            AdvanceTimeEvent?.Clone()
         );
 }

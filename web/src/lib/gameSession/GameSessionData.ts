@@ -46,10 +46,6 @@ export class GameSessionData {
       throw new Error(`First turn must be initialTurn of ${initialTurn}`)
     }
 
-    if (turns.at(0)!.EventsUntilStartState.length > 0) {
-      throw new Error('EventsUntilStartState must be empty for first turn')
-    }
-
     for (const turn of turns.slice(0, -1)) {
       if (_.isUndefined(turn.AdvanceTimeEvent)) {
         throw new TypeError(
@@ -58,7 +54,15 @@ export class GameSessionData {
       }
     }
 
-    for (const turn of turns) {
+    for (const [index, turn] of turns.entries()) {
+      if (
+        _.isEmpty(turn.EventsUntilStartState) ||
+        turn.EventsUntilStartState.at(0)?.Type !== 'ReportEvent'
+      ) {
+        throw new Error(
+          `First event of any game turn must be ReportEvent. Turn index: ${index}`,
+        )
+      }
       if (
         !(
           turn.StartState.Timeline.CurrentTurn ===
@@ -66,12 +70,12 @@ export class GameSessionData {
         )
       ) {
         throw new Error(
-          'All game states in any given turn must have the same turn number',
+          `All game states in any given turn must have the same turn number. Turn index: ${index}`,
         )
       }
       if (!(turn.EndState.UpdateCount >= turn.StartState.UpdateCount)) {
         throw new Error(
-          'End state must have same or more updates than start state.',
+          `End state must have same or more updates than start state. Turn index: ${index}`,
         )
       }
       if (
@@ -81,7 +85,7 @@ export class GameSessionData {
         )
       ) {
         throw new Error(
-          'The number of events in turn must match the number of update count between start and end state.',
+          `The number of events in turn must match the number of update count between start and end state. Turn index: ${index}`,
         )
       }
     }
@@ -109,24 +113,6 @@ export class GameSessionData {
         }
       }
     }
-
-    const lastGameEvent: GameEvent | undefined = gameEvents.at(-1)
-    const idFromLastEvent: number | undefined = !_.isUndefined(lastGameEvent)
-      ? lastGameEvent.Id + 1
-      : undefined
-    const idFromLastTurn: number | undefined = turns.at(-1)!.NextEventId
-    if (
-      !(
-        _.isUndefined(idFromLastEvent) ||
-        _.isUndefined(idFromLastTurn) ||
-        idFromLastEvent === idFromLastTurn
-      )
-    ) {
-      throw new Error(
-        `idFromLastEvent must be equal to idFromLastTurn. But ${idFromLastEvent} != ${idFromLastTurn}`,
-      )
-    }
-
     /* c8 ignore stop */
   }
 
