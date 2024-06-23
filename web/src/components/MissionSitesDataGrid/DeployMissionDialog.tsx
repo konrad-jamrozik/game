@@ -8,7 +8,7 @@ import Grid from '@mui/material/Unstable_Grid2'
 import type { GridRowId, GridRowSelectionModel } from '@mui/x-data-grid'
 import _ from 'lodash'
 import { Fragment, useState } from 'react'
-import type { Faction, MissionSite } from '../../lib/codesync/GameState'
+import type { Assets, Faction, MissionSite } from '../../lib/codesync/GameState'
 import { requiredSurvivingAgentsForSuccess } from '../../lib/codesync/ruleset'
 import {
   useGameSessionContext,
@@ -51,6 +51,119 @@ export default function DeployMissionDialog(
     setOpen(false)
   }
 
+  return (
+    <Fragment>
+      <Button
+        variant="text"
+        color="primary"
+        sx={{ padding: '0px' }}
+        onClick={handleOpen}
+      >
+        Deploy
+      </Button>
+      <Dialog open={open} onClose={handleClose} maxWidth={false}>
+        <DialogTitle
+          sx={{
+            // bgcolor: '#603050',
+            display: 'flex',
+            justifyContent: 'center',
+          }}
+        >
+          {'Choose agents to deploy'}
+        </DialogTitle>
+        <DialogContent
+          sx={{
+            // bgcolor: '#205050',
+            width: '1000px',
+            padding: '10px',
+          }}
+        >
+          <Grid
+            container
+            spacing={1}
+            // bgcolor="rgba(100,100,100,0.5)"
+          >
+            {missionDetailsFragment(props, assets)}
+            {agentsGridFragment(
+              props,
+              gameSession,
+              assets,
+              rowSelectionModel,
+              setRowSelectionModel,
+            )}
+          </Grid>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose}>Close</Button>
+        </DialogActions>
+      </Dialog>
+    </Fragment>
+  )
+}
+
+function missionDetailsFragment(
+  props: DeployMissionDialogProps,
+  assets: Assets | undefined,
+): React.JSX.Element {
+  return (
+    <Fragment>
+      <Grid xs={8}>
+        <Label>Mission site ID</Label>
+      </Grid>
+      <Grid xs={4}>
+        <Label>{props.missionSite?.Id}</Label>
+      </Grid>
+      <Grid xs={8}>
+        <Label>Faction</Label>
+      </Grid>
+      <Grid xs={4}>
+        <Label>{factionsRenderMap[props.faction!.Id]!.label}</Label>
+      </Grid>
+      <Grid xs={8}>
+        <Label sx={getSx('Difficulty')}>Mission site difficulty</Label>
+      </Grid>
+      <Grid xs={4}>
+        <Label>{props.missionSite?.Difficulty}</Label>
+      </Grid>
+      <Grid xs={8}>
+        <Label sx={getSx('Difficulty')}>
+          Required surviving agents for success
+        </Label>
+      </Grid>
+      <Grid xs={4}>
+        <Label>
+          {!_.isUndefined(props.missionSite)
+            ? requiredSurvivingAgentsForSuccess(props.missionSite)
+            : undefined}
+        </Label>
+      </Grid>
+      <Grid xs={8}>
+        <Label sx={getSx('MaxTransportCapacity')}>Max transport capacity</Label>
+      </Grid>
+      <Grid xs={4}>
+        <Label>{assets?.MaxTransportCapacity}</Label>
+      </Grid>
+      <Grid xs={8}>
+        <Label sx={getSx('CurrentTransportCapacity')}>
+          Current transport capacity
+        </Label>
+      </Grid>
+      <Grid xs={4}>
+        <Label>{assets?.CurrentTransportCapacity}</Label>
+      </Grid>
+    </Fragment>
+  )
+}
+
+function agentsGridFragment(
+  props: DeployMissionDialogProps,
+  gameSession: GameSession,
+  assets: Assets | undefined,
+  rowSelectionModel: GridRowSelectionModel,
+  setRowSelectionModel: React.Dispatch<
+    React.SetStateAction<GridRowSelectionModel>
+  >,
+): React.JSX.Element {
   async function handleLaunchMission(): Promise<void> {
     const selectedAgentsIds: number[] = _.map(
       rowSelectionModel,
@@ -69,7 +182,6 @@ export default function DeployMissionDialog(
     if (gameSession.isGameOver()) {
       return [false, `Game is over`]
     }
-
     const selectedAgents = rowSelectionModel.length
     const requiredAgents = requiredSurvivingAgentsForSuccess(props.missionSite)
 
@@ -94,104 +206,21 @@ export default function DeployMissionDialog(
 
   return (
     <Fragment>
-      <Button
-        variant="text"
-        color="primary"
-        sx={{ padding: '0px' }}
-        onClick={handleOpen}
-      >
-        Deploy
-      </Button>
-      <Dialog open={open} onClose={handleClose}>
-        <DialogTitle
-          sx={{
-            // bgcolor: '#603050',
-            display: 'flex',
-            justifyContent: 'center',
-          }}
+      <Grid xs={12} display="flex" justifyContent="center">
+        <AgentsDataGrid
+          missionSiteToDeploy={props.missionSite}
+          {...{ rowSelectionModel, setRowSelectionModel }}
+        />
+      </Grid>
+      <Grid xs={12} display="flex" justifyContent="center">
+        <Button
+          variant="contained"
+          onClick={handleLaunchMission}
+          disabled={!getLaunchMissionButtonText()[0]}
         >
-          {'Choose agents to deploy'}
-        </DialogTitle>
-        <DialogContent
-          sx={{
-            // bgcolor: '#205050',
-            width: '530px',
-            padding: '10px',
-          }}
-        >
-          <Grid
-            container
-            spacing={1}
-            // bgcolor="rgba(100,100,100,0.5)"
-          >
-            <Grid xs={8}>
-              <Label>Mission site ID</Label>
-            </Grid>
-            <Grid xs={4}>
-              <Label>{props.missionSite?.Id}</Label>
-            </Grid>
-            <Grid xs={8}>
-              <Label>Faction</Label>
-            </Grid>
-            <Grid xs={4}>
-              <Label>{factionsRenderMap[props.faction!.Id]!.label}</Label>
-            </Grid>
-            <Grid xs={8}>
-              <Label sx={getSx('Difficulty')}>Mission site difficulty</Label>
-            </Grid>
-            <Grid xs={4}>
-              <Label>{props.missionSite?.Difficulty}</Label>
-            </Grid>
-            <Grid xs={8}>
-              <Label sx={getSx('Difficulty')}>
-                Required surviving agents for success
-              </Label>
-            </Grid>
-            <Grid xs={4}>
-              <Label>
-                {!_.isUndefined(props.missionSite)
-                  ? requiredSurvivingAgentsForSuccess(props.missionSite)
-                  : undefined}
-              </Label>
-            </Grid>
-            <Grid xs={8}>
-              <Label sx={getSx('MaxTransportCapacity')}>
-                Max transport capacity
-              </Label>
-            </Grid>
-            <Grid xs={4}>
-              <Label>{assets?.MaxTransportCapacity}</Label>
-            </Grid>
-            <Grid xs={8}>
-              <Label sx={getSx('CurrentTransportCapacity')}>
-                Current transport capacity
-              </Label>
-            </Grid>
-            <Grid xs={4}>
-              <Label>{assets?.CurrentTransportCapacity}</Label>
-            </Grid>
-
-            <Grid xs={12} display="flex" justifyContent="center">
-              <AgentsDataGrid
-                missionSiteToDeploy={props.missionSite}
-                {...{ rowSelectionModel, setRowSelectionModel }}
-              />
-            </Grid>
-            <Grid xs={12} display="flex" justifyContent="center">
-              <Button
-                variant="contained"
-                onClick={handleLaunchMission}
-                disabled={!getLaunchMissionButtonText()[0]}
-              >
-                {getLaunchMissionButtonText()[1]}
-              </Button>
-            </Grid>
-          </Grid>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose}>Close</Button>
-        </DialogActions>
-      </Dialog>
+          {getLaunchMissionButtonText()[1]}
+        </Button>
+      </Grid>
     </Fragment>
   )
 }
