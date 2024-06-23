@@ -89,7 +89,6 @@ export default function DeployMissionDialog(
           sx={{
             // bgcolor: '#205050',
             padding: '10px',
-            // kja width: '100%',
           }}
         >
           <Stack direction={'row'} spacing={2} alignItems={'flex-start'}>
@@ -119,8 +118,7 @@ function missionDetailsGrid(
     <Grid
       container
       spacing={1}
-      bgcolor="rgba(100,200,100,0.5)"
-      flex="none"
+      // bgcolor="rgba(100,200,100,0.2)"
       width={missionDetailsGridMaxWidthPx}
     >
       <Grid xs={8}>
@@ -221,38 +219,18 @@ function agentsGrid(
   }
 
   return (
-    <Grid
-      container
-      spacing={1}
-      bgcolor="rgba(100,100,100,0.5)"
-      //flex="none"
-      //width="100%"
-    >
-      <Grid
-        xs={12}
-        display="flex"
-        justifyContent="center"
-        bgcolor="rgba(100,100,150,0.5)"
+    <Stack spacing={2} display="flex" alignItems="center">
+      <AgentsDataGrid
+        missionSiteToDeploy={props.missionSite}
+        {...{ rowSelectionModel, setRowSelectionModel }}
+      />
+      <Button
+        variant="contained"
+        onClick={handleLaunchMission}
+        disabled={!getLaunchMissionButtonText()[0]}
       >
-        <AgentsDataGrid
-          missionSiteToDeploy={props.missionSite}
-          {...{ rowSelectionModel, setRowSelectionModel }}
-        />
-      </Grid>
-      <Grid
-        xs={12}
-        display="flex"
-        justifyContent="center"
-        bgcolor="rgba(100,0,0,0.5)"
-      >
-        <Button
-          variant="contained"
-          onClick={handleLaunchMission}
-          disabled={!getLaunchMissionButtonText()[0]}
-        >
-          {getLaunchMissionButtonText()[1]}
-        </Button>
-      </Grid>
-    </Grid>
+        {getLaunchMissionButtonText()[1]}
+      </Button>
+    </Stack>
   )
 }
