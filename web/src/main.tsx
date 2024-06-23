@@ -34,6 +34,4 @@ if (rootElement) {
   )
 }
 
-// kja: when local storage `quota exceeded` is reported, then "Reset game" button is disabled. Why?
-
 // kja need to add support to the new backend stuff like displaying all the mission modifiers and results

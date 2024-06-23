@@ -289,7 +289,10 @@ function resetGameSessionButton(
     <Button
       variant="outlined"
       onClick={resetGame}
-      disabled={!gameSession.isInitialized() || gameSession.loading}
+      disabled={
+        !_.isEmpty(gameSession.error) &&
+        (!gameSession.isInitialized() || gameSession.loading)
+      }
       color="error"
     >
       {`Reset game`}

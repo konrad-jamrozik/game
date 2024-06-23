@@ -163,6 +163,7 @@ export class GameSession {
 
   public resetGame(): void {
     this.data.resetData()
+    this.setError(undefined)
   }
 
   public canHireAgents(count: number): boolean {
@@ -333,11 +334,10 @@ export class GameSession {
     const turnsAfterUpsertion = [...retainedTurns, ...upsertedTurns]
     try {
       this.data.setTurns(turnsAfterUpsertion)
-      this.setError('')
+      this.setError(undefined)
     } catch (error: unknown) {
       this.setError((error as Error).message)
     }
-    this.setLoading(false)
   }
 
   private async applyPlayerAction(

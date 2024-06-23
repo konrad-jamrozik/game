@@ -29,7 +29,7 @@ export async function callApi<T>(
   params: CallApiParams,
 ): Promise<T | undefined> {
   params.setLoading(true)
-  params.setError('')
+  params.setError(undefined)
 
   const logRequest: string = await log(params.request)
   try {
