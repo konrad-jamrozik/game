@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { Stack, SxProps, Theme } from '@mui/material'
+import { Stack, type SxProps, type Theme, Tooltip } from '@mui/material'
 import Button from '@mui/material/Button'
 import Dialog from '@mui/material/Dialog'
 import DialogActions from '@mui/material/DialogActions'
@@ -129,9 +129,11 @@ function missionDetailsGrid(
     >
       {_.map(entries, ([label, value, labelSx, valueSx], index) => (
         <Fragment key={index}>
-          <Grid xs={8}>
-            <Label sx={labelSx ?? {}}>{label}</Label>
-          </Grid>
+          <Tooltip title="TODO">
+            <Grid xs={8}>
+              <Label sx={labelSx ?? {}}>{label}</Label>
+            </Grid>
+          </Tooltip>
           <Grid xs={4}>
             <Label sx={valueSx ?? {}}>{value as React.ReactNode}</Label>
           </Grid>
@@ -216,6 +218,7 @@ function getMissionDetailsEntries(
     ? requiredSurvivingAgentsForSuccess(props.missionSite)
     : undefined
   // kja add here MissionSiteModifiers: rewards, penalties
+  // kja add support for tooltip, explain agents, shorten title to "Agents required"
   // prettier-ignore
   const entries: [string, unknown, SxProps<Theme>?, SxProps<Theme>?][] = [
     ['Mission site ID',                       props.missionSite?.Id,            ],
