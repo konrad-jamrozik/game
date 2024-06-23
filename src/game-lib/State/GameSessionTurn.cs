@@ -39,7 +39,8 @@ public class GameSessionTurn
     {
         Contract.Assert(
             StartState.Timeline.CurrentTurn == EndState.Timeline.CurrentTurn,
-            "Both game states in the turn must denote the same turn.");
+            $"Both game states in the turn must denote the same turn. " +
+            $"StartState turn: {StartState.Timeline.CurrentTurn}, EndState turn: {EndState.Timeline.CurrentTurn}");
 
         Contract.Assert(
             EndState.UpdateCount >= StartState.UpdateCount,
@@ -49,9 +50,8 @@ public class GameSessionTurn
             EventsInTurn.Count == EndState.UpdateCount - StartState.UpdateCount,
             "Number of events in turn must match the number of updates between the game states.");
 
-        IReadOnlyList<GameEvent> events = GameEvents;
-        Contract.Assert(events.First().Type == GameEventName.ReportEvent);
-        IdGen.AssertConsecutiveIds(events.ToList());
+        Contract.Assert(EventsUntilStartState.Last().Type == GameEventName.ReportEvent);
+        IdGen.AssertConsecutiveIds(GameEvents.ToList());
         StartState.AssertInvariants();
         EndState.AssertInvariants();
     }
@@ -63,8 +63,11 @@ public class GameSessionTurn
                 ..EventsUntilStartState,
                 ..EventsInTurn,
                 ..(AdvanceTimeEvent != null ? (List<GameEvent>) [AdvanceTimeEvent] : [])
-            ])
-            .ToList().AsReadOnly();
+            ]).AsReadOnly();
+
+    [JsonIgnore]
+    public IReadOnlyList<GameState> GameStates
+        => ((List<GameState>)[StartState, EndState]).AsReadOnly();
 
     public GameSessionTurn Clone()
         => DeepClone();
