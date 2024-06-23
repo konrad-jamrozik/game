@@ -43,10 +43,24 @@ export type Mission = {
 export type MissionSite = {
   readonly Id: number
   readonly $Id_Faction: number
+  readonly Modifiers: MissionSiteModifiers
+  readonly Difficulty: number
+  readonly TurnAppeared: number
+  readonly TurnDeactivated: number | undefined
   readonly Expired: number
   readonly ExpiresIn: number | undefined
-  readonly TurnDeactivated: number | undefined
-  readonly Difficulty: number
+}
+
+export type MissionSiteModifiers = {
+  readonly MoneyReward: number
+  readonly IntelReward: number
+  readonly FundingReward: number
+  readonly SupportReward: number
+  readonly PowerDamageReward: number
+  readonly PowerIncreaseDamageReward: number
+  readonly PowerAccelerationDamageReward: number
+  readonly FundingPenalty: number
+  readonly SupportPenalty: number
 }
 
 export type Faction = {

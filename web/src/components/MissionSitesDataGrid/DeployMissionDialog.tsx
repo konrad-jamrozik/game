@@ -1,4 +1,3 @@
-/* eslint-disable max-lines-per-function */
 import { Stack, type SxProps, type Theme, Tooltip } from '@mui/material'
 import Button from '@mui/material/Button'
 import Dialog from '@mui/material/Dialog'
@@ -9,7 +8,12 @@ import Grid from '@mui/material/Unstable_Grid2'
 import type { GridRowId, GridRowSelectionModel } from '@mui/x-data-grid'
 import _ from 'lodash'
 import { Fragment, useState } from 'react'
-import type { Assets, Faction, MissionSite } from '../../lib/codesync/GameState'
+import type {
+  Assets,
+  Faction,
+  MissionSite,
+  MissionSiteModifiers,
+} from '../../lib/codesync/GameState'
 import { requiredSurvivingAgentsForSuccess } from '../../lib/codesync/ruleset'
 import {
   useGameSessionContext,
@@ -127,15 +131,15 @@ function missionDetailsGrid(
       // bgcolor="rgba(100,200,100,0.2)"
       width={missionDetailsGridMaxWidthPx}
     >
-      {_.map(entries, ([label, value, labelSx, valueSx], index) => (
+      {_.map(entries, (entry, index) => (
         <Fragment key={index}>
           <Tooltip title="TODO">
             <Grid xs={8}>
-              <Label sx={labelSx ?? {}}>{label}</Label>
+              <Label sx={entry.label.sx ?? {}}>{entry.label.content}</Label>
             </Grid>
           </Tooltip>
           <Grid xs={4}>
-            <Label sx={valueSx ?? {}}>{value as React.ReactNode}</Label>
+            <Label sx={entry.value.sx ?? {}}>{entry.value.content}</Label>
           </Grid>
         </Fragment>
       ))}
@@ -209,24 +213,42 @@ function agentsGrid(
   )
 }
 
+type missionDetailsEntry = {
+  label: {
+    content: string
+    sx?: SxProps<Theme>
+  }
+  value: {
+    content: string | number | undefined
+    sx?: SxProps<Theme>
+  }
+}
+
 function getMissionDetailsEntries(
   props: DeployMissionDialogProps,
   assets: Assets | undefined,
-): [string, unknown, SxProps<Theme>?, SxProps<Theme>?][] {
+): missionDetailsEntry[] {
   const factionLabel = factionsRenderMap[props.faction!.Id]!.label
   const reqAgents = !_.isUndefined(props.missionSite)
     ? requiredSurvivingAgentsForSuccess(props.missionSite)
     : undefined
   // kja add here MissionSiteModifiers: rewards, penalties
   // kja add support for tooltip, explain agents, shorten title to "Agents required"
+
+  const site: MissionSite | undefined = props.missionSite
+  const mods: MissionSiteModifiers | undefined = site?.Modifiers
+
   // prettier-ignore
-  const entries: [string, unknown, SxProps<Theme>?, SxProps<Theme>?][] = [
-    ['Mission site ID',                       props.missionSite?.Id,            ],
-    ['Faction',                               factionLabel                      ],
-    ['Mission site difficulty',               props.missionSite?.Difficulty,    getSx('Difficulty')],
-    ['Required surviving agents for success', reqAgents,                        getSx('Difficulty')],
-    ['Max Transport Capacity',                assets?.MaxTransportCapacity,     getSx('MaxTransportCapacity')],
-    ['Current Transport Capacity',            assets?.CurrentTransportCapacity, getSx('CurrentTransportCapacity')],
+  const entries2: missionDetailsEntry[] = [
+    { label: { content: 'Mission site ID' },                                                              value: { content: site?.Id                         }},
+    { label: { content: 'Faction' },                                                                      value: { content: factionLabel                     }},
+    { label: { content: 'Mission site difficulty',               sx: getSx('Difficulty') },               value: { content: site?.Difficulty                 }},
+    { label: { content: 'Required surviving agents for success', sx: getSx('Difficulty') },               value: { content: reqAgents                        }},
+    { label: { content: 'Max Transport Capacity',                sx: getSx('MaxTransportCapacity') },     value: { content: assets?.MaxTransportCapacity     }},
+    { label: { content: 'Current Transport Capacity',            sx: getSx('CurrentTransportCapacity') }, value: { content: assets?.CurrentTransportCapacity }},
+    { label: { content: 'Funding reward'                         },                                       value: { content: mods?.FundingReward              }},
+    { label: { content: 'Funding penalty'                        },                                       value: { content: mods?.FundingPenalty             }},
   ]
-  return entries
+
+  return entries2
 }
