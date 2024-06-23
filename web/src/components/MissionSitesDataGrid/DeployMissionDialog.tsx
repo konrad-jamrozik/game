@@ -215,6 +215,7 @@ function getMissionDetailsEntries(
   const reqAgents = !_.isUndefined(props.missionSite)
     ? requiredSurvivingAgentsForSuccess(props.missionSite)
     : undefined
+  // kja add here MissionSiteModifiers: rewards, penalties
   // prettier-ignore
   const entries: [string, unknown, SxProps<Theme>?, SxProps<Theme>?][] = [
     ['Mission site ID',                       props.missionSite?.Id,            ],
