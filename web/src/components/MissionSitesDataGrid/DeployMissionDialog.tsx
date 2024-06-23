@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { Stack } from '@mui/material'
+import { Stack, SxProps, Theme } from '@mui/material'
 import Button from '@mui/material/Button'
 import Dialog from '@mui/material/Dialog'
 import DialogActions from '@mui/material/DialogActions'
@@ -114,6 +114,12 @@ function missionDetailsGrid(
   props: DeployMissionDialogProps,
   assets: Assets | undefined,
 ): React.JSX.Element {
+  //   let myTuple: [string, number];
+  // myTuple = ["Hello", 10]; // OK
+  const entries = getMissionDetailsEntries(props, assets)
+  // About react keys:
+  // https://www.dhiwise.com/post/react-lists-and-keys-the-key-to-efficient-rendering#understanding-lists-in-react
+  // https://react.dev/learn/rendering-lists
   return (
     <Grid
       container
@@ -121,50 +127,16 @@ function missionDetailsGrid(
       // bgcolor="rgba(100,200,100,0.2)"
       width={missionDetailsGridMaxWidthPx}
     >
-      <Grid xs={8}>
-        <Label>Mission site ID</Label>
-      </Grid>
-      <Grid xs={4}>
-        <Label>{props.missionSite?.Id}</Label>
-      </Grid>
-      <Grid xs={8}>
-        <Label>Faction</Label>
-      </Grid>
-      <Grid xs={4}>
-        <Label>{factionsRenderMap[props.faction!.Id]!.label}</Label>
-      </Grid>
-      <Grid xs={8}>
-        <Label sx={getSx('Difficulty')}>Mission site difficulty</Label>
-      </Grid>
-      <Grid xs={4}>
-        <Label>{props.missionSite?.Difficulty}</Label>
-      </Grid>
-      <Grid xs={8}>
-        <Label sx={getSx('Difficulty')}>
-          Required surviving agents for success
-        </Label>
-      </Grid>
-      <Grid xs={4}>
-        <Label>
-          {!_.isUndefined(props.missionSite)
-            ? requiredSurvivingAgentsForSuccess(props.missionSite)
-            : undefined}
-        </Label>
-      </Grid>
-      <Grid xs={8}>
-        <Label sx={getSx('MaxTransportCapacity')}>Max transport capacity</Label>
-      </Grid>
-      <Grid xs={4}>
-        <Label>{assets?.MaxTransportCapacity}</Label>
-      </Grid>
-      <Grid xs={8}>
-        <Label sx={getSx('CurrentTransportCapacity')}>
-          Current transport capacity
-        </Label>
-      </Grid>
-      <Grid xs={4}>
-        <Label>{assets?.CurrentTransportCapacity}</Label>
-      </Grid>
+      {_.map(entries, ([label, value, labelSx, valueSx], index) => (
+        <Fragment key={index}>
+          <Grid xs={8}>
+            <Label sx={labelSx ?? {}}>{label}</Label>
+          </Grid>
+          <Grid xs={4}>
+            <Label sx={valueSx ?? {}}>{value as React.ReactNode}</Label>
+          </Grid>
+        </Fragment>
+      ))}
     </Grid>
   )
 }
@@ -233,4 +205,24 @@ function agentsGrid(
       </Button>
     </Stack>
   )
+}
+
+function getMissionDetailsEntries(
+  props: DeployMissionDialogProps,
+  assets: Assets | undefined,
+): [string, unknown, SxProps<Theme>?, SxProps<Theme>?][] {
+  const factionLabel = factionsRenderMap[props.faction!.Id]!.label
+  const reqAgents = !_.isUndefined(props.missionSite)
+    ? requiredSurvivingAgentsForSuccess(props.missionSite)
+    : undefined
+  // prettier-ignore
+  const entries: [string, unknown, SxProps<Theme>?, SxProps<Theme>?][] = [
+    ['Mission site ID',                       props.missionSite?.Id,            ],
+    ['Faction',                               factionLabel                      ],
+    ['Mission site difficulty',               props.missionSite?.Difficulty,    getSx('Difficulty')],
+    ['Required surviving agents for success', reqAgents,                        getSx('Difficulty')],
+    ['Max Transport Capacity',                assets?.MaxTransportCapacity,     getSx('MaxTransportCapacity')],
+    ['Current Transport Capacity',            assets?.CurrentTransportCapacity, getSx('CurrentTransportCapacity')],
+  ]
+  return entries
 }
