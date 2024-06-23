@@ -38,6 +38,9 @@ import {
 import { AgentsDataGridToolbar } from './AgentsDataGridToolbar'
 import type { BatchAgentPlayerActionOption } from './batchAgentPlayerActionOptions'
 
+export const agentsDataGridDeploymentDisplayMaxWidthPx = 488
+export const agentsDataGridMaxWidthPx = 550
+
 export type AgentsDataGridProps = {
   readonly missionSiteToDeploy?: MissionSite | undefined
   readonly rowSelectionModel?: GridRowSelectionModel
@@ -91,7 +94,9 @@ export function AgentsDataGrid(props: AgentsDataGridProps): React.JSX.Element {
         {
           height: !deploymentDisplay ? defaultComponentHeight : 460,
           minWidth: defaultComponentMinWidth,
-          maxWidth: deploymentDisplay ? 488 : 550,
+          maxWidth: deploymentDisplay
+            ? agentsDataGridDeploymentDisplayMaxWidthPx
+            : agentsDataGridMaxWidthPx,
           width: '100%',
         },
         sxClassesFromColors(agentStateColors),

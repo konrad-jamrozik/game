@@ -1,4 +1,5 @@
 /* eslint-disable max-lines-per-function */
+import { Stack } from '@mui/material'
 import Button from '@mui/material/Button'
 import Dialog from '@mui/material/Dialog'
 import DialogActions from '@mui/material/DialogActions'
@@ -16,9 +17,16 @@ import {
 } from '../../lib/gameSession/GameSession'
 import { factionsRenderMap } from '../../lib/rendering/renderFactions'
 import { getSx } from '../../lib/rendering/renderUtils'
-import { AgentsDataGrid } from '../AgentsDataGrid/AgentsDataGrid'
+import {
+  AgentsDataGrid,
+  // agentsDataGridDeploymentDisplayMaxWidthPx,
+} from '../AgentsDataGrid/AgentsDataGrid'
 import { Label } from '../Label'
-import { Stack } from '@mui/material'
+
+const missionDetailsGridMaxWidthPx = 500
+// const agentsGridWidthPx = agentsDataGridDeploymentDisplayMaxWidthPx + 50
+// const dialogContentWidthPx =
+// missionDetailsGridMaxWidthPx + agentsGridWidthPx + 50
 
 export type DeployMissionDialogProps = {
   readonly missionSite: MissionSite | undefined
@@ -62,7 +70,12 @@ export default function DeployMissionDialog(
       >
         Deploy
       </Button>
-      <Dialog open={open} onClose={handleClose} maxWidth={false}>
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        maxWidth={false}
+        fullWidth={false}
+      >
         <DialogTitle
           sx={{
             // bgcolor: '#603050',
@@ -75,13 +88,13 @@ export default function DeployMissionDialog(
         <DialogContent
           sx={{
             // bgcolor: '#205050',
-            width: '1400px',
             padding: '10px',
+            // kja width: '100%',
           }}
         >
           <Stack direction={'row'} spacing={2} alignItems={'flex-start'}>
             {missionDetailsGrid(props, assets)}
-            {agentsGridGrid(
+            {agentsGrid(
               props,
               gameSession,
               assets,
@@ -103,7 +116,13 @@ function missionDetailsGrid(
   assets: Assets | undefined,
 ): React.JSX.Element {
   return (
-    <Grid container spacing={1} bgcolor="rgba(100,200,100,0.5)" width={'500px'}>
+    <Grid
+      container
+      spacing={1}
+      bgcolor="rgba(100,200,100,0.5)"
+      flex="none"
+      width={missionDetailsGridMaxWidthPx}
+    >
       <Grid xs={8}>
         <Label>Mission site ID</Label>
       </Grid>
@@ -152,7 +171,7 @@ function missionDetailsGrid(
   )
 }
 
-function agentsGridGrid(
+function agentsGrid(
   props: DeployMissionDialogProps,
   gameSession: GameSession,
   assets: Assets | undefined,
@@ -202,14 +221,30 @@ function agentsGridGrid(
   }
 
   return (
-    <Grid container spacing={1} bgcolor="rgba(100,100,100,0.5)" width={'500px'}>
-      <Grid xs={12} display="flex" justifyContent="center">
+    <Grid
+      container
+      spacing={1}
+      bgcolor="rgba(100,100,100,0.5)"
+      //flex="none"
+      //width="100%"
+    >
+      <Grid
+        xs={12}
+        display="flex"
+        justifyContent="center"
+        bgcolor="rgba(100,100,150,0.5)"
+      >
         <AgentsDataGrid
           missionSiteToDeploy={props.missionSite}
           {...{ rowSelectionModel, setRowSelectionModel }}
         />
       </Grid>
-      <Grid xs={12} display="flex" justifyContent="center">
+      <Grid
+        xs={12}
+        display="flex"
+        justifyContent="center"
+        bgcolor="rgba(100,0,0,0.5)"
+      >
         <Button
           variant="contained"
           onClick={handleLaunchMission}
