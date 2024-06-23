@@ -16,6 +16,7 @@ public class Faction : IIdentifiable
     /// When it is 1 and the time is advanced, a new mission site is generated and the countdown is reset.
     /// </summary>
     public int MissionSiteCountdown;
+    // kja rename PowerIncrease to PowerClimb
     public int PowerIncrease;
     public readonly int PowerAcceleration; // More derivatives: https://en.wikipedia.org/wiki/Fourth,_fifth,_and_sixth_derivatives_of_position
     public int AccumulatedPowerAcceleration;

@@ -10,7 +10,7 @@ const missionStateRenderMap: {
   [key in MissionState]: { display: string; color: string }
 } = {
   Successful: { display: '✅ Won', color: 'LimeGreen' },
-  Failed: { display: '❌ Lost', color: 'Red' },
+  Failed: { display: '❌ Lost', color: 'OrangeRed' },
   Active: { display: '⚔️ Active', color: 'DarkOrange' },
 }
 

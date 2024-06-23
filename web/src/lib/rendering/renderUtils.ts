@@ -15,13 +15,16 @@ export const defaultComponentHeight = 600
 // "Pixel 5": 393px x 850px (2.75)
 export const defaultComponentMinWidth = '250px'
 
-type MiscValues = 'Cost' | 'Difficulty'
+type MiscValues = 'Cost' | 'Difficulty' | 'Penalty' | 'Reward' | 'Requirement'
 
 type AllStylableValues = keyof Assets | AgentState | MissionState | MiscValues
 
 export const miscColors: { [key in MiscValues]: string } = {
-  Cost: 'red',
-  Difficulty: 'red',
+  Cost: 'OrangeRed',
+  Difficulty: 'OrangeRed',
+  Penalty: 'OrangeRed',
+  Requirement: 'Orange',
+  Reward: 'LimeGreen',
 }
 
 const allColors: { [key in AllStylableValues]: string } = {

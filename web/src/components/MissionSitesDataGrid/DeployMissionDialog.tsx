@@ -27,7 +27,7 @@ import {
 } from '../AgentsDataGrid/AgentsDataGrid'
 import { Label } from '../Label'
 
-const missionDetailsGridMaxWidthPx = 500
+const missionDetailsGridMaxWidthPx = 400
 // const agentsGridWidthPx = agentsDataGridDeploymentDisplayMaxWidthPx + 50
 // const dialogContentWidthPx =
 // missionDetailsGridMaxWidthPx + agentsGridWidthPx + 50
@@ -228,22 +228,30 @@ function getMissionDetailsEntries(
   const reqAgents = !_.isUndefined(props.missionSite)
     ? requiredSurvivingAgentsForSuccess(props.missionSite)
     : undefined
-  // kja add here MissionSiteModifiers: rewards, penalties
-  // kja add support for tooltip, explain agents, shorten title to "Agents required"
+  // future work: add support for tooltip. See MUI <Tooltip> doc.
 
   const site: MissionSite | undefined = props.missionSite
   const mods: MissionSiteModifiers | undefined = site?.Modifiers
+  const transportCap = `${assets?.CurrentTransportCapacity} / ${assets?.MaxTransportCapacity}`
+  const powerClimbDamage = mods?.PowerIncreaseDamageReward
 
   // prettier-ignore
   const entries2: missionDetailsEntry[] = [
-    { label: 'Mission site ID',                       value: site?.Id                         },
-    { label: 'Faction',                               value: factionLabel                     },
-    { label: 'Mission site difficulty',               value: site?.Difficulty,                 labelSx: getSx('Difficulty')               },
-    { label: 'Required surviving agents for success', value: reqAgents,                        labelSx: getSx('Difficulty')               },
-    { label: 'Max Transport Capacity',                value: assets?.MaxTransportCapacity,     labelSx: getSx('MaxTransportCapacity')     },
-    { label: 'Current Transport Capacity',            value: assets?.CurrentTransportCapacity, labelSx: getSx('CurrentTransportCapacity') },
-    { label: 'Funding reward',                        value: mods?.FundingReward              },
-    { label: 'Funding penalty',                       value: mods?.FundingPenalty             },
+    { label: 'Mission site ID',               value: site?.Id             },
+    { label: 'Faction',                       value: factionLabel         },
+    { label: 'Difficulty',                    value: site?.Difficulty,        valueSx: getSx('Difficulty')               },
+    { label: 'Required agents',               value: reqAgents,               valueSx: getSx('Requirement')              },
+    { label: 'Available / Max transport cap', value: transportCap,            valueSx: getSx('CurrentTransportCapacity') },
+    { label: 'Money reward',                  value: mods?.MoneyReward,       valueSx: getSx('Reward')                   },
+    { label: 'Intel reward',                  value: mods?.IntelReward,       valueSx: getSx('Reward')                   },
+    { label: 'Funding reward',                value: mods?.FundingReward,     valueSx: getSx('Reward')                   },
+    { label: 'Support reward',                value: mods?.SupportReward,     valueSx: getSx('Reward')                   },
+    { label: 'Faction damage',                value: mods?.PowerDamageReward, valueSx: getSx('Reward')                   },
+    { label: 'Faction power climb damage',    value: powerClimbDamage,        valueSx: getSx('Reward')                   },    
+    { label: 'Funding penalty',               value: mods?.FundingPenalty,    valueSx: getSx('Penalty')                  },
+    { label: 'Support penalty',               value: mods?.SupportPenalty,    valueSx: getSx('Penalty')                  },
+
+
   ]
 
   return entries2

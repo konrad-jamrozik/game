@@ -33,5 +33,3 @@ if (rootElement) {
     'Could not find #root element! Ensure that index.html has an element with id="root"',
   )
 }
-
-// kja need to add support to the new backend stuff like displaying all the mission modifiers and results
