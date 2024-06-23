@@ -78,6 +78,7 @@ public class GameState : IEquatable<GameState>
                               // This condition is here to protect against infinite loops.
                               || Timeline.CurrentTurn > MaxTurnLimit;
 
+    // kja game should not be lost if funding is less than zero. Funding should never be less than zero.
     public bool IsGameLost => Assets.Money < 0
                               || Assets.Funding < 0
                               || Assets.Support <= 0;
