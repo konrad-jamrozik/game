@@ -157,7 +157,7 @@ public class GameSessionController
 
     private void NewTurn(List<WorldEvent> worldEvents, GameState nextTurnStartState)
     {
-        GameSession.Turns.Add(
+        GameSession.AddTurn(
             new GameSessionTurn(
                 eventsUntilStartState: worldEvents,
                 startState: nextTurnStartState));
@@ -176,7 +176,7 @@ public class GameSessionController
     public GameState LoadCurrentGameStateFromFile()
     {
         GameState loadedGameState = GameState.FromJsonFile(_config.SaveFile);
-        GameSession.Turns.Add(new GameSessionTurn(startState: loadedGameState));
+        GameSession.ReplaceCurrentTurnWithState(loadedGameState);
         _log.Info($"Loaded game state from {_config.SaveFile.FullPath}");
         return GameSession.CurrentGameState;
     }

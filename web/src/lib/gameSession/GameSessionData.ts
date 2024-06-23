@@ -57,10 +57,10 @@ export class GameSessionData {
     for (const [index, turn] of turns.entries()) {
       if (
         _.isEmpty(turn.EventsUntilStartState) ||
-        turn.EventsUntilStartState.at(0)?.Type !== 'ReportEvent'
+        turn.EventsUntilStartState.at(-1)?.Type !== 'ReportEvent'
       ) {
         throw new Error(
-          `First event of any game turn must be ReportEvent. Turn index: ${index}`,
+          `Last world event of any game turn must be ReportEvent. Turn index: ${index}`,
         )
       }
       if (

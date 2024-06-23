@@ -58,7 +58,7 @@ public class GameSessionTests
     //   - This, coupled with the smart player simulations, ensures test failure on invariant violation.
 
     [Test]
-    public void BasicHappyPathGameSessionWorks()
+    public void BasicHappyPath()
     {
         var session = new GameSession(_randomGen, factions: _factions);
         var controller = new GameSessionController(_config, _log, session);
@@ -102,6 +102,20 @@ public class GameSessionTests
         });
     }
 
+    [Test]
+    public void BasicSaveAndLoadOfGameState()
+    {
+        var session = new GameSession(_randomGen);
+        var controller = new GameSessionController(_config, _log, session);
+
+        // Act 1: Save game, thus saving initialGameState to file
+        controller.SaveCurrentGameStateToFile();
+
+        // Act 2: Load the saved state.
+        controller.LoadCurrentGameStateFromFile();
+
+        // Assert: no exception was thrown.
+    }
 
     /// <summary>
     /// Given:
@@ -122,7 +136,7 @@ public class GameSessionTests
 
         GameStatePlayerView stateView = controller.CurrentGameStatePlayerView;
         int savedTurn = stateView.CurrentTurn;
-        GameState initialGameState = session.CurrentGameState.Clone();
+        GameState savedGameState = session.CurrentGameState.Clone();
         
         // Act 1: Save game, thus saving initialGameState to file
         controller.SaveCurrentGameStateToFile();
@@ -141,11 +155,12 @@ public class GameSessionTests
         // Assert that after loading, the state view continues to reference current state.
         Assert.That(stateView.StateReferenceEquals(controller.CurrentGameStatePlayerView));
 
+        // Assert that session.CurrentGameState has been updated to be loadedGameState.
         Assert.That(loadedGameState, Is.EqualTo(session.CurrentGameState));
-        Assert.That(loadedGameState, Is.EqualTo(initialGameState));
-        
-        Assert.That(stateView.CurrentTurn, Is.EqualTo(savedTurn), "savedTurn");
 
+        // Assert that after loading, the loadedGameState is the same as at save time, i.e. savedGameState.
+        Assert.That(loadedGameState, Is.EqualTo(savedGameState));
+        Assert.That(stateView.CurrentTurn, Is.EqualTo(savedTurn), "savedTurn");
     }
 
     /// <summary>
@@ -160,7 +175,7 @@ public class GameSessionTests
     ///   - and some properties have values exactly as expected.
     /// </summary>
     [Test]
-    public void RoundTrippingSavingAndLoadingGameStateBehavesCorrectly()
+    public void SaveAndLoadOfModifiedGameState()
     {
         var session = new GameSession(_randomGen, factions: _factions);
         var controller = new GameSessionController(_config, _log, session);
@@ -223,11 +238,11 @@ public class GameSessionTests
     }
 
     /// <summary>
-    /// This test is like RoundTrippingSavingAndLoadingGameStateBehavesCorrectly
+    /// This test is like SaveAndLoadOfModifiedGameState
     /// but when the game is saved there is an active mission.
     /// </summary>
     [Test]
-    public void RoundTrippingSavingAndLoadingGameStateWithActiveMissionBehavesCorrectly()
+    public void SaveAndLoadOfModifiedGameStateWithActiveMission()
     {
         var session = new GameSession(_randomGen, factions: _factions);
         var controller = new GameSessionController(_config, _log, session);

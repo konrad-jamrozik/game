@@ -12,17 +12,19 @@ public class IdGen
     public int Value => NextId;
 
     // kja need to assert AssertConsecutiveIds across entire game session
-    public static void AssertConsecutiveIds<T>(List<T> instances) where T: IIdentifiable
+    public static void AssertConsecutiveIds<T>(List<T> instances, int? expectedFirstId = null) where T: IIdentifiable
     {
         if (instances.Any())
         {
             int firstId = instances[0].Id;
+            if (expectedFirstId != null)
+                Contract.Assert(firstId == expectedFirstId);
             for (int i = 0; i < instances.Count; i++)
             {
                 int expectedId = firstId + i;
                 Contract.Assert(
                     instances[i].Id == expectedId,
-                    $"Instance with id {instances[i].Id} is not equal to expected {expectedId}.");
+                    $"Expected consecutive ID of {expectedId} but got {instances[i].Id}.");
             }
         }
     }
