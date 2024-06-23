@@ -135,11 +135,11 @@ function missionDetailsGrid(
         <Fragment key={index}>
           <Tooltip title="TODO">
             <Grid xs={8}>
-              <Label sx={entry.label.sx ?? {}}>{entry.label.content}</Label>
+              <Label sx={entry.labelSx ?? {}}>{entry.label}</Label>
             </Grid>
           </Tooltip>
           <Grid xs={4}>
-            <Label sx={entry.value.sx ?? {}}>{entry.value.content}</Label>
+            <Label sx={entry.valueSx ?? {}}>{entry.value}</Label>
           </Grid>
         </Fragment>
       ))}
@@ -214,14 +214,10 @@ function agentsGrid(
 }
 
 type missionDetailsEntry = {
-  label: {
-    content: string
-    sx?: SxProps<Theme>
-  }
-  value: {
-    content: string | number | undefined
-    sx?: SxProps<Theme>
-  }
+  label: string
+  value: string | number | undefined
+  labelSx?: SxProps<Theme>
+  valueSx?: SxProps<Theme>
 }
 
 function getMissionDetailsEntries(
@@ -240,14 +236,14 @@ function getMissionDetailsEntries(
 
   // prettier-ignore
   const entries2: missionDetailsEntry[] = [
-    { label: { content: 'Mission site ID' },                                                              value: { content: site?.Id                         }},
-    { label: { content: 'Faction' },                                                                      value: { content: factionLabel                     }},
-    { label: { content: 'Mission site difficulty',               sx: getSx('Difficulty') },               value: { content: site?.Difficulty                 }},
-    { label: { content: 'Required surviving agents for success', sx: getSx('Difficulty') },               value: { content: reqAgents                        }},
-    { label: { content: 'Max Transport Capacity',                sx: getSx('MaxTransportCapacity') },     value: { content: assets?.MaxTransportCapacity     }},
-    { label: { content: 'Current Transport Capacity',            sx: getSx('CurrentTransportCapacity') }, value: { content: assets?.CurrentTransportCapacity }},
-    { label: { content: 'Funding reward'                         },                                       value: { content: mods?.FundingReward              }},
-    { label: { content: 'Funding penalty'                        },                                       value: { content: mods?.FundingPenalty             }},
+    { label: 'Mission site ID',                       value: site?.Id                         },
+    { label: 'Faction',                               value: factionLabel                     },
+    { label: 'Mission site difficulty',               value: site?.Difficulty,                 labelSx: getSx('Difficulty')               },
+    { label: 'Required surviving agents for success', value: reqAgents,                        labelSx: getSx('Difficulty')               },
+    { label: 'Max Transport Capacity',                value: assets?.MaxTransportCapacity,     labelSx: getSx('MaxTransportCapacity')     },
+    { label: 'Current Transport Capacity',            value: assets?.CurrentTransportCapacity, labelSx: getSx('CurrentTransportCapacity') },
+    { label: 'Funding reward',                        value: mods?.FundingReward              },
+    { label: 'Funding penalty',                       value: mods?.FundingPenalty             },
   ]
 
   return entries2
