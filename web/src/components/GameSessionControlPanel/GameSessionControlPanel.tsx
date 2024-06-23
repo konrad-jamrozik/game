@@ -290,7 +290,9 @@ function resetGameSessionButton(
       variant="outlined"
       onClick={resetGame}
       disabled={
-        !_.isEmpty(gameSession.error) &&
+        // For the 'Reset Game' button to be disabled, the error must be undefined,
+        // because if it is defined, we want to allow resetting game.
+        _.isUndefined(gameSession.error) &&
         (!gameSession.isInitialized() || gameSession.loading)
       }
       color="error"
