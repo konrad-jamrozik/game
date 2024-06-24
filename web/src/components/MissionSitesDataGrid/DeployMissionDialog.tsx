@@ -21,16 +21,10 @@ import {
 } from '../../lib/gameSession/GameSession'
 import { factionsRenderMap } from '../../lib/rendering/renderFactions'
 import { getSx } from '../../lib/rendering/renderUtils'
-import {
-  AgentsDataGrid,
-  // agentsDataGridDeploymentDisplayMaxWidthPx,
-} from '../AgentsDataGrid/AgentsDataGrid'
+import { AgentsDataGrid } from '../AgentsDataGrid/AgentsDataGrid'
 import { Label } from '../Label'
 
 const missionDetailsGridMaxWidthPx = 400
-// const agentsGridWidthPx = agentsDataGridDeploymentDisplayMaxWidthPx + 50
-// const dialogContentWidthPx =
-// missionDetailsGridMaxWidthPx + agentsGridWidthPx + 50
 
 export type DeployMissionDialogProps = {
   readonly missionSite: MissionSite | undefined
@@ -228,15 +222,15 @@ function getMissionDetailsEntries(
   const reqAgents = !_.isUndefined(props.missionSite)
     ? requiredSurvivingAgentsForSuccess(props.missionSite)
     : undefined
-  // future work: add support for tooltip. See MUI <Tooltip> doc.
 
   const site: MissionSite | undefined = props.missionSite
   const mods: MissionSiteModifiers | undefined = site?.Modifiers
   const transportCap = `${assets?.CurrentTransportCapacity} / ${assets?.MaxTransportCapacity}`
   const powerClimbDamage = mods?.PowerIncreaseDamageReward
 
+  // future work: add support for tooltip. See MUI <Tooltip> doc.
   // prettier-ignore
-  const entries2: missionDetailsEntry[] = [
+  const entries: missionDetailsEntry[] = [
     { label: 'Mission site ID',               value: site?.Id             },
     { label: 'Faction',                       value: factionLabel         },
     { label: 'Difficulty',                    value: site?.Difficulty,        valueSx: getSx('Difficulty')               },
@@ -250,9 +244,7 @@ function getMissionDetailsEntries(
     { label: 'Faction power climb damage',    value: powerClimbDamage,        valueSx: getSx('Reward')                   },    
     { label: 'Funding penalty',               value: mods?.FundingPenalty,    valueSx: getSx('Penalty')                  },
     { label: 'Support penalty',               value: mods?.SupportPenalty,    valueSx: getSx('Penalty')                  },
-
-
   ]
 
-  return entries2
+  return entries
 }

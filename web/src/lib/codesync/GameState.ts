@@ -65,7 +65,7 @@ export type MissionSiteModifiers = {
 
 export type Faction = {
   readonly Id: number
-  readonly Name: string
+  readonly Name: FactionName
   readonly Power: number
   readonly MissionSiteCountdown: number
   readonly PowerIncrease: number
@@ -74,12 +74,18 @@ export type Faction = {
   readonly IntelInvested: number
 }
 
-export const factionMap: { [key: number]: string } = {
+export const factionMap: { [key: number]: FactionName } = {
   0: 'Black Lotus cult',
   1: 'Red Dawn remnants',
   2: 'EXALT',
   3: 'Zombies',
 }
+
+export type FactionName =
+  | 'Black Lotus cult'
+  | 'Red Dawn remnants'
+  | 'EXALT'
+  | 'Zombies'
 
 export type AgentState =
   | 'InTransit'

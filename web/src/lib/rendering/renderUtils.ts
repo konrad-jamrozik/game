@@ -1,9 +1,15 @@
-import type { SxProps, Theme } from '@mui/material'
+import type { Theme } from '@mui/material'
 import type { SystemStyleObject } from '@mui/system'
 import _ from 'lodash'
-import type { AgentState, Assets, MissionState } from '../codesync/GameState'
+import type {
+  AgentState,
+  Assets,
+  FactionName,
+  MissionState,
+} from '../codesync/GameState'
 import { agentStateColors } from './renderAgentState'
 import { assetNameColors } from './renderAssets'
+import { factionColors } from './renderFactions'
 import { missionStateColors } from './renderMissionState'
 
 export const defaultComponentHeight = 600
@@ -17,7 +23,12 @@ export const defaultComponentMinWidth = '250px'
 
 type MiscValues = 'Cost' | 'Difficulty' | 'Penalty' | 'Reward' | 'Requirement'
 
-type AllStylableValues = keyof Assets | AgentState | MissionState | MiscValues
+type AllStylableValues =
+  | keyof Assets
+  | AgentState
+  | MissionState
+  | FactionName
+  | MiscValues
 
 export const miscColors: { [key in MiscValues]: string } = {
   Cost: 'OrangeRed',
@@ -31,13 +42,19 @@ const allColors: { [key in AllStylableValues]: string } = {
   ...assetNameColors,
   ...agentStateColors,
   ...missionStateColors,
+  ...factionColors,
   ...miscColors,
 }
 
-export function getSx(key: AllStylableValues): SxProps<Theme> {
+export function getSx(key: AllStylableValues): SystemStyleObject<Theme> {
   return { color: allColors[key] }
 }
 
+// To be used with "cellClassName" in GridColDef.
+// Based on examples in:
+// https://mui.com/x/react-data-grid/style/#styling-cells
+// https://mui.com/material-ui/customization/how-to-customize/#2-reusable-component
+// https://mui.com/x/react-data-grid/style/#using-the-sx-prop
 export function sxClassesFromColors(
   valueToColorMap: Partial<{
     [key in AllStylableValues]: string
@@ -45,7 +62,7 @@ export function sxClassesFromColors(
 ): SystemStyleObject<Theme> {
   const valueToColorPairs: [string, { color: string }][] = _.map(
     valueToColorMap,
-    (color, valueToStyle) => [`& .${valueToStyle}`, { color }],
+    (color, valueToStyle) => [`& .${_.kebabCase(valueToStyle)}`, { color }],
   ) as [string, { color: string }][]
   const sxClasses = Object.fromEntries(valueToColorPairs)
   return sxClasses as SystemStyleObject<Theme>

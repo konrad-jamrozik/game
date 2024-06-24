@@ -1,4 +1,5 @@
-import { Box } from '@mui/material'
+import { Box, SxProps, Theme } from '@mui/material'
+import type { SystemStyleObject } from '@mui/system'
 import {
   DataGrid,
   type GridCallbackDetails,
@@ -7,12 +8,22 @@ import {
   type GridRowSelectionModel,
 } from '@mui/x-data-grid'
 import _ from 'lodash'
-import type { Faction, MissionSite } from '../../lib/codesync/GameState'
+import type {
+  Faction,
+  FactionName,
+  MissionSite,
+} from '../../lib/codesync/GameState'
 import { getFaction } from '../../lib/codesync/dereferencing'
 import { isActive } from '../../lib/codesync/ruleset'
 import { useGameSessionContext } from '../../lib/gameSession/GameSession'
-import { factionsRenderMap } from '../../lib/rendering/renderFactions'
-import { defaultComponentMinWidth } from '../../lib/rendering/renderUtils'
+import {
+  factionColors,
+  factionNameGridColDef,
+} from '../../lib/rendering/renderFactions'
+import {
+  defaultComponentMinWidth,
+  sxClassesFromColors,
+} from '../../lib/rendering/renderUtils'
 import DeployMissionDialog from './DeployMissionDialog'
 
 const gridHeight = 330
@@ -31,12 +42,7 @@ export function MissionSitesDataGrid(): React.JSX.Element {
       disableColumnMenu: true,
       width: 80,
     },
-    {
-      field: 'faction',
-      headerName: 'Faction',
-      disableColumnMenu: true,
-      width: 150,
-    },
+    factionNameGridColDef,
     {
       field: 'difficulty',
       headerName: 'Difficulty',
@@ -90,7 +96,12 @@ export function MissionSitesDataGrid(): React.JSX.Element {
         onRowSelectionModelChange={onRowSelectionModelChange}
         rowHeight={30}
         hideFooterPagination={true}
-        sx={(theme) => ({ bgcolor: theme.palette.background.default })}
+        sx={[
+          sxClassesFromColors(factionColors),
+          (theme): SystemStyleObject<Theme> => ({
+            bgcolor: theme.palette.background.default,
+          }),
+        ]}
       />
     </Box>
   )
@@ -107,7 +118,7 @@ function onRowSelectionModelChange(
 
 type MissionSiteRow = {
   id: number
-  faction: string
+  name: FactionName
   difficulty: number
   expiresIn: number
 }
@@ -125,7 +136,7 @@ function getRows(
     const faction = getFaction(missionSite, factions)
     return {
       id: missionSite.Id,
-      faction: factionsRenderMap[faction.Id]!.label,
+      name: faction.Name,
       difficulty: missionSite.Difficulty,
       expiresIn: missionSite.ExpiresIn!,
     }
