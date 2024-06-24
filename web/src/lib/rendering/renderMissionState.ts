@@ -34,6 +34,6 @@ export const missionStateGridColDef: GridColDef = {
     params: GridCellParams<GridValidRowModel, string>,
   ): string => {
     const missionStateColumnValue: string = params.value!
-    return invertedMissionStateValueMap[missionStateColumnValue]!
+    return _.kebabCase(invertedMissionStateValueMap[missionStateColumnValue])
   },
 }

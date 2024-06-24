@@ -228,6 +228,8 @@ function getMissionDetailsEntries(
   const transportCap = `${assets?.CurrentTransportCapacity} / ${assets?.MaxTransportCapacity}`
   const powerClimbDamage = mods?.PowerIncreaseDamageReward
 
+  // kja no point in testing for nulls: rewrite so that we can assume that 'site' and 'assets' are defined.
+  // Review all UI components for this pattern.
   // future work: add support for tooltip. See MUI <Tooltip> doc.
   // prettier-ignore
   const entries: missionDetailsEntry[] = [

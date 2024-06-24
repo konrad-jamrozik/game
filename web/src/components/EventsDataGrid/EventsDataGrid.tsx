@@ -1,10 +1,11 @@
-import { Box } from '@mui/material'
+import { Box, Theme } from '@mui/material'
+import type { SystemStyleObject } from '@mui/system'
 import {
   DataGrid,
-  type GridCellParams,
-  type GridValidRowModel,
-  type GridColDef,
   gridClasses,
+  type GridCellParams,
+  type GridColDef,
+  type GridValidRowModel,
 } from '@mui/x-data-grid'
 import _ from 'lodash'
 import type { GameEventWithTurn } from '../../lib/codesync/GameEvent'
@@ -38,17 +39,19 @@ export function EventsDataGrid(): React.JSX.Element {
 
   return (
     <Box
-      sx={(theme) => ({
-        height: defaultComponentHeight,
-        minWidth: defaultComponentMinWidth,
-        maxWidth: 964,
-        width: '100%',
-        // future work: refactor
-        [`& .${gridClasses.row}.odd`]: { backgroundColor: '#202020' },
-        [`& .world-event`]: { color: theme.palette.secondary.dark },
-        [`& .advance-time`]: { color: theme.palette.info.main },
-        [`& .mission-site-expired`]: { color: theme.palette.error.main },
-      })}
+      sx={[
+        (theme): SystemStyleObject<Theme> => ({
+          height: defaultComponentHeight,
+          minWidth: defaultComponentMinWidth,
+          maxWidth: 964,
+          width: '100%',
+          // future work: refactor
+          [`& .${gridClasses.row}.odd`]: { backgroundColor: '#202020' },
+          [`& .world-event`]: { color: theme.palette.secondary.dark },
+          [`& .advance-time`]: { color: theme.palette.info.main },
+          [`& .mission-site-expired`]: { color: theme.palette.error.main },
+        }),
+      ]}
     >
       <DataGrid
         rows={rows}

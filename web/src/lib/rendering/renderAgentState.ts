@@ -38,6 +38,6 @@ export const agentStateGridColDef: GridColDef = {
     params: GridCellParams<GridValidRowModel, string>,
   ): string => {
     const agentStateColumnValue: string = params.value!
-    return invertedAgentStateValueMap[agentStateColumnValue]!
+    return _.kebabCase(invertedAgentStateValueMap[agentStateColumnValue])
   },
 }

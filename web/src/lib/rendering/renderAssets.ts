@@ -46,6 +46,6 @@ export const assetNameGridColDef: GridColDef = {
     params: GridCellParams<GridValidRowModel, string>,
   ): string => {
     const assetNameColumnValue: string = params.value!
-    return invertedAssetNameValueMap[assetNameColumnValue]!
+    return _.kebabCase(invertedAssetNameValueMap[assetNameColumnValue])
   },
 }

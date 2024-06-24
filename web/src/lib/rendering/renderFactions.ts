@@ -35,6 +35,7 @@ const invertedFactionNameValueMap = _.invert(
   _.mapValues(factionNameRenderMap, (value) => value.display),
 )
 
+// kja because field is 'name', bunch of components have Row model that has Name prop instead of Faction. Fix.
 export const factionNameGridColDef: GridColDef = {
   field: 'name',
   headerName: 'Faction',
@@ -48,7 +49,6 @@ export const factionNameGridColDef: GridColDef = {
     params: GridCellParams<GridValidRowModel, string>,
   ): string => {
     const factionNameColumnValue: string = params.value!
-    // kja need to add kebab case to the other types of this kind of mapping. Like assets.
     return _.kebabCase(invertedFactionNameValueMap[factionNameColumnValue])
   },
 }

@@ -8,7 +8,10 @@ import type {
 } from '../../lib/codesync/GameState'
 import { getFaction, getMissionSite } from '../../lib/codesync/dereferencing'
 import { useGameSessionContext } from '../../lib/gameSession/GameSession'
-import { factionsRenderMap } from '../../lib/rendering/renderFactions'
+import {
+  factionColors,
+  factionNameGridColDef,
+} from '../../lib/rendering/renderFactions'
 import {
   missionStateColors,
   missionStateGridColDef,
@@ -43,6 +46,7 @@ export function MissionsDataGrid(): React.JSX.Element {
           width: '100%',
         },
         sxClassesFromColors(missionStateColors),
+        sxClassesFromColors(factionColors),
       ]}
     >
       <DataGrid
@@ -68,7 +72,7 @@ export type MissionRow = {
   turn: number
   state: string
   difficulty: number
-  faction: string
+  name: string
   agentsSent: number
   agentsTerminated: number
 }
@@ -92,11 +96,7 @@ const columns: GridColDef<MissionRow>[] = [
     width: 110,
     disableColumnMenu: true,
   },
-  {
-    field: 'faction',
-    headerName: 'Faction',
-    width: 110,
-  },
+  factionNameGridColDef,
   {
     field: 'agentsSent',
     headerName: 'Agents sent',
@@ -121,7 +121,7 @@ function getRow(
     turn: missionSite.TurnDeactivated!,
     state: mission.CurrentState,
     difficulty: missionSite.Difficulty,
-    faction: factionsRenderMap[getFaction(missionSite, factions).Id]!.label,
+    name: getFaction(missionSite, factions).Name,
     agentsSent: mission.AgentsSent,
     agentsTerminated: mission.AgentsTerminated,
   }
