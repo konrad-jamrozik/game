@@ -7,6 +7,7 @@ import type {
   Agent,
   AgentState,
   Assets,
+  Faction,
   GameState,
   Mission,
   MissionSite,
@@ -34,7 +35,11 @@ const missionSiteSurvivalBaseDifficultyRequirement = 30
 
 const agentBaseSurvivalSkill = 100
 
-export const missionSiteDifficultyFactionPowerDivisor = 10
+export const factionPowerResolution = 10
+
+export function getNormalizedPower(faction: Faction): number {
+  return Math.floor(faction.Power / factionPowerResolution)
+}
 
 export function isActive(missionSite: MissionSite): boolean {
   return (

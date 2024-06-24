@@ -1,10 +1,5 @@
-import {
-  Grid,
-  Stack,
-  Typography,
-  type SxProps,
-  type Theme,
-} from '@mui/material'
+import { Stack, Typography, type SxProps, type Theme } from '@mui/material'
+import Grid from '@mui/material/Unstable_Grid2'
 import Button from '@mui/material/Button'
 import Dialog from '@mui/material/Dialog'
 import DialogActions from '@mui/material/DialogActions'
@@ -13,6 +8,7 @@ import DialogTitle from '@mui/material/DialogTitle'
 import _ from 'lodash'
 import { Fragment, useState } from 'react'
 import type { Faction } from '../../lib/codesync/GameState'
+import { getNormalizedPower } from '../../lib/codesync/ruleset'
 import { factionNameRenderMap } from '../../lib/rendering/renderFactions'
 import { getSx } from '../../lib/rendering/renderUtils'
 import { Label } from '../Label'
@@ -45,6 +41,7 @@ export default function DeployMissionDialog(
       backgroundColor: '#000',
     },
   ]
+  // kja: https://mui.com/material-ui/react-slider/#slider-with-input-field
   return (
     <Fragment>
       <Button
@@ -82,7 +79,10 @@ export default function DeployMissionDialog(
         >
           <Stack direction={'row'} spacing={2} alignItems={'flex-start'}>
             {factionDetailsGrid(props)}
-            {factionDetailsGrid(props)}
+            <Stack spacing={2} display="flex" alignItems="center">
+              <Label>Panel1</Label>
+              <Label>Panel2</Label>
+            </Stack>
           </Stack>
         </DialogContent>
         <DialogActions>
@@ -128,13 +128,17 @@ type FactionDetailsEntry = {
 function getFactionDetailsEntries(
   props: ManageFactionDialogProps,
 ): FactionDetailsEntry[] {
-  const renderedFactionName = factionNameRenderMap[props.faction.Name].display
+  const name = factionNameRenderMap[props.faction.Name].display
+  const power = getNormalizedPower(props.faction)
+  const intel = props.faction.IntelInvested
 
   // kja no point in testing for nulls: rewrite so that we can assume that 'site' and 'assets' are defined.
   // Review all UI components for this pattern.
   // prettier-ignore
   const entries: FactionDetailsEntry[] = [
-    { label: 'Faction',                       value: renderedFactionName,     valueSx: getSx(props.faction.Name)        },
+    { label: 'Faction', value: name,  valueSx: getSx(props.faction.Name) },
+    { label: 'Power',   value: power, valueSx: getSx('Difficulty') },
+    { label: 'Intel',   value: intel, valueSx: getSx('Intel') },
   ]
 
   return entries

@@ -6,7 +6,7 @@ import {
 } from '@mui/x-data-grid'
 import _ from 'lodash'
 import type { Faction } from '../../lib/codesync/GameState'
-import { missionSiteDifficultyFactionPowerDivisor } from '../../lib/codesync/ruleset'
+import { factionPowerResolution } from '../../lib/codesync/ruleset'
 import { useGameSessionContext } from '../../lib/gameSession/GameSession'
 import {
   factionColors,
@@ -31,7 +31,7 @@ export function FactionsDataGrid(): React.JSX.Element {
   const rows: FactionRow[] = _.map(factions, (faction: Faction) => ({
     id: faction.Id,
     name: faction.Name,
-    power: Math.floor(faction.Power / missionSiteDifficultyFactionPowerDivisor),
+    power: Math.floor(faction.Power / factionPowerResolution),
     intel: faction.IntelInvested,
   }))
 
