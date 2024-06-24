@@ -1,5 +1,10 @@
+/* eslint-disable max-lines */
 import _ from 'lodash'
-import type { GameState } from './codesync/GameState'
+import {
+  factionNames,
+  type FactionName,
+  type GameState,
+} from './codesync/GameState'
 import {
   agentUpkeepCost,
   getSurvivalSkill,
@@ -8,7 +13,7 @@ import {
 } from './codesync/ruleset'
 import { agentStateColors } from './rendering/renderAgentState'
 import { assetNameColors } from './rendering/renderAssets'
-import { factionsRenderMap } from './rendering/renderFactions'
+import { factionNameRenderMap } from './rendering/renderFactions'
 import { missionStateColors } from './rendering/renderMissionState'
 import { median } from './utils'
 
@@ -37,10 +42,7 @@ export type GameStatsDataSeriesKey =
   | 'missionsSuccessful'
   | 'missionsFailed'
   | 'missionSitesExpired'
-  | 'faction0'
-  | 'faction1'
-  | 'faction2'
-  | 'faction3'
+  | FactionName
   | GameStatsDerivedDataSeriesKey
 
 export type GameStatsDerivedDataSeriesKey =
@@ -55,7 +57,22 @@ type AllStatsDataSeries = {
 
 const supportScale = 0.1
 
+const factionsDataSeriesByKey = _.reduce(
+  factionNames,
+  (result, factionName) => {
+    result[factionName] = {
+      dataFunc: (gs: GameState): number =>
+        _.find(gs.Factions, { Name: factionName })!.Power,
+      label: factionNameRenderMap[factionName].display,
+      color: factionNameRenderMap[factionName].color,
+    }
+    return result as { [key in FactionName]: Omit<GameStateDataSeries, 'key'> }
+  },
+  {} as { [key in FactionName]: Omit<GameStateDataSeries, 'key'> },
+)
+
 export const allGameStatsDataSeriesByKey: AllStatsDataSeries = {
+  ...factionsDataSeriesByKey,
   money: {
     dataFunc: (gs) => gs.Assets.Money,
     label: 'Money',
@@ -221,26 +238,6 @@ export const allGameStatsDataSeriesByKey: AllStatsDataSeries = {
     label: 'Mission sites expired',
     color: 'DarkRed',
   },
-  faction0: {
-    dataFunc: (gs) => gs.Factions[0]!.Power,
-    label: factionsRenderMap[0]!.label,
-    color: factionsRenderMap[0]!.color,
-  },
-  faction1: {
-    dataFunc: (gs) => gs.Factions[1]!.Power,
-    label: factionsRenderMap[1]!.label,
-    color: factionsRenderMap[1]!.color,
-  },
-  faction2: {
-    dataFunc: (gs) => gs.Factions[2]!.Power,
-    label: factionsRenderMap[2]!.label,
-    color: factionsRenderMap[2]!.color,
-  },
-  faction3: {
-    dataFunc: (gs) => gs.Factions[3]!.Power,
-    label: factionsRenderMap[3]!.label,
-    color: factionsRenderMap[3]!.color,
-  },
 }
 
 const allGameStatsDataSeries: GameStateDataSeries[] = _.map(
@@ -249,8 +246,8 @@ const allGameStatsDataSeries: GameStateDataSeries[] = _.map(
 )
 
 function getDataSeries(keys: GameStatsDataSeriesKey[]): GameStateDataSeries[] {
-  return _.filter(allGameStatsDataSeries, (dsWithKey) =>
-    _.includes(keys, dsWithKey.key),
+  return _.filter(allGameStatsDataSeries, (dataSeries) =>
+    _.includes(keys, dataSeries.key),
   )
 }
 
@@ -291,9 +288,5 @@ export const missionsStatsDataSeries: GameStateDataSeries[] = getDataSeries([
   'missionSitesExpired',
 ])
 
-export const factionsDataSeries: GameStateDataSeries[] = getDataSeries([
-  'faction0',
-  'faction1',
-  'faction2',
-  'faction3',
-])
+export const factionsDataSeries: GameStateDataSeries[] =
+  getDataSeries(factionNames)

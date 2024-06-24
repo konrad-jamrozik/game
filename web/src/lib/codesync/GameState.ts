@@ -74,6 +74,7 @@ export type Faction = {
   readonly IntelInvested: number
 }
 
+// kja remove
 export const factionMap: { [key: number]: FactionName } = {
   0: 'Black Lotus cult',
   1: 'Red Dawn remnants',
@@ -86,6 +87,13 @@ export type FactionName =
   | 'Red Dawn remnants'
   | 'EXALT'
   | 'Zombies'
+
+export const factionNames: FactionName[] = [
+  'Black Lotus cult',
+  'Red Dawn remnants',
+  'EXALT',
+  'Zombies',
+]
 
 export type AgentState =
   | 'InTransit'

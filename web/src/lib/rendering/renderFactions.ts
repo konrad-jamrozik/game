@@ -8,16 +8,6 @@ import type { FactionName, factionMap } from '../codesync/GameState'
 
 type FactionMapKeys = keyof typeof factionMap
 
-// kja replace uses of factionsRenderMap with factionNameRenderMap
-export const factionsRenderMap: {
-  [key in FactionMapKeys]: { label: string; color: string }
-} = {
-  0: { label: 'Black Lotus', color: 'White' },
-  1: { label: 'Red Dawn', color: 'Red' },
-  2: { label: 'EXALT', color: 'RoyalBlue' },
-  3: { label: 'Zombies', color: 'LimeGreen' },
-}
-
 export const factionNameRenderMap: {
   [key in FactionName]: { display: string; color: string }
 } = {
