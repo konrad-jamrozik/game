@@ -17,9 +17,12 @@ public static class Ruleset
 
     // For more example factions data, see:
     // https://github.com/konrad-jamrozik/game/blob/eccb44a1d5f074e95b07aebca2c6bc5bbfdfdda8/src/ufo-game/Model/Data/FactionsData.cs#L34
-    public static Factions InitialFactions(IRandomGen randomGen) => new(
+    public static Factions InitFactions(IRandomGen randomGen) => new(
     [
         // Note: need to ensure here that IDs are consecutive, and from zero.
+        // kja-refact: Power should be "actual" value, not with the precision. So 40 instead of 400. Then powerIncrease (to be renamed to powerClimb)
+        // would be 0.4 and powerAcceleration would be 0.008. This would make it easier to reason about the values.
+        // Just bite the bullet and use doubles.
         Faction.Init(randomGen, id: 0, "Black Lotus cult", power: 200, powerIncrease: 4, powerAcceleration: 8),
         Faction.Init(randomGen, id: 1, "Red Dawn remnants", power: 300, powerIncrease: 5, powerAcceleration: 5),
         Faction.Init(randomGen, id: 2, "EXALT", power: 400, powerIncrease: 6, powerAcceleration: 4),
@@ -76,7 +79,7 @@ public static class Ruleset
 
     public static (int difficulty, int baseDifficulty, float variationRoll) RollMissionSiteDifficulty(
         IRandomGen randomGen,
-        int factionPower)
+        Faction faction)
     {
         // Note that currently the only ways of increasing agents survivability of difficulty is:
         // - by surviving missions
@@ -84,7 +87,7 @@ public static class Ruleset
         // As such, if difficulty per turn would grow at least as fast as Ruleset.AgentTrainingCoefficient,
         // then at some point missions would become impossible, as eventually even the most experienced
         // agents would die, and any new agents would never be able to catch up with mission difficulty.
-        int baseDifficulty = factionPower / FactionPowerResolution;
+        int baseDifficulty = faction.NormalizedPower;
         (int difficulty, float variationRoll) = randomGen.RollVariation(
             baseValue: baseDifficulty,
             range: MissionSiteDifficultyVariationRange,
@@ -99,15 +102,21 @@ public static class Ruleset
         return reqAgentsForSuccess;
     }
 
-    public static int ComputeFundingChange(List<Mission> successfulMissions, List<Mission> failedMissions, int expiredMissionSites)
+    public static int ComputeFundingChange(
+        List<Mission> successfulMissions,
+        List<Mission> failedMissions,
+        List<MissionSite> expiredMissionSites)
         => successfulMissions.Sum(mission => mission.Site.Modifiers.FundingReward)
-            - failedMissions.Sum(mission => mission.Site.Modifiers.FundingPenalty)
-            - expiredMissionSites * 1; // kja dedup this const with MissionSiteModifiers into Ruleset
+           - failedMissions.Sum(mission => mission.Site.Modifiers.FundingPenalty)
+           - expiredMissionSites.Sum(site => site.Modifiers.FundingPenalty);
 
-    public static int ComputeSupportChange(List<Mission> successfulMissions, List<Mission> failedMissions, int expiredMissionSites)
+    public static int ComputeSupportChange(
+        List<Mission> successfulMissions,
+        List<Mission> failedMissions,
+        List<MissionSite> expiredMissionSites)
         => successfulMissions.Sum(mission => mission.Site.Modifiers.SupportReward)
            - failedMissions.Sum(mission => mission.Site.Modifiers.SupportPenalty)
-           - expiredMissionSites * 1; // kja dedup this const with MissionSiteModifiers into Ruleset
+           - expiredMissionSites.Sum(site => site.Modifiers.SupportPenalty);
 
     public static int ComputeMoneyChange(Assets assets, List<Mission> successfulMissions, int agentUpkeep)
     {

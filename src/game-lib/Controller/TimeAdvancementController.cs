@@ -44,8 +44,7 @@ public class TimeAdvancementController
 
         (List<Mission> successfulMissions, List<Mission> failedMissions) = EvaluateMissions(state);
 
-        // kja need to take penalties from each mission instead of just counting downstream.
-        int expiredMissionSites = UpdateActiveMissionSites(state);
+        List<MissionSite> expiredMissionSites = UpdateActiveMissionSites(state);
 
         int moneyChange = Ruleset.ComputeMoneyChange(state.Assets, successfulMissions, agentUpkeep);
         int intelChange = Ruleset.ComputeIntelChange(state.Assets, successfulMissions);
@@ -76,7 +75,7 @@ public class TimeAdvancementController
         var worldEvents = new List<WorldEvent>(_worldEvents);
         _worldEvents.Clear();
 
-        state.Factions.AdvanceTime();
+        state.Factions.AdvanceTime(successfulMissions);
         
         state.AssertInvariants();
         return (advanceTimeEvent, worldEvents);
@@ -195,16 +194,16 @@ public class TimeAdvancementController
         });
     }
 
-    private int UpdateActiveMissionSites(GameState state)
+    private List<MissionSite> UpdateActiveMissionSites(GameState state)
     {
-        int expiredMissions = 0;
+        var expiredMissionSites = new List<MissionSite>();    
         state.MissionSites.Active.ForEach(
             missionSite =>
             {
                 var expired = missionSite.TickExpiration(state.Timeline.CurrentTurn);
                 if (expired)
                 {
-                    expiredMissions++;
+                    expiredMissionSites.Add(missionSite);
                     _worldEvents.Add(
                         new WorldEvent(
                             _eventIdGen.Generate,
@@ -214,7 +213,7 @@ public class TimeAdvancementController
                 }
             }
         );
-        return expiredMissions;
+        return expiredMissionSites;
     }
     private void CreateMissionSites(GameState state)
     {

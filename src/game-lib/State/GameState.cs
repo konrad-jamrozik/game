@@ -57,7 +57,7 @@ public class GameState : IEquatable<GameState>
             new MissionSites(),
             new Missions(),
             terminatedAgents: new Agents(terminated: true),
-            factions: factions ?? Ruleset.InitialFactions(randomGen));
+            factions: factions ?? Ruleset.InitFactions(randomGen));
     }
 
     public void AssertInvariants()

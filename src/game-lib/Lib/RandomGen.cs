@@ -47,10 +47,10 @@ public class RandomGen : IRandomGen
     public float RollFloat(float min, float max)
     {
         Contract.Assert(min <= max);
-        int intMin = (int)min * 1000;
-        int intMax = (int)max * 1000;
+        int intMin = (int)(min * 10000);
+        int intMax = (int)(max * 10000);
         int intRoll = Roll(intMin, intMax);
-        return intRoll / 1000f;
+        return intRoll / 10000f;
     }
 
     public int Roll(Range range)

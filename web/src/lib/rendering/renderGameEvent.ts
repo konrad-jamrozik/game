@@ -104,6 +104,6 @@ function formatString(
 }
 
 function logIds(ids: number[]): string {
-  // The "[...id]: spread here is used to avoid mutating the "ids" array."
+  // The "[...id]" spread here is used to avoid mutating the "ids" array.
   return str([...ids].sort((left, right) => left - right))
 }

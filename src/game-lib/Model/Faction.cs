@@ -18,8 +18,10 @@ public class Faction : IIdentifiable
     public int MissionSiteCountdown;
     // kja rename PowerIncrease to PowerClimb
     public int PowerIncrease;
-    public readonly int PowerAcceleration; // More derivatives: https://en.wikipedia.org/wiki/Fourth,_fifth,_and_sixth_derivatives_of_position
+    public int PowerAcceleration; // More derivatives: https://en.wikipedia.org/wiki/Fourth,_fifth,_and_sixth_derivatives_of_position
     public int AccumulatedPowerAcceleration;
+    // kja implement: the more intel invested, the more faction damage missions are doing
+    // kja introduce "IntelRuleset", "MoneyRuleset" etc. It will make things easier to balance.
     public readonly int IntelInvested;
 
 
@@ -44,6 +46,8 @@ public class Faction : IIdentifiable
         IntelInvested = intelInvested;
     }
 
+    [JsonIgnore]
+    public int NormalizedPower => Power / Ruleset.FactionPowerResolution;
     public static Faction Init(
         IRandomGen randomGen,
         int id,
@@ -80,6 +84,9 @@ public class Faction : IIdentifiable
     {
         Contract.Assert(MissionSiteCountdown >= 1);
 
+        if (Power == 0)
+            return [];
+
         MissionSiteCountdown--;
         if (MissionSiteCountdown >= 1)
             return [];
@@ -103,12 +110,12 @@ public class Faction : IIdentifiable
         List<MissionSite> sites = [];
         int siteId = missionSiteIdGen.Generate;
         (int difficulty, int baseDifficulty, float variationRoll) =
-            Ruleset.RollMissionSiteDifficulty(randomGen, Power);
+            Ruleset.RollMissionSiteDifficulty(randomGen, this);
 
         var site = new MissionSite(
             siteId,
             this,
-            MissionSiteModifiers.Compute(randomGen, this),
+            MissionSiteModifiers.Compute(randomGen, this, difficulty),
             difficulty,
             turnAppeared: state.Timeline.CurrentTurn,
             expiresIn: Ruleset.MissionSiteTurnsUntilExpiration);
@@ -127,8 +134,20 @@ public class Faction : IIdentifiable
         return sites;
     }
 
-    public void AdvanceTime()
+    public void AdvanceTime(List<Mission> successfulMissions)
     {
+        Power = Math.Max(0, Power - successfulMissions.Sum(mission => mission.Site.Modifiers.PowerDamageReward));
+        PowerIncrease = Math.Max(
+            0,
+            PowerIncrease - successfulMissions.Sum(mission => mission.Site.Modifiers.PowerIncreaseDamageReward));
+        PowerAcceleration = Math.Max(
+            0,
+            PowerAcceleration -
+            successfulMissions.Sum(mission => mission.Site.Modifiers.PowerAccelerationDamageReward));
+
+        if (Power == 0)
+            return;
+
         int threshold = Ruleset.FactionPowerIncreaseAccumulationThreshold;
         Power += PowerIncrease;
         AccumulatedPowerAcceleration += PowerAcceleration;
@@ -137,5 +156,7 @@ public class Faction : IIdentifiable
             AccumulatedPowerAcceleration -= threshold;
             PowerIncrease += 1;
         }
+
+        
     }
 }

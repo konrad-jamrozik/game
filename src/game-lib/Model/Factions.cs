@@ -24,6 +24,13 @@ public class Factions : List<Faction>
         GameState state)
         => this.SelectMany(faction => faction.CreateMissionSites(log, randomGen, missionSiteIdGen, state)).ToList();
 
-    public void AdvanceTime()
-        => ForEach(faction => faction.AdvanceTime());
+    public void AdvanceTime(List<Mission> successfulMissions)
+    {
+        ForEach(
+            faction =>
+            {
+                List<Mission> factionSuccessfulMissions = successfulMissions.Where(mission => mission.Site.Faction.Id == faction.Id).ToList();
+                faction.AdvanceTime(factionSuccessfulMissions);
+            });
+    }
 }
