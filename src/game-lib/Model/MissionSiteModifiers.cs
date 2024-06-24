@@ -64,10 +64,10 @@ public record MissionSiteModifiers
     {
     }
 
-    // kja introduce FactionsRuleset for this and other Faction based rules
+    // kja2-refact introduce FactionsRuleset for this and other Faction based rules
     public static MissionSiteModifiers Compute(IRandomGen randomGen, Faction faction)
     {
-        // kja these formulas should depend on factions.
+        // kja2-feat these formulas should depend on factions.
         // E.g.:
         // - Black Lotus is average / baseline
         // - EXALT provides more intel than average
@@ -77,22 +77,22 @@ public record MissionSiteModifiers
         //     - much less funding
         //     - and support rewards and penalties are amplified
         
-        int baseMoneyReward = faction.Power / Ruleset.FactionPowerPrecision;
+        int baseMoneyReward = faction.Power / Ruleset.FactionPowerResolution;
         (int moneyReward, _) = randomGen.RollVariation(baseMoneyReward, -50, 50, 100);
 
-        int baseIntelReward = faction.Power / Ruleset.FactionPowerPrecision;
+        int baseIntelReward = faction.Power / Ruleset.FactionPowerResolution;
         (int intelReward, _) = randomGen.RollVariation(baseIntelReward, -50, 50, 100);
 
-        int baseFundingReward = 5 + faction.Power / 10 / Ruleset.FactionPowerPrecision;
+        int baseFundingReward = 5 + faction.Power / 10 / Ruleset.FactionPowerResolution;
         (int fundingReward, _) = randomGen.RollVariation(baseFundingReward, -50, 50, 100);
 
-        int baseFundingPenalty = 1 + faction.Power / 10 / Ruleset.FactionPowerPrecision;
+        int baseFundingPenalty = 1 + faction.Power / 10 / Ruleset.FactionPowerResolution;
         (int fundingPenalty, _) = randomGen.RollVariation(baseFundingPenalty, -50, 50, 100);
 
-        int baseSupportReward = 20 + faction.Power / 10 / Ruleset.FactionPowerPrecision;
+        int baseSupportReward = 20 + faction.Power / 10 / Ruleset.FactionPowerResolution;
         (int supportReward, _) = randomGen.RollVariation(baseSupportReward, -50, 50, 100);
 
-        int baseSupportPenalty = 20 + faction.Power / 10 / Ruleset.FactionPowerPrecision;
+        int baseSupportPenalty = 20 + faction.Power / 10 / Ruleset.FactionPowerResolution;
         (int supportPenalty, _) = randomGen.RollVariation(baseSupportPenalty, -50, 50, 100);
 
         return new MissionSiteModifiers(

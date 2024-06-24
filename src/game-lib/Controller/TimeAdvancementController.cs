@@ -68,8 +68,11 @@ public class TimeAdvancementController
 
         CreateMissionSites(state);
 
-        // kja add to the report money change and intel change
-        _worldEvents.Add(new WorldEvent(_eventIdGen.Generate, GameEventName.ReportEvent, [fundingChange, supportChange]));
+        _worldEvents.Add(
+            new WorldEvent(
+                _eventIdGen.Generate,
+                GameEventName.ReportEvent,
+                [moneyChange, intelChange, fundingChange, supportChange]));
         var worldEvents = new List<WorldEvent>(_worldEvents);
         _worldEvents.Clear();
 

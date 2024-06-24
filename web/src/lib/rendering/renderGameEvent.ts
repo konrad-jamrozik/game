@@ -54,7 +54,7 @@ const playerActionNameToDisplayMap: {
   },
   ReportEvent: {
     displayedType: 'Report',
-    displayedDetails: `Funding change: $IDs[0], Support change: $IDs[1]`,
+    displayedDetails: `Change: Money: $IDs[0] Intel: $IDs[1] Funding: $IDs[2] Support: $IDs[3]`,
   },
 }
 
@@ -85,10 +85,13 @@ function formatString(
   let formatted = template
   if (!_.isNil(ids)) {
     if (!_.isEmpty(ids)) {
-      formatted = _.replace(formatted, '$IDs[0]', ids[0]!.toString())
-    }
-    if (ids.length >= 2) {
-      formatted = _.replace(formatted, '$IDs[1]', ids[1]!.toString())
+      for (const index of _.rangeRight(ids.length)) {
+        formatted = _.replace(
+          formatted,
+          `$IDs[${index}]`,
+          ids[index]!.toString(),
+        )
+      }
     }
     formatted = _.replace(formatted, '$IDs[1..]', logIds(ids.slice(1)))
     formatted = _.replace(formatted, '$IDs', logIds(ids))
@@ -101,5 +104,6 @@ function formatString(
 }
 
 function logIds(ids: number[]): string {
-  return str(ids.sort((left, right) => left - right))
+  // The "[...id]: spread here is used to avoid mutating the "ids" array."
+  return str([...ids].sort((left, right) => left - right))
 }

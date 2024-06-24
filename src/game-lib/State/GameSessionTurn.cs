@@ -26,7 +26,7 @@ public class GameSessionTurn
         GameState? endState = null,
         PlayerActionEvent? advanceTimeEvent = null)
     {
-        EventsUntilStartState = eventsUntilStartState ?? [new WorldEvent(0, GameEventName.ReportEvent, [0, 0])];
+        EventsUntilStartState = eventsUntilStartState ?? [new WorldEvent(0, GameEventName.ReportEvent, [0, 0, 0, 0])];
         StartState = startState;
         EventsInTurn = eventsInTurn ?? new List<PlayerActionEvent>();
         EndState = endState ?? StartState.Clone();

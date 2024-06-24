@@ -12,7 +12,7 @@ public static class Ruleset
     public const int InitialSupport = 30;
     public const int InitialMaxTransportCapacity = 4;
 
-    public const int FactionPowerPrecision = 10;
+    public const int FactionPowerResolution = 10;
     public const int FactionPowerIncreaseAccumulationThreshold = 100;
 
     // For more example factions data, see:
@@ -35,7 +35,7 @@ public static class Ruleset
 
     public const int MissionSiteSurvivalBaseDifficultyRequirement = 30;
     public static readonly Range FactionMissionSiteCountdownRange = new Range(3, 10);
-    public const int MissionSiteDifficultyRollPrecision = 100;
+    public const int MissionSiteDifficultyRollResolution = 100;
     public static readonly (int min, int max) MissionSiteDifficultyVariationRange = (min: -30, max: 30);
     public const int MissionSiteTurnsUntilExpiration = 3;
 
@@ -84,11 +84,11 @@ public static class Ruleset
         // As such, if difficulty per turn would grow at least as fast as Ruleset.AgentTrainingCoefficient,
         // then at some point missions would become impossible, as eventually even the most experienced
         // agents would die, and any new agents would never be able to catch up with mission difficulty.
-        int baseDifficulty = factionPower / FactionPowerPrecision;
+        int baseDifficulty = factionPower / FactionPowerResolution;
         (int difficulty, float variationRoll) = randomGen.RollVariation(
             baseValue: baseDifficulty,
             range: MissionSiteDifficultyVariationRange,
-            precision: MissionSiteDifficultyRollPrecision);
+            precision: MissionSiteDifficultyRollResolution);
         return (difficulty, baseDifficulty, variationRoll);
     }
 
