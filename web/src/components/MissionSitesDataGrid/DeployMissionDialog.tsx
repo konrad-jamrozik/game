@@ -1,4 +1,4 @@
-import { Stack, Tooltip, type SxProps, type Theme } from '@mui/material'
+import { Stack, type SxProps, type Theme } from '@mui/material'
 import Button from '@mui/material/Button'
 import Dialog from '@mui/material/Dialog'
 import DialogActions from '@mui/material/DialogActions'
@@ -24,7 +24,7 @@ import { getSx } from '../../lib/rendering/renderUtils'
 import { AgentsDataGrid } from '../AgentsDataGrid/AgentsDataGrid'
 import { Label } from '../Label'
 
-const missionDetailsGridMaxWidthPx = 400
+const missionSiteDetailsGridMaxWidthPx = 400
 
 export type DeployMissionDialogProps = {
   readonly missionSite: MissionSite | undefined
@@ -112,8 +112,6 @@ function missionDetailsGrid(
   props: DeployMissionDialogProps,
   assets: Assets | undefined,
 ): React.JSX.Element {
-  //   let myTuple: [string, number];
-  // myTuple = ["Hello", 10]; // OK
   const entries = getMissionDetailsEntries(props, assets)
   // About react keys:
   // https://www.dhiwise.com/post/react-lists-and-keys-the-key-to-efficient-rendering#understanding-lists-in-react
@@ -123,15 +121,13 @@ function missionDetailsGrid(
       container
       spacing={1}
       // bgcolor="rgba(100,200,100,0.2)"
-      width={missionDetailsGridMaxWidthPx}
+      width={missionSiteDetailsGridMaxWidthPx}
     >
       {_.map(entries, (entry, index) => (
         <Fragment key={index}>
-          <Tooltip title="TODO">
-            <Grid xs={8}>
-              <Label sx={entry.labelSx ?? {}}>{entry.label}</Label>
-            </Grid>
-          </Tooltip>
+          <Grid xs={8}>
+            <Label sx={entry.labelSx ?? {}}>{entry.label}</Label>
+          </Grid>
           <Grid xs={4}>
             <Label sx={entry.valueSx ?? {}}>{entry.value}</Label>
           </Grid>
@@ -207,7 +203,7 @@ function agentsGrid(
   )
 }
 
-type missionDetailsEntry = {
+type MissionSiteDetailsEntry = {
   label: string
   value: string | number | undefined
   labelSx?: SxProps<Theme>
@@ -217,7 +213,7 @@ type missionDetailsEntry = {
 function getMissionDetailsEntries(
   props: DeployMissionDialogProps,
   assets: Assets | undefined,
-): missionDetailsEntry[] {
+): MissionSiteDetailsEntry[] {
   const renderedFactionName = factionNameRenderMap[props.faction!.Name].display
   const reqAgents = !_.isUndefined(props.missionSite)
     ? requiredSurvivingAgentsForSuccess(props.missionSite)
@@ -230,9 +226,8 @@ function getMissionDetailsEntries(
 
   // kja no point in testing for nulls: rewrite so that we can assume that 'site' and 'assets' are defined.
   // Review all UI components for this pattern.
-  // future work: add support for tooltip. See MUI <Tooltip> doc.
   // prettier-ignore
-  const entries: missionDetailsEntry[] = [
+  const entries: MissionSiteDetailsEntry[] = [
     { label: 'Mission site ID',               value: site?.Id             },
     { label: 'Faction',                       value: renderedFactionName,     valueSx: getSx(props.faction!.Name)        },
     { label: 'Difficulty',                    value: site?.Difficulty,        valueSx: getSx('Difficulty')               },

@@ -1,13 +1,23 @@
-import { Stack, type SxProps, type Theme, Typography } from '@mui/material'
+import {
+  Grid,
+  Stack,
+  Typography,
+  type SxProps,
+  type Theme,
+} from '@mui/material'
 import Button from '@mui/material/Button'
 import Dialog from '@mui/material/Dialog'
 import DialogActions from '@mui/material/DialogActions'
 import DialogContent from '@mui/material/DialogContent'
 import DialogTitle from '@mui/material/DialogTitle'
+import _ from 'lodash'
 import { Fragment, useState } from 'react'
 import type { Faction } from '../../lib/codesync/GameState'
+import { factionNameRenderMap } from '../../lib/rendering/renderFactions'
 import { getSx } from '../../lib/rendering/renderUtils'
+import { Label } from '../Label'
 
+const factionDetailsGridMaxWidthPx = 400
 export type ManageFactionDialogProps = {
   readonly faction: Faction
 }
@@ -70,11 +80,10 @@ export default function DeployMissionDialog(
             padding: '10px',
           }}
         >
-          <Stack
-            direction={'row'}
-            spacing={2}
-            alignItems={'flex-start'}
-          ></Stack>
+          <Stack direction={'row'} spacing={2} alignItems={'flex-start'}>
+            {factionDetailsGrid(props)}
+            {factionDetailsGrid(props)}
+          </Stack>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Close</Button>
@@ -82,4 +91,51 @@ export default function DeployMissionDialog(
       </Dialog>
     </Fragment>
   )
+}
+
+function factionDetailsGrid(
+  props: ManageFactionDialogProps,
+): React.JSX.Element {
+  const entries = getFactionDetailsEntries(props)
+  return (
+    <Grid
+      container
+      spacing={1}
+      // bgcolor="rgba(100,200,100,0.2)"
+      width={factionDetailsGridMaxWidthPx}
+    >
+      {_.map(entries, (entry, index) => (
+        <Fragment key={index}>
+          <Grid xs={8}>
+            <Label sx={entry.labelSx ?? {}}>{entry.label}</Label>
+          </Grid>
+          <Grid xs={4}>
+            <Label sx={entry.valueSx ?? {}}>{entry.value}</Label>
+          </Grid>
+        </Fragment>
+      ))}
+    </Grid>
+  )
+}
+
+type FactionDetailsEntry = {
+  label: string
+  value: string | number | undefined
+  labelSx?: SxProps<Theme>
+  valueSx?: SxProps<Theme>
+}
+
+function getFactionDetailsEntries(
+  props: ManageFactionDialogProps,
+): FactionDetailsEntry[] {
+  const renderedFactionName = factionNameRenderMap[props.faction.Name].display
+
+  // kja no point in testing for nulls: rewrite so that we can assume that 'site' and 'assets' are defined.
+  // Review all UI components for this pattern.
+  // prettier-ignore
+  const entries: FactionDetailsEntry[] = [
+    { label: 'Faction',                       value: renderedFactionName,     valueSx: getSx(props.faction.Name)        },
+  ]
+
+  return entries
 }
