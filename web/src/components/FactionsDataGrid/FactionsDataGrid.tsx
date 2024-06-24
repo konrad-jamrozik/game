@@ -35,7 +35,6 @@ export function FactionsDataGrid(): React.JSX.Element {
     intel: faction.IntelInvested,
   }))
 
-  console.log('Returning factions data grid!')
   return (
     <Box
       sx={[

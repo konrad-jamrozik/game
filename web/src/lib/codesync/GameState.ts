@@ -62,7 +62,6 @@ export type MissionSiteModifiers = {
   readonly FundingPenalty: number
   readonly SupportPenalty: number
 }
-
 export type Faction = {
   readonly Id: number
   readonly Name: FactionName
@@ -72,14 +71,6 @@ export type Faction = {
   readonly PowerAcceleration: number
   readonly AccumulatedPowerAcceleration: number
   readonly IntelInvested: number
-}
-
-// kja remove
-export const factionMap: { [key: number]: FactionName } = {
-  0: 'Black Lotus cult',
-  1: 'Red Dawn remnants',
-  2: 'EXALT',
-  3: 'Zombies',
 }
 
 export type FactionName =

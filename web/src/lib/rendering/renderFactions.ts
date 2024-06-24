@@ -4,9 +4,7 @@ import type {
   GridValidRowModel,
 } from '@mui/x-data-grid'
 import _ from 'lodash'
-import type { FactionName, factionMap } from '../codesync/GameState'
-
-type FactionMapKeys = keyof typeof factionMap
+import type { FactionName } from '../codesync/GameState'
 
 export const factionNameRenderMap: {
   [key in FactionName]: { display: string; color: string }
