@@ -1,4 +1,4 @@
-import { Box, Theme } from '@mui/material'
+import { Box, type Theme } from '@mui/material'
 import type { SystemStyleObject } from '@mui/system'
 import {
   DataGrid,
