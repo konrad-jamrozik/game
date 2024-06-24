@@ -1,4 +1,4 @@
-import { Stack, type SxProps, type Theme, Tooltip } from '@mui/material'
+import { Stack, Tooltip, type SxProps, type Theme } from '@mui/material'
 import Button from '@mui/material/Button'
 import Dialog from '@mui/material/Dialog'
 import DialogActions from '@mui/material/DialogActions'
@@ -19,7 +19,7 @@ import {
   useGameSessionContext,
   type GameSession,
 } from '../../lib/gameSession/GameSession'
-import { factionsRenderMap } from '../../lib/rendering/renderFactions'
+import { factionNameRenderMap } from '../../lib/rendering/renderFactions'
 import { getSx } from '../../lib/rendering/renderUtils'
 import { AgentsDataGrid } from '../AgentsDataGrid/AgentsDataGrid'
 import { Label } from '../Label'
@@ -218,7 +218,7 @@ function getMissionDetailsEntries(
   props: DeployMissionDialogProps,
   assets: Assets | undefined,
 ): missionDetailsEntry[] {
-  const factionLabel = factionsRenderMap[props.faction!.Id]!.label
+  const renderedFactionName = factionNameRenderMap[props.faction!.Name].display
   const reqAgents = !_.isUndefined(props.missionSite)
     ? requiredSurvivingAgentsForSuccess(props.missionSite)
     : undefined
@@ -234,7 +234,7 @@ function getMissionDetailsEntries(
   // prettier-ignore
   const entries: missionDetailsEntry[] = [
     { label: 'Mission site ID',               value: site?.Id             },
-    { label: 'Faction',                       value: factionLabel         },
+    { label: 'Faction',                       value: renderedFactionName,     valueSx: getSx(props.faction!.Name)        },
     { label: 'Difficulty',                    value: site?.Difficulty,        valueSx: getSx('Difficulty')               },
     { label: 'Required agents',               value: reqAgents,               valueSx: getSx('Requirement')              },
     { label: 'Available / Max transport cap', value: transportCap,            valueSx: getSx('CurrentTransportCapacity') },
