@@ -30,9 +30,15 @@ const gridHeight = 330
 
 export function MissionSitesDataGrid(): React.JSX.Element {
   const gameSession = useGameSessionContext()
-  const gs = gameSession.getCurrentGameStateUnsafe()
-  const missionSites = gs?.MissionSites ?? []
-  const factions = gs?.Factions ?? []
+
+  if (!gameSession.isInitialized()) {
+    // This branch will be executed when the game was reset.
+    return <></>
+  }
+
+  const gs = gameSession.getCurrentGameState()
+  const missionSites = gs.MissionSites
+  const factions = gs.Factions
   const rows: MissionSiteRow[] = getRows(missionSites, factions)
 
   const columns: GridColDef<MissionSiteRow>[] = [
@@ -63,7 +69,7 @@ export function MissionSitesDataGrid(): React.JSX.Element {
       width: 90,
       renderCell: (
         params: GridRenderCellParams<MissionSiteRow>,
-      ): React.JSX.Element | undefined => {
+      ): React.JSX.Element => {
         const row: MissionSiteRow = params.row
 
         const missionSite: MissionSite = _.find(missionSites, {
