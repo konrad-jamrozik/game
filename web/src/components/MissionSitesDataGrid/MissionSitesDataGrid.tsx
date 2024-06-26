@@ -66,12 +66,10 @@ export function MissionSitesDataGrid(): React.JSX.Element {
       ): React.JSX.Element | undefined => {
         const row: MissionSiteRow = params.row
 
-        const missionSite: MissionSite | undefined = _.find(missionSites, {
+        const missionSite: MissionSite = _.find(missionSites, {
           Id: row.id,
-        })
-        const faction: Faction | undefined = !_.isUndefined(missionSite)
-          ? getFaction(missionSite, factions)
-          : undefined
+        })!
+        const faction: Faction = getFaction(missionSite, factions)
 
         return (
           <DeployMissionDialog missionSite={missionSite} faction={faction} />

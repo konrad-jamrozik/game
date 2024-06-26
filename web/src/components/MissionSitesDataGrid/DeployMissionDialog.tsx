@@ -27,24 +27,30 @@ import { Label } from '../Label'
 const missionSiteDetailsGridMaxWidthPx = 400
 
 export type DeployMissionDialogProps = {
-  readonly missionSite: MissionSite | undefined
-  readonly faction: Faction | undefined
+  readonly missionSite: MissionSite
+  readonly faction: Faction
 }
 
 export default function DeployMissionDialog(
   props: DeployMissionDialogProps,
 ): React.JSX.Element {
   const gameSession: GameSession = useGameSessionContext()
-  const assets = gameSession.getAssetsUnsafe()
   const [open, setOpen] = useState<boolean>(false)
   const [rowSelectionModel, setRowSelectionModel] =
     useState<GridRowSelectionModel>([])
+
+  if (!gameSession.isInitialized()) {
+    // This branch will be executed when the game was reset.
+    return <></>
+  }
+
+  const assets = gameSession.getAssets()
 
   function handleOpen(): void {
     if (gameSession.isInitialized()) {
       const stillAvailableAgents: GridRowId[] = _.filter(
         rowSelectionModel,
-        (id: GridRowId) => _.some(assets?.Agents, (agent) => agent.Id === id),
+        (id: GridRowId) => _.some(assets.Agents, (agent) => agent.Id === id),
       )
       if (stillAvailableAgents.length < rowSelectionModel.length) {
         setRowSelectionModel(stillAvailableAgents)
@@ -110,7 +116,7 @@ export default function DeployMissionDialog(
 
 function missionDetailsGrid(
   props: DeployMissionDialogProps,
-  assets: Assets | undefined,
+  assets: Assets,
 ): React.JSX.Element {
   const entries = getMissionDetailsEntries(props, assets)
   // About react keys:
@@ -151,7 +157,7 @@ function agentsGrid(
       rowSelectionModel,
       (id: GridRowId) => id as number,
     )
-    await gameSession.launchMission(selectedAgentsIds, props.missionSite!.Id)
+    await gameSession.launchMission(selectedAgentsIds, props.missionSite.Id)
   }
 
   function getLaunchMissionButtonText(): [boolean, string] {
@@ -212,35 +218,30 @@ type MissionSiteDetailsEntry = {
 
 function getMissionDetailsEntries(
   props: DeployMissionDialogProps,
-  assets: Assets | undefined,
+  assets: Assets,
 ): MissionSiteDetailsEntry[] {
-  const renderedFactionName = factionNameRenderMap[props.faction!.Name].display
-  const reqAgents = !_.isUndefined(props.missionSite)
-    ? requiredSurvivingAgentsForSuccess(props.missionSite)
-    : undefined
+  const renderedFactionName = factionNameRenderMap[props.faction.Name].display
+  const site: MissionSite = props.missionSite
+  const reqAgents = requiredSurvivingAgentsForSuccess(site)
+  const mods: MissionSiteModifiers = site.Modifiers
+  const transportCap = `${assets.CurrentTransportCapacity} / ${assets.MaxTransportCapacity}`
+  const powerClimbDamage = mods.PowerIncreaseDamageReward
 
-  const site: MissionSite | undefined = props.missionSite
-  const mods: MissionSiteModifiers | undefined = site?.Modifiers
-  const transportCap = `${assets?.CurrentTransportCapacity} / ${assets?.MaxTransportCapacity}`
-  const powerClimbDamage = mods?.PowerIncreaseDamageReward
-
-  // kja no point in testing for nulls: rewrite so that we can assume that 'site' and 'assets' are defined.
-  // Review all UI components for this pattern.
   // prettier-ignore
   const entries: MissionSiteDetailsEntry[] = [
-    { label: 'Mission site ID',               value: site?.Id             },
-    { label: 'Faction',                       value: renderedFactionName,     valueSx: getSx(props.faction!.Name)        },
-    { label: 'Difficulty',                    value: site?.Difficulty,        valueSx: getSx('Difficulty')               },
+    { label: 'Mission site ID',               value: site.Id                                                             },
+    { label: 'Faction',                       value: renderedFactionName,     valueSx: getSx(props.faction.Name)         },
+    { label: 'Difficulty',                    value: site.Difficulty,         valueSx: getSx('Difficulty')               },
     { label: 'Required agents',               value: reqAgents,               valueSx: getSx('Requirement')              },
     { label: 'Available / Max transport cap', value: transportCap,            valueSx: getSx('CurrentTransportCapacity') },
-    { label: 'Money reward',                  value: mods?.MoneyReward,       valueSx: getSx('Reward')                   },
-    { label: 'Intel reward',                  value: mods?.IntelReward,       valueSx: getSx('Reward')                   },
-    { label: 'Funding reward',                value: mods?.FundingReward,     valueSx: getSx('Reward')                   },
-    { label: 'Support reward',                value: mods?.SupportReward,     valueSx: getSx('Reward')                   },
-    { label: 'Faction damage',                value: mods?.PowerDamageReward, valueSx: getSx('Reward')                   },
-    { label: 'Faction power climb damage',    value: powerClimbDamage,        valueSx: getSx('Reward')                   },    
-    { label: 'Funding penalty',               value: mods?.FundingPenalty,    valueSx: getSx('Penalty')                  },
-    { label: 'Support penalty',               value: mods?.SupportPenalty,    valueSx: getSx('Penalty')                  },
+    { label: 'Money reward',                  value: mods.MoneyReward,        valueSx: getSx('Reward')                   },
+    { label: 'Intel reward',                  value: mods.IntelReward,        valueSx: getSx('Reward')                   },
+    { label: 'Funding reward',                value: mods.FundingReward,      valueSx: getSx('Reward')                   },
+    { label: 'Support reward',                value: mods.SupportReward,      valueSx: getSx('Reward')                   },
+    { label: 'Faction damage',                value: mods.PowerDamageReward,  valueSx: getSx('Reward')                   },
+    { label: 'Faction power climb damage',    value: powerClimbDamage,        valueSx: getSx('Reward')                   },
+    { label: 'Funding penalty',               value: mods.FundingPenalty,     valueSx: getSx('Penalty')                  },
+    { label: 'Support penalty',               value: mods.SupportPenalty,     valueSx: getSx('Penalty')                  },
   ]
 
   return entries
