@@ -30,7 +30,7 @@ export function FactionsDataGrid(): React.JSX.Element {
 
   const rows: FactionRow[] = _.map(factions, (faction: Faction) => ({
     id: faction.Id,
-    name: faction.Name,
+    faction: faction.Name,
     power: Math.floor(faction.Power / factionPowerResolution),
     intel: faction.IntelInvested,
   }))
@@ -67,7 +67,7 @@ export function FactionsDataGrid(): React.JSX.Element {
 
 export type FactionRow = {
   readonly id: number
-  readonly name: string
+  readonly faction: string
   readonly power: number
   readonly intel: number
 }

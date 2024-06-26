@@ -72,7 +72,7 @@ export type MissionRow = {
   turn: number
   state: string
   difficulty: number
-  name: string
+  faction: string
   agentsSent: number
   agentsTerminated: number
 }
@@ -121,7 +121,7 @@ function getRow(
     turn: missionSite.TurnDeactivated!,
     state: mission.CurrentState,
     difficulty: missionSite.Difficulty,
-    name: getFaction(missionSite, factions).Name,
+    faction: getFaction(missionSite, factions).Name,
     agentsSent: mission.AgentsSent,
     agentsTerminated: mission.AgentsTerminated,
   }

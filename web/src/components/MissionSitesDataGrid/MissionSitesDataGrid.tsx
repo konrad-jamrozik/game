@@ -118,7 +118,7 @@ function onRowSelectionModelChange(
 
 type MissionSiteRow = {
   id: number
-  name: FactionName
+  faction: FactionName
   difficulty: number
   expiresIn: number
 }
@@ -136,7 +136,7 @@ function getRows(
     const faction = getFaction(missionSite, factions)
     return {
       id: missionSite.Id,
-      name: faction.Name,
+      faction: faction.Name,
       difficulty: missionSite.Difficulty,
       expiresIn: missionSite.ExpiresIn!,
     }

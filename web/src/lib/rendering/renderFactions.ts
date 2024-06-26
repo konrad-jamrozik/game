@@ -23,9 +23,8 @@ const invertedFactionNameValueMap = _.invert(
   _.mapValues(factionNameRenderMap, (value) => value.display),
 )
 
-// kja because field is 'name', bunch of components have Row model that has Name prop instead of Faction. Fix.
 export const factionNameGridColDef: GridColDef = {
-  field: 'name',
+  field: 'faction',
   headerName: 'Faction',
   disableColumnMenu: true,
   sortable: false,
