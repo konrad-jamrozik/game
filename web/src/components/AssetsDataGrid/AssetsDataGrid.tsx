@@ -17,7 +17,7 @@ import {
   defaultComponentMinWidth,
   sxClassesFromColors,
 } from '../../lib/rendering/renderUtils'
-import ManageTransportCapDialog from './TransportCapMgmtDialog'
+import ManageTransportCapDialog from './ManageTransportCapDialog'
 
 export type AssetsDataGridProps = {
   readonly currentGameState: GameState | undefined
