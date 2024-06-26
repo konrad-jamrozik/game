@@ -23,6 +23,7 @@ public static class Ruleset
         // kja-refact: Power should be "actual" value, not with the precision. So 40 instead of 400. Then powerIncrease (to be renamed to powerClimb)
         // would be 0.4 and powerAcceleration would be 0.008. This would make it easier to reason about the values.
         // Just bite the bullet and use doubles.
+        // kja also, frontend diagram chart shows the increased precision (e.g. 100) while datagrid shows normalzied (e.g. 10).
         Faction.Init(randomGen, id: 0, "Black Lotus cult", power: 200, powerIncrease: 4, powerAcceleration: 8),
         Faction.Init(randomGen, id: 1, "Red Dawn remnants", power: 300, powerIncrease: 5, powerAcceleration: 5),
         Faction.Init(randomGen, id: 2, "EXALT", power: 400, powerIncrease: 6, powerAcceleration: 4),

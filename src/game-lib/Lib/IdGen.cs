@@ -11,8 +11,7 @@ public class IdGen
 
     public int Value => NextId;
 
-    // kja need to assert AssertConsecutiveIds across entire game session
-    public static void AssertConsecutiveIds<T>(List<T> instances, int? expectedFirstId = null) where T: IIdentifiable
+    public static void AssertConsecutiveIds<T>(List<T> instances, int? expectedFirstId = null) where T : IIdentifiable
     {
         if (instances.Any())
         {
