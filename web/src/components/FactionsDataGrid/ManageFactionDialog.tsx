@@ -132,8 +132,6 @@ function getFactionDetailsEntries(
   const power = getNormalizedPower(props.faction)
   const intel = props.faction.IntelInvested
 
-  // kja no point in testing for nulls: rewrite so that we can assume that 'site' and 'assets' are defined.
-  // Review all UI components for this pattern.
   // prettier-ignore
   const entries: FactionDetailsEntry[] = [
     { label: 'Faction', value: name,  valueSx: getSx(props.faction.Name) },
