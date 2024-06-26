@@ -13,12 +13,12 @@ import {
 import { getSx } from '../../lib/rendering/renderUtils'
 import { Label } from '../Label'
 
-export type TransportCapMgmtDialogProps = {
+export type ManageTransportCapDialogProps = {
   readonly rowName: string
 }
 
-export default function TransportCapMgmtDialog(
-  props: TransportCapMgmtDialogProps,
+export default function ManageTransportCapDialog(
+  props: ManageTransportCapDialogProps,
 ): React.JSX.Element {
   const gameSession: GameSession = useGameSessionContext()
   const assets = gameSession.getAssetsUnsafe()

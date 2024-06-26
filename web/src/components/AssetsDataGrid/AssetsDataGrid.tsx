@@ -17,7 +17,7 @@ import {
   defaultComponentMinWidth,
   sxClassesFromColors,
 } from '../../lib/rendering/renderUtils'
-import TransportCapMgmtDialog from './TransportCapMgmtDialog'
+import ManageTransportCapDialog from './TransportCapMgmtDialog'
 
 export type AssetsDataGridProps = {
   readonly currentGameState: GameState | undefined
@@ -109,7 +109,7 @@ const columns: GridColDef<AssetRow>[] = [
       const row: AssetRow = params.row
 
       return isManageable ? (
-        <TransportCapMgmtDialog rowName={row.name} />
+        <ManageTransportCapDialog rowName={row.name} />
       ) : undefined
     },
   },
