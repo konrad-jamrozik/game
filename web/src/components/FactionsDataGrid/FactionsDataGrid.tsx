@@ -24,10 +24,6 @@ export function FactionsDataGrid(): React.JSX.Element {
   const gs = gameSession.getCurrentGameStateUnsafe()
   const factions = gs?.Factions ?? []
 
-  if (_.isEmpty(factions)) {
-    return <></>
-  }
-
   const rows: FactionRow[] = _.map(factions, (faction: Faction) => ({
     id: faction.Id,
     faction: faction.Name,

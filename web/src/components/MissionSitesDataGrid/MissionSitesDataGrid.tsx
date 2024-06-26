@@ -11,6 +11,7 @@ import _ from 'lodash'
 import type {
   Faction,
   FactionName,
+  GameState,
   MissionSite,
 } from '../../lib/codesync/GameState'
 import { getFaction } from '../../lib/codesync/dereferencing'
@@ -31,17 +32,43 @@ const gridHeight = 330
 export function MissionSitesDataGrid(): React.JSX.Element {
   const gameSession = useGameSessionContext()
 
-  if (!gameSession.isInitialized()) {
-    // This branch will be executed when the game was reset.
-    return <></>
-  }
+  const rows = gameSession.isInitialized()
+    ? getRows(gameSession.getCurrentGameState())
+    : []
 
-  const gs = gameSession.getCurrentGameState()
-  const missionSites = gs.MissionSites
-  const factions = gs.Factions
-  const rows: MissionSiteRow[] = getRows(missionSites, factions)
+  const columns = getColumns(gameSession.getCurrentGameStateUnsafe())
 
-  const columns: GridColDef<MissionSiteRow>[] = [
+  return (
+    <Box
+      sx={{
+        height: gridHeight,
+        minWidth: defaultComponentMinWidth,
+        maxWidth: 530,
+        width: '100%',
+      }}
+    >
+      <DataGrid
+        rows={rows}
+        columns={columns}
+        disableRowSelectionOnClick
+        onRowSelectionModelChange={onRowSelectionModelChange}
+        rowHeight={30}
+        hideFooterPagination={true}
+        sx={[
+          sxClassesFromColors(factionColors),
+          (theme): SystemStyleObject<Theme> => ({
+            bgcolor: theme.palette.background.default,
+          }),
+        ]}
+      />
+    </Box>
+  )
+}
+
+function getColumns(gs?: GameState): GridColDef<MissionSiteRow>[] {
+  const missionSites = gs?.MissionSites ?? []
+  const factions = gs?.Factions ?? []
+  return [
     {
       field: 'id',
       headerName: 'Site',
@@ -83,32 +110,6 @@ export function MissionSitesDataGrid(): React.JSX.Element {
       },
     },
   ]
-
-  return (
-    <Box
-      sx={{
-        height: gridHeight,
-        minWidth: defaultComponentMinWidth,
-        maxWidth: 530,
-        width: '100%',
-      }}
-    >
-      <DataGrid
-        rows={rows}
-        columns={columns}
-        disableRowSelectionOnClick
-        onRowSelectionModelChange={onRowSelectionModelChange}
-        rowHeight={30}
-        hideFooterPagination={true}
-        sx={[
-          sxClassesFromColors(factionColors),
-          (theme): SystemStyleObject<Theme> => ({
-            bgcolor: theme.palette.background.default,
-          }),
-        ]}
-      />
-    </Box>
-  )
 }
 
 // https://mui.com/x/api/data-grid/data-grid/
@@ -127,10 +128,9 @@ type MissionSiteRow = {
   expiresIn: number
 }
 
-function getRows(
-  missionSites: MissionSite[],
-  factions: Faction[],
-): MissionSiteRow[] {
+function getRows(gs: GameState): MissionSiteRow[] {
+  const missionSites = gs.MissionSites
+  const factions = gs.Factions
   const activeMissionSites: MissionSite[] = _.filter(
     missionSites,
     (missionSite) => isActive(missionSite),
