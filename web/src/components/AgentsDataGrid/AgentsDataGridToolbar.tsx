@@ -94,9 +94,8 @@ function agentsToHireCountTextField(
       type="number"
       size="small"
       value={agentsToHireCount}
-      onChange={(event: React.ChangeEvent) => {
-        const target = event.target as HTMLInputElement
-        setAgentsToHireCount(target.valueAsNumber)
+      onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+        setAgentsToHireCount(event.target.valueAsNumber)
       }}
       InputLabelProps={{
         shrink: true,

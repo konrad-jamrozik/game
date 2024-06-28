@@ -9,12 +9,17 @@ import _ from 'lodash'
 import { Fragment, useState } from 'react'
 import type { Faction } from '../../lib/codesync/GameState'
 import { getNormalizedPower } from '../../lib/codesync/ruleset'
+import {
+  GameSession,
+  useGameSessionContext,
+} from '../../lib/gameSession/GameSession'
 import { factionNameRenderMap } from '../../lib/rendering/renderFactions'
 import { getSx } from '../../lib/rendering/renderUtils'
 import { Label } from '../Label'
 import InputSlider from './InputSlider'
 
 const factionDetailsGridMaxWidthPx = 400
+
 export type ManageFactionDialogProps = {
   readonly faction: Faction
 }
@@ -22,8 +27,14 @@ export type ManageFactionDialogProps = {
 export default function DeployMissionDialog(
   props: ManageFactionDialogProps,
 ): React.JSX.Element {
-  // const gameSession: GameSession = useGameSessionContext()
+  const gameSession: GameSession = useGameSessionContext()
   const [open, setOpen] = useState<boolean>(false)
+
+  const gs = gameSession.getCurrentGameStateUnsafe()
+
+  if (_.isUndefined(gs)) {
+    return <></>
+  }
 
   function handleOpen(): void {
     setOpen(true)
@@ -31,6 +42,11 @@ export default function DeployMissionDialog(
 
   function handleClose(): void {
     setOpen(false)
+  }
+
+  // eslint-disable-next-line unicorn/consistent-function-scoping
+  function investIntel(amount: number): void {
+    console.log(`investIntel(${amount}) NOT IMPLEMENTED`)
   }
 
   const factionNameSx: SxProps<Theme> = [
@@ -42,7 +58,6 @@ export default function DeployMissionDialog(
       backgroundColor: '#000',
     },
   ]
-  // kja: https://mui.com/material-ui/react-slider/#slider-with-input-field
   return (
     <Fragment>
       <Button
@@ -83,7 +98,15 @@ export default function DeployMissionDialog(
             <Stack spacing={2} display="flex" alignItems="center">
               <Label>Panel1</Label>
               <Label>Panel2</Label>
-              <InputSlider />
+              <InputSlider
+                defaultValue={gs.Assets.Intel}
+                onClick={async (intel: number) => {
+                  await Promise.resolve()
+                  investIntel(intel)
+                }}
+                minValue={0}
+                maxValue={gs.Assets.Intel}
+              />
               <Label>Panel3</Label>
               <Label>Panel4</Label>
             </Stack>
