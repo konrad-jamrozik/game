@@ -38,7 +38,13 @@ export default function InputSlider(
   }
 
   return (
-    <Box>
+    <Box
+      sx={{
+        bgcolor: 'rgba(20,20,20,0.2)',
+        padding: '12px',
+        borderRadius: '10px',
+      }}
+    >
       <Stack spacing={1}>
         <Stack direction="row" spacing={2} alignItems="center">
           <SvgIcon sx={{ width: 36, height: 36 }}>

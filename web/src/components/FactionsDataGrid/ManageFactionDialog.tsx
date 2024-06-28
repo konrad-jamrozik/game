@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import { Stack, Typography, type SxProps, type Theme } from '@mui/material'
 import Button from '@mui/material/Button'
 import Dialog from '@mui/material/Dialog'
@@ -10,7 +11,7 @@ import { Fragment, useState } from 'react'
 import type { Faction } from '../../lib/codesync/GameState'
 import { getNormalizedPower } from '../../lib/codesync/ruleset'
 import {
-  GameSession,
+  type GameSession,
   useGameSessionContext,
 } from '../../lib/gameSession/GameSession'
 import { factionNameRenderMap } from '../../lib/rendering/renderFactions'
@@ -93,11 +94,14 @@ export default function DeployMissionDialog(
             padding: '10px',
           }}
         >
-          <Stack direction={'row'} spacing={2} alignItems={'flex-start'}>
+          <Stack direction="row" spacing={2} alignItems="flex-start">
             {factionDetailsGrid(props)}
-            <Stack spacing={2} display="flex" alignItems="center">
-              <Label>Panel1</Label>
-              <Label>Panel2</Label>
+            <Stack
+              direction="column"
+              spacing={1}
+              display="flex"
+              alignItems="center"
+            >
               <InputSlider
                 defaultValue={gs.Assets.Intel}
                 onClick={async (intel: number) => {
@@ -107,8 +111,15 @@ export default function DeployMissionDialog(
                 minValue={0}
                 maxValue={gs.Assets.Intel}
               />
-              <Label>Panel3</Label>
-              <Label>Panel4</Label>
+              <InputSlider
+                defaultValue={gs.Assets.Intel}
+                onClick={async (intel: number) => {
+                  await Promise.resolve()
+                  investIntel(intel)
+                }}
+                minValue={0}
+                maxValue={gs.Assets.Intel}
+              />
             </Stack>
           </Stack>
         </DialogContent>
