@@ -12,6 +12,7 @@ import { getNormalizedPower } from '../../lib/codesync/ruleset'
 import { factionNameRenderMap } from '../../lib/rendering/renderFactions'
 import { getSx } from '../../lib/rendering/renderUtils'
 import { Label } from '../Label'
+import InputSlider from './InputSlider'
 
 const factionDetailsGridMaxWidthPx = 400
 export type ManageFactionDialogProps = {
@@ -82,6 +83,9 @@ export default function DeployMissionDialog(
             <Stack spacing={2} display="flex" alignItems="center">
               <Label>Panel1</Label>
               <Label>Panel2</Label>
+              <InputSlider />
+              <Label>Panel3</Label>
+              <Label>Panel4</Label>
             </Stack>
           </Stack>
         </DialogContent>
