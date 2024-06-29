@@ -18,7 +18,6 @@ public class Faction : IIdentifiable
     public int MissionSiteCountdown;
     public double PowerClimb;
     public double PowerAcceleration; // More derivatives: https://en.wikipedia.org/wiki/Fourth,_fifth,_and_sixth_derivatives_of_position
-    // kja implement: the more intel invested, the more faction damage missions are doing
     // kja-refactor introduce "IntelRuleset", "MoneyRuleset" etc. It will make things easier to balance.
     public int IntelInvested;
 
@@ -44,6 +43,9 @@ public class Faction : IIdentifiable
 
     [JsonIgnore]
     public int PowerAsInt => (int)Math.Floor(Power);
+
+    [JsonIgnore]
+    public bool Defeated => Power == 0;
 
     public static Faction Init(
         IRandomGen randomGen,
@@ -79,7 +81,7 @@ public class Faction : IIdentifiable
     {
         Contract.Assert(MissionSiteCountdown >= 1);
 
-        if (Power == 0)
+        if (Defeated)
             return [];
 
         MissionSiteCountdown--;
@@ -150,7 +152,7 @@ public class Faction : IIdentifiable
             successfulMissions.Sum(mission => mission.Site.Modifiers.PowerAccelerationDamageReward);
         PowerAcceleration = Math.Max(0, PowerAcceleration - powerAccelerationDamage);
 
-        if (Power == 0)
+        if (Defeated)
             return;
 
         Power += PowerClimb;

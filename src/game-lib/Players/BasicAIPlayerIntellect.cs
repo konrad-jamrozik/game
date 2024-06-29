@@ -32,6 +32,8 @@ public class BasicAIPlayerIntellect : IPlayer
         LaunchMissions(state, controller);
 
         AssignAvailableAgents(state, controller);
+
+        InvestIntel(state, controller);
     }
 
     private int ComputeTransportCapacityToBuy(GameStatePlayerView state)
@@ -93,7 +95,7 @@ public class BasicAIPlayerIntellect : IPlayer
     {
         Agents agents = state.Assets.Agents;
 
-        // Here we assume that we get determine agents to recall in given turn before 
+        // Here we assert that we get to determine agents to recall in given turn before 
         // any agents have been sent on a mission.
         Contract.Assert(agents.OnMission.Count == 0);
 
@@ -282,5 +284,14 @@ public class BasicAIPlayerIntellect : IPlayer
             state.Assets.Agents.GatheringIntel.Count == initialAgentsGatheringIntel + agentsToSendToGatherIntelCount);
         Contract.Assert(state.Assets.Agents.InTraining.Count == initialAgentsInTraining + agentsToSendToTrainingCount);
         Contract.Assert(state.Assets.Agents.Available.Count == 0);
+    }
+
+    private void InvestIntel(GameStatePlayerView state, GameTurnController controller)
+    {
+        if (state.Assets.Intel >= 5)
+        {
+            Faction faction = state.Factions.MinBy(faction => faction.IntelInvested)!;
+            controller.InvestIntel(faction, state.Assets.Intel);
+        }
     }
 }

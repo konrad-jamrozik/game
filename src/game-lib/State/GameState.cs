@@ -84,7 +84,7 @@ public class GameState : IEquatable<GameState>
                               || Assets.Funding < 0
                               || Assets.Support <= 0;
 
-    public bool IsGameWon => Assets.Intel >= Ruleset.IntelToWin;
+    public bool IsGameWon => Factions.AllDefeated;
 
     public void Terminate(Agent agent, bool sack = false)
     {

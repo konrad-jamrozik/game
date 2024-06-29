@@ -29,6 +29,7 @@ public class GameStatePlayerView(Func<GameState> state) : IEquatable<GameStatePl
     public MissionSites MissionSites => _state().MissionSites;
     public Assets Assets => _state().Assets;
     public Agents TerminatedAgents => _state().TerminatedAgents;
+    public Factions Factions => _state().Factions;
 
     public bool StateReferenceEquals(GameStatePlayerView view)
         => ReferenceEquals(view._state(), _state());

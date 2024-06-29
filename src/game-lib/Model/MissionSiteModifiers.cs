@@ -3,9 +3,6 @@ using UfoGameLib.Lib;
 
 namespace UfoGameLib.Model;
 
-// kja Changes to MissionSite to make:
-// - add props for (money, intel, funding, support), both reward if won and penalty if lost or expired.
-// - add props for: faction damage: reduction of (power, power increase, power acceleration), if mission won
 public record MissionSiteModifiers
 {
     public readonly int MoneyReward;

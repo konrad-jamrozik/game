@@ -14,6 +14,8 @@ public class Factions : List<Faction>
     public Factions(IEnumerable<Faction>? factions = null)
         => AddRange(factions ?? new List<Faction>());
 
+    public bool AllDefeated => this.All(faction => faction.Defeated);
+
     public Factions DeepClone()
         => new Factions(this.Select(faction => faction.DeepClone()));
 

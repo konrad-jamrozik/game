@@ -4,12 +4,6 @@ using Lib.Json;
 
 namespace UfoGameLib.Model;
 
-// kja-wishlist add new usage of intel:
-// - Investing intel into faction will cause missions from this faction to be generated with better modifiers.
-
-// kja-wishlist add new win criterion:
-// - reduce all factions power to 0.
-
 public class MissionSite : IIdentifiable
 {
     public int Id { get; }

@@ -99,7 +99,9 @@ export const allGameStatsDataSeriesByKey: AllStatsDataSeries = {
     color: 'Red',
   },
   intel: {
-    dataFunc: (gs) => gs.Assets.Intel,
+    dataFunc: (gs) =>
+      gs.Assets.Intel +
+      _.sumBy(gs.Factions, (faction) => faction.IntelInvested),
     label: 'Intel',
     color: assetNameColors.Intel,
   },
