@@ -1,8 +1,8 @@
 import { Box } from '@mui/material'
 import {
   DataGrid,
-  type GridRenderCellParams,
   type GridColDef,
+  type GridRenderCellParams,
 } from '@mui/x-data-grid'
 import _ from 'lodash'
 import type { Faction } from '../../lib/codesync/GameState'

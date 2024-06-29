@@ -1,25 +1,19 @@
-/* eslint-disable max-lines-per-function */
 import { Stack, Typography, type SxProps, type Theme } from '@mui/material'
 import Button from '@mui/material/Button'
 import Dialog from '@mui/material/Dialog'
 import DialogActions from '@mui/material/DialogActions'
 import DialogContent from '@mui/material/DialogContent'
 import DialogTitle from '@mui/material/DialogTitle'
-import Grid from '@mui/material/Unstable_Grid2'
 import _ from 'lodash'
 import { Fragment, useState } from 'react'
-import type { Faction, GameState } from '../../lib/codesync/GameState'
-import { getNormalizedPower } from '../../lib/codesync/ruleset'
+import type { Faction } from '../../lib/codesync/GameState'
 import {
-  type GameSession,
   useGameSessionContext,
+  type GameSession,
 } from '../../lib/gameSession/GameSession'
-import { factionNameRenderMap } from '../../lib/rendering/renderFactions'
 import { getSx } from '../../lib/rendering/renderUtils'
-import { Label } from '../Label'
-import SliderWithButton from '../SliderWithButton/SliderWithButton'
-
-const factionDetailsGridMaxWidthPx = 300
+import { FactionActions } from './FactionActions'
+import { FactionDetails } from './FactionDetails'
 
 export type ManageFactionDialogProps = {
   readonly faction: Faction
@@ -90,8 +84,8 @@ export default function DeployMissionDialog(
           }}
         >
           <Stack direction="row" spacing={2} alignItems="flex-start">
-            {factionDetailsGrid(props)}
-            {factionActionsStack(props, gs)}
+            <FactionDetails {...props} />
+            <FactionActions {...{ ...props, gs }} />
           </Stack>
         </DialogContent>
         <DialogActions>
@@ -100,90 +94,4 @@ export default function DeployMissionDialog(
       </Dialog>
     </Fragment>
   )
-}
-
-function factionDetailsGrid(
-  props: ManageFactionDialogProps,
-): React.JSX.Element {
-  const entries = getFactionDetailsEntries(props)
-  return (
-    <Grid
-      container
-      spacing={1}
-      // bgcolor="rgba(100,200,100,0.2)"
-      width={factionDetailsGridMaxWidthPx}
-    >
-      {_.map(entries, (entry, index) => (
-        <Fragment key={index}>
-          <Grid xs={6}>
-            <Label sx={entry.labelSx ?? {}}>{entry.label}</Label>
-          </Grid>
-          <Grid xs={6}>
-            <Label sx={entry.valueSx ?? {}}>{entry.value}</Label>
-          </Grid>
-        </Fragment>
-      ))}
-    </Grid>
-  )
-}
-
-function factionActionsStack(
-  props: ManageFactionDialogProps,
-  gs: GameState,
-): React.JSX.Element {
-  // eslint-disable-next-line unicorn/consistent-function-scoping
-  function investIntel(amount: number): void {
-    console.log(`investIntel(${amount}) NOT IMPLEMENTED`)
-  }
-
-  return (
-    <Stack direction="column" spacing={1} display="flex" alignItems="center">
-      <SliderWithButton
-        defaultValue={Math.floor(gs.Assets.Intel * 0.2)}
-        onClick={async (intel: number) => {
-          await Promise.resolve()
-          investIntel(intel)
-        }}
-        minValue={0}
-        maxValue={gs.Assets.Intel}
-        iconName="Intel"
-        label="Invest $TargetID intel"
-      />
-      <SliderWithButton
-        defaultValue={Math.floor(gs.Assets.Intel * 0.5)}
-        onClick={async (intel: number) => {
-          await Promise.resolve()
-          investIntel(intel)
-        }}
-        minValue={0}
-        maxValue={gs.Assets.Intel}
-        iconName="Intel"
-        label="Invest $TargetID intel"
-      />
-    </Stack>
-  )
-}
-
-type FactionDetailsEntry = {
-  label: string
-  value: string | number | undefined
-  labelSx?: SxProps<Theme>
-  valueSx?: SxProps<Theme>
-}
-
-function getFactionDetailsEntries(
-  props: ManageFactionDialogProps,
-): FactionDetailsEntry[] {
-  const name = factionNameRenderMap[props.faction.Name].display
-  const power = getNormalizedPower(props.faction)
-  const intel = props.faction.IntelInvested
-
-  // prettier-ignore
-  const entries: FactionDetailsEntry[] = [
-    { label: 'Faction', value: name,  valueSx: getSx(props.faction.Name) },
-    { label: 'Power',   value: power, valueSx: getSx('Difficulty') },
-    { label: 'Intel',   value: intel, valueSx: getSx('Intel') },
-  ]
-
-  return entries
 }
