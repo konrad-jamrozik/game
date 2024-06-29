@@ -38,7 +38,7 @@ function getFactionDetailsEntries(
   props: ManageFactionDialogProps,
 ): FactionDetailsEntry[] {
   const name = factionNameRenderMap[props.faction.Name].display
-  const power = props.faction.Power
+  const power = Math.round(props.faction.Power)
   const intel = props.faction.IntelInvested
 
   // prettier-ignore

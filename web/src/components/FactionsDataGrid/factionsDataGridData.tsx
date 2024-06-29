@@ -8,7 +8,7 @@ export function getRows(factions: Faction[]): FactionRow[] {
   return _.map(factions, (faction: Faction) => ({
     id: faction.Id,
     faction: faction.Name,
-    power: faction.Power,
+    power: Math.round(faction.Power),
     intel: faction.IntelInvested,
   }))
 }
