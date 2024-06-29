@@ -1,12 +1,12 @@
 /** This file was originally adapted from
  * https://mui.com/material-ui/react-slider/#slider-with-input-field
  */
-import { Button, Stack, SvgIcon, TextField } from '@mui/material'
+import { Button, Stack, TextField } from '@mui/material'
 import Box from '@mui/material/Box'
 import Slider from '@mui/material/Slider'
 import { useState } from 'react'
-import { assetNameColors } from '../../lib/rendering/renderAssets'
-import { Icon } from '../Icon/Icon'
+import { formatString } from '../../lib/rendering/formatString'
+import { Icon, type IconName } from '../Icon/Icon'
 
 const textFieldWidth = 110
 
@@ -15,6 +15,8 @@ export type InputSliderProps = {
   readonly onClick: (value: number) => Promise<void>
   readonly minValue: number
   readonly maxValue: number
+  readonly iconName: IconName
+  readonly label: string
 }
 
 export default function InputSlider(
@@ -48,7 +50,7 @@ export default function InputSlider(
     >
       <Stack spacing={1}>
         <Stack direction="row" spacing={2} alignItems="center">
-          <Icon iconName="Intel" />
+          <Icon iconName={props.iconName} />
           <Slider
             sx={{ width: '120px' }}
             value={value}
@@ -80,10 +82,12 @@ export default function InputSlider(
         <Button
           variant="contained"
           id="input-slider"
-          disabled={value > props.maxValue || value < props.minValue}
+          disabled={
+            value > props.maxValue || value < props.minValue || value === 0
+          }
           onClick={async () => props.onClick(value)}
         >
-          Invest intel
+          {formatString('Invest $TargetID intel', undefined, value)}
         </Button>
       </Stack>
     </Box>

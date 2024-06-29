@@ -19,7 +19,7 @@ import { getSx } from '../../lib/rendering/renderUtils'
 import { Label } from '../Label'
 import InputSlider from './InputSlider'
 
-const factionDetailsGridMaxWidthPx = 400
+const factionDetailsGridMaxWidthPx = 300
 
 export type ManageFactionDialogProps = {
   readonly faction: Faction
@@ -103,22 +103,26 @@ export default function DeployMissionDialog(
               alignItems="center"
             >
               <InputSlider
-                defaultValue={gs.Assets.Intel}
+                defaultValue={Math.floor(gs.Assets.Intel * 0.2)}
                 onClick={async (intel: number) => {
                   await Promise.resolve()
                   investIntel(intel)
                 }}
                 minValue={0}
                 maxValue={gs.Assets.Intel}
+                iconName="Intel"
+                label="Invest $TargetID intel"
               />
               <InputSlider
-                defaultValue={gs.Assets.Intel}
+                defaultValue={Math.floor(gs.Assets.Intel * 0.5)}
                 onClick={async (intel: number) => {
                   await Promise.resolve()
                   investIntel(intel)
                 }}
                 minValue={0}
                 maxValue={gs.Assets.Intel}
+                iconName="Intel"
+                label="Invest $TargetID intel"
               />
             </Stack>
           </Stack>
@@ -144,10 +148,10 @@ function factionDetailsGrid(
     >
       {_.map(entries, (entry, index) => (
         <Fragment key={index}>
-          <Grid xs={8}>
+          <Grid xs={6}>
             <Label sx={entry.labelSx ?? {}}>{entry.label}</Label>
           </Grid>
-          <Grid xs={4}>
+          <Grid xs={6}>
             <Label sx={entry.valueSx ?? {}}>{entry.value}</Label>
           </Grid>
         </Fragment>
