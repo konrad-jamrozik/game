@@ -7,7 +7,6 @@ import type {
   Agent,
   AgentState,
   Assets,
-  Faction,
   GameState,
   Mission,
   MissionSite,
