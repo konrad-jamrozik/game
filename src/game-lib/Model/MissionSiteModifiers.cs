@@ -15,7 +15,7 @@ public record MissionSiteModifiers
     public readonly int FundingPenalty;
     public readonly int SupportPenalty;
     public readonly int PowerDamageReward;
-    public readonly int PowerIncreaseDamageReward;
+    public readonly int PowerClimbDamageReward;
     public readonly int PowerAccelerationDamageReward;
 
     [JsonConstructor]
@@ -27,7 +27,7 @@ public record MissionSiteModifiers
         int fundingPenalty,
         int supportPenalty,
         int powerDamageReward,
-        int powerIncreaseDamageReward,
+        int powerClimbDamageReward,
         int powerAccelerationDamageReward)
     {
         MoneyReward = moneyReward;
@@ -37,7 +37,7 @@ public record MissionSiteModifiers
         FundingPenalty = fundingPenalty;
         SupportPenalty = supportPenalty;
         PowerDamageReward = powerDamageReward;
-        PowerIncreaseDamageReward = powerIncreaseDamageReward;
+        PowerClimbDamageReward = powerClimbDamageReward;
         PowerAccelerationDamageReward = powerAccelerationDamageReward;
     }
 
@@ -47,7 +47,7 @@ public record MissionSiteModifiers
         int? fundingReward = null,
         int? supportReward = null,
         int? powerDamageReward = null,
-        int? powerIncreaseDamageReward = null,
+        int? powerClimbDamageReward = null,
         int? powerAccelerationDamageReward = null,
         int? fundingPenalty = null,
         int? supportPenalty = null) : this(
@@ -58,7 +58,7 @@ public record MissionSiteModifiers
         fundingPenalty ?? 0,
         supportPenalty ?? 0,
         powerDamageReward ?? 0,
-        powerIncreaseDamageReward ?? 0,
+        powerClimbDamageReward ?? 0,
         powerAccelerationDamageReward ?? 0)
     {
     }
@@ -75,7 +75,7 @@ public record MissionSiteModifiers
         //     - zero intel
         //     - much less funding
         //     - and support rewards and penalties are amplified
-        
+
         int baseMoneyReward = faction.NormalizedPower / 10;
         (int moneyReward, _) = randomGen.RollVariation(baseMoneyReward, -50, 50, 100);
 
@@ -105,7 +105,7 @@ public record MissionSiteModifiers
             fundingPenalty: fundingPenalty,
             supportPenalty: supportPenalty,
             powerDamageReward: powerDamageReward,
-            powerIncreaseDamageReward: 0,
+            powerClimbDamageReward: 0,
             powerAccelerationDamageReward: 0);
     }
 

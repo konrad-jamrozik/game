@@ -3,7 +3,7 @@
 import type { PlayerActionNameInTurn } from '../codesync/PlayerActionEvent'
 import type { PlayerActionPayload } from '../codesync/PlayerActionPayload'
 
-// kja this map could be consolidated with PlayerActionEvent.ts and renderGameEvent.ts
+// kja2-refact this map could be consolidated with PlayerActionEvent.ts and renderGameEvent.ts
 export const playerActionsPayloadsProviders: {
   [actionName in PlayerActionNameInTurn]: PayloadProviderMap[actionName]
 } = {

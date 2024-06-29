@@ -57,7 +57,7 @@ export type MissionSiteModifiers = {
   readonly FundingReward: number
   readonly SupportReward: number
   readonly PowerDamageReward: number
-  readonly PowerIncreaseDamageReward: number
+  readonly PowerClimbDamageReward: number
   readonly PowerAccelerationDamageReward: number
   readonly FundingPenalty: number
   readonly SupportPenalty: number
@@ -67,7 +67,7 @@ export type Faction = {
   readonly Name: FactionName
   readonly Power: number
   readonly MissionSiteCountdown: number
-  readonly PowerIncrease: number
+  readonly PowerClimb: number
   readonly PowerAcceleration: number
   readonly AccumulatedPowerAcceleration: number
   readonly IntelInvested: number

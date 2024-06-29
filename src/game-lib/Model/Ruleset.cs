@@ -13,21 +13,21 @@ public static class Ruleset
     public const int InitialMaxTransportCapacity = 4;
 
     public const int FactionPowerResolution = 10;
-    public const int FactionPowerIncreaseAccumulationThreshold = 100;
+    public const int FactionPowerClimbAccumulationThreshold = 100;
 
     // For more example factions data, see:
     // https://github.com/konrad-jamrozik/game/blob/eccb44a1d5f074e95b07aebca2c6bc5bbfdfdda8/src/ufo-game/Model/Data/FactionsData.cs#L34
     public static Factions InitFactions(IRandomGen randomGen) => new(
     [
         // Note: need to ensure here that IDs are consecutive, and from zero.
-        // kja-refact: Power should be "actual" value, not with the precision. So 40 instead of 400. Then powerIncrease (to be renamed to powerClimb)
+        // kja-refact: Power should be "actual" value, not with the precision. So 40 instead of 400. Then powerClimb (to be renamed to powerClimb)
         // would be 0.4 and powerAcceleration would be 0.008. This would make it easier to reason about the values.
         // Just bite the bullet and use doubles.
-        // kja also, frontend diagram chart shows the increased precision (e.g. 100) while datagrid shows normalzied (e.g. 10).
-        Faction.Init(randomGen, id: 0, "Black Lotus cult", power: 200, powerIncrease: 4, powerAcceleration: 8),
-        Faction.Init(randomGen, id: 1, "Red Dawn remnants", power: 300, powerIncrease: 5, powerAcceleration: 5),
-        Faction.Init(randomGen, id: 2, "EXALT", power: 400, powerIncrease: 6, powerAcceleration: 4),
-        Faction.Init(randomGen, id: 3, "Zombies", power: 100, powerIncrease: 1, powerAcceleration: 20)
+        // kja also, frontend diagram chart shows the increased precision (e.g. 100) while datagrid shows normalized (e.g. 10).
+        Faction.Init(randomGen, id: 0, "Black Lotus cult"  , power: 200, powerClimb: 4, powerAcceleration: 8  ),
+        Faction.Init(randomGen, id: 1, "Red Dawn remnants" , power: 300, powerClimb: 5, powerAcceleration: 5  ),
+        Faction.Init(randomGen, id: 2, "EXALT"             , power: 400, powerClimb: 6, powerAcceleration: 4  ),
+        Faction.Init(randomGen, id: 3, "Zombies"           , power: 100, powerClimb: 1, powerAcceleration: 20 )
     ]);
 
     public const int IntelToWin = 3000;

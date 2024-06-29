@@ -225,7 +225,7 @@ function getMissionDetailsEntries(
   const reqAgents = requiredSurvivingAgentsForSuccess(site)
   const mods: MissionSiteModifiers = site.Modifiers
   const transportCap = `${assets.CurrentTransportCapacity} / ${assets.MaxTransportCapacity}`
-  const powerClimbDamage = mods.PowerIncreaseDamageReward
+  const powerClimbDamage = mods.PowerClimbDamageReward
 
   // prettier-ignore
   const entries: MissionSiteDetailsEntry[] = [

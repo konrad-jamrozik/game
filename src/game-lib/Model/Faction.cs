@@ -16,8 +16,7 @@ public class Faction : IIdentifiable
     /// When it is 1 and the time is advanced, a new mission site is generated and the countdown is reset.
     /// </summary>
     public int MissionSiteCountdown;
-    // kja rename PowerIncrease to PowerClimb
-    public int PowerIncrease;
+    public int PowerClimb;
     public int PowerAcceleration; // More derivatives: https://en.wikipedia.org/wiki/Fourth,_fifth,_and_sixth_derivatives_of_position
     public int AccumulatedPowerAcceleration;
     // kja implement: the more intel invested, the more faction damage missions are doing
@@ -31,7 +30,7 @@ public class Faction : IIdentifiable
         string name,
         int power,
         int missionSiteCountdown,
-        int powerIncrease,
+        int powerClimb,
         int powerAcceleration,
         int accumulatedPowerAcceleration,
         int intelInvested)
@@ -40,7 +39,7 @@ public class Faction : IIdentifiable
         Name = name;
         Power = power;
         MissionSiteCountdown = missionSiteCountdown;
-        PowerIncrease = powerIncrease;
+        PowerClimb = powerClimb;
         PowerAcceleration = powerAcceleration;
         AccumulatedPowerAcceleration = accumulatedPowerAcceleration;
         IntelInvested = intelInvested;
@@ -53,14 +52,14 @@ public class Faction : IIdentifiable
         int id,
         string name,
         int power,
-        int? powerIncrease = null,
+        int? powerClimb = null,
         int? powerAcceleration = null)
         => new(
             id,
             name,
             power,
             randomGen.RandomizeMissionSiteCountdown(),
-            powerIncrease ?? 0,
+            powerClimb ?? 0,
             powerAcceleration ?? 0,
             accumulatedPowerAcceleration: 0,
             intelInvested: 0);
@@ -71,7 +70,7 @@ public class Faction : IIdentifiable
             Name,
             Power,
             MissionSiteCountdown,
-            PowerIncrease,
+            PowerClimb,
             PowerAcceleration,
             AccumulatedPowerAcceleration,
             IntelInvested);
@@ -137,9 +136,9 @@ public class Faction : IIdentifiable
     public void AdvanceTime(List<Mission> successfulMissions)
     {
         Power = Math.Max(0, Power - successfulMissions.Sum(mission => mission.Site.Modifiers.PowerDamageReward));
-        PowerIncrease = Math.Max(
+        PowerClimb = Math.Max(
             0,
-            PowerIncrease - successfulMissions.Sum(mission => mission.Site.Modifiers.PowerIncreaseDamageReward));
+            PowerClimb - successfulMissions.Sum(mission => mission.Site.Modifiers.PowerClimbDamageReward));
         PowerAcceleration = Math.Max(
             0,
             PowerAcceleration -
@@ -148,15 +147,15 @@ public class Faction : IIdentifiable
         if (Power == 0)
             return;
 
-        int threshold = Ruleset.FactionPowerIncreaseAccumulationThreshold;
-        Power += PowerIncrease;
+        int threshold = Ruleset.FactionPowerClimbAccumulationThreshold;
+        Power += PowerClimb;
         AccumulatedPowerAcceleration += PowerAcceleration;
         while (AccumulatedPowerAcceleration >= threshold)
         {
             AccumulatedPowerAcceleration -= threshold;
-            PowerIncrease += 1;
+            PowerClimb += 1;
         }
 
-        
+
     }
 }
