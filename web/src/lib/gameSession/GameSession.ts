@@ -103,6 +103,16 @@ export class GameSession {
     return this.applyPlayerAction(payload)
   }
 
+  public async investIntel(
+    factionId: number,
+    amount: number,
+  ): Promise<boolean> {
+    const payloadProvider =
+      playerActionsPayloadsProviders.InvestIntelPlayerAction
+    const payload = payloadProvider([factionId], amount)
+    return this.applyPlayerAction(payload)
+  }
+
   public async buyTransportCap(count: number): Promise<boolean> {
     /* c8 ignore start */
     if (count !== 1) {

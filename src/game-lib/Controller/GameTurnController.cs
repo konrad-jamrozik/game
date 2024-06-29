@@ -36,6 +36,9 @@ public class GameTurnController
 
     public int CurrentTurn => GameState.Timeline.CurrentTurn;
 
+    public PlayerActionEvent InvestIntel(int factionId, int intel)
+        => InvestIntel(GetFactionById(factionId), intel);
+
     public PlayerActionEvent SackAgents(int[] agentsIds) => SackAgents(GetAgentsByIds(agentsIds));
 
     public PlayerActionEvent SendAgentsToTraining(int[] agentsIds)
@@ -68,6 +71,9 @@ public class GameTurnController
 
         LaunchMission(site, agents);
     }
+
+    public PlayerActionEvent InvestIntel(Faction faction, int intel)
+        => ExecuteAndRecordAction(new InvestIntelPlayerAction(_log, faction, intel));
 
     public PlayerActionEvent HireAgents(int count)
         => ExecuteAndRecordAction(new HireAgentsPlayerAction(_log, _agentIdGen, count));
@@ -102,6 +108,9 @@ public class GameTurnController
 
     private MissionSite GetMissionSiteById(int siteId) =>
         GameState.MissionSites.Single(site => site.Id == siteId);
+
+    private Faction GetFactionById(int factionId) =>
+        GameState.Factions.GetById(factionId);
 
     private Agents GetAgentsByIds(int[] agentsIds) =>
         GameState.Assets.Agents.GetByIds(agentsIds);

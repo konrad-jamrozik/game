@@ -73,7 +73,6 @@ public class Agents : List<Agent>
 
     public Agent AgentAtPercentile(int percentile, Func<Agent, int> orderBy)
         => this.OrderBy(orderBy).TakePercent(percentile).Last();
-
     
     // kja2-assert: add assertions that all searched agents were found
     public Agents GetByIds(int[] ids) =>

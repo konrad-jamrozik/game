@@ -3,6 +3,7 @@
 import type { PlayerActionNameInTurn } from '../codesync/PlayerActionEvent'
 import type { PlayerActionPayload } from '../codesync/PlayerActionPayload'
 
+// kja this map could be consolidated with PlayerActionEvent.ts and renderGameEvent.ts
 export const playerActionsPayloadsProviders: {
   [actionName in PlayerActionNameInTurn]: PayloadProviderMap[actionName]
 } = {
@@ -42,6 +43,11 @@ export const playerActionsPayloadsProviders: {
     Ids,
     TargetId,
   }),
+  InvestIntelPlayerAction: (Ids: number[], TargetId: number) => ({
+    ActionName: 'InvestIntelPlayerAction' as PlayerActionNameInTurn,
+    Ids,
+    TargetId,
+  }),
 }
 
 export type PayloadProvider =
@@ -74,4 +80,5 @@ type PayloadProviderMap = {
   SendAgentsToTrainingPlayerAction: PayloadFromIds
   RecallAgentsPlayerAction: PayloadFromIds
   LaunchMissionPlayerAction: PayloadFromIdsAndTargetId
+  InvestIntelPlayerAction: PayloadFromIdsAndTargetId
 }

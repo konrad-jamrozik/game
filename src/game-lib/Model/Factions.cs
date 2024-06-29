@@ -17,6 +17,9 @@ public class Factions : List<Faction>
     public Factions DeepClone()
         => new Factions(this.Select(faction => faction.DeepClone()));
 
+    public Faction GetById(int id) =>
+        this.Single(faction => faction.Id == id);
+
     public List<MissionSite> CreateMissionSites(
         ILog log,
         IRandomGen randomGen,

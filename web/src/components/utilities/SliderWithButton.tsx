@@ -55,7 +55,7 @@ export default function SliderWithButton(
         <Stack direction="row" spacing={2} alignItems="center">
           <Icon iconName={props.iconName} />
           <Slider
-            sx={{ width: '120px' }}
+            sx={{ width: 120 }}
             value={value}
             onChange={handleSliderChange}
             min={props.minValue}

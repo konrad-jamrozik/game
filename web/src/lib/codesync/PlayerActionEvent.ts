@@ -11,6 +11,7 @@ export type PlayerActionName =
   | 'BuyTransportCapacityPlayerAction'
   | 'HireAgentsPlayerAction'
   | 'LaunchMissionPlayerAction'
+  | 'InvestIntelPlayerAction'
   | AgentPlayerActionName
 
 export type AgentPlayerActionName =
@@ -24,6 +25,7 @@ export const PlayerActionNameVal = [
   'AdvanceTimePlayerAction',
   'BuyTransportCapacityPlayerAction',
   'HireAgentsPlayerAction',
+  'InvestIntelPlayerAction',
   'LaunchMissionPlayerAction',
   'SackAgentsPlayerAction',
   'SendAgentsToGenerateIncomePlayerAction',

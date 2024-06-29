@@ -85,7 +85,7 @@ export default function DeployMissionDialog(
         >
           <Stack direction="row" spacing={2} alignItems="flex-start">
             <FactionDetails {...props} />
-            <FactionActions {...{ ...props, gs }} />
+            <FactionActions {...{ ...props, gameSession, gs }} />
           </Stack>
         </DialogContent>
         <DialogActions>

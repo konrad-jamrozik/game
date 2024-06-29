@@ -18,7 +18,6 @@ public class HireAgentsPlayerAction : PlayerAction
         _log = log;
         _agentIdGen = agentIdGen;
         _count = count;
-        
     }
 
     protected override (List<int>? ids, int? targetId) ApplyImpl(GameState state)

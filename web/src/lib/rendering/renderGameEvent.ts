@@ -25,6 +25,10 @@ const playerActionNameToDisplayMap: {
     displayedType: 'Hire agents',
     displayedDetails: `Count: +$TargetID = $IDs[0]`,
   },
+  InvestIntelPlayerAction: {
+    displayedType: 'Invest intel',
+    displayedDetails: `Faction ID: $IDs[0], Amount: $TargetID`,
+  },
   LaunchMissionPlayerAction: {
     displayedType: 'Launch mission',
     displayedDetails: `Site ID: $TargetID, Mission ID: $IDs[0], Agent IDs: $IDs[1..]`,
