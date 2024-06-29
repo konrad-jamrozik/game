@@ -8,7 +8,7 @@ import { getSx } from '../../lib/rendering/renderUtils'
 import { Label } from '../utilities/Label'
 import type { ManageFactionDialogProps } from './ManageFactionDialog'
 
-const gridMaxWidthPx = 300
+const gridWidth = 300
 
 export function FactionDetails(
   props: ManageFactionDialogProps,
@@ -19,7 +19,7 @@ export function FactionDetails(
       container
       spacing={1}
       // bgcolor="rgba(100,200,100,0.2)"
-      width={gridMaxWidthPx}
+      width={gridWidth}
     >
       {_.map(entries, (entry, index) => (
         <Fragment key={index}>

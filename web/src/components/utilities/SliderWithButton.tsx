@@ -24,7 +24,10 @@ export default function SliderWithButton(
 ): React.JSX.Element {
   const [value, setValue] = useState(props.defaultValue)
 
-  function handleSliderChange(event: Event, newValue: number | number[]): void {
+  function handleSliderChange(
+    _event: Event,
+    newValue: number | number[],
+  ): void {
     setValue(newValue as number)
   }
 

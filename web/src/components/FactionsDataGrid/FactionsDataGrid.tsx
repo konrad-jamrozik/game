@@ -9,6 +9,7 @@ import {
 import { getColumns, getRows } from './factionsDataGridData'
 
 const boxHeight = 200
+
 export function FactionsDataGrid(): React.JSX.Element {
   const gameSession = useGameSessionContext()
   const gs = gameSession.getCurrentGameStateUnsafe()
