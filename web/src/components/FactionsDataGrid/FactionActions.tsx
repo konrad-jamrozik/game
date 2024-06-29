@@ -22,17 +22,6 @@ export function FactionActions(
         label="Invest $TargetID intel"
         loading={props.gameSession.loading}
       />
-      <SliderWithButton
-        defaultValue={Math.floor(props.gs.Assets.Intel * 0.5)}
-        onClick={async (intel: number) => {
-          await investIntel(intel)
-        }}
-        minValue={0}
-        maxValue={props.gs.Assets.Intel}
-        iconName="Intel"
-        label="Invest $TargetID intel"
-        loading={props.gameSession.loading}
-      />
     </Stack>
   )
 }
