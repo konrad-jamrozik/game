@@ -76,7 +76,7 @@ public record MissionSiteModifiers
         //     - much less funding
         //     - and support rewards and penalties are amplified
 
-        double baseMoneyReward = faction.Power / 10;
+        double baseMoneyReward = (faction.Power / 10) + (faction.IntelInvested / 10d);
         (int moneyReward, _) = randomGen.RollVariationAndRound(baseMoneyReward, (min: -0.5, max: 0.5));
 
         double baseIntelReward = faction.Power / 10;
@@ -94,7 +94,7 @@ public record MissionSiteModifiers
         double baseSupportPenalty = 20 + faction.Power / 10;
         (int supportPenalty, _) = randomGen.RollVariationAndRound(baseSupportPenalty, (min: -0.5, max: 0.5));
 
-        double basePowerDamageReward = 2 + faction.Power / 10;
+        double basePowerDamageReward = 2 + (faction.Power / 10) + (faction.IntelInvested / 10d);
         (int powerDamageReward, _) = randomGen.RollVariationAndRound(basePowerDamageReward, (min: -0.2, max: 0.2));
 
         return new MissionSiteModifiers(
