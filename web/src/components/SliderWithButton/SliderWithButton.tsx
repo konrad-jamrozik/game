@@ -10,7 +10,7 @@ import { Icon, type IconName } from '../Icon/Icon'
 
 const textFieldWidth = 110
 
-export type InputSliderProps = {
+export type SliderWithButtonProps = {
   readonly defaultValue: number
   readonly onClick: (value: number) => Promise<void>
   readonly minValue: number
@@ -19,8 +19,8 @@ export type InputSliderProps = {
   readonly label: string
 }
 
-export default function InputSlider(
-  props: InputSliderProps,
+export default function SliderWithButton(
+  props: SliderWithButtonProps,
 ): React.JSX.Element {
   const [value, setValue] = useState(props.defaultValue)
 

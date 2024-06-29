@@ -17,7 +17,7 @@ import {
 import { factionNameRenderMap } from '../../lib/rendering/renderFactions'
 import { getSx } from '../../lib/rendering/renderUtils'
 import { Label } from '../Label'
-import InputSlider from './InputSlider'
+import SliderWithButton from '../SliderWithButton/SliderWithButton'
 
 const factionDetailsGridMaxWidthPx = 300
 
@@ -102,7 +102,7 @@ export default function DeployMissionDialog(
               display="flex"
               alignItems="center"
             >
-              <InputSlider
+              <SliderWithButton
                 defaultValue={Math.floor(gs.Assets.Intel * 0.2)}
                 onClick={async (intel: number) => {
                   await Promise.resolve()
@@ -113,7 +113,7 @@ export default function DeployMissionDialog(
                 iconName="Intel"
                 label="Invest $TargetID intel"
               />
-              <InputSlider
+              <SliderWithButton
                 defaultValue={Math.floor(gs.Assets.Intel * 0.5)}
                 onClick={async (intel: number) => {
                   await Promise.resolve()
