@@ -21,10 +21,14 @@ public class InvestIntelPlayerAction : PlayerAction
 
     protected override (List<int>? ids, int? targetId) ApplyImpl(GameState state)
     {
-        // kja WIP InvestIntelPlayerAction
-
-        Console.Out.WriteLine($"Invest intel. Faction: '{_faction.Name}', Faction ID: {_faction.Id}, Intel: {_intel}");
+        Console.Out.WriteLine($"kja temp debug Invest intel. Faction: '{_faction.Name}', Faction ID: {_faction.Id}, Intel: {_intel}");
         _log.Info($"Invest intel. Faction: '{_faction.Name}', Faction ID: {_faction.Id}, Intel: {_intel}");
+
+        Contract.Assert(state.Factions.Contains(_faction));
+        Contract.Assert(_intel > 0 && _intel <= state.Assets.Intel);
+
+        state.Assets.Intel -= _intel;
+        _faction.IntelInvested += _intel;
 
         return (ids: [_faction.Id], targetId: _intel);
     }

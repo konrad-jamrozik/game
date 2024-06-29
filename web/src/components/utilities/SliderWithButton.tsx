@@ -4,6 +4,7 @@
 import { Button, Stack, TextField } from '@mui/material'
 import Box from '@mui/material/Box'
 import Slider from '@mui/material/Slider'
+import _ from 'lodash'
 import { useState } from 'react'
 import { formatString } from '../../lib/rendering/formatString'
 import { Icon, type IconName } from './Icon'
@@ -17,12 +18,17 @@ export type SliderWithButtonProps = {
   readonly maxValue: number
   readonly iconName: IconName
   readonly label: string
+  readonly loading: boolean
 }
 
 export default function SliderWithButton(
   props: SliderWithButtonProps,
 ): React.JSX.Element {
   const [value, setValue] = useState(props.defaultValue)
+  const clampedValue = _.clamp(value, props.minValue, props.maxValue)
+  if (value !== clampedValue) {
+    setValue(clampedValue)
+  }
 
   function handleSliderChange(
     _event: Event,
@@ -86,7 +92,10 @@ export default function SliderWithButton(
           variant="contained"
           id="input-slider"
           disabled={
-            value > props.maxValue || value < props.minValue || value === 0
+            props.loading ||
+            value > props.maxValue ||
+            value < props.minValue ||
+            value === 0
           }
           onClick={async () => props.onClick(value)}
         >

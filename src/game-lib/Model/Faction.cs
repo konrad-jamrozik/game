@@ -21,8 +21,8 @@ public class Faction : IIdentifiable
     public int PowerAcceleration; // More derivatives: https://en.wikipedia.org/wiki/Fourth,_fifth,_and_sixth_derivatives_of_position
     public int AccumulatedPowerAcceleration;
     // kja implement: the more intel invested, the more faction damage missions are doing
-    // kja introduce "IntelRuleset", "MoneyRuleset" etc. It will make things easier to balance.
-    public readonly int IntelInvested;
+    // kja-refactor introduce "IntelRuleset", "MoneyRuleset" etc. It will make things easier to balance.
+    public int IntelInvested;
 
 
     [JsonConstructor]

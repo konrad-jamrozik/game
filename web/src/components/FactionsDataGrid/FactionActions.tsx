@@ -20,6 +20,7 @@ export function FactionActions(
         maxValue={props.gs.Assets.Intel}
         iconName="Intel"
         label="Invest $TargetID intel"
+        loading={props.gameSession.loading}
       />
       <SliderWithButton
         defaultValue={Math.floor(props.gs.Assets.Intel * 0.5)}
@@ -30,6 +31,7 @@ export function FactionActions(
         maxValue={props.gs.Assets.Intel}
         iconName="Intel"
         label="Invest $TargetID intel"
+        loading={props.gameSession.loading}
       />
     </Stack>
   )

@@ -1,5 +1,6 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Lib.Contracts;
 using Lib.Json;
 using UfoGameLib.Lib;
 using UfoGameLib.Model;
@@ -87,6 +88,7 @@ public class GameState : IEquatable<GameState>
 
     public void Terminate(Agent agent, bool sack = false)
     {
+        Contract.Assert(Assets.Agents.Contains(agent));
         Assets.Agents.Remove(agent);
         agent.Terminate(Timeline.CurrentTurn, sack);
         TerminatedAgents.Add(agent);
