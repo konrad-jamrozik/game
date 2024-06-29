@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react'
 import { describe, expect, test } from 'vitest'
-import { Label } from '../../src/components/Label.tsx'
+import { Label } from '../../src/components/utilities/Label.tsx'
 
 describe('describe Label', () => {
   // eslint-disable-next-line vitest/no-disabled-tests

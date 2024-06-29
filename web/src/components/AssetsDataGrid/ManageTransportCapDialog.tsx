@@ -12,7 +12,7 @@ import {
   useGameSessionContext,
 } from '../../lib/gameSession/GameSession'
 import { getSx } from '../../lib/rendering/renderUtils'
-import { Label } from '../Label'
+import { Label } from '../utilities/Label'
 
 export type ManageTransportCapDialogProps = {
   readonly rowName: string

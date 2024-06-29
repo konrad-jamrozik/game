@@ -15,7 +15,7 @@ import _ from 'lodash'
 import { useState } from 'react'
 import { initialTurn } from '../../lib/codesync/GameState'
 import type { GameSession } from '../../lib/gameSession/GameSession'
-import { Label } from '../Label'
+import { Label } from '../utilities/Label'
 
 export type GameSessionControlPanelProps = {
   readonly gameSession: GameSession

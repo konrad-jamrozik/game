@@ -1,6 +1,6 @@
 import { Stack } from '@mui/material'
 import type { GameState } from '../../lib/codesync/GameState'
-import SliderWithButton from '../SliderWithButton/SliderWithButton'
+import SliderWithButton from '../utilities/SliderWithButton'
 import type { ManageFactionDialogProps } from './ManageFactionDialog'
 
 export function FactionActions(

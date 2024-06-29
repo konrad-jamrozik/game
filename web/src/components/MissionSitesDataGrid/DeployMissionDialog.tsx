@@ -22,7 +22,7 @@ import {
 import { factionNameRenderMap } from '../../lib/rendering/renderFactions'
 import { getSx } from '../../lib/rendering/renderUtils'
 import { AgentsDataGrid } from '../AgentsDataGrid/AgentsDataGrid'
-import { Label } from '../Label'
+import { Label } from '../utilities/Label'
 
 const missionSiteDetailsGridMaxWidthPx = 400
 

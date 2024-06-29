@@ -5,7 +5,7 @@ import { Fragment } from 'react/jsx-runtime'
 import { getNormalizedPower } from '../../lib/codesync/ruleset'
 import { factionNameRenderMap } from '../../lib/rendering/renderFactions'
 import { getSx } from '../../lib/rendering/renderUtils'
-import { Label } from '../Label'
+import { Label } from '../utilities/Label'
 import type { ManageFactionDialogProps } from './ManageFactionDialog'
 
 const gridMaxWidthPx = 300

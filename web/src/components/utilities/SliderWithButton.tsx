@@ -6,7 +6,7 @@ import Box from '@mui/material/Box'
 import Slider from '@mui/material/Slider'
 import { useState } from 'react'
 import { formatString } from '../../lib/rendering/formatString'
-import { Icon, type IconName } from '../Icon/Icon'
+import { Icon, type IconName } from './Icon'
 
 const textFieldWidth = 110
 

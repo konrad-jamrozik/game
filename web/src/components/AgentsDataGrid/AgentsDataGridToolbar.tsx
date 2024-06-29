@@ -5,7 +5,7 @@ import { GridToolbarContainer } from '@mui/x-data-grid'
 import { useState } from 'react'
 import { agentHireCost } from '../../lib/codesync/ruleset'
 import type { GameSession } from '../../lib/gameSession/GameSession'
-import { Label } from '../Label'
+import { Label } from '../utilities/Label'
 import {
   AgentsActionDropdown,
   type AgentsActionDropdownProps,
