@@ -15,7 +15,7 @@ export function Icon(props: IconProps): React.JSX.Element {
   )
 }
 
-const iconNameMap: { [key in IconName]: React.ReactNode } = {
+const iconNameMap: { [key in IconName]: React.JSX.Element } = {
   // https://game-icons.net/1x1/delapouite/spy.html
   Intel: (
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
