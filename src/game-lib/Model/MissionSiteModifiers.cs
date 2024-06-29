@@ -76,26 +76,26 @@ public record MissionSiteModifiers
         //     - much less funding
         //     - and support rewards and penalties are amplified
 
-        int baseMoneyReward = faction.NormalizedPower / 10;
-        (int moneyReward, _) = randomGen.RollVariation(baseMoneyReward, -50, 50, 100);
+        double baseMoneyReward = faction.Power / 10;
+        (int moneyReward, _) = randomGen.RollVariationAndRound(baseMoneyReward, (min: -0.5, max: 0.5));
 
-        int baseIntelReward = faction.NormalizedPower / 10;
-        (int intelReward, _) = randomGen.RollVariation(baseIntelReward, -50, 50, 100);
+        double baseIntelReward = faction.Power / 10;
+        (int intelReward, _) = randomGen.RollVariationAndRound(baseIntelReward, (min: -0.5, max: 0.5));
 
-        int baseFundingReward = 5 + faction.NormalizedPower / 10;
-        (int fundingReward, _) = randomGen.RollVariation(baseFundingReward, -50, 50, 100);
+        double baseFundingReward = 5 + faction.Power / 10;
+        (int fundingReward, _) = randomGen.RollVariationAndRound(baseFundingReward, (min: -0.5, max: 0.5));
 
-        int baseFundingPenalty = 1 + faction.NormalizedPower / 10;
-        (int fundingPenalty, _) = randomGen.RollVariation(baseFundingPenalty, -50, 50, 100);
+        double baseFundingPenalty = 1 + faction.Power / 10;
+        (int fundingPenalty, _) = randomGen.RollVariationAndRound(baseFundingPenalty, (min: -0.5, max: 0.5));
 
-        int baseSupportReward = 20 + faction.NormalizedPower / 10;
-        (int supportReward, _) = randomGen.RollVariation(baseSupportReward, -50, 50, 100);
+        double baseSupportReward = 20 + faction.Power / 10;
+        (int supportReward, _) = randomGen.RollVariationAndRound(baseSupportReward, (min: -0.5, max: 0.5));
 
-        int baseSupportPenalty = 20 + faction.NormalizedPower / 10;
-        (int supportPenalty, _) = randomGen.RollVariation(baseSupportPenalty, -50, 50, 100);
+        double baseSupportPenalty = 20 + faction.Power / 10;
+        (int supportPenalty, _) = randomGen.RollVariationAndRound(baseSupportPenalty, (min: -0.5, max: 0.5));
 
-        int basePowerDamageReward = 20 + faction.Power / 10;
-        (int powerDamageReward, _) = randomGen.RollVariation(basePowerDamageReward, -20, 20, 100);
+        double basePowerDamageReward = 20 + faction.Power / 10;
+        (int powerDamageReward, _) = randomGen.RollVariationAndRound(basePowerDamageReward, (min: -0.2, max: 0.2));
 
         return new MissionSiteModifiers(
             moneyReward: moneyReward,

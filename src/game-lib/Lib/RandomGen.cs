@@ -44,13 +44,13 @@ public class RandomGen : IRandomGen
         return @base + Roll(min, max);
     }
 
-    public float RollFloat(float min, float max)
+    public double RollDouble(double min, double max)
     {
         Contract.Assert(min <= max);
         int intMin = (int)(min * 10000);
         int intMax = (int)(max * 10000);
         int intRoll = Roll(intMin, intMax);
-        return intRoll / 10000f;
+        return intRoll / 10000d;
     }
 
     public int Roll(Range range)
@@ -77,10 +77,10 @@ public class RandomGen : IRandomGen
 
     public bool FlipCoin() => _random.Next(2) == 1;
 
-    public (int result, float variationRoll) RollVariation(int baseValue, (int min, int max) range, int precision)
-        => RollVariation(baseValue, range.min, range.max, precision);
+    public (int result, float variationRoll) RollVariationInt(int baseValue, (int min, int max) range, int precision)
+        => RollVariationInt(baseValue, range.min, range.max, precision);
 
-    public (int result, float variationRoll) RollVariation(int baseValue, int min, int max, int precision)
+    public (int result, float variationRoll) RollVariationInt(int baseValue, int min, int max, int precision)
     {
         // e.g.       -15 = Roll(-30, 30)
         int variationRoll = Roll(min, max);
@@ -89,5 +89,22 @@ public class RandomGen : IRandomGen
         // e.g. 42 =        50 *       85 / 100
         int result = baseValue * modifier / precision;
         return (result, variationRoll: variationRoll / (float)precision);
+    }
+
+    public (int result, double variationRoll) RollVariationAndRound(double baseValue, (double min, double max) range)
+    {
+        (double result, double variationRoll) = RollVariation(baseValue, range);
+        return (result: (int)Math.Round(result), variationRoll);
+    }
+
+    public (double result, double variationRoll) RollVariation(double baseValue, (double min, double max) range)
+        => RollVariation(baseValue, range.min, range.max);
+
+    public (double result, double variationRoll) RollVariation(double baseValue, double min, double max)
+    {
+        double variationRoll = RollDouble(min, max);
+        double modifier = 1 + variationRoll;
+        double result = baseValue * modifier;
+        return (result, variationRoll);
     }
 } 

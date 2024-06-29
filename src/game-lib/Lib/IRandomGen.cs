@@ -7,7 +7,7 @@ public interface IRandomGen
     int Roll(int min, int max);
     int Roll((int min, int max) range);
     int Roll(int @base, int min, int max);
-    float RollFloat(float min, float max);
+    public double RollDouble(double min, double max);
     int Roll(Range range);
     T Pick<T>(List<T> items);
     List<T> Pick<T>(List<T> items, int count);
@@ -15,8 +15,17 @@ public interface IRandomGen
     int RandomizeMissionSiteCountdown();
     bool FlipCoin();
 
-    (int result, float variationRoll) RollVariation(int baseValue, (int min, int max) range, int precision);
+    public (int result, double variationRoll) RollVariationAndRound(double baseValue, (double min, double max) range);
 
-    (int result, float variationRoll) RollVariation(int baseValue, int min, int max, int precision);
+    public (double result, double variationRoll) RollVariation(double baseValue, (double min, double max) range);
+
+    public (double result, double variationRoll) RollVariation(double baseValue, double min, double max);
+
+    
+
+
+    (int result, float variationRoll) RollVariationInt(int baseValue, (int min, int max) range, int precision);
+
+    (int result, float variationRoll) RollVariationInt(int baseValue, int min, int max, int precision);
 
 }

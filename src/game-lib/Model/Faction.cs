@@ -10,15 +10,14 @@ public class Faction : IIdentifiable
 {
     public int Id { get; }
     public readonly string Name;
-    public int Power;
+    public double Power;
     /// <summary>
     /// The number of times the time must be advanced for a new mission site to be generated.
     /// When it is 1 and the time is advanced, a new mission site is generated and the countdown is reset.
     /// </summary>
     public int MissionSiteCountdown;
-    public int PowerClimb;
-    public int PowerAcceleration; // More derivatives: https://en.wikipedia.org/wiki/Fourth,_fifth,_and_sixth_derivatives_of_position
-    public int AccumulatedPowerAcceleration;
+    public double PowerClimb;
+    public double PowerAcceleration; // More derivatives: https://en.wikipedia.org/wiki/Fourth,_fifth,_and_sixth_derivatives_of_position
     // kja implement: the more intel invested, the more faction damage missions are doing
     // kja-refactor introduce "IntelRuleset", "MoneyRuleset" etc. It will make things easier to balance.
     public int IntelInvested;
@@ -28,11 +27,10 @@ public class Faction : IIdentifiable
     public Faction(
         int id,
         string name,
-        int power,
+        double power,
         int missionSiteCountdown,
-        int powerClimb,
-        int powerAcceleration,
-        int accumulatedPowerAcceleration,
+        double powerClimb,
+        double powerAcceleration,
         int intelInvested)
     {
         Id = id;
@@ -41,19 +39,19 @@ public class Faction : IIdentifiable
         MissionSiteCountdown = missionSiteCountdown;
         PowerClimb = powerClimb;
         PowerAcceleration = powerAcceleration;
-        AccumulatedPowerAcceleration = accumulatedPowerAcceleration;
         IntelInvested = intelInvested;
     }
 
     [JsonIgnore]
-    public int NormalizedPower => Power / Ruleset.FactionPowerResolution;
+    public int PowerAsInt => (int)Math.Floor(Power);
+
     public static Faction Init(
         IRandomGen randomGen,
         int id,
         string name,
-        int power,
-        int? powerClimb = null,
-        int? powerAcceleration = null)
+        double power,
+        double? powerClimb = null,
+        double? powerAcceleration = null)
         => new(
             id,
             name,
@@ -61,7 +59,6 @@ public class Faction : IIdentifiable
             randomGen.RandomizeMissionSiteCountdown(),
             powerClimb ?? 0,
             powerAcceleration ?? 0,
-            accumulatedPowerAcceleration: 0,
             intelInvested: 0);
 
     public Faction DeepClone()
@@ -72,7 +69,6 @@ public class Faction : IIdentifiable
             MissionSiteCountdown,
             PowerClimb,
             PowerAcceleration,
-            AccumulatedPowerAcceleration,
             IntelInvested);
 
     public List<MissionSite> CreateMissionSites(
@@ -108,7 +104,7 @@ public class Faction : IIdentifiable
         // make AI player send less experienced soldiers on it.
         List<MissionSite> sites = [];
         int siteId = missionSiteIdGen.Generate;
-        (int difficulty, int baseDifficulty, float variationRoll) =
+        (int difficulty, double baseDifficulty, double variationRoll) =
             Ruleset.RollMissionSiteDifficulty(randomGen, this);
 
         var site = new MissionSite(
@@ -123,11 +119,18 @@ public class Faction : IIdentifiable
         // returning a list.
         sites.Add(site);
 
+        Console.WriteLine(
+            "kja temp debug " + 
+            $"Add {site.LogString} : " +
+            $"Faction: {Name,20}, " +
+            $"difficulty: {difficulty,3}, " +
+            $"baseDifficulty: {baseDifficulty,5:F2}, " +
+            $"variationRoll: {variationRoll,5:F2}.");
         log.Info(
             $"Add {site.LogString} : " +
             $"Faction: {Name,20}, " +
             $"difficulty: {difficulty,3}, " +
-            $"baseDifficulty: {baseDifficulty,3}, " +
+            $"baseDifficulty: {baseDifficulty,5:F2}, " +
             $"variationRoll: {variationRoll,5:F2}.");
 
         return sites;
@@ -136,9 +139,11 @@ public class Faction : IIdentifiable
     public void AdvanceTime(List<Mission> successfulMissions)
     {
         Power = Math.Max(0, Power - successfulMissions.Sum(mission => mission.Site.Modifiers.PowerDamageReward));
+        
         PowerClimb = Math.Max(
             0,
             PowerClimb - successfulMissions.Sum(mission => mission.Site.Modifiers.PowerClimbDamageReward));
+        
         PowerAcceleration = Math.Max(
             0,
             PowerAcceleration -
@@ -147,15 +152,7 @@ public class Faction : IIdentifiable
         if (Power == 0)
             return;
 
-        int threshold = Ruleset.FactionPowerClimbAccumulationThreshold;
         Power += PowerClimb;
-        AccumulatedPowerAcceleration += PowerAcceleration;
-        while (AccumulatedPowerAcceleration >= threshold)
-        {
-            AccumulatedPowerAcceleration -= threshold;
-            PowerClimb += 1;
-        }
-
-
+        PowerClimb += PowerAcceleration;
     }
 }

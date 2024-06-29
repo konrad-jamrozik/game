@@ -12,22 +12,16 @@ public static class Ruleset
     public const int InitialSupport = 30;
     public const int InitialMaxTransportCapacity = 4;
 
-    public const int FactionPowerResolution = 10;
-    public const int FactionPowerClimbAccumulationThreshold = 100;
-
     // For more example factions data, see:
     // https://github.com/konrad-jamrozik/game/blob/eccb44a1d5f074e95b07aebca2c6bc5bbfdfdda8/src/ufo-game/Model/Data/FactionsData.cs#L34
     public static Factions InitFactions(IRandomGen randomGen) => new(
     [
         // Note: need to ensure here that IDs are consecutive, and from zero.
-        // kja-refact: Power should be "actual" value, not with the precision. So 40 instead of 400. Then powerClimb (to be renamed to powerClimb)
-        // would be 0.4 and powerAcceleration would be 0.008. This would make it easier to reason about the values.
-        // Just bite the bullet and use doubles.
         // kja also, frontend diagram chart shows the increased precision (e.g. 100) while datagrid shows normalized (e.g. 10).
-        Faction.Init(randomGen, id: 0, "Black Lotus cult"  , power: 200, powerClimb: 4, powerAcceleration: 8  ),
-        Faction.Init(randomGen, id: 1, "Red Dawn remnants" , power: 300, powerClimb: 5, powerAcceleration: 5  ),
-        Faction.Init(randomGen, id: 2, "EXALT"             , power: 400, powerClimb: 6, powerAcceleration: 4  ),
-        Faction.Init(randomGen, id: 3, "Zombies"           , power: 100, powerClimb: 1, powerAcceleration: 20 )
+        Faction.Init(randomGen, id: 0, "Black Lotus cult"  , power: 20, powerClimb: 0.4, powerAcceleration: 0.008 ),
+        Faction.Init(randomGen, id: 1, "Red Dawn remnants" , power: 30, powerClimb: 0.5, powerAcceleration: 0.005 ),
+        Faction.Init(randomGen, id: 2, "EXALT"             , power: 40, powerClimb: 0.6, powerAcceleration: 0.004 ),
+        Faction.Init(randomGen, id: 3, "Zombies"           , power: 10, powerClimb: 0.1, powerAcceleration: 0.02  )
     ]);
 
     public const int IntelToWin = 3000;
@@ -39,8 +33,7 @@ public static class Ruleset
 
     public const int MissionSiteSurvivalBaseDifficultyRequirement = 30;
     public static readonly Range FactionMissionSiteCountdownRange = new Range(3, 10);
-    public const int MissionSiteDifficultyRollResolution = 100;
-    public static readonly (int min, int max) MissionSiteDifficultyVariationRange = (min: -30, max: 30);
+    public static readonly (double min, double max) MissionSiteDifficultyVariationRange = (min: -0.3, max: 0.3);
     public const int MissionSiteTurnsUntilExpiration = 3;
 
     public static (bool survived, int? recoversIn) RollForAgentSurvival(
@@ -78,7 +71,7 @@ public static class Ruleset
         return skillFromFirstMissions + missionsBeyondFirstMissions * SkillFromEachMissionBeyondFirstMissions;
     }
 
-    public static (int difficulty, int baseDifficulty, float variationRoll) RollMissionSiteDifficulty(
+    public static (int difficulty, double baseDifficulty, double variationRoll) RollMissionSiteDifficulty(
         IRandomGen randomGen,
         Faction faction)
     {
@@ -88,11 +81,10 @@ public static class Ruleset
         // As such, if difficulty per turn would grow at least as fast as Ruleset.AgentTrainingCoefficient,
         // then at some point missions would become impossible, as eventually even the most experienced
         // agents would die, and any new agents would never be able to catch up with mission difficulty.
-        int baseDifficulty = faction.NormalizedPower;
-        (int difficulty, float variationRoll) = randomGen.RollVariation(
+        double baseDifficulty = faction.Power;
+        (int difficulty, double variationRoll) = randomGen.RollVariationAndRound(
             baseValue: baseDifficulty,
-            range: MissionSiteDifficultyVariationRange,
-            precision: MissionSiteDifficultyRollResolution);
+            MissionSiteDifficultyVariationRange);
         return (difficulty, baseDifficulty, variationRoll);
     }
 
