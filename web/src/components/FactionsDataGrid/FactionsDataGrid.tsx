@@ -1,35 +1,18 @@
 import { Box } from '@mui/material'
-import {
-  DataGrid,
-  type GridColDef,
-  type GridRenderCellParams,
-} from '@mui/x-data-grid'
-import _ from 'lodash'
-import type { Faction } from '../../lib/codesync/GameState'
-import { factionPowerResolution } from '../../lib/codesync/ruleset'
+import { DataGrid } from '@mui/x-data-grid'
 import { useGameSessionContext } from '../../lib/gameSession/GameSession'
-import {
-  factionColors,
-  factionNameGridColDef,
-} from '../../lib/rendering/renderFactions'
+import { factionColors } from '../../lib/rendering/renderFactions'
 import {
   defaultComponentMinWidth,
   sxClassesFromColors,
 } from '../../lib/rendering/renderUtils'
-import ManageFactionDialog from './ManageFactionDialog'
+import { getColumns, getRows } from './factionsDataGridData'
 
 const boxHeight = 200
 export function FactionsDataGrid(): React.JSX.Element {
   const gameSession = useGameSessionContext()
   const gs = gameSession.getCurrentGameStateUnsafe()
   const factions = gs?.Factions ?? []
-
-  const rows: FactionRow[] = _.map(factions, (faction: Faction) => ({
-    id: faction.Id,
-    faction: faction.Name,
-    power: Math.floor(faction.Power / factionPowerResolution),
-    intel: faction.IntelInvested,
-  }))
 
   return (
     <Box
@@ -44,8 +27,8 @@ export function FactionsDataGrid(): React.JSX.Element {
       ]}
     >
       <DataGrid
-        rows={rows}
-        columns={columns(factions)}
+        rows={getRows(factions)}
+        columns={getColumns(factions)}
         rowHeight={30}
         initialState={{
           pagination: {
@@ -59,46 +42,4 @@ export function FactionsDataGrid(): React.JSX.Element {
       />
     </Box>
   )
-}
-
-export type FactionRow = {
-  readonly id: number
-  readonly faction: string
-  readonly power: number
-  readonly intel: number
-}
-
-function columns(factions: Faction[]): GridColDef<FactionRow>[] {
-  return [
-    factionNameGridColDef,
-    {
-      field: 'power',
-      headerName: 'Power',
-      width: 110,
-      disableColumnMenu: true,
-    },
-    {
-      field: 'intel',
-      headerName: 'Intel',
-      width: 80,
-      disableColumnMenu: true,
-    },
-    {
-      field: 'deploy',
-      disableColumnMenu: true,
-      sortable: false,
-      headerName: '',
-      width: 90,
-      renderCell: (
-        params: GridRenderCellParams<FactionRow>,
-      ): React.JSX.Element => {
-        const row: FactionRow = params.row
-
-        const faction: Faction = _.find(factions, {
-          Id: row.id,
-        })!
-        return <ManageFactionDialog faction={faction} />
-      },
-    },
-  ]
 }
