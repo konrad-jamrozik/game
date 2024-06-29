@@ -138,16 +138,15 @@ public class Faction : IIdentifiable
 
     public void AdvanceTime(List<Mission> successfulMissions)
     {
-        Power = Math.Max(0, Power - successfulMissions.Sum(mission => mission.Site.Modifiers.PowerDamageReward));
-        
-        PowerClimb = Math.Max(
-            0,
-            PowerClimb - successfulMissions.Sum(mission => mission.Site.Modifiers.PowerClimbDamageReward));
-        
-        PowerAcceleration = Math.Max(
-            0,
-            PowerAcceleration -
-            successfulMissions.Sum(mission => mission.Site.Modifiers.PowerAccelerationDamageReward));
+        int powerDamage = successfulMissions.Sum(mission => mission.Site.Modifiers.PowerDamageReward);
+        Power = Math.Max(0, Power - powerDamage);
+
+        int powerClimbDamage = successfulMissions.Sum(mission => mission.Site.Modifiers.PowerClimbDamageReward);
+        PowerClimb = Math.Max(0, PowerClimb - powerClimbDamage);
+
+        int powerAccelerationDamage =
+            successfulMissions.Sum(mission => mission.Site.Modifiers.PowerAccelerationDamageReward);
+        PowerAcceleration = Math.Max(0, PowerAcceleration - powerAccelerationDamage);
 
         if (Power == 0)
             return;

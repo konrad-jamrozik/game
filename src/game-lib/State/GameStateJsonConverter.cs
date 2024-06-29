@@ -74,11 +74,15 @@ class GameStateJsonConverter : JsonConverterSupportingReferences<GameState>
             // [2] https://learn.microsoft.com/en-us/dotnet/standard/serialization/system-text-json/custom-contracts
             IgnoreReadOnlyProperties = false,
 
-            // The JsonStringEnumConverter allows serialization of enums as string instead of integers.
-            // Reference:
-            // https://learn.microsoft.com/en-us/dotnet/standard/serialization/system-text-json/customize-properties?pivots=dotnet-7-0#enums-as-strings
-            // https://stackoverflow.com/a/58234964/986533
-            Converters = { new JsonStringEnumConverter() },
+            Converters =
+            {
+                // The JsonStringEnumConverter allows serialization of enums as string instead of integers.
+                // Reference:
+                // https://learn.microsoft.com/en-us/dotnet/standard/serialization/system-text-json/customize-properties?pivots=dotnet-7-0#enums-as-strings
+                // https://stackoverflow.com/a/58234964/986533
+                new JsonStringEnumConverter(),
+                new DoubleDecimalConverter(decimalPlaces: 6)
+            },
 
             // Required for the ASP.NET Core API to be able to use the default deserializer to deserialize
             // an instance of GameState. It matches the behavior of JsonSerializerDefaults.Web
@@ -91,7 +95,7 @@ class GameStateJsonConverter : JsonConverterSupportingReferences<GameState>
     public override void Write(Utf8JsonWriter writer, GameState value, JsonSerializerOptions options)
     {
         JsonNode gameStateNode = JsonSerializer.SerializeToNode(value, SerializationOptions)!;
-        
+
         ReplaceArrayObjectsPropertiesWithRefs(
             parent: gameStateNode,
             objJsonArrayName: nameof(GameState.Missions),
@@ -138,7 +142,7 @@ class GameStateJsonConverter : JsonConverterSupportingReferences<GameState>
 
         Agents terminatedAgents =
             Deserialize<List<Agent>>(gameStateNode, nameof(GameState.TerminatedAgents)).ToAgents(terminated: true);
-        
+
         var missions = new Missions(
             DeserializeObjArrayWithDepRefProps(
                 objJsonArray: JsonArray(gameStateNode, nameof(GameState.Missions)),
@@ -161,7 +165,7 @@ class GameStateJsonConverter : JsonConverterSupportingReferences<GameState>
                 deps: missions,
                 (agentObj, mission)
                     => new Agent(
-                        id: DeserializeInt(agentObj,nameof(Agent.Id)),
+                        id: DeserializeInt(agentObj, nameof(Agent.Id)),
                         turnHired: DeserializeInt(agentObj, nameof(Agent.TurnHired)),
                         currentState: DeserializeEnum<Agent.AgentState>(agentObj, nameof(Agent.CurrentState)),
                         currentMission: mission,

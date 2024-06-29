@@ -10,6 +10,7 @@ namespace UfoGameLib.Lib;
 public class RandomGen : IRandomGen
 {
     private readonly Random _random;
+    private const int DoubleRollPrecision = 1000000;
 
     public RandomGen(Random? random = null)
     {
@@ -44,13 +45,14 @@ public class RandomGen : IRandomGen
         return @base + Roll(min, max);
     }
 
+
     public double RollDouble(double min, double max)
     {
         Contract.Assert(min <= max);
-        int intMin = (int)(min * 10000);
-        int intMax = (int)(max * 10000);
+        int intMin = (int)(min * DoubleRollPrecision);
+        int intMax = (int)(max * DoubleRollPrecision);
         int intRoll = Roll(intMin, intMax);
-        return intRoll / 10000d;
+        return intRoll / (double)DoubleRollPrecision;
     }
 
     public int Roll(Range range)
