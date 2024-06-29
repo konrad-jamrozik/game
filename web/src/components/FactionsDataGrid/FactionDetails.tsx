@@ -2,7 +2,6 @@ import type { SxProps, Theme } from '@mui/material'
 import Grid from '@mui/material/Unstable_Grid2'
 import _ from 'lodash'
 import { Fragment } from 'react/jsx-runtime'
-import { getNormalizedPower } from '../../lib/codesync/ruleset'
 import { factionNameRenderMap } from '../../lib/rendering/renderFactions'
 import { getSx } from '../../lib/rendering/renderUtils'
 import { Label } from '../utilities/Label'
@@ -39,7 +38,7 @@ function getFactionDetailsEntries(
   props: ManageFactionDialogProps,
 ): FactionDetailsEntry[] {
   const name = factionNameRenderMap[props.faction.Name].display
-  const power = getNormalizedPower(props.faction)
+  const power = props.faction.Power
   const intel = props.faction.IntelInvested
 
   // prettier-ignore

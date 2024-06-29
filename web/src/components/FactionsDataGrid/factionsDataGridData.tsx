@@ -1,7 +1,6 @@
 import type { GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
 import _ from 'lodash'
 import type { Faction } from '../../lib/codesync/GameState'
-import { factionPowerResolution } from '../../lib/codesync/ruleset'
 import { factionNameGridColDef } from '../../lib/rendering/renderFactions'
 import ManageFactionDialog from './ManageFactionDialog'
 
@@ -9,7 +8,7 @@ export function getRows(factions: Faction[]): FactionRow[] {
   return _.map(factions, (faction: Faction) => ({
     id: faction.Id,
     faction: faction.Name,
-    power: Math.floor(faction.Power / factionPowerResolution),
+    power: faction.Power,
     intel: faction.IntelInvested,
   }))
 }
