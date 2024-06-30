@@ -19,7 +19,7 @@ public class BuyTransportCapacityPlayerAction : PlayerAction
 
     protected override (List<int>? ids, int? targetId) ApplyImpl(GameState state)
     {
-        int buyingCost = Ruleset.AssetsRuleset.TransportCapacityBuyingCost(_capacity);
+        int buyingCost = Ruleset.AssetsRuleset.TransportCapacityBuyingCost(state.Assets.MaxTransportCapacity, _capacity);
         Contract.Assert(state.Assets.Money >= buyingCost);
         _log.Debug($"Buy transport capacity. Count: {_capacity}. Cost: {buyingCost}");
         state.Assets.Money -= buyingCost;

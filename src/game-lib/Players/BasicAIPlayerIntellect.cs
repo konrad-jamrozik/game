@@ -2,6 +2,7 @@ using Lib.Contracts;
 using UfoGameLib.Controller;
 using UfoGameLib.Lib;
 using UfoGameLib.Model;
+using UfoGameLib.Ruleset;
 using UfoGameLib.State;
 
 namespace UfoGameLib.Players;
@@ -9,7 +10,7 @@ namespace UfoGameLib.Players;
 public class BasicAIPlayerIntellect : IPlayer
 {
     private const int MinimumAcceptableAgentSurvivalChance = 20; // percent
-    private const int MoneyThresholdToBuyTransportCapacity = 600;
+    private const int MoneyBufferToBuyTransportCapacity = 600;
     private readonly ILog _log;
 
     public BasicAIPlayerIntellect(ILog log)
@@ -37,14 +38,22 @@ public class BasicAIPlayerIntellect : IPlayer
     }
 
     private int ComputeTransportCapacityToBuy(GameStatePlayerView state)
-        => state.Assets.Money >= MoneyThresholdToBuyTransportCapacity
-           // The number of current agents has to be at least the current max transport capacity,
-           // which is still significantly below full complement.
-           // There is no point in increasing the transport capacity if we cannot even 
-           // get close to the full complement of agents.
-           && state.Assets.Agents.Count >= state.Assets.MaxTransportCapacity
+    {
+        int currentMaxCap = state.Assets.MaxTransportCapacity;
+
+        int buyingCost = AssetsRuleset.TransportCapacityBuyingCost(currentMaxCap, 1);
+
+        // The number of current agents has to be at least the current max transport capacity,
+        // which is still significantly below full complement.
+        // There is no point in increasing the transport capacity if we cannot even 
+        // get close to the full complement of agents.
+        bool moreAgentsThanCurrentMaxCap = state.Assets.Agents.Count > currentMaxCap;
+        bool enoughMoneyToBuy = state.Assets.Money >= MoneyBufferToBuyTransportCapacity + buyingCost;
+
+        return moreAgentsThanCurrentMaxCap && enoughMoneyToBuy
             ? 1
             : 0;
+    }
 
     private static bool NoMissionsAvailable(GameStatePlayerView state) => !state.MissionSites.Active.Any();
 

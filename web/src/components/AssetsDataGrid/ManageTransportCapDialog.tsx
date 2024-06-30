@@ -103,7 +103,12 @@ export default function ManageTransportCapDialog(
               <Label sx={getSx('Cost')}>Capacity increase cost</Label>
             </Grid>
             <Grid xs={4}>
-              <Label>{transportCapBuyingCost(1)}</Label>
+              <Label>
+                {transportCapBuyingCost(
+                  gameSession.getAssets().MaxTransportCapacity,
+                  1,
+                )}
+              </Label>
             </Grid>
             <Grid xs={12} display="flex" justifyContent="center">
               <Button

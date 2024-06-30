@@ -23,8 +23,6 @@ export const agentHireCost = 50
 
 const agentTrainingCoefficient = 1
 
-const transportCapBuyCost = 200
-
 const skillFromEachFirstMission = [18, 15, 12, 9, 6]
 
 const skillFromEachMissionBeyondFirstMissions =
@@ -56,8 +54,15 @@ export function getSurvivalSkill(agent: Agent): number {
   )
 }
 
-export function transportCapBuyingCost(cap: number): number {
-  return cap * transportCapBuyCost
+const InitialMaxTransportCapacity = 4
+
+export function transportCapBuyingCost(
+  maxTransportCap: number,
+  capacityToBuy: number,
+): number {
+  return (
+    (200 + 50 * (maxTransportCap - InitialMaxTransportCapacity)) * capacityToBuy
+  )
 }
 
 export function canBeSentOnMission(agent: Agent): boolean {

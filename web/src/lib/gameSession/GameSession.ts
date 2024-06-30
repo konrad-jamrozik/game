@@ -188,7 +188,8 @@ export class GameSession {
     return (
       this.isInProgress() &&
       !this.loading &&
-      this.getAssets().Money >= transportCapBuyingCost(1)
+      this.getAssets().Money >=
+        transportCapBuyingCost(this.getAssets().MaxTransportCapacity, 1)
     )
   }
 

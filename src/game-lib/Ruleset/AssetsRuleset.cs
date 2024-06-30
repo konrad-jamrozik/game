@@ -1,3 +1,4 @@
+using Lib.Contracts;
 using UfoGameLib.Model;
 
 namespace UfoGameLib.Ruleset;
@@ -42,6 +43,36 @@ public static class AssetsRuleset
         return intelGathered + intelFromMissions;
     }
 
-    public static int TransportCapacityBuyingCost(int capacity)
-        => capacity * 200;
+    /// <summary>
+    /// The way this formula is set up, one gets discount for buying transport capacity in bulk.
+    ///
+    /// For example, assume:
+    ///
+    ///   maxTransportCap == InitialMaxTransportCapacity
+    /// 
+    /// Now consider:
+    ///
+    /// Scenario A:
+    /// Buy 1 price: 200 * 1 = 200
+    /// Buy 1 price: 250 * 1 = 250
+    /// Buy 1 price: 300 * 1 = 300
+    /// Buy 1 price: 350 * 1 = 350
+    /// Total: 1100 = 200 + 250 + 300 + 350
+    ///
+    /// Scenario B:
+    /// Buy 2 price: 200 * 2 = 400
+    /// Buy 2 price: 300 * 2 = 600
+    /// Total: 1000 = 400 + 600
+    ///
+    /// Scenario C:
+    /// Buy 4 price: 200 * 4 = 800
+    /// Total: 800 = 800
+    /// 
+    /// </summary>
+    public static int TransportCapacityBuyingCost(int maxTransportCap, int capacityToBuy)
+    {
+        Contract.Assert(maxTransportCap >= InitialMaxTransportCapacity);
+        Contract.Assert(capacityToBuy >= 1);
+        return (200 + (50 * (maxTransportCap - InitialMaxTransportCapacity))) * capacityToBuy;
+    }
 }
