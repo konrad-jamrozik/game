@@ -19,7 +19,6 @@ public class Faction : IIdentifiable
     public int MissionSiteCountdown;
     public double PowerClimb;
     public double PowerAcceleration; // More derivatives: https://en.wikipedia.org/wiki/Fourth,_fifth,_and_sixth_derivatives_of_position
-    // kja-refactor introduce "IntelRuleset", "MoneyRuleset" etc. It will make things easier to balance.
     public int IntelInvested;
 
 
