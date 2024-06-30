@@ -57,4 +57,9 @@
   ],
   "colorize.decoration_type": "background",
   "colorize.hide_current_line_decorations": false,
+  "search.exclude": {
+    "**/.git": true,
+    "**/node_modules": true,
+    "**/build": true
+  }  
 }

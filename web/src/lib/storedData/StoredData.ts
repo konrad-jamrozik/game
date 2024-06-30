@@ -45,13 +45,16 @@ export class StoredData {
     value: StoredDataTypeMap[T],
   ): void {
     const json: string = JSON.stringify(value)
+    // kja WIP
+    // const gzippedJson: string = zlib.gzipSync(json).toString('base64')
     console.log(
-      `setInLocalStorage. key: '${key}'. json.length: ${json.length}.`,
+      `setInLocalStorage. key: '${key}'. json.length: ${json.length}, gzippedJson.length: ${json.length}.`,
     )
     try {
       // https://developer.mozilla.org/en-US/docs/Web/API/Storage/setItem
       // Max in Chrome is 5_000_000 bytes for the entire local storage. See storage.test.ts for details.
       localStorage.setItem(key, json)
+      // localStorage.setItem(`${key}_gzipped`, gzippedJson)
     } catch (error: unknown) {
       if (error instanceof DOMException) {
         // https://developer.mozilla.org/en-US/docs/Web/API/DOMException
