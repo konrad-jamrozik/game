@@ -50,13 +50,11 @@ public class TimeAdvancementController
         int intelChange = Ruleset.ComputeIntelChange(state.Assets, successfulMissions);
         int fundingChange = Ruleset.ComputeFundingChange(successfulMissions, failedMissions, expiredMissionSites);
         int supportChange = Ruleset.ComputeSupportChange(successfulMissions, failedMissions, expiredMissionSites);
-        
+
         state.Assets.Money += moneyChange;
-        state.Assets.Intel += intelChange;
-        // Note: this funding change will get taken into account when computing money change this turn,
-        // as money change is computed downstream.
-        state.Assets.Funding += fundingChange;
-        state.Assets.Support += supportChange;
+        state.Assets.Intel = Math.Max(0, state.Assets.Intel + intelChange);
+        state.Assets.Funding = Math.Max(0, state.Assets.Funding + fundingChange);
+        state.Assets.Support = Math.Max(0, state.Assets.Support + supportChange);
 
         // Each turn all transport capacity gets freed up.
         state.Assets.CurrentTransportCapacity = state.Assets.MaxTransportCapacity;
