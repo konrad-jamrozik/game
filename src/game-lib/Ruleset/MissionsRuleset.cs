@@ -49,4 +49,49 @@ public static class MissionsRuleset
         Contract.Assert(reqAgentsForSuccess >= 1);
         return reqAgentsForSuccess;
     }
+
+    public static MissionSiteModifiers ComputeMissionSiteModifiers(IRandomGen randomGen, Faction faction, int difficulty)
+    {
+        // kja2-feat these formulas should depend on factions.
+        // E.g.:
+        // - Black Lotus is average / baseline
+        // - EXALT provides more intel than average
+        // - Red Dawn provides more money than average
+        // - Zombies provide:
+        //     - zero intel
+        //     - much less funding
+        //     - and support rewards and penalties are amplified
+
+        double baseMoneyReward = (faction.Power / 10) + (faction.IntelInvested / 10d);
+        (int moneyReward, _) = randomGen.RollVariationAndRound(baseMoneyReward, (min: -0.5, max: 0.5));
+
+        double baseIntelReward = faction.Power / 10;
+        (int intelReward, _) = randomGen.RollVariationAndRound(baseIntelReward, (min: -0.5, max: 0.5));
+
+        double baseFundingReward = 5 + faction.Power / 10;
+        (int fundingReward, _) = randomGen.RollVariationAndRound(baseFundingReward, (min: -0.5, max: 0.5));
+
+        double baseFundingPenalty = 1 + faction.Power / 10;
+        (int fundingPenalty, _) = randomGen.RollVariationAndRound(baseFundingPenalty, (min: -0.5, max: 0.5));
+
+        double baseSupportReward = 20 + faction.Power / 10;
+        (int supportReward, _) = randomGen.RollVariationAndRound(baseSupportReward, (min: -0.5, max: 0.5));
+
+        double baseSupportPenalty = 20 + faction.Power / 10;
+        (int supportPenalty, _) = randomGen.RollVariationAndRound(baseSupportPenalty, (min: -0.5, max: 0.5));
+
+        double basePowerDamageReward = 2 + (faction.Power / 10) + (faction.IntelInvested / 10d);
+        (int powerDamageReward, _) = randomGen.RollVariationAndRound(basePowerDamageReward, (min: -0.2, max: 0.2));
+
+        return new MissionSiteModifiers(
+            moneyReward: moneyReward,
+            intelReward: intelReward,
+            fundingReward: fundingReward,
+            supportReward: supportReward,
+            fundingPenalty: fundingPenalty,
+            supportPenalty: supportPenalty,
+            powerDamageReward: powerDamageReward,
+            powerClimbDamageReward: 0,
+            powerAccelerationDamageReward: 0);
+    }
 }

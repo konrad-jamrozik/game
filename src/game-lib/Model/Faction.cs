@@ -2,6 +2,7 @@ using System.Text.Json.Serialization;
 using Lib.Contracts;
 using Lib.Json;
 using UfoGameLib.Lib;
+using UfoGameLib.Ruleset;
 using UfoGameLib.State;
 
 namespace UfoGameLib.Model;
@@ -112,7 +113,7 @@ public class Faction : IIdentifiable
         var site = new MissionSite(
             siteId,
             this,
-            MissionSiteModifiers.Compute(randomGen, this, difficulty),
+            MissionsRuleset.ComputeMissionSiteModifiers(randomGen, this, difficulty),
             difficulty,
             turnAppeared: state.Timeline.CurrentTurn,
             expiresIn: Ruleset.MissionsRuleset.MissionSiteTurnsUntilExpiration);
