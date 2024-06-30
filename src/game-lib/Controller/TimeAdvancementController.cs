@@ -46,10 +46,10 @@ public class TimeAdvancementController
 
         List<MissionSite> expiredMissionSites = UpdateActiveMissionSites(state);
 
-        int moneyChange = Ruleset.ComputeMoneyChange(state.Assets, successfulMissions, agentUpkeep);
-        int intelChange = Ruleset.ComputeIntelChange(state.Assets, successfulMissions);
-        int fundingChange = Ruleset.ComputeFundingChange(successfulMissions, failedMissions, expiredMissionSites);
-        int supportChange = Ruleset.ComputeSupportChange(successfulMissions, failedMissions, expiredMissionSites);
+        int moneyChange = Ruleset.AssetsRuleset.ComputeMoneyChange(state.Assets, successfulMissions, agentUpkeep);
+        int intelChange = Ruleset.AssetsRuleset.ComputeIntelChange(state.Assets, successfulMissions);
+        int fundingChange = Ruleset.AssetsRuleset.ComputeFundingChange(successfulMissions, failedMissions, expiredMissionSites);
+        int supportChange = Ruleset.AssetsRuleset.ComputeSupportChange(successfulMissions, failedMissions, expiredMissionSites);
 
         state.Assets.Money += moneyChange;
         state.Assets.Intel = Math.Max(0, state.Assets.Intel + intelChange);
@@ -106,7 +106,7 @@ public class TimeAdvancementController
         mission.ApplyAgentsResults(agentsSurvived, agentsTerminated);
 
         int agentsRequired = mission.Site.RequiredSurvivingAgentsForSuccess;
-        bool missionSuccessful = Ruleset.MissionSuccessful(mission, agentsSurvived);
+        bool missionSuccessful = Ruleset.MissionsRuleset.MissionSuccessful(mission, agentsSurvived);
         mission.CurrentState = missionSuccessful
             ? Mission.MissionState.Successful
             : Mission.MissionState.Failed;
@@ -156,7 +156,7 @@ public class TimeAdvancementController
 
         foreach (Agent agent in agentsOnMission)
         {
-            (bool survived, int? recoversIn) = Ruleset.RollForAgentSurvival(_log, _randomGen, agent, mission);
+            (bool survived, int? recoversIn) = Ruleset.MissionsRuleset.RollForAgentSurvival(_log, _randomGen, agent, mission);
 
             if (survived)
             {

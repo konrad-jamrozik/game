@@ -57,7 +57,7 @@ public class MissionSite : IIdentifiable
     public bool WasLaunched => TurnDeactivated >= 1 && !Expired && ExpiresIn == null;
 
     [JsonIgnore]
-    public int RequiredSurvivingAgentsForSuccess => Ruleset.RequiredSurvivingAgentsForSuccess(this);
+    public int RequiredSurvivingAgentsForSuccess => Ruleset.MissionsRuleset.RequiredSurvivingAgentsForSuccess(this);
 
     [JsonIgnore]
     public string LogString => $"SiteID: {Id,3}";

@@ -33,7 +33,7 @@ public class Agents : List<Agent>
         base.AddRange(agentsList);
     }
 
-    public int UpkeepCost => Count * Ruleset.AgentUpkeepCost;
+    public int UpkeepCost => Count * Ruleset.AgentsRuleset.AgentUpkeepCost;
 
     public Agents InTransit => this.Where(agent => agent.IsInTransit).ToAgents();
 

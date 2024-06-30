@@ -107,7 +107,7 @@ public class Faction : IIdentifiable
         List<MissionSite> sites = [];
         int siteId = missionSiteIdGen.Generate;
         (int difficulty, double baseDifficulty, double variationRoll) =
-            Ruleset.RollMissionSiteDifficulty(randomGen, this);
+            Ruleset.MissionsRuleset.RollMissionSiteDifficulty(randomGen, this);
 
         var site = new MissionSite(
             siteId,
@@ -115,7 +115,7 @@ public class Faction : IIdentifiable
             MissionSiteModifiers.Compute(randomGen, this, difficulty),
             difficulty,
             turnAppeared: state.Timeline.CurrentTurn,
-            expiresIn: Ruleset.MissionSiteTurnsUntilExpiration);
+            expiresIn: Ruleset.MissionsRuleset.MissionSiteTurnsUntilExpiration);
 
         // Note: currently returning only one mission site even though this method supports
         // returning a list.

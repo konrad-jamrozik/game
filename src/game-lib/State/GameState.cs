@@ -49,16 +49,16 @@ public class GameState : IEquatable<GameState>
             updateCount: 0,
             new Timeline(currentTurn: Timeline.InitialTurn),
             new Assets(
-                money: Ruleset.InitialMoney,
-                intel: Ruleset.InitialIntel,
-                funding: Ruleset.InitialFunding,
-                support: Ruleset.InitialSupport,
-                maxTransportCapacity: Ruleset.InitialMaxTransportCapacity,
+                money: Ruleset.AssetsRuleset.InitialMoney,
+                intel: Ruleset.AssetsRuleset.InitialIntel,
+                funding: Ruleset.AssetsRuleset.InitialFunding,
+                support: Ruleset.AssetsRuleset.InitialSupport,
+                maxTransportCapacity: Ruleset.AssetsRuleset.InitialMaxTransportCapacity,
                 agents: new Agents()),
             new MissionSites(),
             new Missions(),
             terminatedAgents: new Agents(terminated: true),
-            factions: factions ?? Ruleset.InitFactions(randomGen));
+            factions: factions ?? Ruleset.FactionsRuleset.InitFactions(randomGen));
     }
 
     public void AssertInvariants()

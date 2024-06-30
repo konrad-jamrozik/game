@@ -119,7 +119,7 @@ class GameStateJsonConverter : JsonConverterSupportingReferences<GameState>
         JsonNode gameStateNode = JsonNode(ref reader);
 
         int updateCount = DeserializeInt(gameStateNode, nameof(GameState.UpdateCount));
-        // kja should this instead be Deserialize<List<Faction>> ? Like terminated agents below.
+        // kja2-fix should this instead be Deserialize<List<Faction>> ? Like terminated agents below.
         // I think right now factions may just be empty due to empty ctor.
         Factions factions = Deserialize<Factions>(gameStateNode);
         Timeline timeline = Deserialize<Timeline>(gameStateNode);

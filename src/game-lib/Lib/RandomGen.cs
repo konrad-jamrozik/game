@@ -78,7 +78,7 @@ public class RandomGen : IRandomGen
     }
 
     public virtual int RandomizeMissionSiteCountdown()
-        => Roll(Ruleset.FactionMissionSiteCountdownRange);
+        => Roll(Ruleset.FactionsRuleset.FactionMissionSiteCountdownRange);
 
     public bool FlipCoin() => _random.Next(2) == 1;
 

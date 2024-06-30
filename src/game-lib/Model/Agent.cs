@@ -76,7 +76,7 @@ public class Agent : IIdentifiable
     }
 
     [JsonIgnore]
-    public int SurvivalSkill => Ruleset.AgentSurvivalSkill(this);
+    public int SurvivalSkill => Ruleset.AgentsRuleset.AgentSurvivalSkill(this);
 
     public int SurvivalChance(int difficulty) => AgentSurvivalRoll.ComputeSurvivalChance(this, difficulty);
 
