@@ -22,20 +22,10 @@ describe('compression tests', () => {
     expect.hasAssertions()
 
     const repoDir = path.normalize(`${import.meta.dirname}/../../..`)
-    const inputFilePath = path.normalize(`${repoDir}/input.json`)
-    // check if file at inputFilePath exists
-    const inputFileExists = fs.existsSync(inputFilePath)
 
-    const rawInputDataStrFromFile = inputFileExists
-      ? await readFile(inputFilePath, 'utf8')
-      : ''
+    const strFromFile = await getStrFromInputFile(repoDir)
 
-    const inputDataStrFromFile = JSON.stringify(
-      JSON.parse(rawInputDataStrFromFile),
-    )
-
-    const inputData =
-      inputDataStrFromFile.length > 0 ? inputDataStrFromFile : inputDataStr
+    const inputData = strFromFile.length > 0 ? strFromFile : inputDataStr
 
     const compressed = LZString.compressToUTF16(inputData)
     localStorage.clear()
@@ -44,9 +34,11 @@ describe('compression tests', () => {
     const roundTripped = LZString.decompressFromUTF16(read)
 
     console.log(
-      `lz-string test: rawInputDataStrFromFile: ${rawInputDataStrFromFile.length}, inputDataStrFromFile: ${inputDataStrFromFile.length}, ` +
+      `lz-string test: ` +
         `inputData.length: ${inputData.length}, compressed.length: ${compressed.length}, roundTripped.length: ${roundTripped.length}`,
     )
+
+    logReduction(inputData.length, compressed.length)
 
     expect(roundTripped.length).toBe(inputData.length)
     expect(roundTripped).toBe(inputData)
@@ -56,22 +48,22 @@ describe('compression tests', () => {
     expect.hasAssertions()
 
     const repoDir = path.normalize(`${import.meta.dirname}/../../..`)
-    const inputFilePath = path.normalize(`${repoDir}/input.json`)
     const outputFilePath = path.normalize(`${repoDir}/output.gzip`)
     const parsedOutputFilePath = path.normalize(`${repoDir}/output.json`)
 
+    console.log(`repo dir: '${repoDir}'`)
+
     try {
-      await writeFile(inputFilePath, inputDataStr, 'utf8')
-      const inputData = await readFile(inputFilePath, 'utf8')
-      const minInputData = JSON.stringify(JSON.parse(inputData))
-      console.log(`repo dir: '${repoDir}'`)
+      const strFromFile = await getStrFromInputFile(repoDir)
+
+      const inputData = strFromFile.length > 0 ? strFromFile : inputDataStr
       console.log(
-        `input file: '${inputFilePath}', minifiedData.length: ${minInputData.length}`,
+        `strFromFile.length: ${strFromFile.length}, inputData.length: ${inputData.length}`,
       )
 
       // Act
       // Compress the JSON data using gzip
-      const compressedData: Buffer = await gzip(minInputData)
+      const compressedData: Buffer = await gzip(inputData)
 
       console.log(
         `output file: '${outputFilePath}', compressedData.length: ${compressedData.length}`,
@@ -89,9 +81,7 @@ describe('compression tests', () => {
       // reduction to: 4.66 %
       // With test runtime of 351ms:
       //   Duration  3.29s (transform 150ms, setup 776ms, collect 33ms, tests 351ms, environment 1.48s, prepare 239ms)
-      console.log(
-        `reduction to: ${((compressedData.length / minInputData.length) * 100).toFixed(2)} %`,
-      )
+      logReduction(inputData.length, compressedData.length)
 
       // Write the compressed data to the output file
       await writeFile(outputFilePath, compressedData)
@@ -104,20 +94,37 @@ describe('compression tests', () => {
       )
 
       await writeFile(parsedOutputFilePath, parsedData, 'utf8')
-      expect(parsedData.length).toBe(minInputData.length)
-      expect(parsedData).toBe(minInputData)
+      expect(parsedData.length).toBe(inputData.length)
+      expect(parsedData).toBe(inputData)
     } finally {
-      const filesToDelete = [
-        inputFilePath,
-        outputFilePath,
-        parsedOutputFilePath,
-      ]
+      const filesToDelete = [outputFilePath, parsedOutputFilePath]
       await Promise.all(
         _.map(filesToDelete, async (file) => fs.promises.unlink(file)),
       )
     }
   })
 })
+
+function logReduction(original: number, reduced: number): void {
+  console.log(`reduction to: ${((reduced / original) * 100).toFixed(2)} %`)
+}
+
+async function getStrFromInputFile(repoDir: string): Promise<string> {
+  const inputFilePath = path.normalize(`${repoDir}/input.json`)
+  // check if file at inputFilePath exists
+  const inputFileExists = fs.existsSync(inputFilePath)
+
+  const rawStrFromFile = inputFileExists
+    ? await readFile(inputFilePath, 'utf8')
+    : ''
+
+  const strFromFile = JSON.stringify(JSON.parse(rawStrFromFile))
+
+  console.log(
+    `getStrFromInputFile: input file: '${inputFilePath}', rawStrFromFile.length: ${rawStrFromFile.length}, strFromFile.length: ${strFromFile.length}`,
+  )
+  return strFromFile
+}
 
 // Research:
 // https://pieroxy.net/blog/pages/lz-string/index.html
