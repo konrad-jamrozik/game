@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/class-methods-use-this */
 import _ from 'lodash'
+import * as LZString from 'lz-string'
 import type { GameSessionDataType } from '../gameSession/GameSessionData'
 import {
   defaultSettingsData,
@@ -45,21 +46,34 @@ export class StoredData {
     value: StoredDataTypeMap[T],
   ): void {
     const json: string = JSON.stringify(value)
-    // kja WIP
-    // const gzippedJson: string = zlib.gzipSync(json).toString('base64')
+
+    // https://developer.mozilla.org/en-US/docs/Web/API/Storage/setItem
+    // Max in Chrome is 5_000_000 bytes for the entire local storage. See storage.test.ts for details.
+    const mustCompress = json.length >= 4_999_000
+    const compressedJson: string | undefined = mustCompress
+      ? LZString.compressToUTF16(json)
+      : undefined
+
     console.log(
-      `setInLocalStorage. key: '${key}'. json.length: ${json.length}, gzippedJson.length: ${json.length}.`,
+      `setInLocalStorage. key: '${key}'. json.length: ${json.length}, compressedJson.length: ${compressedJson?.length}.`,
     )
     try {
-      // https://developer.mozilla.org/en-US/docs/Web/API/Storage/setItem
-      // Max in Chrome is 5_000_000 bytes for the entire local storage. See storage.test.ts for details.
-      localStorage.setItem(key, json)
-      // localStorage.setItem(`${key}_gzipped`, gzippedJson)
+      if (mustCompress) {
+        localStorage.setItem(`${key}_compressed`, compressedJson!)
+        localStorage.setItem(`${key}_isCompressed`, 'true')
+        localStorage.removeItem(key)
+      } else {
+        localStorage.setItem(key, json)
+        localStorage.removeItem(`${key}_compressed`)
+        localStorage.setItem(`${key}_isCompressed`, 'false')
+      }
     } catch (error: unknown) {
       if (error instanceof DOMException) {
         // https://developer.mozilla.org/en-US/docs/Web/API/DOMException
         // See storage.test.ts for details.
-        const errMsg = `Error setting item in local storage. Key: '${key}'. json.length: ${json.length}. cause.message: ${error.message}`
+        const errMsg =
+          `Error setting item in local storage. Key: '${key}'. json.length: ${json.length}}, ` +
+          `compressedJson.length: ${compressedJson?.length}. cause.message: ${error.message}`
         console.error(errMsg)
         throw new Error(errMsg, { cause: error })
       }
@@ -94,7 +108,12 @@ export function loadSettingsData(): SettingsDataType {
 function load<T extends StoredDataTypeName>(
   key: T,
 ): StoredDataTypeMap[T] | undefined {
-  const data: string | null = localStorage.getItem(key)
+  const isCompressed = localStorage.getItem(`${key}_isCompressed`) === 'true'
+
+  const data = isCompressed
+    ? LZString.decompressFromUTF16(localStorage.getItem(`${key}_compressed`)!)
+    : localStorage.getItem(key)
+
   if (!_.isNil(data)) {
     const loadedData = JSON.parse(data) as StoredDataTypeMap[T]
     console.log(
