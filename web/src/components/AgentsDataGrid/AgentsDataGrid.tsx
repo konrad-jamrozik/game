@@ -114,6 +114,11 @@ export function AgentsDataGrid(props: AgentsDataGridProps): React.JSX.Element {
               turnsInTraining: false,
             },
           },
+          sorting: {
+            sortModel: deploymentDisplay
+              ? [{ field: 'survivalChance', sort: 'desc' }]
+              : [],
+          },
         }}
         slots={
           !deploymentDisplay
