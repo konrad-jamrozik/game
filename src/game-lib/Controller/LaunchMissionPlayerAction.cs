@@ -14,8 +14,7 @@ public class LaunchMissionPlayerAction : PlayerAction
 
     public LaunchMissionPlayerAction(ILog log, MissionIdGen missionIdGen, MissionSite site, Agents agents)
     {
-        Contract.Assert(agents.Any());
-        agents.AssertCanBeSentOnMission();
+        // Asserts are made in ApplyImpl() instead.
         _log = log;
         _missionIdGen = missionIdGen;
         _site = site;
@@ -26,8 +25,8 @@ public class LaunchMissionPlayerAction : PlayerAction
     {
         Contract.Assert(state.MissionSites.Contains(_site));
         Contract.Assert(_site.IsActive);
-        Contract.Assert(_agents.Count > 0);
-        _agents.ForEach(agent => Contract.Assert(agent.CanBeSentOnMission));
+        Contract.Assert(_agents.Any());
+        _agents.AssertCanBeSentOnMission();
         Contract.Assert(state.Assets.CurrentTransportCapacity >= _agents.Count);
         Contract.Assert(
             _agents.Count >= _site.RequiredSurvivingAgentsForSuccess,

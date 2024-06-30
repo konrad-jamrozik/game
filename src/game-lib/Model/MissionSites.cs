@@ -12,12 +12,6 @@ public class MissionSites : List<MissionSite>
     public MissionSites(IEnumerable<MissionSite>? missionSites = null)
         => AddRange(missionSites ?? new List<MissionSite>());
 
-    public MissionSites Active => this.Where(missionSite => missionSite.IsActive).ToMissionSites();
-
-    public MissionSites Launched => this.Where(missionSite => missionSite.WasLaunched).ToMissionSites();
-
-    public MissionSites Expired => this.Where(missionSite => missionSite.IsExpired).ToMissionSites();
-
     public MissionSites DeepClone(Factions clonedFactions)
     {
         return new MissionSites(this.Select(missionSite =>
@@ -26,4 +20,13 @@ public class MissionSites : List<MissionSite>
             return missionSite.DeepClone(clonedFaction);
         }));
     }
+
+    public MissionSites Active => this.Where(missionSite => missionSite.IsActive).ToMissionSites();
+
+    public MissionSites Launched => this.Where(missionSite => missionSite.WasLaunched).ToMissionSites();
+
+    public MissionSites Expired => this.Where(missionSite => missionSite.IsExpired).ToMissionSites();
+
+    public MissionSites ActiveOrdByDifficultyDesc => Active.OrderByDescending(site => site.Difficulty).ToMissionSites();
+
 }

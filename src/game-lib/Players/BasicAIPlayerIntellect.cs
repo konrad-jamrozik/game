@@ -35,6 +35,8 @@ public class BasicAIPlayerIntellect : IPlayer
         AssignAvailableAgents(state, controller);
 
         InvestIntel(state, controller);
+
+        _log.Info($"[AI] Advance turn");
     }
 
     private int ComputeTransportCapacityToBuy(GameStatePlayerView state)
@@ -55,13 +57,10 @@ public class BasicAIPlayerIntellect : IPlayer
             : 0;
     }
 
-    private static bool NoMissionsAvailable(GameStatePlayerView state) => !state.MissionSites.Active.Any();
+    private static bool NoActiveMissionSitesAvailable(GameStatePlayerView state) => !state.MissionSites.Active.Any();
 
-    private static bool NoAgentsCanBeSentOnMission(GameStatePlayerView state)
-        => !state.Assets.Agents.CanBeSentOnMission.Any();
-
-    private static bool NoTransportCapacityAvailable(GameStatePlayerView state)
-        => !TransportCapacityAvailable(state);
+    private static bool AtLeastOneAgentCanBeSentOnMission(GameStatePlayerView state)
+        => state.Assets.Agents.CanBeSentOnMission.Any();
 
     private static bool TransportCapacityAvailable(GameStatePlayerView state)
         => state.Assets.CurrentTransportCapacity > 0;
@@ -84,20 +83,24 @@ public class BasicAIPlayerIntellect : IPlayer
 
     private void LaunchMissions(GameStatePlayerView state, GameTurnController controller)
     {
-        if (NoMissionsAvailable(state) || NoAgentsCanBeSentOnMission(state) || NoTransportCapacityAvailable(state))
-            return;
-
-        MissionSites missionSitesOrdByDifficulty = state.MissionSites.Active.OrderBy(site => site.Difficulty).ToMissionSites();
-
-        while (missionSitesOrdByDifficulty.Any() && TransportCapacityAvailable(state))
+        MissionSites candidateSites = state.MissionSites.ActiveOrdByDifficultyDesc;
+        while (
+            candidateSites.Any()
+            && AtLeastOneAgentCanBeSentOnMission(state)
+            && TransportCapacityAvailable(state))
         {
-            var site = missionSitesOrdByDifficulty.First();
+            var site = candidateSites.First();
+            _log.Info($"[AI] Eval site ID: {site.Id}. Active sites: {candidateSites.Count}");
             Agents agents = ChooseAgents(site, state);
             if (agents.Any())
+            {
+                _log.Info($"[AI] Launch mission to site ID: {site.Id}.");
                 controller.LaunchMission(site, agents);
-            else
-                break;
+            }
+
+            candidateSites = candidateSites.Skip(1).ToMissionSites();
         }
+
     }
 
     private void RecallAgents(GameStatePlayerView state, GameTurnController controller)
@@ -163,8 +166,12 @@ public class BasicAIPlayerIntellect : IPlayer
             return new Agents();
         }
 
+        // future work: use more advanced formula. See:
+        // https://numerics.mathdotnet.com/
+        // https://chatgpt.com/c/ef8bd9cc-36d2-4fc3-8cc8-ba8e45f4b621
         Agents agents = candidateAgentsThatCanSurvive
-            .Take(state.Assets.CurrentTransportCapacity)
+            // Always trying to take 2 extra agents.
+            .Take(Math.Min(site.RequiredSurvivingAgentsForSuccess + 2, state.Assets.CurrentTransportCapacity))
             .ToAgents();
 
         int requiredSurvivingAgentsForSuccess = site.RequiredSurvivingAgentsForSuccess;
@@ -260,12 +267,15 @@ public class BasicAIPlayerIntellect : IPlayer
             else
                 agentsToSendToGatherIntelCount++;
         }
+
         Contract.Assert(agentsToSendToGenerateIncomeCount + agentsToSendToGatherIntelCount == agentsToSendToOps);
 
-        Agents agentsToSendToGenerateIncome = controller.RandomGen.Pick(agents.Available, agentsToSendToGenerateIncomeCount).ToAgents();
+        Agents agentsToSendToGenerateIncome =
+            controller.RandomGen.Pick(agents.Available, agentsToSendToGenerateIncomeCount).ToAgents();
         if (agentsToSendToGenerateIncome.Any())
             controller.SendAgentsToGenerateIncome(agentsToSendToGenerateIncome);
-        Agents agentsToSendToGatherIntel = controller.RandomGen.Pick(agents.Available, agentsToSendToGatherIntelCount).ToAgents();
+        Agents agentsToSendToGatherIntel =
+            controller.RandomGen.Pick(agents.Available, agentsToSendToGatherIntelCount).ToAgents();
         if (agentsToSendToGatherIntel.Any())
             controller.SendAgentsToGatherIntel(agentsToSendToGatherIntel);
 
@@ -288,7 +298,8 @@ public class BasicAIPlayerIntellect : IPlayer
             $"availableAgents: {initialAvailableAgents}.");
 
         Contract.Assert(
-            state.Assets.Agents.GeneratingIncome.Count == initialAgentsGeneratingIncome + agentsToSendToGenerateIncomeCount);
+            state.Assets.Agents.GeneratingIncome.Count ==
+            initialAgentsGeneratingIncome + agentsToSendToGenerateIncomeCount);
         Contract.Assert(
             state.Assets.Agents.GatheringIntel.Count == initialAgentsGatheringIntel + agentsToSendToGatherIntelCount);
         Contract.Assert(state.Assets.Agents.InTraining.Count == initialAgentsInTraining + agentsToSendToTrainingCount);
