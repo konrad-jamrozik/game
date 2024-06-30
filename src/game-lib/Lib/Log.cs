@@ -13,8 +13,19 @@ public class Log : ILog
     {
         _config = config;
         _logs = new StringBuilder();
-        if (_config.LoggingEnabled)
-            Console.WriteLine($"Logs will be written out to file path {_config.LogFile.FullPath}");
+        if (_config.LogLevel != "silent")
+            LogInternal($"Logs will be written out to file path {_config.LogFile.FullPath}");
+    }
+
+    public void Debug(
+        string message,
+        [CallerFilePath] string? callerFilePath = null,
+        [CallerMemberName] string? callerMemberName = null)
+    {
+        if (_config.LogLevel != "debug")
+            return;
+
+        LogInternal(message, callerFilePath, callerMemberName);
     }
 
     public void Info(
@@ -22,9 +33,17 @@ public class Log : ILog
         [CallerFilePath] string? callerFilePath = null,
         [CallerMemberName] string? callerMemberName = null)
     {
-        if (!_config.LoggingEnabled)
+        if (!((string[])["debug", "info"]).Contains(_config.LogLevel))
             return;
 
+        LogInternal(message, callerFilePath, callerMemberName);
+    }
+
+    private void LogInternal(
+        string message,
+        string? callerFilePath = null,
+        string? callerMemberName = null)
+    {
         string log = LogPrefix(callerFilePath, callerMemberName) + message;
         Console.WriteLine(log);
         _logs.AppendLine(log);
@@ -32,7 +51,7 @@ public class Log : ILog
 
     public void Flush()
     {
-        if (!_config.LoggingEnabled)
+        if (_config.LogLevel == "silent")
             return;
 
         if (_logs.Length > 0)

@@ -121,15 +121,8 @@ public class Faction : IIdentifiable
         // returning a list.
         sites.Add(site);
 
-        string format = $"{{0,{RandomGen.DoubleRollDecimalPrecision+3}:F{RandomGen.DoubleRollDecimalPrecision}}}";
+        string format = $"{{0,{RandomGen.DoubleRollDecimalPrecision + 3}:F{RandomGen.DoubleRollDecimalPrecision}}}";
 
-        Console.WriteLine(
-            "kja temp debug " +
-            $"Add {site.LogString} : " +
-            $"Faction: {Name,20}, " +
-            $"difficulty: {difficulty,3}, " +
-            $"baseDifficulty: {string.Format(format, baseDifficulty)}, " +
-            $"variationRoll: {string.Format(format, variationRoll)}.");
         log.Info(
             $"Add {site.LogString} : " +
             $"Faction: {Name,20}, " +

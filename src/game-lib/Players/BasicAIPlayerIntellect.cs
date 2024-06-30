@@ -113,7 +113,7 @@ public class BasicAIPlayerIntellect : IPlayer
         if (agentsToRecall.Any())
             controller.RecallAgents(agentsToRecall);
 
-        _log.Info(
+        _log.Debug(
             $"[AI] RecallAgents: " +
             $"agentsRecalled: {agentsToRecall.Count}, " +
             $"generatingIncome: {recalledGeneratingIncome}, " +
@@ -136,7 +136,7 @@ public class BasicAIPlayerIntellect : IPlayer
 
         if (!candidateAgents.Any())
         {
-            _log.Info($"[AI] There are no agents left. Not launching mission for {site.LogString}.");
+            _log.Debug($"[AI] There are no agents left. Not launching mission for {site.LogString}.");
             return new Agents();
         }
 
@@ -146,7 +146,7 @@ public class BasicAIPlayerIntellect : IPlayer
 
         if (!candidateAgentsThatCanSurvive.Any())
         {
-            _log.Info(
+            _log.Debug(
                 $"[AI] There are {candidateAgents.Count} agents available but no agents that could survive mission site " +
                 $"with difficulty {site.Difficulty} with " +
                 $"the minimum acceptable survival chance of {MinimumAcceptableAgentSurvivalChance}%. " +
@@ -161,7 +161,7 @@ public class BasicAIPlayerIntellect : IPlayer
         int requiredSurvivingAgentsForSuccess = site.RequiredSurvivingAgentsForSuccess;
         if (requiredSurvivingAgentsForSuccess > agents.Count)
         {
-            _log.Info(
+            _log.Debug(
                 $"[AI] There are {agents.Count} agents that could be transported to the mission site and survive, " +
                 $"but the mission site requires at least {requiredSurvivingAgentsForSuccess} agents. " +
                 $"Not launching mission for site {site.LogString}.");
@@ -193,7 +193,7 @@ public class BasicAIPlayerIntellect : IPlayer
             Math.Min(agentsMissingToDesired, moneyAvailableFor),
             maxAgentIncrease);
 
-        _log.Info(
+        _log.Debug(
             $"[AI] ComputeAgentsToHire: " +
             $"agentsToHire: {agentsToHire} | " +
             $"desiredAgentCount: {desiredAgentCount}, " +
@@ -269,7 +269,7 @@ public class BasicAIPlayerIntellect : IPlayer
             controller.SendAgentsToTraining(agents.Available);
         }
 
-        _log.Info(
+        _log.Debug(
             $"[AI] AssignAvailableAgents: " +
             $"agentsSentToOps: {agentsToSendToOps}, " +
             $"agentsSentToGenerateIncome: {agentsToSendToGenerateIncomeCount}, " +

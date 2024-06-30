@@ -22,7 +22,7 @@ public class SendAgentsToGatherIntelPlayerAction : PlayerAction
         _agents.ForEach(
             agent =>
             {
-                _log.Info($"Send {agent.LogString} to gather intel. Was in state: {agent.CurrentState}.");
+                _log.Debug($"Send {agent.LogString} to gather intel. Was in state: {agent.CurrentState}.");
                 agent.GatherIntel();
             });
 

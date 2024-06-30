@@ -21,7 +21,7 @@ public class BuyTransportCapacityPlayerAction : PlayerAction
     {
         int buyingCost = Ruleset.AssetsRuleset.TransportCapacityBuyingCost(_capacity);
         Contract.Assert(state.Assets.Money >= buyingCost);
-        _log.Info($"Buy transport capacity. Count: {_capacity}. Cost: {buyingCost}");
+        _log.Debug($"Buy transport capacity. Count: {_capacity}. Cost: {buyingCost}");
         state.Assets.Money -= buyingCost;
         state.Assets.MaxTransportCapacity += _capacity;
 

@@ -14,7 +14,7 @@ public class AgentSurvivalRoll
     public readonly bool Survived;
     public readonly int? RecoversIn;
 
-    
+
     public const int MaxRecoversIn = 30;
 
     public AgentSurvivalRoll(ILog log, IRandomGen randomGen, Agent agent, Mission mission)
@@ -23,10 +23,10 @@ public class AgentSurvivalRoll
         Roll = randomGen.Roll(RollRange);
         Survived = ComputeSurvived(Roll);
         RecoversIn = ComputeRecoversIn(Roll, SurvivalChance, Survived);
-        log.Info(
+        log.Debug(
             $"{agent.LogString} survived {mission.LogString} : {Survived,5}. " +
             $"Skill: {agent.SurvivalSkill,3}, Difficulty: {mission.Site.Difficulty,3}, " +
-            $"Roll: {Roll, 3} {(Survived ? "<=" : "> ")} {SurvivalChance,3}," +
+            $"Roll: {Roll,3} {(Survived ? "<=" : "> ")} {SurvivalChance,3}," +
             $"{(Survived ? $" RecoversIn: {RecoversIn,3}" : "")}"
         );
     }

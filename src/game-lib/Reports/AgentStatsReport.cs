@@ -28,7 +28,7 @@ public class AgentStatsReport : CsvFileReport
     public void Write()
     {
 
-        (string header, Func<Agent, int> orderBy)[] data = 
+        (string header, Func<Agent, int> orderBy)[] data =
         {
             ("skill", agent => agent.SurvivalSkill),
             ("turns survived", agent => agent.TurnsSurvived(_lastTurn)),
@@ -42,16 +42,16 @@ public class AgentStatsReport : CsvFileReport
         data.ForEach(
             row =>
             {
-                _log.Info("");
-                _log.Info($"Top {TopAgents} agents by {row.header}:");
+                _log.Debug("");
+                _log.Debug($"Top {TopAgents} agents by {row.header}:");
                 LogAgents(TopAgentsBy(row.orderBy), _lastTurn);
-                _log.Info("");
+                _log.Debug("");
             });
 
         object[] headerRow = HeaderRow;
-        
+
         object[][] dataRows = DataRows(_gameState);
-        
+
         Contract.Assert(!dataRows.Any() || headerRow.Length == dataRows[0].Length);
 
         SaveToCsvFile(_log, dataDescription: "agent", new TabularData(headerRow, dataRows), _csvFile);
@@ -60,7 +60,7 @@ public class AgentStatsReport : CsvFileReport
     private static object[] HeaderRow => new object[]
     {
         // $" | TsInRecovery: {agent.TurnsInRecovery,3}";
-         "ID", "Skill", "Turn hired", "Turn term.", "Sacked", "Ts survived", 
+         "ID", "Skill", "Turn hired", "Turn term.", "Sacked", "Ts survived",
          "Mis survived", "Mis succeeded", "Mis failed",
          "Ts in training", "Ts genIncome", "Ts gathIntel", "Ts in ops", "Ts inRecovery"
     };
@@ -95,7 +95,7 @@ public class AgentStatsReport : CsvFileReport
             .ToAgents(terminated: null);
 
     private void LogAgents(Agents agents, int lastTurn)
-        => agents.ForEach(agent => _log.Info(AgentLogString(agent, lastTurn)));
+        => agents.ForEach(agent => _log.Debug(AgentLogString(agent, lastTurn)));
 
     private static string AgentLogString(Agent agent, int lastTurn)
     {

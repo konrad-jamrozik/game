@@ -22,11 +22,11 @@ public class SackAgentsPlayerAction : PlayerAction
 
     protected override (List<int>? ids, int? targetId) ApplyImpl(GameState state)
     {
-        _log.Info($"Sack agents. Count: {_agents.Count}");
+        _log.Debug($"Sack agents. Count: {_agents.Count}");
         foreach (Agent agent in _agents)
         {
             state.Terminate(agent, sack: true);
-            _log.Info($"Sacked {agent.LogString}.");
+            _log.Debug($"Sacked {agent.LogString}.");
         }
 
         return (_agents.Ids, targetId: null);

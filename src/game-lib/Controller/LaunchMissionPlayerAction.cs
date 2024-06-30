@@ -46,8 +46,8 @@ public class LaunchMissionPlayerAction : PlayerAction
 
         state.Assets.CurrentTransportCapacity -= _agents.Count;
 
-        _log.Info($"Launch {mission.LogString}, {_site.LogString}, AgentCount: {_agents.Count}");
+        _log.Debug($"Launch {mission.LogString}, {_site.LogString}, AgentCount: {_agents.Count}");
 
-        return (ids: [mission.Id, .._agents.Ids], targetId: _site.Id);
+        return (ids: [mission.Id, .. _agents.Ids], targetId: _site.Id);
     }
 }

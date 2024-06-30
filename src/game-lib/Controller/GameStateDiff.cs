@@ -18,12 +18,12 @@ internal class GameStateDiff
 
     public void PrintTo(ILog log)
     {
-        log.Info("");
-        log.Info(
+        log.Debug("");
+        log.Debug(
             _prev.Timeline.CurrentTurn == _curr.Timeline.CurrentTurn
                 ? $"===== GSDiff: Player actions in turn {_prev.Timeline.CurrentTurn}"
                 : $"===== GSDiff: Result of turn {_prev.Timeline.CurrentTurn}");
-        log.Info("");
+        log.Debug("");
 
         List<(Agent? prev, Agent curr)> agentDiffs = _prev.AllAgents.OrderBy(a => a.Id)
             .ZipLongest(
@@ -35,7 +35,7 @@ internal class GameStateDiff
             agentDiff =>
             {
                 if (agentDiff.prev is not { IsTerminated: true })
-                    log.Info(AgentDiffLog(agentDiff.prev, agentDiff.curr));
+                    log.Debug(AgentDiffLog(agentDiff.prev, agentDiff.curr));
             });
     }
 
@@ -45,20 +45,20 @@ internal class GameStateDiff
         string currState = curr.CurrentState.ToString();
         if (curr.IsOnMission)
             currState += $" ID: {curr.CurrentMission!.Id}";
-        string stateLog = prevState != currState 
-            ? $"{prevState,16} -> {currState,-16}" 
+        string stateLog = prevState != currState
+            ? $"{prevState,16} -> {currState,-16}"
             : $"{prevState,16}    {"",-16}";
 
         string prevSkill = prev != null ? prev.SurvivalSkill.ToString() : "";
         string currSkill = curr.SurvivalSkill.ToString();
-        string skillLog = prevSkill != currSkill 
-            ? $"{prevSkill,3} -> {currSkill,-3}" 
+        string skillLog = prevSkill != currSkill
+            ? $"{prevSkill,3} -> {currSkill,-3}"
             : $"{prevSkill,3}    {"",-3}";
 
         string prevRecoversIn = prev?.RecoversIn.ToString() ?? "";
         string currRecoversIn = curr.RecoversIn?.ToString() ?? "";
         string recoversInLog = prevRecoversIn != currRecoversIn
-            ? $"{prevRecoversIn,3} -> {currRecoversIn,-3}" 
+            ? $"{prevRecoversIn,3} -> {currRecoversIn,-3}"
             : $"{prevRecoversIn,3}    {"",-3}";
 
         return $"{curr.LogString} | State: {stateLog,36} | Skill: {skillLog,10} | RecoversIn: {recoversInLog,10}";

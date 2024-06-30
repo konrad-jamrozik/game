@@ -81,11 +81,11 @@ public class GameSessionController
 
         var endState = GameSession.CurrentGameState;
 
-        _log.Info("");
-        _log.Info(
+        _log.Debug("");
+        _log.Debug(
             $"===== Game over! " +
             $"Game result: {(endState.IsGameLost ? "lost" : endState.IsGameWon ? "won" : "undecided")}");
-        _log.Info(
+        _log.Debug(
             $"Money: {endState.Assets.Money}, " +
             $"Intel: {endState.Assets.Intel}, " +
             $"Funding: {endState.Assets.Funding}, " +
@@ -125,9 +125,9 @@ public class GameSessionController
         // anything.
         while (!GameSessionOver(GameSession.CurrentGameState, turnLimit))
         {
-            _log.Info("");
-            _log.Info($"===== Turn {GameSession.CurrentGameState.Timeline.CurrentTurn}");
-            _log.Info("");
+            _log.Debug("");
+            _log.Debug($"===== Turn {GameSession.CurrentGameState.Timeline.CurrentTurn}");
+            _log.Debug("");
 
             player.PlayGameTurn(CurrentGameStatePlayerView, CurrentTurnController);
 
@@ -169,7 +169,7 @@ public class GameSessionController
     public GameState SaveCurrentGameStateToFile()
     {
         GameSession.CurrentGameState.ToJsonFile(_config.SaveFile);
-        _log.Info($"Saved game state to {_config.SaveFile.FullPath}");
+        _log.Debug($"Saved game state to {_config.SaveFile.FullPath}");
         return GameSession.CurrentGameState;
     }
 
@@ -177,7 +177,7 @@ public class GameSessionController
     {
         GameState loadedGameState = GameState.FromJsonFile(_config.SaveFile);
         GameSession.ReplaceCurrentTurnWithState(loadedGameState);
-        _log.Info($"Loaded game state from {_config.SaveFile.FullPath}");
+        _log.Debug($"Loaded game state from {_config.SaveFile.FullPath}");
         return GameSession.CurrentGameState;
     }
 

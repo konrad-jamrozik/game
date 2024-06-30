@@ -74,7 +74,7 @@ public static class AdvanceTurnsRoute
 
         AdvanceTurnsSuccessResponse result = ApiUtils.ToJsonHttpResult(gameSession.Turns);
 
-        Console.Out.WriteLine($"AdvanceTurnsInternal runtime: {stopwatch.Elapsed}");
+        log.Info($"AdvanceTurnsInternal runtime: {stopwatch.Elapsed}");
         return result;
     }
 }

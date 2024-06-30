@@ -21,7 +21,6 @@ public class InvestIntelPlayerAction : PlayerAction
 
     protected override (List<int>? ids, int? targetId) ApplyImpl(GameState state)
     {
-        Console.Out.WriteLine($"kja temp debug Invest intel. Faction: '{_faction.Name}', Faction ID: {_faction.Id}, Intel: {_intel}");
         _log.Info($"Invest intel. Faction: '{_faction.Name}', Faction ID: {_faction.Id}, Intel: {_intel}");
 
         Contract.Assert(state.Factions.Contains(_faction));

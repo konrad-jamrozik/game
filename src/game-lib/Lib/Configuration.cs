@@ -5,6 +5,8 @@ namespace UfoGameLib.Lib;
 
 public class Configuration
 {
+    private const string DefaultLogLevel = "info";
+
     public readonly File SaveFile;
 
     public readonly File LogFile;
@@ -19,9 +21,9 @@ public class Configuration
 
     public readonly bool IncludeCallerMemberNameInLog = false;
 
-    public readonly bool LoggingEnabled;
+    public readonly string LogLevel;
 
-    public Configuration(IFileSystem fs, bool loggingEnabled = false)
+    public Configuration(IFileSystem fs, string? logLevel = null)
     {
         // Given expected starting path on .NET 8, using the Simplified Output Paths [1]
         //   [repo_root]/artifacts/bin/game-lib/debug/.
@@ -39,6 +41,6 @@ public class Configuration
         TurnReportCsvFile = new File(saveFileDir, "turns_report.csv");
         AgentReportCsvFile = new File(saveFileDir, "agents_report.csv");
         MissionSiteReportCsvFile = new File(saveFileDir, "mission_sites_report.csv");
-        LoggingEnabled = loggingEnabled;
+        LogLevel = logLevel ?? DefaultLogLevel;
     }
 }

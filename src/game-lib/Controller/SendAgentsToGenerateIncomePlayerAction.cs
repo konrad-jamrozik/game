@@ -22,7 +22,7 @@ public class SendAgentsToGenerateIncomePlayerAction : PlayerAction
         _agents.ForEach(
             agent =>
             {
-                _log.Info($"Send {agent.LogString} to generate income. Was in state: {agent.CurrentState}.");
+                _log.Debug($"Send {agent.LogString} to generate income. Was in state: {agent.CurrentState}.");
                 agent.GenerateIncome();
             });
 

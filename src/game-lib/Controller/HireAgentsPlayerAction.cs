@@ -22,7 +22,7 @@ public class HireAgentsPlayerAction : PlayerAction
 
     protected override (List<int>? ids, int? targetId) ApplyImpl(GameState state)
     {
-        _log.Info($"Hire agents. Count: {_count}");
+        _log.Debug($"Hire agents. Count: {_count}");
         int totalHireCost = Ruleset.AgentsRuleset.AgentHireCost * _count;
         Contract.Assert(state.Assets.Money >= totalHireCost);
         state.Assets.Money -= totalHireCost;

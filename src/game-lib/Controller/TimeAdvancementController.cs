@@ -29,9 +29,9 @@ public class TimeAdvancementController
 
     public (PlayerActionEvent advanceTimeEvent, List<WorldEvent> worldEvents) AdvanceTime(GameState state)
     {
-        _log.Info("");
-        _log.Info("----- Advancing time");
-        _log.Info("");
+        _log.Debug("");
+        _log.Debug("----- Advancing time");
+        _log.Debug("");
 
         PlayerActionEvent advanceTimeEvent = new PlayerActionEvent(
             _eventIdGen.Generate,
@@ -74,7 +74,7 @@ public class TimeAdvancementController
         _worldEvents.Clear();
 
         state.Factions.AdvanceTime(successfulMissions);
-        
+
         state.AssertInvariants();
         return (advanceTimeEvent, worldEvents);
     }
@@ -120,8 +120,8 @@ public class TimeAdvancementController
         // we need to know how many agents survived it. As soon as we know if given agent
         // survived a mission, we set their status.
         UpdateAgentMissionStats(agentsOnMission, missionSuccessful);
-        
-        _log.Info($"Evaluated {mission.LogString}. result: {mission.CurrentState,7}, " +
+
+        _log.Debug($"Evaluated {mission.LogString}. result: {mission.CurrentState,7}, " +
                   $"difficulty: {mission.Site.Difficulty,3}, " +
                   $"agents: surviving / required: {agentsSurvived,3} / {agentsRequired,3}, " +
                   $"terminated / sent: {agentsTerminated,3} / {mission.AgentsSent,3}.");
@@ -187,14 +187,14 @@ public class TimeAdvancementController
             agent.TickRecovery();
             if (agent.IsAvailable)
             {
-                _log.Info($"{agent.LogString} fully recovered! Skill: {agent.SurvivalSkill,3}.");
+                _log.Debug($"{agent.LogString} fully recovered! Skill: {agent.SurvivalSkill,3}.");
             }
         });
     }
 
     private List<MissionSite> UpdateActiveMissionSites(GameState state)
     {
-        var expiredMissionSites = new List<MissionSite>();    
+        var expiredMissionSites = new List<MissionSite>();
         state.MissionSites.Active.ForEach(
             missionSite =>
             {
@@ -207,7 +207,7 @@ public class TimeAdvancementController
                             _eventIdGen.Generate,
                             GameEventName.MissionSiteExpiredEvent,
                             targetId: missionSite.Id));
-                    _log.Info($"{missionSite.LogString} expired!");
+                    _log.Debug($"{missionSite.LogString} expired!");
                 }
             }
         );
