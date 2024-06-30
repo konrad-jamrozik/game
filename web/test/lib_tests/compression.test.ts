@@ -5,6 +5,7 @@ import path from 'node:path'
 import { promisify } from 'node:util'
 import * as zlib from 'node:zlib'
 import _ from 'lodash'
+import * as LZString from 'lz-string'
 import { describe, expect, test } from 'vitest'
 
 // Promisify the fs and zlib functions for better async/await support
@@ -17,7 +18,43 @@ const inputDataStr =
   '{"turns":[{"EventsUntilStartState":[],"StartState":{"IsGameOver":false,"IsGameLost":false,"IsGameWon":false,"Timeline":{"CurrentTurn":1},"Assets":{"Money":500,"Intel":0,"Funding":20,"Support":30,"CurrentTransportCapacity":4,"MaxTransportCapacity":4,"Agents":[]},"MissionSites":[],"Missions":[],"TerminatedAgents":[],"Factions":[{"Id":0,"Name":"Black Lotus cult","Power":200,"MissionSiteCountdown":3,"PowerClimb":4,"PowerAcceleration":8,"AccumulatedPowerAcceleration":0,"IntelInvested":0},{"Id":1,"Name":"Red Dawn remnants","Power":300,"MissionSiteCountdown":3,"PowerClimb":5,"PowerAcceleration":5,"AccumulatedPowerAcceleration":0,"IntelInvested":0},{"Id":2,"Name":"EXALT","Power":400,"MissionSiteCountdown":9,"PowerClimb":6,"PowerAcceleration":4,"AccumulatedPowerAcceleration":0,"IntelInvested":0},{"Id":3,"Name":"Zombies","Power":100,"MissionSiteCountdown":6,"PowerClimb":1,"PowerAcceleration":20,"AccumulatedPowerAcceleration":0,"IntelInvested":0}],"UpdateCount":0},"EventsInTurn":[],"EndState":{"IsGameOver":false,"IsGameLost":false,"IsGameWon":false,"Timeline":{"CurrentTurn":1},"Assets":{"Money":500,"Intel":0,"Funding":20,"Support":30,"CurrentTransportCapacity":4,"MaxTransportCapacity":4,"Agents":[]},"MissionSites":[],"Missions":[],"TerminatedAgents":[],"Factions":[{"Id":0,"Name":"Black Lotus cult","Power":200,"MissionSiteCountdown":3,"PowerClimb":4,"PowerAcceleration":8,"AccumulatedPowerAcceleration":0,"IntelInvested":0},{"Id":1,"Name":"Red Dawn remnants","Power":300,"MissionSiteCountdown":3,"PowerClimb":5,"PowerAcceleration":5,"AccumulatedPowerAcceleration":0,"IntelInvested":0},{"Id":2,"Name":"EXALT","Power":400,"MissionSiteCountdown":9,"PowerClimb":6,"PowerAcceleration":4,"AccumulatedPowerAcceleration":0,"IntelInvested":0},{"Id":3,"Name":"Zombies","Power":100,"MissionSiteCountdown":6,"PowerClimb":1,"PowerAcceleration":20,"AccumulatedPowerAcceleration":0,"IntelInvested":0}],"UpdateCount":0},"AdvanceTimeEvent":null}]}'
 
 describe('compression tests', () => {
-  test('test json-gzip compression file round-trip', async () => {
+  test('test lz-string string to local storage round-trip', async () => {
+    expect.hasAssertions()
+
+    const repoDir = path.normalize(`${import.meta.dirname}/../../..`)
+    const inputFilePath = path.normalize(`${repoDir}/input.json`)
+    // check if file at inputFilePath exists
+    const inputFileExists = fs.existsSync(inputFilePath)
+
+    const rawInputDataStrFromFile = inputFileExists
+      ? await readFile(inputFilePath, 'utf8')
+      : ''
+
+    const inputDataStrFromFile = JSON.stringify(
+      JSON.parse(rawInputDataStrFromFile),
+    )
+
+    const inputData =
+      inputDataStrFromFile.length > 0 ? inputDataStrFromFile : inputDataStr
+
+    const compressed = LZString.compressToUTF16(inputData)
+    localStorage.clear()
+    localStorage.setItem('compressed', compressed)
+    const read = localStorage.getItem('compressed')!
+    const roundTripped = LZString.decompressFromUTF16(read)
+
+    console.log(
+      `lz-string test: rawInputDataStrFromFile: ${rawInputDataStrFromFile.length}, inputDataStrFromFile: ${inputDataStrFromFile.length}, ` +
+        `inputData.length: ${inputData.length}, compressed.length: ${compressed.length}, roundTripped.length: ${roundTripped.length}`,
+    )
+
+    expect(roundTripped.length).toBe(inputData.length)
+    expect(roundTripped).toBe(inputData)
+  })
+
+  test('test node:zlip:gzip string to file round-trip', async () => {
+    expect.hasAssertions()
+
     const repoDir = path.normalize(`${import.meta.dirname}/../../..`)
     const inputFilePath = path.normalize(`${repoDir}/input.json`)
     const outputFilePath = path.normalize(`${repoDir}/output.gzip`)
