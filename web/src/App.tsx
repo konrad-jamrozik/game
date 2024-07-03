@@ -1,6 +1,6 @@
 import { Link, Stack, Typography } from '@mui/material'
 import Grid from '@mui/material/Unstable_Grid2'
-import { Fragment, useEffect, useState } from 'react'
+import { Fragment, useState } from 'react'
 import { AgentsDataGrid } from './components/AgentsDataGrid/AgentsDataGrid'
 import { AssetsDataGrid } from './components/AssetsDataGrid/AssetsDataGrid'
 import { Charts } from './components/Charts'
@@ -12,12 +12,10 @@ import { MissionSitesDataGrid } from './components/MissionSitesDataGrid/MissionS
 import { MissionsDataGrid } from './components/MissionsDataGrid/MissionsDataGrid'
 import OutroDialog from './components/OutroDialog'
 import { SettingsPanel } from './components/SettingsPanel/SettingsPanel'
-import { measureTiming } from './lib/dev'
 import { useGameSessionContext } from './lib/gameSession/GameSession'
 import { useSettingsContext } from './lib/settings/Settings'
 
 export default function App(): React.JSX.Element {
-  console.log(`render App.tsx`)
   const settings = useSettingsContext()
   const gameSession = useGameSessionContext()
   const currentGameState = gameSession.getCurrentGameStateUnsafe()
@@ -35,10 +33,6 @@ export default function App(): React.JSX.Element {
     gameSession.isGameOverUnsafe(),
     turnAdvanced,
   )
-
-  useEffect(() => {
-    console.log(`render App.tsx DONE. Elapsed: ${measureTiming()}`)
-  })
 
   if (turnAdvanced) {
     // Reset the 'turnAdvanced' signal after it was used above.
