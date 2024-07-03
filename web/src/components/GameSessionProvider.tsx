@@ -9,7 +9,7 @@ import type { StoredData } from '../lib/storedData/StoredData'
 export const GameSessionContext = createContext<GameSession>(undefined!)
 
 export type GameSessionProviderProps = {
-  children: React.ReactNode
+  children: React.JSX.Element
   storedData: StoredData
 }
 

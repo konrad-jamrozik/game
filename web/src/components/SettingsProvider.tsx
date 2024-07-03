@@ -5,7 +5,7 @@ import type { StoredData } from '../lib/storedData/StoredData'
 export const SettingsContext = createContext<Settings>(undefined!)
 
 export type SettingsProviderProps = {
-  children: React.ReactNode
+  children: React.JSX.Element
   storedData: StoredData
 }
 
