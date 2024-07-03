@@ -1,5 +1,4 @@
-import { createContext, useEffect } from 'react'
-import { measureTiming } from '../lib/dev'
+import { createContext } from 'react'
 import {
   type GameSession,
   useGameSession,
@@ -17,14 +16,7 @@ export type GameSessionProviderProps = {
 export function GameSessionProvider(
   props: GameSessionProviderProps,
 ): React.JSX.Element {
-  console.log(`render GameSessionProvider.tsx. Elapsed: ${measureTiming()}`)
   const gameSession = useGameSession(props.storedData)
-
-  useEffect(() => {
-    console.log(
-      `render GameSessionProvider.tsx DONE. Elapsed: ${measureTiming()}`,
-    )
-  })
   return (
     <GameSessionContext.Provider value={gameSession}>
       {props.children}
