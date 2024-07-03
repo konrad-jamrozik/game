@@ -28,7 +28,7 @@ export type AssetsDataGridProps = {
 const boxHeight = 280
 
 export function AssetsDataGrid(props: AssetsDataGridProps): React.JSX.Element {
-  console.log(`render AssetsDataGrid.tsx Elapsed: ${measureTiming()}`)
+  console.log(`render AssetsDataGrid.tsx. Elapsed: ${measureTiming()}`)
 
   useEffect(() => {
     console.log(`render AssetsDataGrid.tsx: DONE. Elapsed: ${measureTiming()}`)

@@ -3,8 +3,8 @@ import _ from 'lodash'
 import { Profiler, StrictMode } from 'react'
 import { seconds } from '../../lib/dev'
 
-const strict = true
-const profile = true
+const strict = false
+const profile = false
 
 export function DevTools({
   id,
