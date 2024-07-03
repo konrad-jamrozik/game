@@ -41,14 +41,14 @@ export function useGameSession(storedData: StoredData): GameSession {
   const [error, setError] = useState<string>()
 
   console.log(
-    `render useGameSession. Elasped: ${measureTiming()}. data: '${Md5.hashStr(JSON.stringify(data))}', loading: '${loading}', error: '${error}'`,
+    `render useGameSession. Elapsed: ${measureTiming()}. data: '${Md5.hashStr(JSON.stringify(data))}', loading: '${loading}', error: '${error}'`,
   )
 
   useEffect(() => {
     console.log(
-      `render useGameSession: DONE. Elasped: ${measureTiming()}. loading: '${loading}', error: '${error}'`,
+      `render useGameSession: DONE. Elapsed: ${measureTiming()}. loading: '${loading}', error: '${error}'`,
     )
-  }, [loading]) // Only re-run the effect if count changes
+  }, [loading, error])
 
   return new GameSession(
     new GameSessionData(storedData, data, setData),

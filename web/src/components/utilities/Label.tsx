@@ -4,7 +4,7 @@ import type { Variant } from '@mui/material/styles/createTypography'
 export type LabelProps = {
   sx?: SxProps<Theme>
   typographyVariant?: Variant | undefined
-  children?: React.JSX.Element
+  children?: React.ReactNode
 }
 export function Label(props: LabelProps): React.JSX.Element {
   const sx = props.sx ?? {}
