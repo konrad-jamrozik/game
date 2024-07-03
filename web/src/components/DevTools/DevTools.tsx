@@ -1,21 +1,37 @@
+/* eslint-disable @typescript-eslint/no-unnecessary-condition */
 import _ from 'lodash'
-import { Profiler } from 'react'
+import { Profiler, StrictMode } from 'react'
 
+const strict = false
 const profile = true
 
-export function WrapInProfiler({
+export function DevTools({
+  id,
   children,
 }: {
+  id: string
   children: React.JSX.Element
 }): React.JSX.Element {
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-  return profile ? (
-    <Profiler id="top_level" onRender={onRender}>
-      {children}
-    </Profiler>
-  ) : (
-    children
-  )
+  if (profile && strict) {
+    return (
+      <StrictMode>
+        <Profiler id={id} onRender={onRender}>
+          {children}
+        </Profiler>
+      </StrictMode>
+    )
+  }
+  if (profile && !strict) {
+    return (
+      <Profiler id={id} onRender={onRender}>
+        {children}
+      </Profiler>
+    )
+  }
+  if (!profile && strict) {
+    return <StrictMode>{children}</StrictMode>
+  }
+  return children
 }
 
 // https://react.dev/reference/react/Profiler#onrender-parameters
@@ -29,7 +45,7 @@ function onRender(
   commitTime: number,
 ): void {
   console.log(
-    `Profiler.onRender: id: ${id}, phase: ${_.padStart(phase, 13)}, ` +
+    `Profiler.onRender: id: ${_.padStart(id, 13)}, phase: ${_.padStart(phase, 13)}, ` +
       `actualDuration: ${seconds(actualDuration)}, baseDuration: ${seconds(baseDuration)}, ` +
       `startTime: ${seconds(startTime)}, commitTime: ${seconds(commitTime)}`,
   )

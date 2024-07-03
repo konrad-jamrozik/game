@@ -12,7 +12,7 @@ export type SettingsProviderProps = {
 export function SettingsProvider(
   props: SettingsProviderProps,
 ): React.JSX.Element {
-  console.log(`render GameSessionProvider.tsx`)
+  console.log(`render SettingsProvider.tsx`)
   const settings = useSettings(props.storedData)
   return (
     <SettingsContext.Provider value={settings}>
