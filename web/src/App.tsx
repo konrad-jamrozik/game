@@ -1,6 +1,6 @@
 import { Link, Stack, Typography } from '@mui/material'
 import Grid from '@mui/material/Unstable_Grid2'
-import { Fragment, useState } from 'react'
+import { Fragment, useEffect, useState } from 'react'
 import { AgentsDataGrid } from './components/AgentsDataGrid/AgentsDataGrid'
 import { AssetsDataGrid } from './components/AssetsDataGrid/AssetsDataGrid'
 import { Charts } from './components/Charts'
@@ -34,6 +34,10 @@ export default function App(): React.JSX.Element {
     gameSession.isGameOverUnsafe(),
     turnAdvanced,
   )
+
+  useEffect(() => {
+    console.log(`render App.tsx DONE`)
+  })
 
   if (turnAdvanced) {
     // Reset the 'turnAdvanced' signal after it was used above.

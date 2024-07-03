@@ -1,4 +1,4 @@
-import { createContext } from 'react'
+import { createContext, useEffect } from 'react'
 import {
   type GameSession,
   useGameSession,
@@ -18,6 +18,10 @@ export function GameSessionProvider(
 ): React.JSX.Element {
   console.log(`render GameSessionProvider.tsx`)
   const gameSession = useGameSession(props.storedData)
+
+  useEffect(() => {
+    console.log(`render GameSessionProvider.tsx DONE`)
+  })
   return (
     <GameSessionContext.Provider value={gameSession}>
       {props.children}

@@ -26,6 +26,7 @@ export type AssetsDataGridProps = {
 const boxHeight = 280
 
 export function AssetsDataGrid(props: AssetsDataGridProps): React.JSX.Element {
+  console.log(`render AssetsDataGrid.tsx`)
   const rows: AssetRow[] = getRows(props.currentGameState)
 
   return (

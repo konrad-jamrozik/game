@@ -40,6 +40,7 @@ export function GameSessionControlPanel(
     turnsToAdvance?: number,
     delegateToAi?: boolean,
   ): Promise<void> {
+    console.log(`Executing advanceTurns()`)
     const { resolvedStartTurn, resolvedTargetTurn } = resolveStartAndTargetTurn(
       startTurn,
       targetTurn,

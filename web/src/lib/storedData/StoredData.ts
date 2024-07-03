@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/class-methods-use-this */
 import _ from 'lodash'
 import * as LZString from 'lz-string'
+import { seconds } from '../../components/DevTools/DevTools'
 import type { GameSessionDataType } from '../gameSession/GameSessionData'
 import {
   defaultSettingsData,
@@ -41,10 +42,12 @@ export class StoredData {
     this.data = { ...this.data, settings: newSettingsData }
   }
 
+  // eslint-disable-next-line max-statements
   private setInLocalStorage<T extends StoredDataTypeName>(
     key: T,
     value: StoredDataTypeMap[T],
   ): void {
+    const startTime = performance.now() // Start timing
     const json: string = JSON.stringify(value)
 
     // https://developer.mozilla.org/en-US/docs/Web/API/Storage/setItem
@@ -79,6 +82,12 @@ export class StoredData {
       }
       throw error
     }
+    const endTime = performance.now() // End timing
+    const executionTimeInSeconds = seconds(endTime - startTime)
+
+    console.log(
+      `setInLocalStorage. key: '${key}'. DONE. Execution time: ${executionTimeInSeconds} seconds.`,
+    )
   }
 
   private removeFromLocalStorage<T extends StoredDataTypeName>(key: T): void {

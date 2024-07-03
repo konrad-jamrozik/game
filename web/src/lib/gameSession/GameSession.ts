@@ -1,7 +1,7 @@
 /* eslint-disable max-lines */
 /* eslint-disable @typescript-eslint/parameter-properties */
 import _ from 'lodash'
-import { useContext, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { Md5 } from 'ts-md5'
 import { GameSessionContext } from '../../components/GameSessionProvider'
 import { callAdvanceTurnsApi } from '../api/advanceTurnsApi'
@@ -42,6 +42,10 @@ export function useGameSession(storedData: StoredData): GameSession {
   console.log(
     `useGameSession: data: '${Md5.hashStr(JSON.stringify(data))}', loading: '${loading}', error: '${error}'`,
   )
+
+  useEffect(() => {
+    console.log('useGameSession: loading changed to:', loading)
+  }, [loading]) // Only re-run the effect if count changes
 
   return new GameSession(
     new GameSessionData(storedData, data, setData),
