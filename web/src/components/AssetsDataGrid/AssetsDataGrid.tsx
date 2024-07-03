@@ -7,8 +7,10 @@ import {
   type GridRowSelectionModel,
 } from '@mui/x-data-grid'
 import _ from 'lodash'
+import { useEffect } from 'react'
 import type { Assets, GameState } from '../../lib/codesync/GameState'
 import { getAssetTurnDiffEstimate } from '../../lib/codesync/ruleset'
+import { measureTiming } from '../../lib/dev'
 import {
   assetNameColors,
   assetNameGridColDef,
@@ -27,6 +29,11 @@ const boxHeight = 280
 
 export function AssetsDataGrid(props: AssetsDataGridProps): React.JSX.Element {
   console.log(`render AssetsDataGrid.tsx`)
+
+  useEffect(() => {
+    console.log(`render AssetsDataGrid.tsx: DONE. Elapsed: ${measureTiming()}`)
+  })
+
   const rows: AssetRow[] = getRows(props.currentGameState)
 
   return (

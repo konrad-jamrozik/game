@@ -12,6 +12,7 @@ import { MissionSitesDataGrid } from './components/MissionSitesDataGrid/MissionS
 import { MissionsDataGrid } from './components/MissionsDataGrid/MissionsDataGrid'
 import OutroDialog from './components/OutroDialog'
 import { SettingsPanel } from './components/SettingsPanel/SettingsPanel'
+import { measureTiming } from './lib/dev'
 import { useGameSessionContext } from './lib/gameSession/GameSession'
 import { useSettingsContext } from './lib/settings/Settings'
 
@@ -36,7 +37,7 @@ export default function App(): React.JSX.Element {
   )
 
   useEffect(() => {
-    console.log(`render App.tsx DONE`)
+    console.log(`render App.tsx DONE. Elapsed: ${measureTiming()}`)
   })
 
   if (turnAdvanced) {

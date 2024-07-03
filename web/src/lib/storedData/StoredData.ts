@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/class-methods-use-this */
 import _ from 'lodash'
 import * as LZString from 'lz-string'
-import { seconds } from '../../components/DevTools/DevTools'
+import { seconds } from '../dev'
 import type { GameSessionDataType } from '../gameSession/GameSessionData'
 import {
   defaultSettingsData,

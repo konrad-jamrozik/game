@@ -19,6 +19,7 @@ import { initialTurn, type Assets, type GameState } from '../codesync/GameState'
 import type { AgentPlayerActionName } from '../codesync/PlayerActionEvent'
 import type { PlayerActionPayload } from '../codesync/PlayerActionPayload'
 import { agentHireCost, transportCapBuyingCost } from '../codesync/ruleset'
+import { measureTiming } from '../dev'
 import type { StoredData } from '../storedData/StoredData'
 import {
   GameSessionData,
@@ -44,7 +45,9 @@ export function useGameSession(storedData: StoredData): GameSession {
   )
 
   useEffect(() => {
-    console.log('useGameSession: loading changed to:', loading)
+    console.log(
+      `useGameSession: loading changed to: ${loading}. Elapsed: ${measureTiming()}`,
+    )
   }, [loading]) // Only re-run the effect if count changes
 
   return new GameSession(

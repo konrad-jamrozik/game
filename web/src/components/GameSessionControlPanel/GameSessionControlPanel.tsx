@@ -14,6 +14,7 @@ import Grid from '@mui/material/Unstable_Grid2'
 import _ from 'lodash'
 import { useState } from 'react'
 import { initialTurn } from '../../lib/codesync/GameState'
+import { startTiming } from '../../lib/dev'
 import type { GameSession } from '../../lib/gameSession/GameSession'
 import { Label } from '../utilities/Label'
 
@@ -40,7 +41,8 @@ export function GameSessionControlPanel(
     turnsToAdvance?: number,
     delegateToAi?: boolean,
   ): Promise<void> {
-    console.log(`Executing advanceTurns()`)
+    console.log(`Executing advanceTurns(). Resetting elapsed time.`)
+    startTiming()
     const { resolvedStartTurn, resolvedTargetTurn } = resolveStartAndTargetTurn(
       startTurn,
       targetTurn,
@@ -258,6 +260,8 @@ function resetCurrentTurnButton(gameSession: GameSession): React.JSX.Element {
       : `Revert 1 turn`
 
   function reset(): void {
+    console.log(`Executing reset(). Resetting elapsed time.`)
+    startTiming()
     if (playerMadeActions ?? false) {
       gameSession.resetCurrentTurn()
     } else {
@@ -282,6 +286,8 @@ function resetGameSessionButton(
   setShowIntro: React.Dispatch<React.SetStateAction<boolean>>,
 ): React.JSX.Element {
   function resetGame(): void {
+    console.log(`Executing resetGame(). Resetting elapsed time.`)
+    startTiming()
     gameSession.resetGame()
     setShowIntro(true)
   }
