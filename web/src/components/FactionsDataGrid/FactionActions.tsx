@@ -1,5 +1,6 @@
 import { Stack } from '@mui/material'
 import type { GameState } from '../../lib/codesync/GameState'
+import { startTiming } from '../../lib/dev'
 import type { GameSession } from '../../lib/gameSession/GameSession'
 import SliderWithButton from '../utilities/SliderWithButton'
 import type { ManageFactionDialogProps } from './ManageFactionDialog'
@@ -8,6 +9,8 @@ export function FactionActions(
   props: ManageFactionDialogProps & { gameSession: GameSession; gs: GameState },
 ): React.JSX.Element {
   async function investIntel(amount: number): Promise<void> {
+    console.log(`Executing investIntel(). Resetting elapsed time.`)
+    startTiming()
     await props.gameSession.investIntel(props.faction.Id, amount)
   }
 
