@@ -34,6 +34,12 @@ public abstract class PlayerAction
 
     public static void ValidateName(string name)
     {
+        bool isValid = IsValidName(name);
+        Contract.Assert(isValid, $"The type name '{name}' is not a valid name of PlayerAction-derived class.");
+    }
+
+    public static bool IsValidName(string name)
+    {
         // Get the assembly that contains the PlayerAction class
         Assembly assembly = Assembly.GetAssembly(typeof(PlayerAction))!;
         
@@ -42,8 +48,6 @@ public abstract class PlayerAction
 
         // Check if the provided typeName matches any derived type's name
         bool isValid = derivedTypes.Any(t => t.Name == name);
-
-        Contract.Assert(isValid, $"The type name '{name}' is not a valid name of PlayerAction-derived class.");
+        return isValid;
     }
-
 }

@@ -35,7 +35,7 @@ public class TimeAdvancementController
 
         PlayerActionEvent advanceTimeEvent = new PlayerActionEvent(
             _eventIdGen.Generate,
-            GameEventName.AdvanceTimePlayerAction,
+            GameEventType.AdvanceTimePlayerAction,
             targetId: state.Timeline.CurrentTurn);
 
         // Agents cost upkeep. Note we compute upkeep before evaluating missions.
@@ -68,7 +68,7 @@ public class TimeAdvancementController
         _worldEvents.Add(
             new WorldEvent(
                 _eventIdGen.Generate,
-                GameEventName.ReportEvent,
+                GameEventType.ReportEvent,
                 [moneyChange, intelChange, fundingChange, supportChange]));
         var worldEvents = new List<WorldEvent>(_worldEvents);
         _worldEvents.Clear();
@@ -205,7 +205,7 @@ public class TimeAdvancementController
                     _worldEvents.Add(
                         new WorldEvent(
                             _eventIdGen.Generate,
-                            GameEventName.MissionSiteExpiredEvent,
+                            GameEventType.MissionSiteExpiredEvent,
                             targetId: missionSite.Id));
                     _log.Debug($"{missionSite.LogString} expired!");
                 }

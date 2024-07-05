@@ -26,7 +26,7 @@ public class GameSessionTurn
         GameState? endState = null,
         PlayerActionEvent? advanceTimeEvent = null)
     {
-        EventsUntilStartState = eventsUntilStartState ?? [new WorldEvent(0, GameEventName.ReportEvent, [0, 0, 0, 0])];
+        EventsUntilStartState = eventsUntilStartState ?? [new WorldEvent(0, GameEventType.ReportEvent, [0, 0, 0, 0])];
         StartState = startState;
         EventsInTurn = eventsInTurn ?? new List<PlayerActionEvent>();
         EndState = endState ?? StartState.Clone();
@@ -44,14 +44,16 @@ public class GameSessionTurn
 
         Contract.Assert(
             EndState.UpdateCount >= StartState.UpdateCount,
-            "End state must have same or more updates than start state.");
+            "End state must have same or more updates than the start state.");
 
         Contract.Assert(
             EventsInTurn.Count == EndState.UpdateCount - StartState.UpdateCount,
             "Number of events in turn must match the number of updates between the game states.");
 
-        Contract.Assert(EventsUntilStartState.Last().Type == GameEventName.ReportEvent);
+        Contract.Assert(EventsUntilStartState.Last().Type == GameEventType.ReportEvent);
         IdGen.AssertConsecutiveIds(GameEvents.ToList());
+        // kja all events in turn except the last one must be not AdvanceTime player action
+        // Contract.Assert(EventsInTurn.SkipLast(1).All(@event => @event.Type == "a"))
         StartState.AssertInvariants();
         EndState.AssertInvariants();
     }
