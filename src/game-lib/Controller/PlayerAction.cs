@@ -1,4 +1,5 @@
 using Lib.Contracts;
+using System.Reflection;
 using UfoGameLib.Events;
 using UfoGameLib.State;
 
@@ -30,5 +31,19 @@ public abstract class PlayerAction
 
     }
     protected abstract (List<int>? ids, int? targetId) ApplyImpl(GameState state);
+
+    public static void ValidateName(string name)
+    {
+        // Get the assembly that contains the PlayerAction class
+        Assembly assembly = Assembly.GetAssembly(typeof(PlayerAction))!;
+        
+        // Get all types in the assembly that inherit from PlayerAction
+        var derivedTypes = assembly.GetTypes().Where(t => t.IsSubclassOf(typeof(PlayerAction)));
+
+        // Check if the provided typeName matches any derived type's name
+        bool isValid = derivedTypes.Any(t => t.Name == name);
+
+        Contract.Assert(isValid, $"The type name '{name}' is not a valid name of PlayerAction-derived class.");
+    }
 
 }

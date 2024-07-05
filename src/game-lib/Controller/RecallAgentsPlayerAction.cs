@@ -12,8 +12,8 @@ public class RecallAgentsPlayerAction : PlayerAction
 
     public RecallAgentsPlayerAction(ILog log, Agents agents)
     {
-        // kja2-assert: agents.AssertCanBeRecalled()
         Contract.Assert(agents.Any());
+        Contract.Assert(agents.All(agent => agent.CanBeRecalled));
         _log = log;
         _agents = agents;
     }

@@ -1,5 +1,8 @@
 ﻿// ReSharper disable MemberCanBePrivate.Global
 // Reason: public fields are being serialized to JSON.
+
+using UfoGameLib.Controller;
+
 namespace UfoGameLib.Events;
 
 public class PlayerActionEvent : GameEvent
@@ -11,7 +14,7 @@ public class PlayerActionEvent : GameEvent
     {
         Ids = ids;
         TargetId = targetId;
-        // kja2-assert: that 'type' is one of the valid PlayerActions.
+        // kja PlayerAction.ValidateName(type);
     }
 
     public override PlayerActionEvent Clone()

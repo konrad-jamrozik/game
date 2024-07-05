@@ -11,16 +11,29 @@ namespace UfoGameLib.Api;
 ///
 /// The payload can be applied to a GameSessionController. See the Apply() method.
 /// </summary>
-[method: JsonConstructor]
-public class PlayerActionPayload(string actionName, int[]? ids, int? targetId)
+
+// kja can this be made abstract?
+public class PlayerActionPayload
 {
-    // kja2-assert: instead of string this should be an enum or something. See https://chatgpt.com/c/fb0a4197-4397-4f3f-bc13-2e0468141b0b
-    // put this constraint in JsonCtor (currently primary ctor, so: weird)
     // ReSharper disable MemberCanBePrivate.Global
     // Reason for 'ReSharper disable MemberCanBePrivate.Global': these fields are used by the deserializer.
-    public readonly string ActionName = actionName;
-    public readonly int[]? Ids = ids;
-    public readonly int? TargetId = targetId;
+    public readonly string ActionName;
+    public readonly int[]? Ids;
+    public readonly int? TargetId;
+
+    /// <summary>
+    /// Represents a player action payload. The payload is expected to be deserialized
+    /// from a system boundary, e.g. from a JSON string received from a POST HTTP request.
+    ///
+    /// The payload can be applied to a GameSessionController. See the Apply() method.
+    /// </summary>
+    public PlayerActionPayload(string actionName, int[]? ids, int? targetId)
+    {
+        PlayerAction.ValidateName(actionName);
+        ActionName = actionName;
+        Ids = ids;
+        TargetId = targetId;
+    }
 
     /// <summary>
     /// This method translates the PlayerActionPayload to appropriate player action
