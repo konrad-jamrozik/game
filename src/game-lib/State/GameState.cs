@@ -135,35 +135,8 @@ public class GameState : IEquatable<GameState>
 
     private static JsonSerializerOptions GetJsonSerializerOptions()
     {
-        // We return 'options' that:
-        // 1. use the 'converterOptions' as base options
-        // 2. have GameStateJsonConverter as a 'converter'
-        // 3. the 'converter' also uses 'converterOptions' as base options
-        //
-        // In other words, both 'options' and its 'converter' use the same base options: 'converterOptions'.
-        //   
-        // Note: we couldn't collapse 'options' and 'converterOptions' into one instance, because it would
-        // result in an infinite loop: 'options' would use GameStateJsonConverter, which would use 'options', which
-        // would use GameStateJsonConverter, which would use 'options'...
-        //
-        // Note: the JsonStringEnumConverter() defined within converterOptions
-        // is a "leaf" converter in the sense it doesn't need any other of the settings
-        // defined in the options of which it is part of.
-
-        // Define "base" JsonSerializerOptions that:
-        // - do not have converters defined,
-        // - are used by the returned 'options' and its converter, GameStateJsonConverter.
-        var converterOptions = GameStateJsonConverter.JsonSerializerOptions();
-
-        // Define the "top-level" options to be returned. They use "converterOptions".
-        var options = new JsonSerializerOptions(converterOptions);
-
-        options.Converters.Add(new GameEventTypeConverter());
-
-        // Attach GameStateJsonConverter to 'options'. Now both 'options' and its converter use 'converterOptions'.
+        var options = new JsonSerializerOptions(JsonExtensions.SerializerOptionsIndentedUnsafe);
         options.Converters.Add(new GameStateJsonConverter());
-        
-
         return options;
     }
 }
