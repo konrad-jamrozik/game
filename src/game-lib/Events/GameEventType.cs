@@ -25,6 +25,8 @@ public class GameEventType
 
     public static bool IsValidPlayerActionEvent(string type) => PlayerActionName.IsValid(type);
 
+    public bool IsNotTimeAdvancement => ToString() != nameof(AdvanceTimePlayerAction);
+
     public GameEventType(string type)
     {
         Contract.Assert(IsValidWorldEventType(type) || IsValidPlayerActionEvent(type));
