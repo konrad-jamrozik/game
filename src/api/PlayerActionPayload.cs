@@ -1,4 +1,6 @@
 ﻿// codesync: UfoGameLib.Api.PlayerActionPayload
+
+using System.Text.Json.Serialization;
 using UfoGameLib.Controller;
 using UfoGameLib.Events;
 
@@ -15,12 +17,15 @@ namespace UfoGameLib.Api;
 // Reason: used by JSON deserializer.
 public class PlayerActionPayload
 {
-    // kja introduce type: PlayerActionName
+    public readonly PlayerActionName Name;
     // ReSharper disable MemberCanBePrivate.Global
     // Reason: used by JSON deserializer.
-    public readonly string ActionName;
     public readonly int[]? Ids;
     public readonly int? TargetId;
+
+    public PlayerActionPayload(string name, int[]? ids, int? targetId) : this(new PlayerActionName(name), ids, targetId)
+    {
+    }
 
     /// <summary>
     /// Represents a player action payload. The payload is expected to be deserialized
@@ -28,10 +33,10 @@ public class PlayerActionPayload
     ///
     /// The payload can be applied to a GameSessionController. See the Apply() method.
     /// </summary>
-    public PlayerActionPayload(string actionName, int[]? ids, int? targetId)
+    [JsonConstructor]
+    public PlayerActionPayload(PlayerActionName name, int[]? ids, int? targetId)
     {
-        PlayerAction.ValidateName(actionName);
-        ActionName = actionName;
+        Name = name;
         Ids = ids;
         TargetId = targetId;
     }
@@ -53,7 +58,7 @@ public class PlayerActionPayload
     private Func<PlayerActionEvent> TranslatePlayerActionToControllerAction(GameSessionController controller)
         // https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/operators/patterns#property-pattern
         // https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/operators/patterns#positional-pattern
-        => ActionName switch
+        => Name.ToString() switch
         {
             GameEventType.AdvanceTimePlayerAction => () => controller.AdvanceTime().advaceTimeEvent,
             nameof(BuyTransportCapacityPlayerAction) => () => controller.CurrentTurnController.BuyTransportCapacity(TargetId!.Value),
@@ -65,6 +70,6 @@ public class PlayerActionPayload
             nameof(SendAgentsToTrainingPlayerAction) => () => controller.CurrentTurnController.SendAgentsToTraining(Ids!),
             nameof(RecallAgentsPlayerAction) => () => controller.CurrentTurnController.RecallAgents(Ids!),
             nameof(LaunchMissionPlayerAction) => () => controller.CurrentTurnController.LaunchMission(TargetId!.Value, Ids!),
-            _ => () => throw new ArgumentException($"Unsupported player action of '{ActionName}'")
+            _ => () => throw new ArgumentException($"Unsupported player action of '{Name}'")
         };
 }

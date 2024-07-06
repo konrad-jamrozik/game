@@ -46,7 +46,7 @@ public static class ApplyPlayerActionRoute
         GameSession gameSession = ApiUtils.NewGameSessionFromTurn(gameSessionTurn);
         var controller = new GameSessionController(config, log, gameSession);
 
-        Contract.Assert(playerActionPayload.ActionName != GameEventType.AdvanceTimePlayerAction);
+        Contract.Assert(playerActionPayload.Name.ToString() != GameEventType.AdvanceTimePlayerAction);
 
         gameSession.CurrentPlayerActionEvents.Add(playerActionPayload.Apply(controller));
 
@@ -65,7 +65,6 @@ public static class ApplyPlayerActionRoute
             // https://learn.microsoft.com/en-us/aspnet/core/fundamentals/minimal-apis/parameter-binding?view=aspnetcore-8.0#configure-json-deserialization-options-for-an-endpoint
             parsedBody =
                 (await req.ReadFromJsonAsync<ApplyPlayerActionRequestBody>(GameSessionTurn.JsonSerializerOptions))!;
-            PlayerAction.ValidateName(parsedBody.PlayerActionPayload.ActionName);
             error = null;
         }
         else

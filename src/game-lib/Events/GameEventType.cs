@@ -1,12 +1,13 @@
 using System.Collections.Immutable;
 using System.Text.Json.Serialization;
 using Lib.Contracts;
+using Lib.Json;
 using UfoGameLib.Controller;
 
 namespace UfoGameLib.Events;
 
 
-[JsonConverter(typeof(GameEventTypeConverter))]
+[JsonConverter(typeof(StringJsonConverter<GameEventType>))]
 public class GameEventType
 {
     private readonly string _type;

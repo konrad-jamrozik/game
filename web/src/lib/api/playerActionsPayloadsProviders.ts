@@ -9,42 +9,41 @@ export const playerActionsPayloadsProviders: {
 } = {
   // Note: currently Cap always buys 1 capacity. See PlayerActionPayload.cs in backend.
   BuyTransportCapacityPlayerAction: (TargetId: number) => ({
-    ActionName: 'BuyTransportCapacityPlayerAction' as PlayerActionNameInTurn,
+    Name: 'BuyTransportCapacityPlayerAction' as PlayerActionNameInTurn,
     TargetId,
   }),
   // Note: currently HireAgents always hires 1 agent. See PlayerActionPayload.cs in backend.
   HireAgentsPlayerAction: (TargetId: number) => ({
-    ActionName: 'HireAgentsPlayerAction' as PlayerActionNameInTurn,
+    Name: 'HireAgentsPlayerAction' as PlayerActionNameInTurn,
     TargetId,
   }),
   SackAgentsPlayerAction: (Ids: number[]) => ({
-    ActionName: 'SackAgentsPlayerAction' as PlayerActionNameInTurn,
+    Name: 'SackAgentsPlayerAction' as PlayerActionNameInTurn,
     Ids,
   }),
   SendAgentsToGenerateIncomePlayerAction: (Ids: number[]) => ({
-    ActionName:
-      'SendAgentsToGenerateIncomePlayerAction' as PlayerActionNameInTurn,
+    Name: 'SendAgentsToGenerateIncomePlayerAction' as PlayerActionNameInTurn,
     Ids,
   }),
   SendAgentsToGatherIntelPlayerAction: (Ids: number[]) => ({
-    ActionName: 'SendAgentsToGatherIntelPlayerAction' as PlayerActionNameInTurn,
+    Name: 'SendAgentsToGatherIntelPlayerAction' as PlayerActionNameInTurn,
     Ids,
   }),
   SendAgentsToTrainingPlayerAction: (Ids: number[]) => ({
-    ActionName: 'SendAgentsToTrainingPlayerAction' as PlayerActionNameInTurn,
+    Name: 'SendAgentsToTrainingPlayerAction' as PlayerActionNameInTurn,
     Ids,
   }),
   RecallAgentsPlayerAction: (Ids: number[]) => ({
-    ActionName: 'RecallAgentsPlayerAction' as PlayerActionNameInTurn,
+    Name: 'RecallAgentsPlayerAction' as PlayerActionNameInTurn,
     Ids,
   }),
   LaunchMissionPlayerAction: (Ids: number[], TargetId: number) => ({
-    ActionName: 'LaunchMissionPlayerAction' as PlayerActionNameInTurn,
+    Name: 'LaunchMissionPlayerAction' as PlayerActionNameInTurn,
     Ids,
     TargetId,
   }),
   InvestIntelPlayerAction: (Ids: number[], TargetId: number) => ({
-    ActionName: 'InvestIntelPlayerAction' as PlayerActionNameInTurn,
+    Name: 'InvestIntelPlayerAction' as PlayerActionNameInTurn,
     Ids,
     TargetId,
   }),

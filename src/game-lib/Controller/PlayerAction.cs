@@ -32,12 +32,6 @@ public abstract class PlayerAction
     }
     protected abstract (List<int>? ids, int? targetId) ApplyImpl(GameState state);
 
-    // kja get rid of ValidattName and IsValidName
-    public static void ValidateName(string name)
-    {
-        bool isValid = IsValidName(name);
-        Contract.Assert(isValid, $"The type name '{name}' is not a valid name of PlayerAction-derived class.");
-    }
 
     public static bool IsValidName(string name)
     {
