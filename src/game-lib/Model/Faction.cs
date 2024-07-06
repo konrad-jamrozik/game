@@ -102,8 +102,6 @@ public class Faction : IIdentifiable
         // 7    | 3         | Yes
         MissionSiteCountdown = randomGen.RandomizeMissionSiteCountdown();
 
-        // kja2-simul-feat to make simulation more interesting: create easier missions from time to time and
-        // make AI player send less experienced soldiers on it.
         List<MissionSite> sites = [];
         int siteId = missionSiteIdGen.Generate;
         (int difficulty, double baseDifficulty, double variationRoll) =

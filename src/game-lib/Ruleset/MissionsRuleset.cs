@@ -52,7 +52,7 @@ public static class MissionsRuleset
 
     public static MissionSiteModifiers ComputeMissionSiteModifiers(IRandomGen randomGen, Faction faction, int difficulty)
     {
-        // kja2-feat these formulas should depend on factions.
+        // future work: The mission modifier formulas should depend on factions.
         // E.g.:
         // - Black Lotus is average / baseline
         // - EXALT provides more intel than average

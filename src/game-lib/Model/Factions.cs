@@ -7,12 +7,10 @@ namespace UfoGameLib.Model;
 public class Factions : List<Faction>
 {
     [JsonConstructor]
-    public Factions()
+    public Factions(IEnumerable<Faction> factions)
     {
+        AddRange(factions);
     }
-
-    public Factions(IEnumerable<Faction>? factions = null)
-        => AddRange(factions ?? new List<Faction>());
 
     public bool AllDefeated => this.All(faction => faction.Defeated);
 
