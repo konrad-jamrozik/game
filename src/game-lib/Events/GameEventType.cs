@@ -21,7 +21,6 @@ public class GameEventType
         ReportEvent
     ];
 
-    // kja use GameEventType
     public GameEventType(string type)
     {
         Contract.Assert(GameEventTypes.Contains(type) || PlayerAction.IsValidName(type));

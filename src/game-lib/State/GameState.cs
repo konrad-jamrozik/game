@@ -13,7 +13,7 @@ public class GameState : IEquatable<GameState>
 {
     public const int MaxTurnLimit = 1000;
 
-    public static readonly JsonSerializerOptions StateJsonSerializerOptions = GetJsonSerializerOptions();
+    public static readonly JsonSerializerOptions JsonSerializerOptions = GetJsonSerializerOptions();
     public readonly Timeline Timeline;
     public readonly Assets Assets;
     public readonly MissionSites MissionSites;
@@ -70,7 +70,7 @@ public class GameState : IEquatable<GameState>
     }
 
     public static GameState FromJsonFile(File file)
-        => file.ReadJsonInto<GameState>(StateJsonSerializerOptions);
+        => file.ReadJsonInto<GameState>(JsonSerializerOptions);
 
     public void ToJsonFile(File file)
         => file.WriteAllText(ToJsonString());
@@ -99,7 +99,7 @@ public class GameState : IEquatable<GameState>
     public GameState Clone(bool useJsonSerialization = false)
     {
         return useJsonSerialization 
-            ? this.Clone(StateJsonSerializerOptions) 
+            ? this.Clone(JsonSerializerOptions) 
             : DeepClone();
     }
 
@@ -119,19 +119,19 @@ public class GameState : IEquatable<GameState>
     }
 
     public string ToJsonString()
-        => this.ToIndentedUnsafeJsonString(StateJsonSerializerOptions);
+        => this.ToIndentedUnsafeJsonString(JsonSerializerOptions);
 
     public bool Equals(GameState? other)
-        => this.Equals(other, StateJsonSerializerOptions);
+        => this.Equals(other, JsonSerializerOptions);
 
     public override bool Equals(object? obj)
         => Equals(obj as GameState);
 
     public override int GetHashCode()
-        => this.GetHashCode(StateJsonSerializerOptions);
+        => this.GetHashCode(JsonSerializerOptions);
 
     public JsonDiff JsonDiffWith(GameState other)
-        => new JsonDiff(this, other, StateJsonSerializerOptions);
+        => new JsonDiff(this, other, JsonSerializerOptions);
 
     private static JsonSerializerOptions GetJsonSerializerOptions()
     {

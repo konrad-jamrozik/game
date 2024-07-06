@@ -64,7 +64,7 @@ public static class ApplyPlayerActionRoute
             // Deserialization method invocation and configuration as explained by:
             // https://learn.microsoft.com/en-us/aspnet/core/fundamentals/minimal-apis/parameter-binding?view=aspnetcore-8.0#configure-json-deserialization-options-for-an-endpoint
             parsedBody =
-                (await req.ReadFromJsonAsync<ApplyPlayerActionRequestBody>(GameState.StateJsonSerializerOptions))!;
+                (await req.ReadFromJsonAsync<ApplyPlayerActionRequestBody>(GameSessionTurn.JsonSerializerOptions))!;
             PlayerAction.ValidateName(parsedBody.PlayerActionPayload.ActionName);
             error = null;
         }

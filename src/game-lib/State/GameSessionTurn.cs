@@ -1,5 +1,7 @@
+using System.Text.Json;
 using System.Text.Json.Serialization;
 using Lib.Contracts;
+using Lib.Json;
 using UfoGameLib.Events;
 using UfoGameLib.Lib;
 
@@ -7,6 +9,8 @@ namespace UfoGameLib.State;
 
 public class GameSessionTurn
 {
+    public static readonly JsonSerializerOptions JsonSerializerOptions = GetJsonSerializerOptions();
+
     // Future work: implement custom deserialization converter to handle deserializing derived WorldEvents
     // See https://chatgpt.com/c/ef2aadcc-7e9d-491f-b7b6-7f8011c69676
     public readonly List<WorldEvent> EventsUntilStartState;
@@ -70,6 +74,16 @@ public class GameSessionTurn
     [JsonIgnore]
     public IReadOnlyList<GameState> GameStates
         => ((List<GameState>)[StartState, EndState]).AsReadOnly();
+
+    private static JsonSerializerOptions GetJsonSerializerOptions()
+    {
+        var options = new JsonSerializerOptions(JsonExtensions.SerializerOptionsIndentedUnsafe);
+        options.Converters.Add(new GameEventTypeConverter());
+        options.Converters.Add(new GameStateJsonConverter());
+
+        return options;
+    }
+
 
     public GameSessionTurn Clone()
         => DeepClone();

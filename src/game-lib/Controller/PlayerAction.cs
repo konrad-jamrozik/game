@@ -32,6 +32,7 @@ public abstract class PlayerAction
     }
     protected abstract (List<int>? ids, int? targetId) ApplyImpl(GameState state);
 
+    // kja get rid of ValidattName and IsValidName
     public static void ValidateName(string name)
     {
         bool isValid = IsValidName(name);

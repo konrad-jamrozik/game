@@ -6,7 +6,7 @@ namespace UfoGameLib.Tests;
 
 public class GameStateTests
 {
-    private static readonly JsonSerializerOptions Opts = GameState.StateJsonSerializerOptions;
+    private static readonly JsonSerializerOptions Opts = GameState.JsonSerializerOptions;
 
     [SetUp]
     public void Setup()

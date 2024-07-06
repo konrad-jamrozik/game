@@ -61,7 +61,7 @@ public static class ApiUtils
             {
                 // Deserialization method invocation and configuration as explained by:
                 // https://learn.microsoft.com/en-us/aspnet/core/fundamentals/minimal-apis/parameter-binding?view=aspnetcore-8.0#configure-json-deserialization-options-for-an-endpoint
-                parsedGameState = (requestBody.FromJsonTo<GameState>(GameState.StateJsonSerializerOptions));
+                parsedGameState = (requestBody.FromJsonTo<GameState>(GameState.JsonSerializerOptions));
                 error = null;
             }
         }
@@ -91,8 +91,7 @@ public static class ApiUtils
             {
                 // Deserialization method invocation and configuration as explained by:
                 // https://learn.microsoft.com/en-us/aspnet/core/fundamentals/minimal-apis/parameter-binding?view=aspnetcore-8.0#configure-json-deserialization-options-for-an-endpoint
-                // kja this should use GameSessionTurn.SerializerOptions not GameState
-                parsedTurn = (requestBody.FromJsonTo<GameSessionTurn>(GameState.StateJsonSerializerOptions));
+                parsedTurn = (requestBody.FromJsonTo<GameSessionTurn>(GameSessionTurn.JsonSerializerOptions));
                 // If the input game session turn would have advance time event, besides conceptually not making sense,
                 // it would throw off the NextEventId calculation, as game session could start appending player action events to current turn
                 // counting from event ID beyond AdvanceTurnEvent, but all player action events must have consecutive IDs, with no
@@ -146,22 +145,22 @@ public static class ApiUtils
     }
 
     public static JsonHttpResult<GameSessionTurn> ToJsonHttpResult(GameSessionTurn gst)
-        => TypedResults.Json(gst, GameState.StateJsonSerializerOptions);
+        => TypedResults.Json(gst, GameSessionTurn.JsonSerializerOptions);
 
     public static JsonHttpResult<List<GameSessionTurn>> ToJsonHttpResult(List<GameSessionTurn> gsts)
-        => TypedResults.Json(gsts, GameState.StateJsonSerializerOptions);
+        => TypedResults.Json(gsts, GameSessionTurn.JsonSerializerOptions);
 
     public static JsonHttpResult<GameState> ToJsonHttpResult(GameState gs)
-        => TypedResults.Json(gs, GameState.StateJsonSerializerOptions);
+        => TypedResults.Json(gs, GameState.JsonSerializerOptions);
 
     public static JsonHttpResult<List<GameState>> ToJsonHttpResult(List<GameState> gss)
-        => TypedResults.Json(gss, GameState.StateJsonSerializerOptions);
+        => TypedResults.Json(gss, GameState.JsonSerializerOptions);
 
     public static JsonHttpResult<GameStatePlayerView> ToJsonHttpResult(GameStatePlayerView gs)
-        => TypedResults.Json(gs, GameState.StateJsonSerializerOptions);
+        => TypedResults.Json(gs, GameState.JsonSerializerOptions);
 
     public static JsonHttpResult<List<GameStatePlayerView>> ToJsonHttpResult(List<GameStatePlayerView> gss)
-        => TypedResults.Json(gss, GameState.StateJsonSerializerOptions);
+        => TypedResults.Json(gss, GameState.JsonSerializerOptions);
 
     public static async Task<JsonElement> ParseJsonElement(HttpRequest request)
     {
