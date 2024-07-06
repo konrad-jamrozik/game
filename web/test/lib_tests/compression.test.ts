@@ -55,7 +55,7 @@ describe('compression tests', () => {
     try {
       const strFromFile = await getStrFromInputFile(repoDir)
 
-      const inputData = strFromFile.length > 0 ? strFromFile : inputDataStr
+      const inputData = strFromFile.length > 2 ? strFromFile : inputDataStr
       console.log(
         `strFromFile.length: ${strFromFile.length}, inputData.length: ${inputData.length}`,
       )
@@ -115,7 +115,7 @@ async function getStrFromInputFile(repoDir: string): Promise<string> {
 
   const rawStrFromFile = inputFileExists
     ? await readFile(inputFilePath, 'utf8')
-    : ''
+    : '{}'
 
   const strFromFile = JSON.stringify(JSON.parse(rawStrFromFile))
 
