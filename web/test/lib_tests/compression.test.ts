@@ -1,5 +1,4 @@
 /* eslint-disable max-statements */
-/* eslint-disable max-lines-per-function */
 import * as fs from 'node:fs'
 import path from 'node:path'
 import { promisify } from 'node:util'

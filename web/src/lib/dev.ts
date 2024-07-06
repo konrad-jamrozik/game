@@ -1,7 +1,5 @@
 import _ from 'lodash'
 
-// eslint-disable-next-line @typescript-eslint/init-declarations
-
 export function seconds(milliseconds: number): string {
   const value = (Math.round(milliseconds) / 1000).toString()
 
