@@ -50,7 +50,7 @@ public class GameSessionTurn
             EventsInTurn.Count == EndState.UpdateCount - StartState.UpdateCount,
             "Number of events in turn must match the number of updates between the game states.");
 
-        Contract.Assert(EventsUntilStartState.Last().Type == GameEventType.ReportEvent);
+        Contract.Assert(EventsUntilStartState.Last().Type.ToString() == GameEventType.ReportEvent);
         IdGen.AssertConsecutiveIds(GameEvents.ToList());
         // kja all events in turn except the last one must be not AdvanceTime player action
         // Contract.Assert(EventsInTurn.SkipLast(1).All(@event => @event.Type == "a"))

@@ -27,4 +27,9 @@ public class GameEventType
         Contract.Assert(GameEventTypes.Contains(type) || PlayerAction.IsValidName(type));
         _type = type;
     }
+
+    public override string ToString()
+    {
+        return $"{_type}";
+    }
 }

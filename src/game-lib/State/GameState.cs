@@ -2,6 +2,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using Lib.Contracts;
 using Lib.Json;
+using UfoGameLib.Events;
 using UfoGameLib.Lib;
 using UfoGameLib.Model;
 using File = Lib.OS.File;
@@ -136,10 +137,10 @@ public class GameState : IEquatable<GameState>
     {
         // We return 'options' that:
         // 1. use the 'converterOptions' as base options
-        // 2. have GameStateJsonConverter as a converter
-        // 3. the converter also uses 'converterOptions' as base options
+        // 2. have GameStateJsonConverter as a 'converter'
+        // 3. the 'converter' also uses 'converterOptions' as base options
         //
-        // In other words, both 'options' and its converter use the same base options: 'converterOptions'.
+        // In other words, both 'options' and its 'converter' use the same base options: 'converterOptions'.
         //   
         // Note: we couldn't collapse 'options' and 'converterOptions' into one instance, because it would
         // result in an infinite loop: 'options' would use GameStateJsonConverter, which would use 'options', which
@@ -157,8 +158,11 @@ public class GameState : IEquatable<GameState>
         // Define the "top-level" options to be returned. They use "converterOptions".
         var options = new JsonSerializerOptions(converterOptions);
 
+        options.Converters.Add(new GameEventTypeConverter());
+
         // Attach GameStateJsonConverter to 'options'. Now both 'options' and its converter use 'converterOptions'.
         options.Converters.Add(new GameStateJsonConverter());
+        
 
         return options;
     }

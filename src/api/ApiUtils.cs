@@ -91,6 +91,7 @@ public static class ApiUtils
             {
                 // Deserialization method invocation and configuration as explained by:
                 // https://learn.microsoft.com/en-us/aspnet/core/fundamentals/minimal-apis/parameter-binding?view=aspnetcore-8.0#configure-json-deserialization-options-for-an-endpoint
+                // kja this should use GameSessionTurn.SerializerOptions not GameState
                 parsedTurn = (requestBody.FromJsonTo<GameSessionTurn>(GameState.StateJsonSerializerOptions));
                 // If the input game session turn would have advance time event, besides conceptually not making sense,
                 // it would throw off the NextEventId calculation, as game session could start appending player action events to current turn
