@@ -24,39 +24,6 @@ public class GameSessionTests
         _factions = FactionFixtures.SingleFaction(_randomGen);
     }
 
-    // kja3 overall work plan:
-    //
-    // implement charts in frontend instead of excel. chartjs.org etc.
-    //
-    // reimplement a bit more logic in the AIPlayer
-    //   start by adding new capabilities to AIPlayer (as if it tried to do a new thing) and implement going from there.
-    //
-    // implement IPersistable
-    //   write unit tests confirming it works
-    //
-    // implement IResettable
-    //   write unit tests confirming it works
-    //
-    // implement ITemporal
-    //   write unit tests confirming it works
-    //
-    // generate CLI interface based on available PlayerActions and contents of GameState
-    //
-    // generate API Controller methods for REST API generation
-    //
-    // when available, interface with the swagger UI via LLM, or with CLI by using GH CLI Copilot
-    //
-    // Test strategy:
-    // - One basic happy path test, showcasing concrete steps how player could interact with the API,
-    // via usage of player simulator.
-    // - Smart player simulators, actually playing the game, designed in a way to exercise its features.
-    //   - Such simulators will exercise all of the game logic by design, and I could add assertions checking
-    //     if given feature was used at least once during the simulated run.
-    //   - Game sessions executed by these players will be captured as unit tests, by fixing appropriate
-    //     random seed and letting the simulator play.
-    // - All code augmented with strong suite of invariants: preconditions, postconditions, assertions.
-    //   - This, coupled with the smart player simulations, ensures test failure on invariant violation.
-
     [Test]
     public void BasicHappyPath()
     {
@@ -85,7 +52,8 @@ public class GameSessionTests
 
         GameState finalState = session.CurrentGameState;
 
-        Assert.Multiple(() => {
+        Assert.Multiple(() =>
+        {
             Assert.That(finalState.Timeline.CurrentTurn, Is.EqualTo(5), "currentTurn");
             Assert.That(
                 finalState.AllAgents.Count,
@@ -137,7 +105,7 @@ public class GameSessionTests
         GameStatePlayerView stateView = controller.CurrentGameStatePlayerView;
         int savedTurn = stateView.CurrentTurn;
         GameState savedGameState = session.CurrentGameState.Clone();
-        
+
         // Act 1: Save game, thus saving initialGameState to file
         controller.SaveCurrentGameStateToFile();
 
@@ -148,7 +116,7 @@ public class GameSessionTests
         Assert.That(stateView.StateReferenceEquals(controller.CurrentGameStatePlayerView));
         // Assert that advancing time has indeed modified the current game state
         Assert.That(stateView.CurrentTurn, Is.EqualTo(savedTurn + 1), "savedTurn+1");
-        
+
         // Act 3: Load game, thus restoring the current game state to initialGameState
         GameState loadedGameState = controller.LoadCurrentGameStateFromFile();
 
@@ -204,7 +172,7 @@ public class GameSessionTests
         controller.AdvanceTime();
         Assert.That(state.MissionSites.Expired.Any(), Is.False);
         controller.AdvanceTime();
-        
+
         Assert.Multiple(
             () =>
             {
@@ -255,9 +223,9 @@ public class GameSessionTests
         // Need to advance time here so that hired agents are no longer InTransit and can be
         // sent on a mission.
         controller.AdvanceTime();
-        
+
         Assert.That(state.MissionSites.Active.Any(), Is.True);
-        
+
         turnController.LaunchMission(
             state.MissionSites.Active.First(),
             agentCount: state.Assets.CurrentTransportCapacity);

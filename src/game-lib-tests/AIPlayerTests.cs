@@ -52,7 +52,6 @@ public class AIPlayerTests
         controller.PlayGameSession(turnLimit: 30, aiPlayer);
     }
 
-
     [Test]
     [Ignore("Long-running test (15+ sec)")]
     public void RunSimulations()
