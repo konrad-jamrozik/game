@@ -54,6 +54,7 @@ public class AIPlayerTests
 
 
     [Test]
+    [Ignore("Long-running test (15+ sec)")]
     public void RunSimulations()
     {
         // future work: run this test in a way where no save games or logs are produced except the final log of

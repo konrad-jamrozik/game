@@ -22,11 +22,10 @@ public static class Contract
         [DoesNotReturnIf(false)] bool condition,
         [CallerArgumentExpression("condition")]
         string? message = null,
-        [CallerMemberName]
-        string? memberName = null)
+        [CallerMemberName] string? memberName = null)
     {
         if (!condition)
-            throw message != null ? new InvariantException($"Caller: {memberName}(), Failed condition: {message}") : new InvariantException();
+            throw new InvariantException($"Caller: {memberName}(), Failed condition: {message}");
     }
 
     public static void AssertImplication(

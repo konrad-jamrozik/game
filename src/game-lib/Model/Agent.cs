@@ -69,7 +69,7 @@ public class Agent : IIdentifiable
         TurnsInRecovery = turnsInRecovery;
         Contract.Assert(TurnHired >= 1);
         Contract.Assert(TurnTerminated == null || TurnHired <= TurnTerminated);
-        AssertMissionInvariants();
+        AssertInvariants();
         Contract.Assert(!sacked || turnTerminated != null);
         Contract.Assert(!IsRecovering || RecoversIn >= 1);
         Contract.Assert(IsRecovering || RecoversIn == null);
@@ -176,34 +176,45 @@ public class Agent : IIdentifiable
         // would already take into the account experience from that mission
         // itself, but shouldn't.
         // Instead, we increment this when we finish evaluating a mission
-        // and also increment either the count of successful or of failed 
+        // and also increment either the count of successful or failed 
         // missions.
-        AssertMissionInvariants();
+        AssertInvariants();
     }
 
-    public void MakeAvailable()
+    public void FinishMissionUnharmed()
     {
-        Contract.Assert(!IsAvailable);
-        // kja2-assert: for better assertions, make special method for making agent available from mission
-        // Think about this as a different edge in the state transition diagram, originating from different
-        // node but targeting the same node.
-        if (IsOnMission)
-            CurrentMission = null;
+        Contract.Assert(IsOnMission);
+        CurrentMission = null;
         CurrentState = AgentState.Available;
-        AssertMissionInvariants();
+        AssertInvariants();
     }
 
-    public void SetRecoversIn(int? recoversIn)
+    public void FinishRecovery()
+    {
+        Contract.Assert(IsRecovering);
+        Contract.Assert(RecoversIn == 0);
+        RecoversIn = null;
+        CurrentState = AgentState.Available;
+        AssertInvariants();
+    }
+
+    public void FinishTransfer()
+    {
+        Contract.Assert(IsInTransit);
+        CurrentState = AgentState.Available;
+        AssertInvariants();
+    }
+
+    public void FinishMissionWithWounds(int? recoversIn)
     {
         Contract.Assert(recoversIn >= 1);
+        Contract.Assert(IsOnMission);
         
-        if (IsOnMission)
-            CurrentMission = null;
-
         CurrentState = AgentState.Recovering;
+        CurrentMission = null;
         RecoversIn = recoversIn;
 
-        AssertMissionInvariants();
+        AssertInvariants();
     }
 
     public void TickRecovery()
@@ -216,8 +227,7 @@ public class Agent : IIdentifiable
 
         if (RecoversIn == 0)
         {
-            RecoversIn = null;
-            MakeAvailable();
+            FinishRecovery();
         }
     }
 
@@ -236,7 +246,7 @@ public class Agent : IIdentifiable
         TurnTerminated = turnTerminated;
         CurrentMission = null;
         Sacked = sack;
-        AssertMissionInvariants();
+        AssertInvariants();
     }
 
     [JsonIgnore]
@@ -249,12 +259,12 @@ public class Agent : IIdentifiable
         return turnsSurvived;
     }
 
-    private void AssertMissionInvariants()
+    private void AssertInvariants()
     {
         Contract.Assert(
             IsOnMission == (CurrentMission != null),
             $"IsOnMission: {IsOnMission} == (CurrentMission != null): {CurrentMission != null}");
-        
+
         Contract.Assert(MissionsSurvived >= 0);
         Contract.Assert(MissionsSucceeded >= 0);
         Contract.Assert(MissionsFailed >= 0);
@@ -262,7 +272,7 @@ public class Agent : IIdentifiable
         // missions succeeded or failed, that's why this comparison allows the difference of 1.
         Contract.Assert(MissionsSucceeded + MissionsFailed >= MissionsSurvived);
         Contract.Assert(MissionsSucceeded + MissionsFailed <= MissionsSurvived + 1);
-        // kja2-assert: add invariant that terminated agent is not on a mission
+        
     }
 
     public Agent DeepClone(Mission? clonedMission)

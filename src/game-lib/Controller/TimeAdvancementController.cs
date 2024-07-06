@@ -162,9 +162,9 @@ public class TimeAdvancementController
             {
                 agentsSurvived++;
                 if (recoversIn > 0)
-                    agent.SetRecoversIn(recoversIn);
+                    agent.FinishMissionWithWounds(recoversIn);
                 else
-                    agent.MakeAvailable();
+                    agent.FinishMissionUnharmed();
             }
             else
             {
@@ -178,7 +178,7 @@ public class TimeAdvancementController
 
     private void UpdateAgentStates(GameState state)
     {
-        state.Assets.Agents.InTransit.ForEach(agent => agent.MakeAvailable());
+        state.Assets.Agents.InTransit.ForEach(agent => agent.FinishTransfer());
         state.Assets.Agents.InTraining.ForEach(agent => agent.TurnsInTraining++);
         state.Assets.Agents.GeneratingIncome.ForEach(agent => agent.TurnsGeneratingIncome++);
         state.Assets.Agents.GatheringIntel.ForEach(agent => agent.TurnsGatheringIntel++);
