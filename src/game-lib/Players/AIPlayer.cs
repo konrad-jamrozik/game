@@ -25,7 +25,6 @@ public class AIPlayer : IPlayer
         _intellect = intellectMap[intellect];
     }
 
-
     public void PlayGameTurn(GameStatePlayerView state, GameTurnController controller)
         => _intellect.PlayGameTurn(state, controller);
 }

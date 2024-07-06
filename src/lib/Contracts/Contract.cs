@@ -18,14 +18,15 @@ public static class Contract
                 $"{subjectName}: Expected value <= {range.End.Value}. value = {subject}. ");
     }
 
-    // kja2 include in the exception the name of the caller
     public static void Assert(
         [DoesNotReturnIf(false)] bool condition,
         [CallerArgumentExpression("condition")]
-        string? message = null)
+        string? message = null,
+        [CallerMemberName]
+        string? memberName = null)
     {
         if (!condition)
-            throw message != null ? new InvariantException(message) : new InvariantException();
+            throw message != null ? new InvariantException($"Caller: {memberName}(), Failed condition: {message}") : new InvariantException();
     }
 
     public static void AssertImplication(
