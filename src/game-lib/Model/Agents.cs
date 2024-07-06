@@ -74,9 +74,12 @@ public class Agents : List<Agent>
     public Agent AgentAtPercentile(int percentile, Func<Agent, int> orderBy)
         => this.OrderBy(orderBy).TakePercent(percentile).Last();
     
-    // kja2-assert: add assertions that all searched agents were found
-    public Agents GetByIds(int[] ids) =>
-        this.Where(agent => ids.Contains(agent.Id)).ToAgents();
+    public Agents GetByIds(int[] ids)
+    {
+        var agents = this.Where(agent => ids.Contains(agent.Id)).ToAgents();
+        Contract.AssertEqual(agents.Select(agent => agent.Id), ids);
+        return agents;
+    }
 
     public List<int> Ids => this.Select(agent => agent.Id).ToList();
 

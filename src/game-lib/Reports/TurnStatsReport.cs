@@ -56,10 +56,10 @@ public class TurnStatsReport : CsvFileReport
                         ? Math.Round(state.MissionSites.TakeLast(5).Average(site => site.Difficulty))
                         : 0;
 
-                    // kja2-report-feat: add: income from all GeneratingIncome missions, plus money balance per turn (Funding + gen income - upkeep).
-
+                    // future work:
+                    // add: income from all GeneratingIncome missions, plus money balance per turn (Funding + gen income - upkeep).
                     object[] stateData =
-                    {
+                    [
                         state.Timeline.CurrentTurn,
                         state.Assets.Money / 10,
                         state.Assets.Intel,
@@ -87,8 +87,8 @@ public class TurnStatsReport : CsvFileReport
                         SurvivalChanceOfAgentAtPercentile(agents, lastMissionSiteDifficulty, 80),
                         SurvivalChanceOfAgentAtPercentile(agents, lastMissionSiteDifficulty, 60),
                         SurvivalChanceOfAgentAtPercentile(agents, lastMissionSiteDifficulty, 40),
-                        SurvivalChanceOfAgentAtPercentile(agents, lastMissionSiteDifficulty, 20),
-                    };
+                        SurvivalChanceOfAgentAtPercentile(agents, lastMissionSiteDifficulty, 20)
+                    ];
                     return stateData;
                 }).ToArray();
         return dataRows;

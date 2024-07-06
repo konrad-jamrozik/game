@@ -41,13 +41,13 @@ public class Assets
         // Contract.Assert(funding >= 0);
         Contract.Assert(intel >= 0);
         Contract.Assert(currentTransportCapacity >= 0 && currentTransportCapacity <= maxTransportCapacity);
+        Contract.Assert(agents.All(agent => agent.IsAlive));
         Money = money;
         Intel = intel;
         Funding = funding;
         Support = support;
         CurrentTransportCapacity = currentTransportCapacity;
         MaxTransportCapacity = maxTransportCapacity;
-        // kja2-assert: here none of the agents are terminated?
         Agents = agents;
     }
 

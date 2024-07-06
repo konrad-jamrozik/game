@@ -116,9 +116,6 @@ public class Agent : IIdentifiable
     [JsonIgnore]
     public bool CanBeSacked => IsAvailable || IsTraining;
 
-    [JsonIgnore]
-    public bool IsInBase => IsAvailable || IsTraining || IsRecovering;
-
     [JsonIgnore] 
     public bool CanBeSentOnMissionNextTurnForSure => CanBeSentOnMission || IsArrivingNextTurnForSure;
 
@@ -136,6 +133,9 @@ public class Agent : IIdentifiable
 
     [JsonIgnore]
     public bool CanBeRecalled => IsDoingOps;
+
+    [JsonIgnore]
+    public bool IsInBase => IsAvailable || IsTraining || IsRecovering;
 
     [JsonIgnore]
     public bool IsAway => IsInTransit || IsDoingOps || IsOnMission;

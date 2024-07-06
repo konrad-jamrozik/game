@@ -6,7 +6,6 @@ namespace UfoGameLib.Players;
 
 public class AIPlayer : IPlayer
 {
-    // kja2-test need to add intellect that tries to lose the game on 3rd turn.
     public enum Intellect
     {
         DoNothing,
