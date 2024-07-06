@@ -78,7 +78,6 @@ public class GameSessionTurn
     private static JsonSerializerOptions GetJsonSerializerOptions()
     {
         var options = new JsonSerializerOptions(JsonExtensions.SerializerOptionsIndentedUnsafe);
-        options.Converters.Add(new GameEventTypeConverter());
         options.Converters.Add(new GameStateJsonConverter());
 
         return options;

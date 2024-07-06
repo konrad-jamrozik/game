@@ -135,7 +135,7 @@ public class GameState : IEquatable<GameState>
 
     private static JsonSerializerOptions GetJsonSerializerOptions()
     {
-        var options = new JsonSerializerOptions(JsonExtensions.SerializerOptionsIndentedUnsafe);
+        var options = new JsonSerializerOptions();
         options.Converters.Add(new GameStateJsonConverter());
         return options;
     }

@@ -1,10 +1,13 @@
 using System.Collections.Immutable;
+using System.Text.Json.Serialization;
 using Lib.Contracts;
 using UfoGameLib.Controller;
 
 namespace UfoGameLib.Events;
 
 // kja make abstract?
+
+[JsonConverter(typeof(GameEventTypeConverter))]
 public class GameEventType
 {
     private readonly string _type;
