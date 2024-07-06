@@ -6,6 +6,11 @@ using UfoGameLib.State;
 
 namespace UfoGameLib.Controller;
 
+/// <summary>
+/// Allows the IPlayer to invoke player actions on current game state turn view.
+/// Notably, does not allow to invoke "advance time" player action, for reasons explained
+/// in the comment of AdvanceTimePlayerAction.
+/// </summary>
 public class GameTurnController
 {
     private readonly ILog _log;

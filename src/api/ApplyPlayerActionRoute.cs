@@ -3,7 +3,6 @@ using Lib.Json;
 using Lib.OS;
 using Microsoft.AspNetCore.Http.HttpResults;
 using UfoGameLib.Controller;
-using UfoGameLib.Events;
 using UfoGameLib.Lib;
 using UfoGameLib.State;
 
@@ -46,7 +45,7 @@ public static class ApplyPlayerActionRoute
         GameSession gameSession = ApiUtils.NewGameSessionFromTurn(gameSessionTurn);
         var controller = new GameSessionController(config, log, gameSession);
 
-        Contract.Assert(playerActionPayload.Name.ToString() != GameEventType.AdvanceTimePlayerAction);
+        Contract.Assert(playerActionPayload.Name.IsNotTimeAdvancement);
 
         gameSession.CurrentPlayerActionEvents.Add(playerActionPayload.Apply(controller));
 

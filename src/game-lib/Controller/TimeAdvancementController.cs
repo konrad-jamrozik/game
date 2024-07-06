@@ -35,7 +35,7 @@ public class TimeAdvancementController
 
         PlayerActionEvent advanceTimeEvent = new PlayerActionEvent(
             _eventIdGen.Generate,
-            GameEventType.AdvanceTimePlayerAction,
+            nameof(AdvanceTimePlayerAction),
             targetId: state.Timeline.CurrentTurn);
 
         // Agents cost upkeep. Note we compute upkeep before evaluating missions.

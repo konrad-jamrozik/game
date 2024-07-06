@@ -60,7 +60,7 @@ public class PlayerActionPayload
         // https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/operators/patterns#positional-pattern
         => Name.ToString() switch
         {
-            GameEventType.AdvanceTimePlayerAction => () => controller.AdvanceTime().advaceTimeEvent,
+            nameof(AdvanceTimePlayerAction) => () => throw new InvalidOperationException($"See comment on {nameof(AdvanceTimePlayerAction)}"),
             nameof(BuyTransportCapacityPlayerAction) => () => controller.CurrentTurnController.BuyTransportCapacity(TargetId!.Value),
             nameof(InvestIntelPlayerAction) => () => controller.CurrentTurnController.InvestIntel(Ids![0], TargetId!.Value),
             nameof(HireAgentsPlayerAction) => () => controller.CurrentTurnController.HireAgents(TargetId!.Value),

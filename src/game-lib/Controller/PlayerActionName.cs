@@ -3,6 +3,7 @@ using System.Reflection;
 using System.Text.Json.Serialization;
 using Lib.Contracts;
 using Lib.Json;
+using UfoGameLib.Events;
 
 namespace UfoGameLib.Controller;
 
@@ -31,6 +32,8 @@ public class PlayerActionName
             $"The type name '{name}' is not a valid name of PlayerAction-derived class.");
         _name = name;
     }
+
+    public bool IsNotTimeAdvancement => ToString() != GameEventType.AdvanceTimePlayerAction;
 
     public override string ToString()
     {
