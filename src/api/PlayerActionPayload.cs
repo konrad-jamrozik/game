@@ -1,5 +1,4 @@
 ﻿// codesync: UfoGameLib.Api.PlayerActionPayload
-using System.Text.Json.Serialization;
 using UfoGameLib.Controller;
 using UfoGameLib.Events;
 
@@ -12,11 +11,13 @@ namespace UfoGameLib.Api;
 /// The payload can be applied to a GameSessionController. See the Apply() method.
 /// </summary>
 
-// kja can this be made abstract?
+// ReSharper disable once ClassNeverInstantiated.Global
+// Reason: used by JSON deserializer.
 public class PlayerActionPayload
 {
+    // kja introduce type: PlayerActionName
     // ReSharper disable MemberCanBePrivate.Global
-    // Reason for 'ReSharper disable MemberCanBePrivate.Global': these fields are used by the deserializer.
+    // Reason: used by JSON deserializer.
     public readonly string ActionName;
     public readonly int[]? Ids;
     public readonly int? TargetId;

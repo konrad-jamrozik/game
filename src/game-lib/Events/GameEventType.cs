@@ -5,7 +5,6 @@ using UfoGameLib.Controller;
 
 namespace UfoGameLib.Events;
 
-// kja make abstract?
 
 [JsonConverter(typeof(GameEventTypeConverter))]
 public class GameEventType
