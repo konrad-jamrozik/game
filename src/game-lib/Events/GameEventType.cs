@@ -12,21 +12,22 @@ public class GameEventType
 {
     private readonly string _type;
 
-    // kja AdvanceTimePlayerAction should inherit from PlayerAction
-    public const string AdvanceTimePlayerAction = "AdvanceTimePlayerAction";
     public const string MissionSiteExpiredEvent = "MissionSiteExpiredEvent";
     public const string ReportEvent = "ReportEvent";
 
-    public static readonly ImmutableList<string> GameEventTypes =
+    public static readonly ImmutableList<string> WorldEventTypes =
     [
-        AdvanceTimePlayerAction,
         MissionSiteExpiredEvent,
         ReportEvent
     ];
 
+    public static bool IsValidWorldEventType(string type) => WorldEventTypes.Contains(type);
+
+    public static bool IsValidPlayerActionEvent(string type) => PlayerActionName.IsValid(type);
+
     public GameEventType(string type)
     {
-        Contract.Assert(GameEventTypes.Contains(type) || PlayerAction.IsValidName(type));
+        Contract.Assert(IsValidWorldEventType(type) || IsValidPlayerActionEvent(type));
         _type = type;
     }
 

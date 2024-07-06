@@ -3,7 +3,6 @@ using System.Reflection;
 using System.Text.Json.Serialization;
 using Lib.Contracts;
 using Lib.Json;
-using UfoGameLib.Events;
 
 namespace UfoGameLib.Controller;
 
@@ -13,6 +12,8 @@ public class PlayerActionName
     private readonly string _name;
 
     private static readonly ImmutableList<string> ValidNames = GetValidNames();
+
+    public static bool IsValid(string name) => ValidNames.Contains(name);
 
     private static ImmutableList<string> GetValidNames()
     {
@@ -28,12 +29,12 @@ public class PlayerActionName
     public PlayerActionName(string name)
     {
         Contract.Assert(
-            ValidNames.Contains(name),
+            IsValid(name),
             $"The type name '{name}' is not a valid name of PlayerAction-derived class.");
         _name = name;
     }
 
-    public bool IsNotTimeAdvancement => ToString() != GameEventType.AdvanceTimePlayerAction;
+    public bool IsNotTimeAdvancement => ToString() != nameof(AdvanceTimePlayerAction);
 
     public override string ToString()
     {

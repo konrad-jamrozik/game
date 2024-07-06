@@ -2,6 +2,7 @@
 // Reason: public fields are being serialized to JSON.
 
 using System.Text.Json.Serialization;
+using Lib.Contracts;
 
 namespace UfoGameLib.Events;
 
@@ -21,6 +22,7 @@ public class WorldEvent : GameEvent
     [JsonConstructor]
     public WorldEvent(int id, GameEventType type, List<int>? ids = null, int? targetId = null) : base(id, type)
     {
+        Contract.Assert(GameEventType.IsValidWorldEventType(type.ToString()));
         Ids = ids;
         TargetId = targetId;
     }
