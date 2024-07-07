@@ -1,13 +1,17 @@
+/* eslint-disable max-lines-per-function */
 import {
   Button,
   Card,
   CardHeader,
+  Checkbox,
+  Divider,
   List,
   ListItem,
   ListItemText,
   Switch,
 } from '@mui/material'
 import { useSettingsContext, type Settings } from '../../lib/settings/Settings'
+import { Label } from '../utilities/Label'
 
 export function SettingsPanel(): React.JSX.Element {
   const settings: Settings = useSettingsContext()
@@ -68,7 +72,47 @@ export function SettingsPanel(): React.JSX.Element {
             }}
           />
         </ListItem>
+        <Divider sx={{ marginY: 1 }} />
         <ListItem>
+          <ListItemText id="label-list-gameSessionSize" primary="Data size" />
+          <Label sx={{ minWidth: 92, marginLeft: 2, textAlign: 'center' }}>
+            99.99 MB
+          </Label>
+        </ListItem>
+
+        <ListItem>
+          <ListItemText
+            id="switch-list-saveOnExitEnabled"
+            primary="Save on exit"
+          />
+          <Switch
+            edge="end"
+            disabled={true}
+            checked={false}
+            inputProps={{
+              'aria-labelledby': 'switch-list-saveOnExitEnabled',
+            }}
+          />
+        </ListItem>
+        <ListItem>
+          <ListItemText
+            id="switch-list-compressionEnabled"
+            primary="Compress"
+          />
+          <Switch
+            edge="end"
+            disabled={true}
+            checked={false}
+            inputProps={{
+              'aria-labelledby': 'switch-list-compressionEnabled',
+            }}
+          />
+        </ListItem>
+        <ListItem sx={{ justifyContent: 'center' }}>
+          <Button variant="outlined">Save data</Button>
+        </ListItem>
+        <Divider sx={{ marginY: 1 }} />
+        <ListItem sx={{ justifyContent: 'center' }}>
           <Button
             variant="outlined"
             color="error"
@@ -77,7 +121,7 @@ export function SettingsPanel(): React.JSX.Element {
               console.log('Cleared local storage')
             }}
           >
-            Clear local storage
+            Reset settings
           </Button>
         </ListItem>
       </List>
