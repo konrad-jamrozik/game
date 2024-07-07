@@ -1,30 +1,27 @@
 import { useEffect } from 'react'
 import { useGameSessionContext } from '../lib/gameSession/GameSession'
 
-// https://developer.mozilla.org/en-US/docs/Web/API/Window/beforeunload_event
-// Better alternative: https://developer.mozilla.org/en-US/docs/Web/API/Document/visibilitychange_event
-function GoodbyeComponent(): React.JSX.Element {
+// https://developer.mozilla.org/en-US/docs/Web/API/Document/visibilitychange_event
+// Worse alternative: https://developer.mozilla.org/en-US/docs/Web/API/Window/beforeunload_event
+export default function Goodbye(): React.JSX.Element {
   const gameSession = useGameSessionContext()
   useEffect(() => {
-    function handleBeforeUnload(event: BeforeUnloadEvent): void {
-      console.log('goodbye from GoodbyeComponent')
-      gameSession.goodbye()
-
-      // Uncomment the next line if you want to show a confirmation dialog
-      // event.returnValue = 'Are you sure you want to leave?'
+    function handleVisibilityChange(): void {
+      if (document.visibilityState === 'hidden') {
+        console.log('goodbye from Goodbye')
+        gameSession.goodbye()
+      }
     }
 
-    window.addEventListener('beforeunload', handleBeforeUnload)
+    document.addEventListener('visibilitychange', handleVisibilityChange)
 
     // This is a clean-up function per:
     // https://react.dev/reference/react/useEffect#connecting-to-an-external-system
     // https://react.dev/learn/synchronizing-with-effects#unmount
     return (): void => {
-      window.removeEventListener('beforeunload', handleBeforeUnload)
+      document.removeEventListener('visibilitychange', handleVisibilityChange)
     }
   })
 
   return <div></div>
 }
-
-export default GoodbyeComponent
