@@ -37,7 +37,7 @@ export class StoredData {
     this.setInLocalStorage('gameSessionData', newGameSessionData)
     localStorage.setItem(
       `gameSessionData_persisted_timestamp`,
-      new Date().toISOString(),
+      new Date().toLocaleString(),
     )
     this.data = { ...this.data, gameSessionData: newGameSessionData }
   }
@@ -46,7 +46,7 @@ export class StoredData {
     this.setInLocalStorage('settingsData', newSettingsData)
     localStorage.setItem(
       `settingsData_persisted_timestamp`,
-      new Date().toISOString(),
+      new Date().toLocaleString(),
     )
     this.data = { ...this.data, settings: newSettingsData }
   }
