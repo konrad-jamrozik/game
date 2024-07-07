@@ -376,6 +376,10 @@ export class GameSession {
     return this.data.getCompressionEnabled()
   }
 
+  public getSavedTurnNoUnsafe(): number | undefined {
+    return this.data.getSavedTurnNoUnsafe()
+  }
+
   private async applyPlayerAction(
     playerActionPayload: PlayerActionPayload,
   ): Promise<boolean> {

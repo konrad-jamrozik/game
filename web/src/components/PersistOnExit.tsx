@@ -5,7 +5,8 @@ import {
 } from '../lib/gameSession/GameSession'
 import { useSettingsContext, type Settings } from '../lib/settings/Settings'
 
-// kja this does not work reliably:
+// Note: PersistOnExit does not work if the data is to be compressed, as it runs too long. See:
+// https://stackoverflow.com/questions/78716366/how-much-time-do-i-have-to-save-data-to-local-storage-when-browser-visibility-ch
 //
 // https://developer.chrome.com/docs/web-platform/page-lifecycle-api
 // > Terminated
@@ -13,7 +14,6 @@ import { useSettingsContext, type Settings } from '../lib/settings/Settings'
 // Also:
 // https://developer.mozilla.org/en-US/docs/Web/API/Page_Visibility_API#policies_in_place_to_aid_background_page_performance
 // https://developer.mozilla.org/en-US/blog/using-the-page-visibility-api/
-// https://stackoverflow.com/questions/78716366/how-much-time-do-i-have-to-save-data-to-local-storage-when-browser-visibility-ch
 
 // https://developer.mozilla.org/en-US/docs/Web/API/Document/visibilitychange_event
 // Worse alternative: https://developer.mozilla.org/en-US/docs/Web/API/Window/beforeunload_event
@@ -45,5 +45,4 @@ export default function PersistOnExit(): React.JSX.Element {
   return <div></div>
 }
 
-// kja add "Save on exit enabled/disabled" label
-// kja add "Save game state to local storage" button
+// kja implement "Save game state to local storage" button
