@@ -17,7 +17,7 @@ export function renderApp(introEnabled: boolean): {
   outroDialog: OutroDialogFixture
 } {
   const storedData = new StoredData()
-  storedData.persistSettingsData({
+  storedData.saveSettingsData({
     introEnabled,
     outroEnabled: true,
     chartsEnabled: false,

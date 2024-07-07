@@ -197,9 +197,9 @@ export class GameSessionData {
     this._setData(initialGameSessionData)
   }
 
-  public persistOnExit(): void {
-    console.log('GameSessionData.persistOnExit()')
-    this.storedData.persistGameSessionData(this._data)
+  public save(): void {
+    console.log('GameSessionData.save()')
+    this.storedData.saveGameSessionData(this._data)
   }
 
   public getSize(): number {
@@ -216,9 +216,9 @@ export class GameSessionData {
 
   private setData(data: GameSessionDataType): void {
     GameSessionData.verify(data.turns)
-    // Uncomment to persist game session data on every update.
-    // Now it is persisted only on exit.
-    // this.storedData.persistGameSessionData(data)
+    // Uncomment to save game session data on every update.
+    // Now it is saveed only on exit.
+    // this.storedData.saveGameSessionData(data)
     this._setData(data)
     // kja is this necessary?
     this._data = data

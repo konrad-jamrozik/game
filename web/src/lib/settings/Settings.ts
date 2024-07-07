@@ -63,25 +63,25 @@ export class Settings {
   ) {}
 
   public setIntroEnabled(value: boolean): void {
-    this.persistSettings({ introEnabled: value })
+    this.saveSettings({ introEnabled: value })
     this._setIntroEnabled(value)
   }
   public setOutroEnabled(value: boolean): void {
-    this.persistSettings({ outroEnabled: value })
+    this.saveSettings({ outroEnabled: value })
     this._setOutroEnabled(value)
   }
 
   public setChartsEnabled(value: boolean): void {
-    this.persistSettings({ chartsEnabled: value })
+    this.saveSettings({ chartsEnabled: value })
     this._setChartsEnabled(value)
   }
 
-  public persistOnExit(): void {
-    console.log('Settings.persistOnExit()')
-    this.persistSettings({})
+  public saveOnExit(): void {
+    console.log('Settings.saveOnExit()')
+    this.saveSettings({})
   }
 
-  private persistSettings({
+  private saveSettings({
     introEnabled,
     outroEnabled,
     chartsEnabled,
@@ -95,6 +95,6 @@ export class Settings {
       outroEnabled: outroEnabled ?? this.outroEnabled,
       chartsEnabled: chartsEnabled ?? this.chartsEnabled,
     }
-    this.storedData.persistSettingsData(newSettingsData)
+    this.storedData.saveSettingsData(newSettingsData)
   }
 }

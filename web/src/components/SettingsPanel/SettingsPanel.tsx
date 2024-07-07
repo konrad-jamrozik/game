@@ -39,6 +39,10 @@ export function SettingsPanel(): React.JSX.Element {
     settings.setChartsEnabled(event.target.checked)
   }
 
+  function saveGameSession(): void {
+    gameSession.save()
+  }
+
   // MUI components usage based on: https://mui.com/material-ui/react-list/#switch
   return (
     <Card variant="outlined">
@@ -86,7 +90,9 @@ export function SettingsPanel(): React.JSX.Element {
           </Label>
         </ListItem>
         <ListItem sx={{ justifyContent: 'center' }}>
-          <Button variant="outlined">Save game data</Button>
+          <Button onClick={saveGameSession} variant="outlined">
+            Save game data
+          </Button>
         </ListItem>
         <ListItem>
           <ListItemText

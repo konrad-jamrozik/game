@@ -11,7 +11,7 @@ import IntroDialog from './components/IntroDialog'
 import { MissionSitesDataGrid } from './components/MissionSitesDataGrid/MissionSitesDataGrid'
 import { MissionsDataGrid } from './components/MissionsDataGrid/MissionsDataGrid'
 import OutroDialog from './components/OutroDialog'
-import PersistOnExit from './components/PersistOnExit'
+import SaveOnExit from './components/SaveOnExit'
 import { SettingsPanel } from './components/SettingsPanel/SettingsPanel'
 import { useGameSessionContext } from './lib/gameSession/GameSession'
 import { useSettingsContext } from './lib/settings/Settings'
@@ -42,7 +42,7 @@ export default function App(): React.JSX.Element {
 
   return (
     <Fragment>
-      <PersistOnExit />
+      <SaveOnExit />
       <IntroDialog
         {...{ introEnabled: settings.introEnabled, showIntro, setShowIntro }}
       />

@@ -30,22 +30,22 @@ export class StoredData {
 
   public resetGameSessionData(): void {
     this.removeFromLocalStorage('gameSessionData')
-    localStorage.removeItem('gameSessionData_persisted_timestamp')
+    localStorage.removeItem('gameSessionData_saved_timestamp')
   }
 
-  public persistGameSessionData(newGameSessionData: GameSessionDataType): void {
+  public saveGameSessionData(newGameSessionData: GameSessionDataType): void {
     this.setInLocalStorage('gameSessionData', newGameSessionData)
     localStorage.setItem(
-      `gameSessionData_persisted_timestamp`,
+      `gameSessionData_saved_timestamp`,
       new Date().toLocaleString(),
     )
     this.data = { ...this.data, gameSessionData: newGameSessionData }
   }
 
-  public persistSettingsData(newSettingsData: SettingsDataType): void {
+  public saveSettingsData(newSettingsData: SettingsDataType): void {
     this.setInLocalStorage('settingsData', newSettingsData)
     localStorage.setItem(
-      `settingsData_persisted_timestamp`,
+      `settingsData_saved_timestamp`,
       new Date().toLocaleString(),
     )
     this.data = { ...this.data, settings: newSettingsData }

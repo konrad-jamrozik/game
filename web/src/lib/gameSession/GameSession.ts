@@ -369,8 +369,8 @@ export class GameSession {
     }
   }
 
-  public persistOnExit(): void {
-    this.data.persistOnExit()
+  public save(): void {
+    this.data.save()
     this.setSavedTurn(this.getCurrentTurnNoUnsafe())
   }
 
@@ -379,7 +379,6 @@ export class GameSession {
   }
 
   public getSaveOnExitEnabled(): boolean {
-    // kja dedup synonyms: save and persist
     return this.data.getSaveOnExitEnabled()
   }
 
