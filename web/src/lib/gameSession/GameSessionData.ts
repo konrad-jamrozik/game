@@ -214,10 +214,6 @@ export class GameSessionData {
     return this.storedData.getCompressionEnabled(JSON.stringify(this._data))
   }
 
-  public getSavedTurnNoUnsafe(): number | undefined {
-    return this.storedData.getSavedTurnNoUnsafe()
-  }
-
   private setData(data: GameSessionDataType): void {
     GameSessionData.verify(data.turns)
     // Uncomment to persist game session data on every update.

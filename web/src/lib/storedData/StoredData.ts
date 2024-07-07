@@ -31,7 +31,6 @@ export class StoredData {
   public resetGameSessionData(): void {
     this.removeFromLocalStorage('gameSessionData')
     localStorage.removeItem('gameSessionData_persisted_timestamp')
-    localStorage.removeItem('gameSessionData_turnNo')
   }
 
   public persistGameSessionData(newGameSessionData: GameSessionDataType): void {
@@ -39,12 +38,6 @@ export class StoredData {
     localStorage.setItem(
       `gameSessionData_persisted_timestamp`,
       new Date().toLocaleString(),
-    )
-    localStorage.setItem(
-      `gameSessionData_turnNo`,
-      newGameSessionData.turns
-        .at(-1)!
-        .StartState.Timeline.CurrentTurn.toString(),
     )
     this.data = { ...this.data, gameSessionData: newGameSessionData }
   }
@@ -65,14 +58,6 @@ export class StoredData {
     // https://developer.mozilla.org/en-US/docs/Web/API/Storage/setItem
     // Max in Chrome is 5_000_000 bytes for the entire local storage. See storage.test.ts for details.
     return json.length >= 4_999_000
-  }
-
-  public getSavedTurnNoUnsafe(): number | undefined {
-    const turnNo = localStorage.getItem('gameSessionData_turnNo')
-    if (_.isNil(turnNo)) {
-      return undefined
-    }
-    return _.parseInt(turnNo)
   }
 
   // eslint-disable-next-line max-statements

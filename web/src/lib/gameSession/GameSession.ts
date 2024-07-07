@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/max-params */
 /* eslint-disable max-lines */
 /* eslint-disable @typescript-eslint/parameter-properties */
 import _ from 'lodash'
@@ -39,9 +40,12 @@ export function useGameSession(storedData: StoredData): GameSession {
   )
   const [loading, setLoading] = useState<boolean>(false)
   const [error, setError] = useState<string>()
+  const [savedTurn, setSavedTurn] = useState<number | undefined>(
+    data.turns.at(-1)?.StartState.Timeline.CurrentTurn,
+  )
 
   console.log(
-    `render useGameSession. Elapsed: ${measureTiming()}. data: '${Md5.hashStr(JSON.stringify(data))}', loading: '${loading}', error: '${error}'`,
+    `render useGameSession. Elapsed: ${measureTiming()}. data: '${Md5.hashStr(JSON.stringify(data))}', loading: '${loading}', error: '${error}', savedTurn: '${savedTurn}'`,
   )
 
   useEffect(() => {
@@ -57,6 +61,8 @@ export function useGameSession(storedData: StoredData): GameSession {
     setLoading,
     error,
     setError,
+    savedTurn,
+    setSavedTurn,
   )
 }
 
@@ -71,6 +77,10 @@ export class GameSession {
     public readonly error: string | undefined,
     private readonly setError: React.Dispatch<
       React.SetStateAction<string | undefined>
+    >,
+    public readonly savedTurn: number | undefined,
+    private readonly setSavedTurn: React.Dispatch<
+      React.SetStateAction<number | undefined>
     >,
   ) {
     this.data = data
@@ -178,9 +188,9 @@ export class GameSession {
     /* c8 ignore stop */
     this.data.resetCurrentTurn()
   }
-
   public resetGame(): void {
     this.data.resetData()
+    this.setSavedTurn(undefined)
     this.setError(undefined)
   }
 
@@ -361,6 +371,7 @@ export class GameSession {
 
   public persistOnExit(): void {
     this.data.persistOnExit()
+    this.setSavedTurn(this.getCurrentTurnNoUnsafe())
   }
 
   public getSize(): number {
@@ -374,10 +385,6 @@ export class GameSession {
 
   public getCompressionEnabled(): boolean {
     return this.data.getCompressionEnabled()
-  }
-
-  public getSavedTurnNoUnsafe(): number | undefined {
-    return this.data.getSavedTurnNoUnsafe()
   }
 
   private async applyPlayerAction(

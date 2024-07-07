@@ -20,33 +20,6 @@ import { Label } from '../utilities/Label'
 export function SettingsPanel(): React.JSX.Element {
   const settings: Settings = useSettingsContext()
   const gameSession: GameSession = useGameSessionContext()
-  const [savedTurn, setSavedTurn] = useState(
-    gameSession.getSavedTurnNoUnsafe() ?? 'N/A',
-  )
-
-  // kja also need to setSavedTurn every time it is changed in local storage,
-  // e.g. when game is reset or when "save game data" button is pressed.
-  // I feel the 'savedTurn' should become a property of GameSession.
-
-  useEffect(() => {
-    function handleVisibilityChange(): void {
-      if (document.visibilityState === 'visible') {
-        console.log(
-          `SettingsPanel: Visibility state 'visible' event triggered.`,
-        )
-        setSavedTurn(gameSession.getSavedTurnNoUnsafe() ?? 'N/A')
-      }
-    }
-
-    document.addEventListener('visibilitychange', handleVisibilityChange)
-
-    // This is a clean-up function per:
-    // https://react.dev/reference/react/useEffect#connecting-to-an-external-system
-    // https://react.dev/learn/synchronizing-with-effects#unmount
-    return (): void => {
-      document.removeEventListener('visibilitychange', handleVisibilityChange)
-    }
-  }, [])
 
   function handleIntroEnabledChange(
     event: React.ChangeEvent<HTMLInputElement>,
@@ -109,7 +82,7 @@ export function SettingsPanel(): React.JSX.Element {
         <ListItem>
           <ListItemText primary="Saved turn" />
           <Label sx={{ minWidth: 40, marginLeft: 2, textAlign: 'center' }}>
-            {savedTurn}
+            {gameSession.savedTurn ?? 'N/A'}
           </Label>
         </ListItem>
         <ListItem sx={{ justifyContent: 'center' }}>
