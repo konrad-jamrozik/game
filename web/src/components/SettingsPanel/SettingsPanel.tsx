@@ -95,7 +95,7 @@ export function SettingsPanel(): React.JSX.Element {
           <Switch
             edge="end"
             disabled={true}
-            checked={false}
+            checked={gameSession.getSaveOnExitEnabled()}
             inputProps={{
               'aria-labelledby': 'switch-list-saveOnExitEnabled',
             }}
@@ -109,7 +109,7 @@ export function SettingsPanel(): React.JSX.Element {
           <Switch
             edge="end"
             disabled={true}
-            checked={false}
+            checked={gameSession.getCompressionEnabled()}
             inputProps={{
               'aria-labelledby': 'switch-list-compressionEnabled',
             }}

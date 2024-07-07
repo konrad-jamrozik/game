@@ -367,6 +367,15 @@ export class GameSession {
     return this.data.getSize()
   }
 
+  public getSaveOnExitEnabled(): boolean {
+    // kja dedup synonyms: save and persist
+    return this.data.getSaveOnExitEnabled()
+  }
+
+  public getCompressionEnabled(): boolean {
+    return this.data.getCompressionEnabled()
+  }
+
   private async applyPlayerAction(
     playerActionPayload: PlayerActionPayload,
   ): Promise<boolean> {

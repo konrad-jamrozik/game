@@ -25,8 +25,10 @@ export default function PersistOnExit(): React.JSX.Element {
     function handleVisibilityChange(): void {
       if (document.visibilityState === 'hidden') {
         console.log('PersistOnExit() effect triggered')
-        gameSession.persistOnExit()
         settings.persistOnExit()
+        if (gameSession.getSaveOnExitEnabled()) {
+          gameSession.persistOnExit()
+        }
       }
     }
 

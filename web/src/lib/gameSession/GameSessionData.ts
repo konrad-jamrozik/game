@@ -206,6 +206,14 @@ export class GameSessionData {
     return JSON.stringify(this._data).length
   }
 
+  public getSaveOnExitEnabled(): boolean {
+    return this.storedData.getSaveOnExitEnabled(JSON.stringify(this._data))
+  }
+
+  public getCompressionEnabled(): boolean {
+    return this.storedData.getCompressionEnabled(JSON.stringify(this._data))
+  }
+
   private setData(data: GameSessionDataType): void {
     GameSessionData.verify(data.turns)
     // Uncomment to persist game session data on every update.

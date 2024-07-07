@@ -50,6 +50,15 @@ export class StoredData {
     )
     this.data = { ...this.data, settings: newSettingsData }
   }
+  public getSaveOnExitEnabled(json: string): boolean {
+    return !this.getCompressionEnabled(json)
+  }
+
+  public getCompressionEnabled(json: string): boolean {
+    // https://developer.mozilla.org/en-US/docs/Web/API/Storage/setItem
+    // Max in Chrome is 5_000_000 bytes for the entire local storage. See storage.test.ts for details.
+    return json.length >= 4_999_000
+  }
 
   // eslint-disable-next-line max-statements
   private setInLocalStorage<T extends StoredDataTypeName>(
@@ -59,9 +68,7 @@ export class StoredData {
     const startTime = performance.now() // Start timing
     const json: string = JSON.stringify(value)
 
-    // https://developer.mozilla.org/en-US/docs/Web/API/Storage/setItem
-    // Max in Chrome is 5_000_000 bytes for the entire local storage. See storage.test.ts for details.
-    const mustCompress = json.length >= 4_999_000
+    const mustCompress = this.getCompressionEnabled(json)
     const compressedJson: string | undefined = mustCompress
       ? LZString.compressToUTF16(json)
       : undefined
