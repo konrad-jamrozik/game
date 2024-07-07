@@ -7,6 +7,7 @@ import { useSettingsContext, type Settings } from '../lib/settings/Settings'
 
 // https://developer.mozilla.org/en-US/docs/Web/API/Document/visibilitychange_event
 // Worse alternative: https://developer.mozilla.org/en-US/docs/Web/API/Window/beforeunload_event
+// Read more at: https://www.igvita.com/2015/11/20/dont-lose-user-and-app-state-use-page-visibility/
 export default function PersistOnExit(): React.JSX.Element {
   const gameSession: GameSession = useGameSessionContext()
   const settings: Settings = useSettingsContext()

@@ -204,8 +204,11 @@ export class GameSessionData {
 
   private setData(data: GameSessionDataType): void {
     GameSessionData.verify(data.turns)
-    this.storedData.persistGameSessionData(data)
+    // Uncomment to persist game session data on every update.
+    // Now it is persisted only on exit.
+    // this.storedData.persistGameSessionData(data)
     this._setData(data)
+    // kja is this necessary?
     this._data = data
   }
 }

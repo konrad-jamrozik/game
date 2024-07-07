@@ -74,9 +74,6 @@ export function SettingsPanel(): React.JSX.Element {
             color="error"
             onClick={() => {
               localStorage.clear()
-              // kja dedup gameSessionData_reset
-              localStorage.setItem('gameSessionData_reset', 'true')
-              localStorage.setItem('settingsData_reset', 'true')
               console.log('Cleared local storage')
             }}
           >
@@ -87,3 +84,6 @@ export function SettingsPanel(): React.JSX.Element {
     </Card>
   )
 }
+
+// kja clear local storage no longer works, as the storage will be overridden on exit.
+// Need to reset settings instead.
