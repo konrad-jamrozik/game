@@ -31,6 +31,13 @@ export class StoredData {
   public resetGameSessionData(): void {
     this.removeFromLocalStorage('gameSessionData')
     localStorage.removeItem('gameSessionData_saved_timestamp')
+    localStorage.removeItem('gameSessionData_isCompressed')
+  }
+
+  public resetSettingsData(): void {
+    this.removeFromLocalStorage('settingsData')
+    localStorage.removeItem('settingsData_saved_timestamp')
+    localStorage.removeItem('settingsData_isCompressed')
   }
 
   public saveGameSessionData(newGameSessionData: GameSessionDataType): void {

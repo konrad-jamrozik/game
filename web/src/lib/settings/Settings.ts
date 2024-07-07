@@ -66,6 +66,7 @@ export class Settings {
     this.saveSettings({ introEnabled: value })
     this._setIntroEnabled(value)
   }
+
   public setOutroEnabled(value: boolean): void {
     this.saveSettings({ outroEnabled: value })
     this._setOutroEnabled(value)
@@ -79,6 +80,14 @@ export class Settings {
   public saveOnExit(): void {
     console.log('Settings.saveOnExit()')
     this.saveSettings({})
+  }
+
+  public reset(): void {
+    console.log('Settings.reset()')
+    this.storedData.resetSettingsData()
+    this._setIntroEnabled(defaultSettingsData.introEnabled)
+    this._setOutroEnabled(defaultSettingsData.outroEnabled)
+    this._setChartsEnabled(defaultSettingsData.chartsEnabled)
   }
 
   private saveSettings({

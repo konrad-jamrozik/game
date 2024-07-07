@@ -9,7 +9,6 @@ import {
   ListItemText,
   Switch,
 } from '@mui/material'
-import { useEffect, useState } from 'react'
 import {
   type GameSession,
   useGameSessionContext,
@@ -134,8 +133,7 @@ export function SettingsPanel(): React.JSX.Element {
             variant="outlined"
             color="error"
             onClick={() => {
-              localStorage.clear()
-              console.log('Cleared local storage')
+              settings.reset()
             }}
           >
             Reset settings
@@ -154,6 +152,3 @@ function formatSize(length: number): string {
   }
   return `${(length / 1_000_000).toFixed(3)} M`
 }
-
-// kja clear local storage no longer works, as the storage will be overridden on exit.
-// Need to reset settings instead.
