@@ -42,6 +42,11 @@ export class StoredData {
     this.data = { ...this.data, settings: newSettingsData }
   }
 
+  public goodbye(): void {
+    console.log('goodbye from StoredData')
+    localStorage.setItem(`goodbye`, new Date().toISOString())
+  }
+
   // eslint-disable-next-line max-statements
   private setInLocalStorage<T extends StoredDataTypeName>(
     key: T,

@@ -197,6 +197,11 @@ export class GameSessionData {
     this._setData(initialGameSessionData)
   }
 
+  public goodbye(): void {
+    console.log('goodbye from GameSessionData')
+    this.storedData.goodbye()
+  }
+
   private setData(data: GameSessionDataType): void {
     GameSessionData.verify(data.turns)
     this.storedData.persistGameSessionData(data)

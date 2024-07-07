@@ -7,6 +7,7 @@ import { Charts } from './components/Charts'
 import { EventsDataGrid } from './components/EventsDataGrid/EventsDataGrid'
 import { FactionsDataGrid } from './components/FactionsDataGrid/FactionsDataGrid'
 import { GameSessionControlPanel } from './components/GameSessionControlPanel/GameSessionControlPanel'
+import Goodbye from './components/Goodbye'
 import IntroDialog from './components/IntroDialog'
 import { MissionSitesDataGrid } from './components/MissionSitesDataGrid/MissionSitesDataGrid'
 import { MissionsDataGrid } from './components/MissionsDataGrid/MissionsDataGrid'
@@ -41,6 +42,7 @@ export default function App(): React.JSX.Element {
 
   return (
     <Fragment>
+      <Goodbye />
       <IntroDialog
         {...{ introEnabled: settings.introEnabled, showIntro, setShowIntro }}
       />
@@ -56,7 +58,7 @@ export default function App(): React.JSX.Element {
         container
         justifyContent={'center'}
         spacing={2}
-        marginTop={2}
+        marginTop={0}
         marginX={0}
         bgcolor={'#303030'}
       >

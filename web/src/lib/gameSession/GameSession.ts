@@ -358,6 +358,11 @@ export class GameSession {
     }
   }
 
+  public goodbye(): void {
+    console.log('goodbye from GameSession')
+    this.data.goodbye()
+  }
+
   private async applyPlayerAction(
     playerActionPayload: PlayerActionPayload,
   ): Promise<boolean> {
