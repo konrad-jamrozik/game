@@ -197,9 +197,9 @@ export class GameSessionData {
     this._setData(initialGameSessionData)
   }
 
-  public goodbye(): void {
-    console.log('goodbye from GameSessionData')
-    this.storedData.goodbye()
+  public persistOnExit(): void {
+    console.log('GameSessionData.persistOnExit()')
+    this.storedData.persistGameSessionData(this._data)
   }
 
   private setData(data: GameSessionDataType): void {

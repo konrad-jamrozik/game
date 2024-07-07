@@ -76,6 +76,11 @@ export class Settings {
     this._setChartsEnabled(value)
   }
 
+  public persistOnExit(): void {
+    console.log('Settings.persistOnExit()')
+    this.persistSettings({})
+  }
+
   private persistSettings({
     introEnabled,
     outroEnabled,
@@ -85,6 +90,14 @@ export class Settings {
     outroEnabled?: boolean
     chartsEnabled?: boolean
   }): void {
+    if (localStorage.getItem('settingsData_reset') === 'true') {
+      console.log(
+        'Settings.persistSettings(): skipping because settingsData_reset is true',
+      )
+      localStorage.removeItem('settingsData_reset')
+      return
+    }
+
     const newSettingsData: SettingsDataType = {
       introEnabled: introEnabled ?? this.introEnabled,
       outroEnabled: outroEnabled ?? this.outroEnabled,

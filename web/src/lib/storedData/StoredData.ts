@@ -30,21 +30,33 @@ export class StoredData {
 
   public resetGameSessionData(): void {
     this.removeFromLocalStorage('gameSessionData')
+    localStorage.removeItem('gameSessionData_persisted_timestamp')
+    localStorage.setItem('gameSessionData_reset', 'true')
   }
 
   public persistGameSessionData(newGameSessionData: GameSessionDataType): void {
+    if (localStorage.getItem('gameSessionData_reset') === 'true') {
+      console.log(
+        'StoredData.persistGameSessionData(): skipping because gameSessionData_reset is true',
+      )
+      localStorage.removeItem('gameSessionData_reset')
+      return
+    }
     this.setInLocalStorage('gameSessionData', newGameSessionData)
+    localStorage.setItem(
+      `gameSessionData_persisted_timestamp`,
+      new Date().toISOString(),
+    )
     this.data = { ...this.data, gameSessionData: newGameSessionData }
   }
 
   public persistSettingsData(newSettingsData: SettingsDataType): void {
     this.setInLocalStorage('settingsData', newSettingsData)
+    localStorage.setItem(
+      `settingsData_persisted_timestamp`,
+      new Date().toISOString(),
+    )
     this.data = { ...this.data, settings: newSettingsData }
-  }
-
-  public goodbye(): void {
-    console.log('goodbye from StoredData')
-    localStorage.setItem(`goodbye`, new Date().toISOString())
   }
 
   // eslint-disable-next-line max-statements

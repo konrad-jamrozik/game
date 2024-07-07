@@ -358,9 +358,8 @@ export class GameSession {
     }
   }
 
-  public goodbye(): void {
-    console.log('goodbye from GameSession')
-    this.data.goodbye()
+  public persistOnExit(): void {
+    this.data.persistOnExit()
   }
 
   private async applyPlayerAction(
