@@ -50,6 +50,7 @@ export function useGameSession(storedData: StoredData): GameSession {
     )
   }, [loading, error])
 
+  // kja why pass here storedData, data and setData? Instead, pass storedData and obtain the remained data and setData from it.
   return new GameSession(
     new GameSessionData(storedData, data, setData),
     loading,
@@ -360,6 +361,10 @@ export class GameSession {
 
   public persistOnExit(): void {
     this.data.persistOnExit()
+  }
+
+  public getSize(): number {
+    return this.data.getSize()
   }
 
   private async applyPlayerAction(

@@ -3,18 +3,22 @@ import {
   Button,
   Card,
   CardHeader,
-  Checkbox,
   Divider,
   List,
   ListItem,
   ListItemText,
   Switch,
 } from '@mui/material'
+import {
+  type GameSession,
+  useGameSessionContext,
+} from '../../lib/gameSession/GameSession'
 import { useSettingsContext, type Settings } from '../../lib/settings/Settings'
 import { Label } from '../utilities/Label'
 
 export function SettingsPanel(): React.JSX.Element {
   const settings: Settings = useSettingsContext()
+  const gameSession: GameSession = useGameSessionContext()
 
   function handleIntroEnabledChange(
     event: React.ChangeEvent<HTMLInputElement>,
@@ -73,13 +77,16 @@ export function SettingsPanel(): React.JSX.Element {
           />
         </ListItem>
         <Divider sx={{ marginY: 1 }} />
+
         <ListItem>
-          <ListItemText id="label-list-gameSessionSize" primary="Data size" />
-          <Label sx={{ minWidth: 92, marginLeft: 2, textAlign: 'center' }}>
-            99.99 MB
+          <ListItemText primary="Saved turn" />
+          <Label sx={{ minWidth: 40, marginLeft: 2, textAlign: 'center' }}>
+            {'0'}
           </Label>
         </ListItem>
-
+        <ListItem sx={{ justifyContent: 'center' }}>
+          <Button variant="outlined">Save game data</Button>
+        </ListItem>
         <ListItem>
           <ListItemText
             id="switch-list-saveOnExitEnabled"
@@ -108,8 +115,11 @@ export function SettingsPanel(): React.JSX.Element {
             }}
           />
         </ListItem>
-        <ListItem sx={{ justifyContent: 'center' }}>
-          <Button variant="outlined">Save data</Button>
+        <ListItem>
+          <ListItemText primary="Data size" />
+          <Label sx={{ minWidth: 92, marginLeft: 2, textAlign: 'center' }}>
+            {formatSize(gameSession.getSize())}
+          </Label>
         </ListItem>
         <Divider sx={{ marginY: 1 }} />
         <ListItem sx={{ justifyContent: 'center' }}>
@@ -127,6 +137,15 @@ export function SettingsPanel(): React.JSX.Element {
       </List>
     </Card>
   )
+}
+
+function formatSize(length: number): string {
+  if (length < 1000) {
+    return length.toString()
+  } else if (length < 1_000_000) {
+    return `${(length / 1000).toFixed(3)} K`
+  }
+  return `${(length / 1_000_000).toFixed(3)} M`
 }
 
 // kja clear local storage no longer works, as the storage will be overridden on exit.

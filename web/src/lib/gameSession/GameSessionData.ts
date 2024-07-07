@@ -202,6 +202,10 @@ export class GameSessionData {
     this.storedData.persistGameSessionData(this._data)
   }
 
+  public getSize(): number {
+    return JSON.stringify(this._data).length
+  }
+
   private setData(data: GameSessionDataType): void {
     GameSessionData.verify(data.turns)
     // Uncomment to persist game session data on every update.
