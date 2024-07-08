@@ -37,7 +37,7 @@ export default function App(): React.JSX.Element {
   )
 
   if (turnAdvanced) {
-    // Reset the 'turnAdvanced' signal after it was used above.
+    // Reset the 'turnAdvanced' signal after it was used, above.
     setTurnAdvanced(false)
   }
 
