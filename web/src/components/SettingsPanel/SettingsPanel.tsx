@@ -88,11 +88,6 @@ export function SettingsPanel(): React.JSX.Element {
             {gameSession.savedTurn ?? 'N/A'}
           </Label>
         </ListItem>
-        <ListItem sx={{ justifyContent: 'center' }}>
-          <Button onClick={saveGameSession} variant="outlined">
-            Save game data
-          </Button>
-        </ListItem>
         <ListItem>
           <ListItemText
             id="switch-list-saveOnExitEnabled"

@@ -1,6 +1,6 @@
 /* eslint-disable max-statements */
 /* eslint-disable @typescript-eslint/init-declarations */
-import { Button, Card, CardContent, CardHeader } from '@mui/material'
+import { Button, Card, CardContent, CardHeader, Stack } from '@mui/material'
 import Grid from '@mui/material/Unstable_Grid2'
 import _ from 'lodash'
 import { useState } from 'react'
@@ -57,6 +57,12 @@ export function GameSessionControlPanel(
             </Grid>
           </Grid>
           <Grid container xs={12} marginBottom={'0px'}>
+            <Grid sx={{ alignContent: 'bottom' }}>
+              <Stack direction="row" spacing={1} alignItems="center">
+                {saveGameButton(props.gameSession)}
+                <Label>{`Saved turn: ${props.gameSession.savedTurn ?? 'N/A'}`}</Label>
+              </Stack>
+            </Grid>
             <Grid xsOffset={'auto'}>
               {resetGameSessionButton(props.gameSession, props.setShowIntro)}
             </Grid>
@@ -158,6 +164,23 @@ function resetGameSessionButton(
       color="error"
     >
       {`Reset game`}
+    </Button>
+  )
+}
+
+function saveGameButton(gameSession: GameSession): React.JSX.Element {
+  function saveGame(): void {
+    gameSession.save()
+  }
+
+  return (
+    <Button
+      variant="outlined"
+      onClick={saveGame}
+      disabled={!gameSession.isInitialized() || gameSession.loading}
+      color="primary"
+    >
+      {`Save game`}
     </Button>
   )
 }
