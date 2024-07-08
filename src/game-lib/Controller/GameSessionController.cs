@@ -68,7 +68,7 @@ public class GameSessionController
     public GameStatePlayerView CurrentGameStatePlayerView
         => new GameStatePlayerView(() => GameSession.CurrentGameState);
 
-    public void PlayGameSession(int turnLimit, IPlayer player)
+    public void PlayGameSession(int turnLimit, IAIPlayer player)
     {
         // Assert:
         // IF the GameSession was ctored with null initialGameState,
@@ -114,7 +114,7 @@ public class GameSessionController
         _log.Flush();
     }
 
-    private void PlayGameUntilOver(IPlayer player, int turnLimit)
+    private void PlayGameUntilOver(IAIPlayer player, int turnLimit)
     {
         // Note: in the boundary case of
         //

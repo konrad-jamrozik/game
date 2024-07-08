@@ -3,28 +3,21 @@ using System.Reflection;
 using System.Text.Json.Serialization;
 using Lib.Contracts;
 using Lib.Json;
+using UfoGameLib.Lib;
 
 namespace UfoGameLib.Controller;
 
 [JsonConverter(typeof(StringJsonConverter<PlayerActionName>))]
 public class PlayerActionName
 {
-    private readonly string _name;
-
     private static readonly ImmutableList<string> ValidNames = GetValidNames();
 
     public static bool IsValid(string name) => ValidNames.Contains(name);
 
+    private readonly string _name;
+
     private static ImmutableList<string> GetValidNames()
-    {
-        // Get the assembly that contains the PlayerAction class
-        Assembly assembly = Assembly.GetAssembly(typeof(PlayerAction))!;
-
-        // Get all types in the assembly that inherit from PlayerAction
-        var derivedTypes = assembly.GetTypes().Where(t => t.IsSubclassOf(typeof(PlayerAction)));
-
-        return derivedTypes.Select(t => t.Name).ToImmutableList();
-    }
+        => Reflection.GetDerivedTypeNames<PlayerAction>();
 
     public PlayerActionName(string name)
     {

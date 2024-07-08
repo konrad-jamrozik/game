@@ -29,7 +29,7 @@ export function AIPlayerControlPanel(
 ): React.JSX.Element {
   const [startTurn, setStartTurn] = useState<number>(defaultStartTurn)
   const [targetTurn, setTargetTurn] = useState<number>(defaultTargetTurn)
-  const [aiPlayer, setAiPlayer] = useState<AIPlayerName>('Basic')
+  const [aiPlayer, setAiPlayer] = useState<AIPlayerName>('BasicAIPlayer')
 
   const theme = useTheme()
   const smallDisplay = useMediaQuery(theme.breakpoints.down('sm'))

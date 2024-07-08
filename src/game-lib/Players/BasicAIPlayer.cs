@@ -7,13 +7,13 @@ using UfoGameLib.State;
 
 namespace UfoGameLib.Players;
 
-public class BasicAIPlayerIntellect : IPlayer
+public class BasicAIPlayer : IAIPlayer
 {
     private const int MinimumAcceptableAgentSurvivalChance = 20; // percent
     private const int MoneyBufferToBuyTransportCapacity = 600;
     private readonly ILog _log;
 
-    public BasicAIPlayerIntellect(ILog log)
+    public BasicAIPlayer(ILog log)
     {
         _log = log;
     }

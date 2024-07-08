@@ -61,19 +61,9 @@ public static class AdvanceTurnsRoute
         GameSession gameSession = ApiUtils.NewGameSessionFromTurn(initialTurn);
         var controller = new GameSessionController(config, log, gameSession);
 
-        // kja strongly type aiPlayer, similarly to PlayerActionName
-        AIPlayer.Intellect intellect = aiPlayer switch
-        {
-            "Basic" => AIPlayer.Intellect.Basic,
-            "DoNothing" => AIPlayer.Intellect.DoNothing,
-            null => AIPlayer.Intellect.DoNothing,
-            _ => throw new ArgumentException(
-                $"Invalid AI player: {aiPlayer}. Must be 'basic' or 'doNothing'.")
-        };
-        
-        var aiPlayerInstance = new AIPlayer(
-            log,
-            intellect);
+        var aiPlayerName = new AIPlayerName(aiPlayer ?? AIPlayerName.DoNothing.ToString());
+
+        var aiPlayerInstance = IAIPlayer.New(log, aiPlayerName);
 
         controller.PlayGameSession(turnLimit: parsedTurnLimit, aiPlayerInstance);
 

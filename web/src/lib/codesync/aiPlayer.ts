@@ -1,3 +1,3 @@
 // codesync: UfoGameLib.Players
 
-export type AIPlayerName = 'DoNothing' | 'Basic'
+export type AIPlayerName = 'BasicAIPlayer' | 'DoNothingAIPlayer'

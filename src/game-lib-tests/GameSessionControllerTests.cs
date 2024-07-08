@@ -31,7 +31,7 @@ public class GameSessionControllerTests
         Assert.That(controller.CurrentTurnController.CurrentTurn, Is.EqualTo(initialTurn));
 
         // Act
-        controller.PlayGameSession(2, new AIPlayer(_log, AIPlayer.Intellect.DoNothing));
+        controller.PlayGameSession(2, IAIPlayer.New(_log, AIPlayerName.DoNothing));
 
         int nextTurn = session.CurrentGameState.Timeline.CurrentTurn;
         Contract.Assert(initialTurn + 1 == nextTurn);

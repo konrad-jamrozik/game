@@ -32,11 +32,11 @@ public class AIPlayerTests
 
     [Test]
     public void DoNothingAIPlayerIntellectPlaysGameUntilConclusion()
-        => AIPlayerPlaysGameUntilConclusion(AIPlayer.Intellect.DoNothing, turnLimit: 10);
+        => AIPlayerPlaysGameUntilConclusion(AIPlayerName.DoNothing, turnLimit: 10);
 
     [Test]
     public void BasicAIPlayerIntellectPlaysGameUntilConclusion()
-        => AIPlayerPlaysGameUntilConclusion(AIPlayer.Intellect.Basic, turnLimit: 100);
+        => AIPlayerPlaysGameUntilConclusion(AIPlayerName.Basic, turnLimit: 100);
 
     [Test]
     public void ExampleGameSessionForApi()
@@ -44,9 +44,9 @@ public class AIPlayerTests
         var config = new Configuration(new SimulatedFileSystem());
         var log = new Log(config);
         var randomGen = new RandomGen();
-        var intellect = AIPlayer.Intellect.Basic;
+        var aiPlayerName = AIPlayerName.Basic;
         var controller = new GameSessionController(config, log, new GameSession(randomGen));
-        var aiPlayer = new AIPlayer(log, intellect);
+        var aiPlayer = IAIPlayer.New(log, aiPlayerName);
 
         // Act
         controller.PlayGameSession(turnLimit: 30, aiPlayer);
@@ -61,7 +61,7 @@ public class AIPlayerTests
         // Also, as each game session progresses, no GameStates in it should be kept except the current one.
         for (int i = 0; i < 100; i++)
         {
-            AIPlayerPlaysGameUntilConclusion(AIPlayer.Intellect.Basic, turnLimit: 300);    
+            AIPlayerPlaysGameUntilConclusion(AIPlayerName.Basic, turnLimit: 300);    
         }
     }
 
@@ -71,10 +71,10 @@ public class AIPlayerTests
         _log.Dispose();
     }
 
-    private void AIPlayerPlaysGameUntilConclusion(AIPlayer.Intellect intellect, int turnLimit)
+    private void AIPlayerPlaysGameUntilConclusion(AIPlayerName name, int turnLimit)
     {
         var controller = new GameSessionController(_config, _log, new GameSession(_randomGen));
-        var aiPlayer = new AIPlayer(_log, intellect);
+        var aiPlayer = IAIPlayer.New(_log, name);
 
         // Act
         controller.PlayGameSession(turnLimit, aiPlayer);

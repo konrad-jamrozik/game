@@ -112,4 +112,4 @@ public class RandomGen : IRandomGen
         double result = baseValue * modifier;
         return (result, variationRoll);
     }
-} 
+}
