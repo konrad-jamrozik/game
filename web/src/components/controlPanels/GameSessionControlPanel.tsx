@@ -58,9 +58,6 @@ export function GameSessionControlPanel(
     }
   }
 
-  const theme = useTheme()
-  const smallDisplay = useMediaQuery(theme.breakpoints.down('sm'))
-
   return (
     <Card
       variant="outlined"

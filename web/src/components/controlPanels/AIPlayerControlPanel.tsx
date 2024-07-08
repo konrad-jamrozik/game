@@ -16,6 +16,8 @@ import { useState } from 'react'
 import { initialTurn } from '../../lib/codesync/GameState'
 import { startTiming } from '../../lib/dev'
 import type { GameSession } from '../../lib/gameSession/GameSession'
+import { AIPlayerDropdown } from './AIPlayerDropdown'
+import type { AIPlayerOption } from './aiPlayerOptions'
 
 export type AIPlayerControlPanelProps = {
   readonly gameSession: GameSession
@@ -31,6 +33,7 @@ export function AIPlayerControlPanel(
 ): React.JSX.Element {
   const [startTurn, setStartTurn] = useState<number>(defaultStartTurn)
   const [targetTurn, setTargetTurn] = useState<number>(defaultTargetTurn)
+  const [aiPlayer, setAiPlayer] = useState<AIPlayerOption>('Basic')
 
   async function advanceTurns(
     turnsToAdvance?: number,
@@ -72,6 +75,9 @@ export function AIPlayerControlPanel(
           <Grid container xs={12} marginBottom={'0px'}>
             <Grid>
               {delegate1TurnToAiButton(advanceTurns, props.gameSession)}
+            </Grid>
+            <Grid xsOffset={'auto'}>
+              <AIPlayerDropdown aiPlayer={aiPlayer} setAiPlayer={setAiPlayer} />
             </Grid>
           </Grid>
           <Grid>
