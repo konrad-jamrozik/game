@@ -1,6 +1,3 @@
-/* eslint-disable max-statements */
-/* eslint-disable @typescript-eslint/init-declarations */
-/* eslint-disable max-lines */
 import {
   Button,
   Card,
