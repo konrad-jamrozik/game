@@ -16,7 +16,6 @@ import { useState } from 'react'
 import { initialTurn } from '../../lib/codesync/GameState'
 import { startTiming } from '../../lib/dev'
 import type { GameSession } from '../../lib/gameSession/GameSession'
-import { Label } from '../utilities/Label'
 
 export type AIPlayerControlPanelProps = {
   readonly gameSession: GameSession
@@ -32,10 +31,6 @@ export function AIPlayerControlPanel(
 ): React.JSX.Element {
   const [startTurn, setStartTurn] = useState<number>(defaultStartTurn)
   const [targetTurn, setTargetTurn] = useState<number>(defaultTargetTurn)
-
-  function gameRunMsg(): string {
-    return `Game ran until turn ${props.gameSession.getCurrentTurnNo()}. Result: ${props.gameSession.getGameResult()}`
-  }
 
   async function advanceTurns(
     turnsToAdvance?: number,
@@ -74,23 +69,9 @@ export function AIPlayerControlPanel(
       <CardHeader title="AI Player" sx={{ paddingBottom: '0px' }} />
       <CardContent sx={{ padding: '14px' }}>
         <Grid container spacing={1}>
-          <Grid xs={12}>
-            <Label>{currentTurnLabel(props.gameSession)}</Label>
-          </Grid>
-          <Grid container xs={12} marginBottom={'0px'}>
-            <Grid>
-              {advanceTimeBy1TurnButton(advanceTurns, props.gameSession)}
-            </Grid>
-            <Grid xsOffset={'auto'}>
-              {resetCurrentTurnButton(props.gameSession)}
-            </Grid>
-          </Grid>
           <Grid container xs={12} marginBottom={'0px'}>
             <Grid>
               {delegate1TurnToAiButton(advanceTurns, props.gameSession)}
-            </Grid>
-            <Grid xsOffset={'auto'}>
-              {resetGameSessionButton(props.gameSession, props.setShowIntro)}
             </Grid>
           </Grid>
           <Grid>
@@ -113,22 +94,10 @@ export function AIPlayerControlPanel(
               )}
             </Grid>
           </Grid>
-          {props.gameSession.isInitialized() && (
-            <Grid xs={12}>
-              <Label>{gameRunMsg()}</Label>
-            </Grid>
-          )}
-          {Boolean(props.gameSession.error) && (
-            <Grid xs={12}>Error: {props.gameSession.error}</Grid>
-          )}
         </Grid>
       </CardContent>
     </Card>
   )
-}
-
-function currentTurnLabel(gameSession: GameSession): string {
-  return `Current turn: ${gameSession.getCurrentTurnNoUnsafe() ?? 'N/A'}`
 }
 
 function startTurnInputTextField(
@@ -189,24 +158,6 @@ function targetTurnInputTextField(
   )
 }
 
-function advanceTimeBy1TurnButton(
-  advanceTurns: (
-    turnsToAdvance?: number,
-    delegateToAi?: boolean,
-  ) => Promise<void>,
-  gameSession: GameSession,
-): React.JSX.Element {
-  return (
-    <Button
-      variant="contained"
-      onClick={async () => advanceTurns(1, false)}
-      disabled={!gameSession.canAdvanceTime()}
-    >
-      {'Advance 1 turn'}
-    </Button>
-  )
-}
-
 function delegate1TurnToAiButton(
   advanceTurns: (
     turnsToAdvance?: number,
@@ -241,70 +192,6 @@ function delegateTurnsToAiButton(
       disabled={!gameSession.canDelegateTurnsToAi() || startTurn >= targetTurn}
     >
       {`Delegate turns to AI:`}
-    </Button>
-  )
-}
-
-function resetCurrentTurnButton(gameSession: GameSession): React.JSX.Element {
-  const playerMadeActions: boolean | undefined =
-    gameSession.hasPlayerMadeActionsInCurrentTurn()
-  const isDisabled =
-    !gameSession.isInitialized() ||
-    gameSession.loading ||
-    (gameSession.getCurrentTurnNo() === initialTurn &&
-      !(playerMadeActions ?? false))
-
-  const label =
-    (playerMadeActions ?? false) || !gameSession.isInitialized()
-      ? `Reset turn`
-      : `Revert 1 turn`
-
-  function reset(): void {
-    console.log(`Executing reset(). Resetting elapsed time.`)
-    startTiming()
-    if (playerMadeActions ?? false) {
-      gameSession.resetCurrentTurn()
-    } else {
-      gameSession.revertToPreviousTurn()
-    }
-  }
-
-  return (
-    <Button
-      variant="outlined"
-      onClick={reset}
-      disabled={isDisabled}
-      color="warning"
-    >
-      {label}
-    </Button>
-  )
-}
-
-function resetGameSessionButton(
-  gameSession: GameSession,
-  setShowIntro: React.Dispatch<React.SetStateAction<boolean>>,
-): React.JSX.Element {
-  function resetGame(): void {
-    console.log(`Executing resetGame(). Resetting elapsed time.`)
-    startTiming()
-    gameSession.resetGame()
-    setShowIntro(true)
-  }
-
-  return (
-    <Button
-      variant="outlined"
-      onClick={resetGame}
-      disabled={
-        // For the 'Reset Game' button to be disabled, the error must be undefined,
-        // because if it is defined, we want to allow resetting game.
-        _.isUndefined(gameSession.error) &&
-        (!gameSession.isInitialized() || gameSession.loading)
-      }
-      color="error"
-    >
-      {`Reset game`}
     </Button>
   )
 }

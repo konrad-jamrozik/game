@@ -6,7 +6,6 @@ import {
   Card,
   CardContent,
   CardHeader,
-  TextField,
   useMediaQuery,
   useTheme,
 } from '@mui/material'
@@ -30,8 +29,8 @@ const defaultTargetTurn = 80
 export function GameSessionControlPanel(
   props: GameSessionControlPanelProps,
 ): React.JSX.Element {
-  const [startTurn, setStartTurn] = useState<number>(defaultStartTurn)
-  const [targetTurn, setTargetTurn] = useState<number>(defaultTargetTurn)
+  const [startTurn, _setStartTurn] = useState<number>(defaultStartTurn)
+  const [targetTurn, _setTargetTurn] = useState<number>(defaultTargetTurn)
 
   function gameRunMsg(): string {
     return `Game ran until turn ${props.gameSession.getCurrentTurnNo()}. Result: ${props.gameSession.getGameResult()}`
@@ -61,7 +60,6 @@ export function GameSessionControlPanel(
 
   const theme = useTheme()
   const smallDisplay = useMediaQuery(theme.breakpoints.down('sm'))
-  const textFieldWidth = smallDisplay ? 64 : 90
 
   return (
     <Card
@@ -86,31 +84,8 @@ export function GameSessionControlPanel(
             </Grid>
           </Grid>
           <Grid container xs={12} marginBottom={'0px'}>
-            <Grid>
-              {delegate1TurnToAiButton(advanceTurns, props.gameSession)}
-            </Grid>
             <Grid xsOffset={'auto'}>
               {resetGameSessionButton(props.gameSession, props.setShowIntro)}
-            </Grid>
-          </Grid>
-          <Grid>
-            {delegateTurnsToAiButton(
-              advanceTurns,
-              props.gameSession,
-              startTurn,
-              targetTurn,
-            )}
-          </Grid>
-          <Grid container xsOffset={'auto'}>
-            <Grid>
-              {startTurnInputTextField(startTurn, setStartTurn, textFieldWidth)}
-            </Grid>
-            <Grid>
-              {targetTurnInputTextField(
-                targetTurn,
-                setTargetTurn,
-                textFieldWidth,
-              )}
             </Grid>
           </Grid>
           {props.gameSession.isInitialized() && (
@@ -131,64 +106,6 @@ function currentTurnLabel(gameSession: GameSession): string {
   return `Current turn: ${gameSession.getCurrentTurnNoUnsafe() ?? 'N/A'}`
 }
 
-function startTurnInputTextField(
-  startTurn: number,
-  setStartTurn: React.Dispatch<React.SetStateAction<number>>,
-  width: number,
-): React.JSX.Element {
-  return (
-    <TextField
-      sx={{ width }}
-      id="textfield-start-turn"
-      label="Start"
-      type="number"
-      size="small"
-      value={startTurn}
-      onChange={(event: React.ChangeEvent) => {
-        const target = event.target as HTMLInputElement
-        setStartTurn(target.valueAsNumber)
-      }}
-      InputLabelProps={{
-        shrink: true,
-      }}
-      inputProps={{
-        min: 1,
-        max: 300,
-        step: 1,
-      }}
-    />
-  )
-}
-
-function targetTurnInputTextField(
-  targetTurn: number,
-  setTargetTurn: React.Dispatch<React.SetStateAction<number>>,
-  width: number,
-): React.JSX.Element {
-  return (
-    <TextField
-      sx={{ width }}
-      id="textfield-target-turn"
-      label="Target"
-      type="number"
-      size="small"
-      value={targetTurn}
-      onChange={(event: React.ChangeEvent) => {
-        const target = event.target as HTMLInputElement
-        setTargetTurn(target.valueAsNumber)
-      }}
-      InputLabelProps={{
-        shrink: true,
-      }}
-      inputProps={{
-        min: 1,
-        max: 300,
-        step: 1,
-      }}
-    />
-  )
-}
-
 function advanceTimeBy1TurnButton(
   advanceTurns: (
     turnsToAdvance?: number,
@@ -203,44 +120,6 @@ function advanceTimeBy1TurnButton(
       disabled={!gameSession.canAdvanceTime()}
     >
       {'Advance 1 turn'}
-    </Button>
-  )
-}
-
-function delegate1TurnToAiButton(
-  advanceTurns: (
-    turnsToAdvance?: number,
-    delegateToAi?: boolean,
-  ) => Promise<void>,
-  gameSession: GameSession,
-): React.JSX.Element {
-  return (
-    <Button
-      variant="outlined"
-      onClick={async () => advanceTurns(1, true)}
-      disabled={!gameSession.canDelegateTurnsToAi()}
-    >
-      {'Delegate 1 turn to AI'}
-    </Button>
-  )
-}
-
-function delegateTurnsToAiButton(
-  advanceTurns: (
-    turnsToAdvance?: number,
-    delegateToAi?: boolean,
-  ) => Promise<void>,
-  gameSession: GameSession,
-  startTurn: number,
-  targetTurn: number,
-): React.JSX.Element {
-  return (
-    <Button
-      variant="outlined"
-      onClick={async () => advanceTurns(undefined, true)}
-      disabled={!gameSession.canDelegateTurnsToAi() || startTurn >= targetTurn}
-    >
-      {`Delegate turns to AI:`}
     </Button>
   )
 }
