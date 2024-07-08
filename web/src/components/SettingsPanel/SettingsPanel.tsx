@@ -38,10 +38,6 @@ export function SettingsPanel(): React.JSX.Element {
     settings.setChartsEnabled(event.target.checked)
   }
 
-  function saveGameSession(): void {
-    gameSession.save()
-  }
-
   // MUI components usage based on: https://mui.com/material-ui/react-list/#switch
   return (
     <Card variant="outlined">
