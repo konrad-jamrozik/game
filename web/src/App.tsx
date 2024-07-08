@@ -6,7 +6,7 @@ import { AssetsDataGrid } from './components/AssetsDataGrid/AssetsDataGrid'
 import { Charts } from './components/Charts'
 import { EventsDataGrid } from './components/EventsDataGrid/EventsDataGrid'
 import { FactionsDataGrid } from './components/FactionsDataGrid/FactionsDataGrid'
-import { GameSessionControlPanel } from './components/GameSessionControlPanel/GameSessionControlPanel'
+import { GameSessionControlPanel } from './components/controlPanels/GameSessionControlPanel'
 import IntroDialog from './components/IntroDialog'
 import { MissionSitesDataGrid } from './components/MissionSitesDataGrid/MissionSitesDataGrid'
 import { MissionsDataGrid } from './components/MissionsDataGrid/MissionsDataGrid'
@@ -15,6 +15,7 @@ import SaveOnExit from './components/SaveOnExit'
 import { SettingsPanel } from './components/SettingsPanel/SettingsPanel'
 import { useGameSessionContext } from './lib/gameSession/GameSession'
 import { useSettingsContext } from './lib/settings/Settings'
+import { AIPlayerControlPanel } from './components/controlPanels/AIPlayerControlPanel'
 
 export default function App(): React.JSX.Element {
   const settings = useSettingsContext()
@@ -63,11 +64,18 @@ export default function App(): React.JSX.Element {
         bgcolor={'#303030'}
       >
         <Grid sx={{ bgcolor: '#200000' }}>
-          <GameSessionControlPanel
-            gameSession={gameSession}
-            setShowIntro={setShowIntro}
-            setTurnAdvanced={setTurnAdvanced}
-          />
+          <Stack spacing={1}>
+            <GameSessionControlPanel
+              gameSession={gameSession}
+              setShowIntro={setShowIntro}
+              setTurnAdvanced={setTurnAdvanced}
+            />
+            <AIPlayerControlPanel
+              gameSession={gameSession}
+              setShowIntro={setShowIntro}
+              setTurnAdvanced={setTurnAdvanced}
+            />
+          </Stack>
         </Grid>
         <Grid sx={{ bgcolor: '#002110' }}>
           <SettingsPanel />

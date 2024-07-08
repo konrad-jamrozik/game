@@ -189,7 +189,7 @@ module.exports = {
           camelCase: true, // for files primarily exporting a function
           pascalCase: true, // allow PascalCase for React components, as they require it
         },
-        ignore: ['vite-env.d.ts'], // vite-env.d.ts is a file name provided by Vite by default
+        ignore: ['vite-env.d.ts', '^AI.*'], // vite-env.d.ts is a file name provided by Vite by default
       },
     ],
     // https://github.com/sindresorhus/eslint-plugin-unicorn/blob/main/docs/rules/prevent-abbreviations.md
