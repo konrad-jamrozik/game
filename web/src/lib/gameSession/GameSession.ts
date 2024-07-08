@@ -19,6 +19,7 @@ import {
 import { initialTurn, type Assets, type GameState } from '../codesync/GameState'
 import type { AgentPlayerActionName } from '../codesync/PlayerActionEvent'
 import type { PlayerActionPayload } from '../codesync/PlayerActionPayload'
+import type { AIPlayerName } from '../codesync/aiPlayer'
 import { agentHireCost, transportCapBuyingCost } from '../codesync/ruleset'
 import { measureTiming } from '../dev'
 import type { StoredData } from '../storedData/StoredData'
@@ -89,13 +90,13 @@ export class GameSession {
   public async advanceTurns(
     startTurn: number,
     targetTurn: number,
-    delegateToAi?: boolean | undefined,
+    aiPlayer?: AIPlayerName | undefined,
   ): Promise<boolean> {
     let startGameTurn: GameSessionTurn | undefined =
       this.getTurnAtUnsafe(startTurn)
     if (!_.isUndefined(startGameTurn)) {
       startGameTurn = removeAdvanceTimeEvent(startGameTurn)
-      if (delegateToAi ?? true) {
+      if (!_.isUndefined(aiPlayer)) {
         startGameTurn = resetTurn(startGameTurn)
       }
     }
@@ -105,7 +106,7 @@ export class GameSession {
       setError: this.setError,
       startGameTurn,
       targetTurn,
-      delegateToAi,
+      aiPlayer,
     })
     if (!_.isUndefined(newTurns)) {
       this.upsertTurns(newTurns)
@@ -286,10 +287,7 @@ export class GameSession {
 
   public canDelegateTurnsToAi(): boolean {
     const canDelegateTurnsToAi =
-      !this.loading &&
-      (!this.isInitialized() ||
-        (!this.isGameOver() &&
-          !(this.hasPlayerMadeActionsInCurrentTurn() ?? false)))
+      !this.loading && (!this.isInitialized() || !this.isGameOver())
     return canDelegateTurnsToAi
   }
 

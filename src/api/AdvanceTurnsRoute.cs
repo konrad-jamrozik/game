@@ -26,7 +26,7 @@ public static class AdvanceTurnsRoute
     /// unless game ended before turn 50.
     /// </summary>
     public static Task<AdvanceTurnsResponse>
-        AdvanceTurns(HttpRequest req, int? turnLimit, bool? delegateToAi)
+        AdvanceTurns(HttpRequest req, int? turnLimit, string? aiPlayer = null)
     {
         return ApiUtils.TryProcessRoute(RouteFunc);
 
@@ -41,17 +41,13 @@ public static class AdvanceTurnsRoute
                     $"Cannot advance turns with turnLimit: {turnLimit}. " +
                     $"Input game state turn is {turn.StartState.Timeline.CurrentTurn}. turnLimit must be higher than that.");
 
-            if (delegateToAi == true && (turn?.EventsInTurn.Any() == true))
-                throw new ArgumentException(
-                    "Cannot delegate to AI when there are player actions in the input turn.");
-
-            return AdvanceTurnsInternal(turnLimit, delegateToAi, turn);
+            return AdvanceTurnsInternal(turnLimit, aiPlayer, turn);
         }
     }
 
     private static AdvanceTurnsSuccessResponse AdvanceTurnsInternal(
         int? turnLimit,
-        bool? delegateToAi = false,
+        string? aiPlayer = null,
         GameSessionTurn? initialTurn = null)
     {
         var stopwatch = Stopwatch.StartNew();
@@ -64,13 +60,22 @@ public static class AdvanceTurnsRoute
         var log = new Log(config);
         GameSession gameSession = ApiUtils.NewGameSessionFromTurn(initialTurn);
         var controller = new GameSessionController(config, log, gameSession);
-        var aiPlayer = new AIPlayer(
-            log,
-            delegateToAi == true
-                ? AIPlayer.Intellect.Basic
-                : AIPlayer.Intellect.DoNothing);
 
-        controller.PlayGameSession(turnLimit: parsedTurnLimit, aiPlayer);
+        // kja strongly type aiPlayer, similarly to PlayerActionName
+        AIPlayer.Intellect intellect = aiPlayer switch
+        {
+            "Basic" => AIPlayer.Intellect.Basic,
+            "DoNothing" => AIPlayer.Intellect.DoNothing,
+            null => AIPlayer.Intellect.DoNothing,
+            _ => throw new ArgumentException(
+                $"Invalid AI player: {aiPlayer}. Must be 'basic' or 'doNothing'.")
+        };
+        
+        var aiPlayerInstance = new AIPlayer(
+            log,
+            intellect);
+
+        controller.PlayGameSession(turnLimit: parsedTurnLimit, aiPlayerInstance);
 
         AdvanceTurnsSuccessResponse result = ApiUtils.ToJsonHttpResult(gameSession.Turns);
 

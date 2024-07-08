@@ -1,7 +1,7 @@
-export type AIPlayerOption = 'Basic' | 'DoNothing'
+import type { AIPlayerName } from '../../lib/codesync/aiPlayer'
 
 export const aiPlayerOptionLabel: {
-  [key in AIPlayerOption]: string
+  [key in AIPlayerName]: string
 } = {
   Basic: 'Basic',
   DoNothing: 'Do nothing',

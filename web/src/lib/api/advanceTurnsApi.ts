@@ -1,5 +1,6 @@
 import _ from 'lodash'
 import type { GameSessionTurn } from '../codesync/GameSessionTurn'
+import type { AIPlayerName } from '../codesync/aiPlayer'
 import {
   callApi,
   getPostJsonRequest,
@@ -11,12 +12,12 @@ export async function callAdvanceTurnsApi(
   params: FetchCallbacks & {
     startGameTurn: GameSessionTurn | undefined
     targetTurn: number
-    delegateToAi?: boolean | undefined
+    aiPlayer?: AIPlayerName | undefined
   },
 ): Promise<GameSessionTurn[] | undefined> {
-  const { startGameTurn, targetTurn, delegateToAi } = params
+  const { startGameTurn, targetTurn, aiPlayer } = params
 
-  const apiUrl = getAdvanceTurnsApiUrl(targetTurn, delegateToAi ?? false)
+  const apiUrl = getAdvanceTurnsApiUrl(targetTurn, aiPlayer)
   const request = getPostJsonRequest(
     apiUrl,
     !_.isUndefined(startGameTurn) ? JSON.stringify(startGameTurn) : '',
@@ -27,14 +28,14 @@ export async function callAdvanceTurnsApi(
 
 function getAdvanceTurnsApiUrl(
   targetTurn: number,
-  delegateToAi?: boolean,
+  aiPlayer?: AIPlayerName | undefined,
 ): URL {
-  const delegateToAiQueryParam = !_.isUndefined(delegateToAi)
-    ? `&delegateToAi=${delegateToAi}`
+  const aiPlayerQueryParam = !_.isUndefined(aiPlayer)
+    ? `&aiPlayer=${aiPlayer}`
     : ''
 
   return getApiUrl(
     `advanceTurns`,
-    `turnLimit=${targetTurn}${delegateToAiQueryParam}`,
+    `turnLimit=${targetTurn}${aiPlayerQueryParam}`,
   )
 }

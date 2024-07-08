@@ -1,22 +1,17 @@
 /* eslint-disable max-statements */
 /* eslint-disable @typescript-eslint/init-declarations */
 /* eslint-disable max-lines */
-import {
-  Button,
-  Card,
-  CardContent,
-  CardHeader,
-  useMediaQuery,
-  useTheme,
-} from '@mui/material'
+import { Button, Card, CardContent, CardHeader } from '@mui/material'
 import Grid from '@mui/material/Unstable_Grid2'
 import _ from 'lodash'
 import { useState } from 'react'
 import { initialTurn } from '../../lib/codesync/GameState'
+import type { AIPlayerName } from '../../lib/codesync/aiPlayer'
 import { startTiming } from '../../lib/dev'
 import type { GameSession } from '../../lib/gameSession/GameSession'
 import { Label } from '../utilities/Label'
 
+// kja dedup logic between this and AIPlayerControlPanel.tsx
 export type GameSessionControlPanelProps = {
   readonly gameSession: GameSession
   readonly setShowIntro: React.Dispatch<React.SetStateAction<boolean>>
@@ -38,7 +33,7 @@ export function GameSessionControlPanel(
 
   async function advanceTurns(
     turnsToAdvance?: number,
-    delegateToAi?: boolean,
+    aiPlayer?: AIPlayerName | undefined,
   ): Promise<void> {
     console.log(`Executing advanceTurns(). Resetting elapsed time.`)
     startTiming()
@@ -51,7 +46,7 @@ export function GameSessionControlPanel(
     const turnAdvanced = await props.gameSession.advanceTurns(
       resolvedStartTurn,
       resolvedTargetTurn,
-      delegateToAi,
+      aiPlayer,
     )
     if (turnAdvanced) {
       props.setTurnAdvanced(true)
@@ -106,14 +101,14 @@ function currentTurnLabel(gameSession: GameSession): string {
 function advanceTimeBy1TurnButton(
   advanceTurns: (
     turnsToAdvance?: number,
-    delegateToAi?: boolean,
+    aiPlayer?: AIPlayerName | undefined,
   ) => Promise<void>,
   gameSession: GameSession,
 ): React.JSX.Element {
   return (
     <Button
       variant="contained"
-      onClick={async () => advanceTurns(1, false)}
+      onClick={async () => advanceTurns(1)}
       disabled={!gameSession.canAdvanceTime()}
     >
       {'Advance 1 turn'}

@@ -14,10 +14,10 @@ import Grid from '@mui/material/Unstable_Grid2'
 import _ from 'lodash'
 import { useState } from 'react'
 import { initialTurn } from '../../lib/codesync/GameState'
+import type { AIPlayerName } from '../../lib/codesync/aiPlayer'
 import { startTiming } from '../../lib/dev'
 import type { GameSession } from '../../lib/gameSession/GameSession'
 import { AIPlayerDropdown } from './AIPlayerDropdown'
-import type { AIPlayerOption } from './aiPlayerOptions'
 
 export type AIPlayerControlPanelProps = {
   readonly gameSession: GameSession
@@ -33,11 +33,12 @@ export function AIPlayerControlPanel(
 ): React.JSX.Element {
   const [startTurn, setStartTurn] = useState<number>(defaultStartTurn)
   const [targetTurn, setTargetTurn] = useState<number>(defaultTargetTurn)
-  const [aiPlayer, setAiPlayer] = useState<AIPlayerOption>('Basic')
+  const [aiPlayer, setAiPlayer] = useState<AIPlayerName>('Basic')
 
   async function advanceTurns(
     turnsToAdvance?: number,
-    delegateToAi?: boolean,
+    // eslint-disable-next-line @typescript-eslint/no-shadow
+    aiPlayer?: AIPlayerName | undefined,
   ): Promise<void> {
     console.log(`Executing advanceTurns(). Resetting elapsed time.`)
     startTiming()
@@ -50,7 +51,7 @@ export function AIPlayerControlPanel(
     const turnAdvanced = await props.gameSession.advanceTurns(
       resolvedStartTurn,
       resolvedTargetTurn,
-      delegateToAi,
+      aiPlayer,
     )
     if (turnAdvanced) {
       props.setTurnAdvanced(true)
@@ -74,7 +75,11 @@ export function AIPlayerControlPanel(
         <Grid container spacing={1}>
           <Grid container xs={12} marginBottom={'0px'}>
             <Grid>
-              {delegate1TurnToAiButton(advanceTurns, props.gameSession)}
+              {delegate1TurnToAiButton(
+                advanceTurns,
+                props.gameSession,
+                aiPlayer,
+              )}
             </Grid>
             <Grid xsOffset={'auto'}>
               <AIPlayerDropdown aiPlayer={aiPlayer} setAiPlayer={setAiPlayer} />
@@ -86,6 +91,7 @@ export function AIPlayerControlPanel(
               props.gameSession,
               startTurn,
               targetTurn,
+              aiPlayer,
             )}
           </Grid>
           <Grid container xsOffset={'auto'}>
@@ -167,14 +173,15 @@ function targetTurnInputTextField(
 function delegate1TurnToAiButton(
   advanceTurns: (
     turnsToAdvance?: number,
-    delegateToAi?: boolean,
+    aiPlayer?: AIPlayerName | undefined,
   ) => Promise<void>,
   gameSession: GameSession,
+  aiPlayer: AIPlayerName,
 ): React.JSX.Element {
   return (
     <Button
       variant="outlined"
-      onClick={async () => advanceTurns(1, true)}
+      onClick={async () => advanceTurns(1, aiPlayer)}
       disabled={!gameSession.canDelegateTurnsToAi()}
     >
       {'Delegate 1 turn to AI'}
@@ -185,16 +192,17 @@ function delegate1TurnToAiButton(
 function delegateTurnsToAiButton(
   advanceTurns: (
     turnsToAdvance?: number,
-    delegateToAi?: boolean,
+    aiPlayer?: AIPlayerName | undefined,
   ) => Promise<void>,
   gameSession: GameSession,
   startTurn: number,
   targetTurn: number,
+  aiPlayer: AIPlayerName,
 ): React.JSX.Element {
   return (
     <Button
       variant="outlined"
-      onClick={async () => advanceTurns(undefined, true)}
+      onClick={async () => advanceTurns(undefined, aiPlayer)}
       disabled={!gameSession.canDelegateTurnsToAi() || startTurn >= targetTurn}
     >
       {`Delegate turns to AI:`}

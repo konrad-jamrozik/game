@@ -1,10 +1,11 @@
 import { Box, MenuItem, TextField } from '@mui/material'
 import _ from 'lodash'
-import { aiPlayerOptionLabel, type AIPlayerOption } from './aiPlayerOptions'
+import type { AIPlayerName } from '../../lib/codesync/aiPlayer'
+import { aiPlayerOptionLabel } from './aiPlayerOptions'
 
 export type AIPlayerDropdownProps = {
-  readonly aiPlayer: AIPlayerOption
-  readonly setAiPlayer: React.Dispatch<React.SetStateAction<AIPlayerOption>>
+  readonly aiPlayer: AIPlayerName
+  readonly setAiPlayer: React.Dispatch<React.SetStateAction<AIPlayerName>>
 }
 
 export function AIPlayerDropdown(
@@ -14,7 +15,7 @@ export function AIPlayerDropdown(
     const target = event.target as HTMLInputElement
     console.log(`"aiPlayer" is: ${props.aiPlayer}`)
     console.log(`Set "aiPlayer" to ${target.value}`)
-    props.setAiPlayer(target.value as AIPlayerOption)
+    props.setAiPlayer(target.value as AIPlayerName)
   }
 
   return (
