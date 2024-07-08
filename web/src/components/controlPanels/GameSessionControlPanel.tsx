@@ -1,6 +1,5 @@
 /* eslint-disable max-statements */
 /* eslint-disable @typescript-eslint/init-declarations */
-/* eslint-disable max-lines */
 import { Button, Card, CardContent, CardHeader } from '@mui/material'
 import Grid from '@mui/material/Unstable_Grid2'
 import _ from 'lodash'

@@ -6,16 +6,16 @@ import { AssetsDataGrid } from './components/AssetsDataGrid/AssetsDataGrid'
 import { Charts } from './components/Charts'
 import { EventsDataGrid } from './components/EventsDataGrid/EventsDataGrid'
 import { FactionsDataGrid } from './components/FactionsDataGrid/FactionsDataGrid'
-import { GameSessionControlPanel } from './components/controlPanels/GameSessionControlPanel'
 import IntroDialog from './components/IntroDialog'
 import { MissionSitesDataGrid } from './components/MissionSitesDataGrid/MissionSitesDataGrid'
 import { MissionsDataGrid } from './components/MissionsDataGrid/MissionsDataGrid'
 import OutroDialog from './components/OutroDialog'
 import SaveOnExit from './components/SaveOnExit'
 import { SettingsPanel } from './components/SettingsPanel/SettingsPanel'
+import { AIPlayerControlPanel } from './components/controlPanels/AIPlayerControlPanel'
+import { GameSessionControlPanel } from './components/controlPanels/GameSessionControlPanel'
 import { useGameSessionContext } from './lib/gameSession/GameSession'
 import { useSettingsContext } from './lib/settings/Settings'
-import { AIPlayerControlPanel } from './components/controlPanels/AIPlayerControlPanel'
 
 export default function App(): React.JSX.Element {
   const settings = useSettingsContext()
