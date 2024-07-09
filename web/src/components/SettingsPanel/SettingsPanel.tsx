@@ -23,19 +23,19 @@ export function SettingsPanel(): React.JSX.Element {
   function handleIntroEnabledChange(
     event: React.ChangeEvent<HTMLInputElement>,
   ): void {
-    settings.setIntroEnabled(event.target.checked)
+    settings.updateIntroEnabled(event.target.checked)
   }
 
   function handleOutroEnabledChange(
     event: React.ChangeEvent<HTMLInputElement>,
   ): void {
-    settings.setOutroEnabled(event.target.checked)
+    settings.updateOutroEnabled(event.target.checked)
   }
 
   function handleChartsEnabledChange(
     event: React.ChangeEvent<HTMLInputElement>,
   ): void {
-    settings.setChartsEnabled(event.target.checked)
+    settings.updateChartsEnabled(event.target.checked)
   }
 
   // MUI components usage based on: https://mui.com/material-ui/react-list/#switch

@@ -1,6 +1,5 @@
 /* eslint-disable max-statements */
 /* eslint-disable sonarjs/no-inverted-boolean-check */
-/* eslint-disable no-underscore-dangle */
 /* eslint-disable @typescript-eslint/parameter-properties */
 import _ from 'lodash'
 import {
@@ -30,8 +29,8 @@ export const initialGameSessionData: GameSessionDataType = {
 export class GameSessionData {
   public constructor(
     private readonly storedData: StoredData,
-    private _data: GameSessionDataType,
-    private readonly _setData: React.Dispatch<
+    private readonly data: GameSessionDataType,
+    private readonly setData: React.Dispatch<
       React.SetStateAction<GameSessionDataType>
     >,
   ) {}
@@ -117,7 +116,7 @@ export class GameSessionData {
   }
 
   public getTurns(): readonly GameSessionTurn[] {
-    return this._data.turns
+    return this.data.turns
   }
 
   public getCurrentTurn(): GameSessionTurn {
@@ -126,7 +125,7 @@ export class GameSessionData {
 
   public getTurnAtUnsafe(turnToFind: number): GameSessionTurn | undefined {
     return _.find(
-      this._data.turns,
+      this.data.turns,
       (gameTurn) => getTurnNo(gameTurn) === turnToFind,
     )
   }
@@ -136,7 +135,7 @@ export class GameSessionData {
   }
 
   public getGameStates(): readonly GameState[] {
-    return _.flatMap(this._data.turns, (turn) => [
+    return _.flatMap(this.data.turns, (turn) => [
       turn.StartState,
       turn.EndState,
     ])
@@ -164,7 +163,7 @@ export class GameSessionData {
     const newData: GameSessionDataType = {
       turns: [...turnsBeforeCurrentTurn.slice(0, -1), turnBeforeCurrentTurn],
     }
-    this.setData(newData)
+    this.updateData(newData)
   }
 
   public resetCurrentTurn(): void {
@@ -174,7 +173,7 @@ export class GameSessionData {
     const newData: GameSessionDataType = {
       turns: [...this.getTurnsBeforeCurrentTurn(), currentTurnAfterReset],
     }
-    this.setData(newData)
+    this.updateData(newData)
   }
 
   public getTurnsBeforeCurrentTurn(): readonly GameSessionTurn[] {
@@ -189,43 +188,41 @@ export class GameSessionData {
     const newData: GameSessionDataType = {
       turns,
     }
-    this.setData(newData)
+    this.updateData(newData)
   }
 
   public resetData(): void {
     this.storedData.resetGameSessionData()
-    this._setData(initialGameSessionData)
+    this.setData(initialGameSessionData)
   }
 
   public save(): void {
     console.log('GameSessionData.save()')
-    this.storedData.saveGameSessionData(this._data)
+    this.storedData.saveGameSessionData(this.data)
   }
 
   public getSize(): number {
-    return JSON.stringify(this._data).length
+    return JSON.stringify(this.data).length
   }
 
   public getSaveOnExitEnabled(): boolean {
-    return this.storedData.getSaveOnExitEnabled(JSON.stringify(this._data))
+    return this.storedData.getSaveOnExitEnabled(JSON.stringify(this.data))
   }
 
   public getCompressionEnabled(): boolean {
-    return this.storedData.getCompressionEnabled(JSON.stringify(this._data))
+    return this.storedData.getCompressionEnabled(JSON.stringify(this.data))
   }
 
-  private setData(data: GameSessionDataType): void {
+  private updateData(data: GameSessionDataType): void {
     GameSessionData.verify(data.turns)
-    // Uncomment to save game session data on every update.
-    // Now it is saved only on exit.
+    // // Uncomment to save game session data on every update.
+    // // Now it is saved only on exit.
     // this.storedData.saveGameSessionData(data)
-    this._setData(data)
-    // kja is this necessary?
-    this._data = data
+    this.setData(data)
   }
 }
 
-// future work: Consider for later: using a reducer to manage game sates:
+// future work: Consider for later: using a reducer to manage game states:
 // https://react.dev/learn/extracting-state-logic-into-a-reducer
 // using immer:
 // https://react.dev/learn/extracting-state-logic-into-a-reducer#writing-concise-reducers-with-immer

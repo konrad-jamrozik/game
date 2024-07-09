@@ -55,7 +55,6 @@ export function useGameSession(storedData: StoredData): GameSession {
     )
   }, [loading, error])
 
-  // kja why pass here storedData, data and setData? Instead, pass storedData and obtain the remained data and setData from it.
   return new GameSession(
     new GameSessionData(storedData, data, setData),
     loading,

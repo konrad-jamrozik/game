@@ -1,4 +1,3 @@
-/* eslint-disable no-underscore-dangle */
 /* eslint-disable @typescript-eslint/max-params */
 /* eslint-disable @typescript-eslint/parameter-properties */
 import _ from 'lodash'
@@ -49,32 +48,32 @@ export class Settings {
   public constructor(
     private readonly storedData: StoredData,
     public readonly introEnabled: boolean,
-    private readonly _setIntroEnabled: React.Dispatch<
+    private readonly setIntroEnabled: React.Dispatch<
       React.SetStateAction<boolean>
     >,
     public readonly outroEnabled: boolean,
-    private readonly _setOutroEnabled: React.Dispatch<
+    private readonly setOutroEnabled: React.Dispatch<
       React.SetStateAction<boolean>
     >,
     public readonly chartsEnabled: boolean,
-    private readonly _setChartsEnabled: React.Dispatch<
+    private readonly setChartsEnabled: React.Dispatch<
       React.SetStateAction<boolean>
     >,
   ) {}
 
-  public setIntroEnabled(value: boolean): void {
+  public updateIntroEnabled(value: boolean): void {
     this.saveSettings({ introEnabled: value })
-    this._setIntroEnabled(value)
+    this.setIntroEnabled(value)
   }
 
-  public setOutroEnabled(value: boolean): void {
+  public updateOutroEnabled(value: boolean): void {
     this.saveSettings({ outroEnabled: value })
-    this._setOutroEnabled(value)
+    this.setOutroEnabled(value)
   }
 
-  public setChartsEnabled(value: boolean): void {
+  public updateChartsEnabled(value: boolean): void {
     this.saveSettings({ chartsEnabled: value })
-    this._setChartsEnabled(value)
+    this.setChartsEnabled(value)
   }
 
   public saveOnExit(): void {
@@ -85,9 +84,9 @@ export class Settings {
   public reset(): void {
     console.log('Settings.reset()')
     this.storedData.resetSettingsData()
-    this._setIntroEnabled(defaultSettingsData.introEnabled)
-    this._setOutroEnabled(defaultSettingsData.outroEnabled)
-    this._setChartsEnabled(defaultSettingsData.chartsEnabled)
+    this.setIntroEnabled(defaultSettingsData.introEnabled)
+    this.setOutroEnabled(defaultSettingsData.outroEnabled)
+    this.setChartsEnabled(defaultSettingsData.chartsEnabled)
   }
 
   private saveSettings({
