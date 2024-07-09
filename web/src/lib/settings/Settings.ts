@@ -9,12 +9,16 @@ export type SettingsDataType = {
   readonly introEnabled: boolean
   readonly outroEnabled: boolean
   readonly chartsEnabled: boolean
+  readonly eventLogEnabled: boolean
+  readonly missionLogEnabled: boolean
 }
 
 export const defaultSettingsData: SettingsDataType = {
   introEnabled: true,
   outroEnabled: true,
   chartsEnabled: true,
+  eventLogEnabled: true,
+  missionLogEnabled: true,
 }
 
 export function useSettingsContext(): Settings {
@@ -33,6 +37,14 @@ export function useSettings(storedData: StoredData): Settings {
     storedSettingsData.chartsEnabled,
   )
 
+  const [eventLogEnabled, setEventLogEnabled] = useState<boolean>(
+    storedSettingsData.eventLogEnabled,
+  )
+
+  const [missionLogEnabled, setMissionLogEnabled] = useState<boolean>(
+    storedSettingsData.missionLogEnabled,
+  )
+
   return new Settings(
     storedData,
     introEnabled,
@@ -41,6 +53,10 @@ export function useSettings(storedData: StoredData): Settings {
     setOutroEnabled,
     chartsEnabled,
     setChartsEnabled,
+    eventLogEnabled,
+    setEventLogEnabled,
+    missionLogEnabled,
+    setMissionLogEnabled,
   )
 }
 
@@ -57,6 +73,14 @@ export class Settings {
     >,
     public readonly chartsEnabled: boolean,
     private readonly setChartsEnabled: React.Dispatch<
+      React.SetStateAction<boolean>
+    >,
+    public readonly eventLogEnabled: boolean,
+    private readonly setEventLogEnabled: React.Dispatch<
+      React.SetStateAction<boolean>
+    >,
+    public readonly missionLogEnabled: boolean,
+    private readonly setMissionLogEnabled: React.Dispatch<
       React.SetStateAction<boolean>
     >,
   ) {}
@@ -76,6 +100,16 @@ export class Settings {
     this.setChartsEnabled(value)
   }
 
+  public updateEventLogEnabled(value: boolean): void {
+    this.saveSettings({ eventLogEnabled: value })
+    this.setEventLogEnabled(value)
+  }
+
+  public updateMissionLogEnabled(value: boolean): void {
+    this.saveSettings({ missionLogEnabled: value })
+    this.setMissionLogEnabled(value)
+  }
+
   public saveOnExit(): void {
     console.log('Settings.saveOnExit()')
     this.saveSettings({})
@@ -87,21 +121,29 @@ export class Settings {
     this.setIntroEnabled(defaultSettingsData.introEnabled)
     this.setOutroEnabled(defaultSettingsData.outroEnabled)
     this.setChartsEnabled(defaultSettingsData.chartsEnabled)
+    this.setEventLogEnabled(defaultSettingsData.eventLogEnabled)
+    this.setMissionLogEnabled(defaultSettingsData.missionLogEnabled)
   }
 
   private saveSettings({
     introEnabled,
     outroEnabled,
     chartsEnabled,
+    eventLogEnabled,
+    missionLogEnabled,
   }: {
     introEnabled?: boolean
     outroEnabled?: boolean
     chartsEnabled?: boolean
+    eventLogEnabled?: boolean
+    missionLogEnabled?: boolean
   }): void {
     const newSettingsData: SettingsDataType = {
       introEnabled: introEnabled ?? this.introEnabled,
       outroEnabled: outroEnabled ?? this.outroEnabled,
       chartsEnabled: chartsEnabled ?? this.chartsEnabled,
+      eventLogEnabled: eventLogEnabled ?? this.eventLogEnabled,
+      missionLogEnabled: missionLogEnabled ?? this.missionLogEnabled,
     }
     this.storedData.saveSettingsData(newSettingsData)
   }

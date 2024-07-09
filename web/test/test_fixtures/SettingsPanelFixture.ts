@@ -4,26 +4,26 @@ import _ from 'lodash'
 import { clickElement, getElementCheckState } from '../test_lib/testUtils'
 
 export class SettingsPanelFixture {
-  public async disableShowIntro(): Promise<void> {
-    await clickElement('checkbox', 'Show intro')
-    this.assertShowIntro(false)
+  public async disableIntro(): Promise<void> {
+    await clickElement('checkbox', 'Intro enabled')
+    this.assertIntroEnabled(false)
   }
 
-  public async enableShowIntro(): Promise<void> {
-    await clickElement('checkbox', 'Show intro')
-    this.assertShowIntro(true)
+  public async enableIntro(): Promise<void> {
+    await clickElement('checkbox', 'Intro enabled')
+    this.assertIntroEnabled(true)
   }
 
-  public async disableShowOutro(): Promise<void> {
-    await clickElement('checkbox', 'Show outro')
-    this.assertShowOutro(false)
+  public async disableOutro(): Promise<void> {
+    await clickElement('checkbox', 'Outro enabled')
+    this.assertOutroEnabled(false)
   }
 
-  public assertShowIntro(isChecked: boolean): void {
-    getElementCheckState('checkbox', 'Show intro', isChecked)
+  public assertIntroEnabled(isChecked: boolean): void {
+    getElementCheckState('checkbox', 'Intro enabled', isChecked)
   }
 
-  public assertShowOutro(isChecked: boolean): void {
-    getElementCheckState('checkbox', 'Show outro', isChecked)
+  public assertOutroEnabled(isChecked: boolean): void {
+    getElementCheckState('checkbox', 'Outro enabled', isChecked)
   }
 }

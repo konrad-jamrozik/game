@@ -13,7 +13,7 @@ describe('Test suite for IntroDialog.tsx', () => {
     const { controlPanel, settingsPanel, introDialog } = renderApp(true)
     introDialog.assertVisibility('visible')
     await introDialog.close()
-    settingsPanel.assertShowIntro(true)
+    settingsPanel.assertIntroEnabled(true)
 
     await controlPanel.advance1Turn()
 
@@ -27,7 +27,7 @@ describe('Test suite for IntroDialog.tsx', () => {
 
     // When the 'show intro' setting is disabled and then the game is reset.
     // Then the intro dialog does not appear.
-    await settingsPanel.disableShowIntro()
+    await settingsPanel.disableIntro()
     await controlPanel.resetGame()
     introDialog.assertVisibility('not present')
   })
@@ -40,7 +40,7 @@ describe('Test suite for IntroDialog.tsx', () => {
     await controlPanel.advance1Turn()
     await controlPanel.resetGame()
     introDialog.assertVisibility('not present')
-    await settingsPanel.enableShowIntro()
+    await settingsPanel.enableIntro()
     introDialog.assertVisibility('not present')
   })
 })

@@ -19,6 +19,8 @@ export function seconds(milliseconds: number): string {
 
 let timestamp = 0
 
+// kja 2 use instead console.time() / timeLog() / timeEnd()
+// https://medium.com/nmc-techblog/advanced-console-log-tips-tricks-fa3762930bca
 export function startTiming(): void {
   timestamp = performance.now() // Start timing
 }

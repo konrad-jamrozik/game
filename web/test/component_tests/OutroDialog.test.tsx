@@ -16,7 +16,7 @@ describe('Test suite for OutroDialog.tsx', () => {
     // - No outro dialog appears.
     const { controlPanel, settingsPanel, agentsDataGrid, outroDialog } =
       renderApp(false)
-    settingsPanel.assertShowOutro(true)
+    settingsPanel.assertOutroEnabled(true)
     await controlPanel.advance1Turn()
     outroDialog.assertVisibility('not present')
 
@@ -56,7 +56,7 @@ describe('Test suite for OutroDialog.tsx', () => {
     // - The game is over but the outro dialog does not appear
     await outroDialog.close()
     controlPanel.assertTurn2()
-    await settingsPanel.disableShowOutro()
+    await settingsPanel.disableOutro()
     await controlPanel.revert1Turn()
     controlPanel.assertTurn1(true)
     await controlPanel.advance1Turn(true)

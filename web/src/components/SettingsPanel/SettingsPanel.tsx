@@ -8,13 +8,17 @@ import {
   ListItem,
   ListItemText,
   Switch,
+  type SxProps,
+  type Theme,
 } from '@mui/material'
+import type React from 'react'
 import {
-  type GameSession,
   useGameSessionContext,
+  type GameSession,
 } from '../../lib/gameSession/GameSession'
 import { useSettingsContext, type Settings } from '../../lib/settings/Settings'
 import { Label } from '../utilities/Label'
+import _ from 'lodash'
 
 export function SettingsPanel(): React.JSX.Element {
   const settings: Settings = useSettingsContext()
@@ -38,53 +42,56 @@ export function SettingsPanel(): React.JSX.Element {
     settings.updateChartsEnabled(event.target.checked)
   }
 
-  // MUI components usage based on: https://mui.com/material-ui/react-list/#switch
+  function handleEventLogEnabledChange(
+    event: React.ChangeEvent<HTMLInputElement>,
+  ): void {
+    settings.updateEventLogEnabled(event.target.checked)
+  }
+
+  function handleMissionLogEnabledChange(
+    event: React.ChangeEvent<HTMLInputElement>,
+  ): void {
+    settings.updateMissionLogEnabled(event.target.checked)
+  }
+
+  // MUI "List and switch" components usage based on: https://mui.com/material-ui/react-list/#switch
   return (
     <Card variant="outlined">
-      <CardHeader title="Settings" sx={{ paddingBottom: '0px' }} />
+      <CardHeader title="Settings" sx={{ paddingBottom: 1 }} />
       <List sx={{ width: '100%', maxWidth: 360, paddingTop: '0px' }}>
-        <ListItem>
-          <ListItemText id="switch-list-introEnabled" primary="Show intro" />
-          <Switch
-            edge="end"
-            checked={settings.introEnabled}
-            onChange={handleIntroEnabledChange}
-            inputProps={{
-              'aria-labelledby': 'switch-list-introEnabled',
-            }}
-          />
-        </ListItem>
-        <ListItem>
-          <ListItemText id="switch-list-outroEnabled" primary="Show outro" />
-          <Switch
-            edge="end"
-            checked={settings.outroEnabled}
-            onChange={handleOutroEnabledChange}
-            inputProps={{
-              'aria-labelledby': 'switch-list-outroEnabled',
-            }}
-          />
-        </ListItem>
-        <ListItem>
-          <ListItemText id="switch-list-chartsEnabled" primary="Show charts" />
-          <Switch
-            edge="end"
-            checked={settings.chartsEnabled}
-            onChange={handleChartsEnabledChange}
-            inputProps={{
-              'aria-labelledby': 'switch-list-chartsEnabled',
-            }}
-          />
-        </ListItem>
+        <ListItemWithSwitch
+          labelText="Intro enabled"
+          checked={settings.introEnabled}
+          onChange={handleIntroEnabledChange}
+        />
+        <ListItemWithSwitch
+          labelText="Outro enabled"
+          checked={settings.outroEnabled}
+          onChange={handleOutroEnabledChange}
+        />
+        <ListItemWithSwitch
+          labelText="Show mission log"
+          checked={settings.missionLogEnabled}
+          onChange={handleMissionLogEnabledChange}
+        />
+        <ListItemWithSwitch
+          labelText="Show event log"
+          checked={settings.eventLogEnabled}
+          onChange={handleEventLogEnabledChange}
+        />
+        <ListItemWithSwitch
+          labelText="Show charts"
+          checked={settings.chartsEnabled}
+          onChange={handleChartsEnabledChange}
+        />
         <Divider sx={{ marginY: 1 }} />
-
-        <ListItem>
+        <ListItemSx>
           <ListItemText primary="Saved turn" />
           <Label sx={{ minWidth: 40, marginLeft: 2, textAlign: 'center' }}>
             {gameSession.savedTurn ?? 'N/A'}
           </Label>
-        </ListItem>
-        <ListItem>
+        </ListItemSx>
+        <ListItemSx>
           <ListItemText
             id="switch-list-saveOnExitEnabled"
             primary="Save on exit"
@@ -97,8 +104,8 @@ export function SettingsPanel(): React.JSX.Element {
               'aria-labelledby': 'switch-list-saveOnExitEnabled',
             }}
           />
-        </ListItem>
-        <ListItem>
+        </ListItemSx>
+        <ListItemSx>
           <ListItemText
             id="switch-list-compressionEnabled"
             primary="Compress"
@@ -111,15 +118,15 @@ export function SettingsPanel(): React.JSX.Element {
               'aria-labelledby': 'switch-list-compressionEnabled',
             }}
           />
-        </ListItem>
-        <ListItem>
+        </ListItemSx>
+        <ListItemSx>
           <ListItemText primary="Data size" />
           <Label sx={{ minWidth: 92, marginLeft: 2, textAlign: 'center' }}>
             {formatSize(gameSession.getSize())}
           </Label>
-        </ListItem>
+        </ListItemSx>
         <Divider sx={{ marginY: 1 }} />
-        <ListItem sx={{ justifyContent: 'center' }}>
+        <ListItemSx sx={{ justifyContent: 'center' }}>
           <Button
             variant="outlined"
             color="error"
@@ -129,10 +136,51 @@ export function SettingsPanel(): React.JSX.Element {
           >
             Reset settings
           </Button>
-        </ListItem>
+        </ListItemSx>
       </List>
     </Card>
   )
+}
+
+type ListItemWithSwitchProps = {
+  labelText: string
+  checked: boolean
+  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void
+  sx?: SxProps<Theme>
+}
+
+function ListItemWithSwitch({
+  labelText,
+  checked,
+  onChange,
+  sx,
+}: ListItemWithSwitchProps): React.JSX.Element {
+  return (
+    <ListItemSx sx={sx ?? {}}>
+      <ListItemText
+        id={`switch-list-${_.camelCase(labelText)}`}
+        primary={labelText}
+      />
+      <Switch
+        edge="end"
+        checked={checked}
+        onChange={onChange}
+        inputProps={{
+          'aria-labelledby': `switch-list-${_.camelCase(labelText)}`,
+        }}
+      />
+    </ListItemSx>
+  )
+}
+
+function ListItemSx({
+  sx,
+  children,
+}: {
+  sx?: SxProps<Theme>
+  children: React.ReactNode
+}): React.JSX.Element {
+  return <ListItem sx={{ height: 32, ...sx }}>{children}</ListItem>
 }
 
 function formatSize(length: number): string {

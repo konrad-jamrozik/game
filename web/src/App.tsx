@@ -92,12 +92,16 @@ export default function App(): React.JSX.Element {
         <Grid sx={{ bgcolor: '#002040' }}>
           <AgentsDataGrid />
         </Grid>
-        <Grid sx={{ bgcolor: '#301040' }}>
-          <MissionsDataGrid />
-        </Grid>
-        <Grid sx={{ bgcolor: '#002040' }}>
-          <EventsDataGrid />
-        </Grid>
+        {settings.missionLogEnabled && (
+          <Grid sx={{ bgcolor: '#301040' }}>
+            <MissionsDataGrid />
+          </Grid>
+        )}
+        {settings.eventLogEnabled && (
+          <Grid sx={{ bgcolor: '#002040' }}>
+            <EventsDataGrid />
+          </Grid>
+        )}
         {settings.chartsEnabled && <Charts />}
         <Grid xs={12} sx={{ bgcolor: '#300020' }}>
           <Footer />
