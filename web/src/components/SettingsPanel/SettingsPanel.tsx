@@ -5,11 +5,8 @@ import {
   CardHeader,
   Divider,
   List,
-  ListItem,
   ListItemText,
   Switch,
-  type SxProps,
-  type Theme,
 } from '@mui/material'
 import type React from 'react'
 import {
@@ -18,7 +15,7 @@ import {
 } from '../../lib/gameSession/GameSession'
 import { useSettingsContext, type Settings } from '../../lib/settings/Settings'
 import { Label } from '../utilities/Label'
-import _ from 'lodash'
+import { ListItemSx, ListItemWithSwitch } from './ListItemWithSwitch'
 
 export function SettingsPanel(): React.JSX.Element {
   const settings: Settings = useSettingsContext()
@@ -140,47 +137,6 @@ export function SettingsPanel(): React.JSX.Element {
       </List>
     </Card>
   )
-}
-
-type ListItemWithSwitchProps = {
-  labelText: string
-  checked: boolean
-  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void
-  sx?: SxProps<Theme>
-}
-
-function ListItemWithSwitch({
-  labelText,
-  checked,
-  onChange,
-  sx,
-}: ListItemWithSwitchProps): React.JSX.Element {
-  return (
-    <ListItemSx sx={sx ?? {}}>
-      <ListItemText
-        id={`switch-list-${_.camelCase(labelText)}`}
-        primary={labelText}
-      />
-      <Switch
-        edge="end"
-        checked={checked}
-        onChange={onChange}
-        inputProps={{
-          'aria-labelledby': `switch-list-${_.camelCase(labelText)}`,
-        }}
-      />
-    </ListItemSx>
-  )
-}
-
-function ListItemSx({
-  sx,
-  children,
-}: {
-  sx?: SxProps<Theme>
-  children: React.ReactNode
-}): React.JSX.Element {
-  return <ListItem sx={{ height: 32, ...sx }}>{children}</ListItem>
 }
 
 function formatSize(length: number): string {
