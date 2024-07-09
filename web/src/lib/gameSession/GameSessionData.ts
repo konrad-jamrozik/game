@@ -217,7 +217,7 @@ export class GameSessionData {
   private setData(data: GameSessionDataType): void {
     GameSessionData.verify(data.turns)
     // Uncomment to save game session data on every update.
-    // Now it is saveed only on exit.
+    // Now it is saved only on exit.
     // this.storedData.saveGameSessionData(data)
     this._setData(data)
     // kja is this necessary?

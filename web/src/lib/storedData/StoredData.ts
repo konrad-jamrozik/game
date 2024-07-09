@@ -57,6 +57,7 @@ export class StoredData {
     )
     this.data = { ...this.data, settings: newSettingsData }
   }
+
   public getSaveOnExitEnabled(json: string): boolean {
     return !this.getCompressionEnabled(json)
   }
