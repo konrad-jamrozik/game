@@ -21,7 +21,7 @@ export type AgentPlayerActionName =
   | 'SendAgentsToTrainingPlayerAction'
   | 'RecallAgentsPlayerAction'
 
-export const PlayerActionNameVal = [
+export const PlayerActionNameVal: PlayerActionName[] = [
   'AdvanceTimePlayerAction',
   'BuyTransportCapacityPlayerAction',
   'HireAgentsPlayerAction',
