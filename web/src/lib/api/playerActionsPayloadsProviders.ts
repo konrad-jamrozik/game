@@ -12,7 +12,6 @@ export const playerActionsPayloadsProviders: {
     Name: 'BuyTransportCapacityPlayerAction' as PlayerActionNameInTurn,
     TargetId,
   }),
-  // Note: currently HireAgents always hires 1 agent. See PlayerActionPayload.cs in backend.
   HireAgentsPlayerAction: (TargetId: number) => ({
     Name: 'HireAgentsPlayerAction' as PlayerActionNameInTurn,
     TargetId,

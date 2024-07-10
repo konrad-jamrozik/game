@@ -21,6 +21,8 @@ export function renderApp(introEnabled: boolean): {
     introEnabled,
     outroEnabled: true,
     chartsEnabled: false,
+    eventLogEnabled: false,
+    missionLogEnabled: false,
   })
   render(
     <SettingsProvider storedData={storedData}>
