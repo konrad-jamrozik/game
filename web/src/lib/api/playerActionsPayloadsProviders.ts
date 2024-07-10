@@ -3,46 +3,45 @@
 import type { PlayerActionNameInTurn } from '../codesync/PlayerActionName'
 import type { PlayerActionPayload } from '../codesync/PlayerActionPayload'
 
-// kja2-refact this map could be consolidated with PlayerActionEvent.ts and renderGameEvent.ts
 export const playerActionsPayloadsProviders: {
   [actionName in PlayerActionNameInTurn]: PayloadProviderMap[actionName]
 } = {
   // Note: currently Cap always buys 1 capacity. See PlayerActionPayload.cs in backend.
   BuyTransportCapacityPlayerAction: (TargetId: number) => ({
-    Name: 'BuyTransportCapacityPlayerAction' as PlayerActionNameInTurn,
+    Name: 'BuyTransportCapacityPlayerAction' as const,
     TargetId,
   }),
   HireAgentsPlayerAction: (TargetId: number) => ({
-    Name: 'HireAgentsPlayerAction' as PlayerActionNameInTurn,
+    Name: 'HireAgentsPlayerAction' as const,
     TargetId,
   }),
   SackAgentsPlayerAction: (Ids: number[]) => ({
-    Name: 'SackAgentsPlayerAction' as PlayerActionNameInTurn,
+    Name: 'SackAgentsPlayerAction' as const,
     Ids,
   }),
   SendAgentsToGenerateIncomePlayerAction: (Ids: number[]) => ({
-    Name: 'SendAgentsToGenerateIncomePlayerAction' as PlayerActionNameInTurn,
+    Name: 'SendAgentsToGenerateIncomePlayerAction' as const,
     Ids,
   }),
   SendAgentsToGatherIntelPlayerAction: (Ids: number[]) => ({
-    Name: 'SendAgentsToGatherIntelPlayerAction' as PlayerActionNameInTurn,
+    Name: 'SendAgentsToGatherIntelPlayerAction' as const,
     Ids,
   }),
   SendAgentsToTrainingPlayerAction: (Ids: number[]) => ({
-    Name: 'SendAgentsToTrainingPlayerAction' as PlayerActionNameInTurn,
+    Name: 'SendAgentsToTrainingPlayerAction' as const,
     Ids,
   }),
   RecallAgentsPlayerAction: (Ids: number[]) => ({
-    Name: 'RecallAgentsPlayerAction' as PlayerActionNameInTurn,
+    Name: 'RecallAgentsPlayerAction' as const,
     Ids,
   }),
   LaunchMissionPlayerAction: (Ids: number[], TargetId: number) => ({
-    Name: 'LaunchMissionPlayerAction' as PlayerActionNameInTurn,
+    Name: 'LaunchMissionPlayerAction' as const,
     Ids,
     TargetId,
   }),
   InvestIntelPlayerAction: (Ids: number[], TargetId: number) => ({
-    Name: 'InvestIntelPlayerAction' as PlayerActionNameInTurn,
+    Name: 'InvestIntelPlayerAction' as const,
     Ids,
     TargetId,
   }),
@@ -72,11 +71,41 @@ type PayloadProviderMap = {
   // and the actual implementation would take no parameters, then this would not catch that.
   BuyTransportCapacityPlayerAction: PayloadFromTargetId
   HireAgentsPlayerAction: PayloadFromTargetId
-  SackAgentsPlayerAction: PayloadFromIds
-  SendAgentsToGenerateIncomePlayerAction: PayloadFromIds
-  SendAgentsToGatherIntelPlayerAction: PayloadFromIds
-  SendAgentsToTrainingPlayerAction: PayloadFromIds
-  RecallAgentsPlayerAction: PayloadFromIds
-  LaunchMissionPlayerAction: PayloadFromIdsAndTargetId
   InvestIntelPlayerAction: PayloadFromIdsAndTargetId
+  LaunchMissionPlayerAction: PayloadFromIdsAndTargetId
+  RecallAgentsPlayerAction: PayloadFromIds
+  SackAgentsPlayerAction: PayloadFromIds
+  SendAgentsToGatherIntelPlayerAction: PayloadFromIds
+  SendAgentsToGenerateIncomePlayerAction: PayloadFromIds
+  SendAgentsToTrainingPlayerAction: PayloadFromIds
 }
+
+// kja searching e.g. for 'SendAgentsToGatherIntelPlayerAction:' shows it usage in following maps:
+// - playerActionsPayloadsProviders, to determine how to call the backend for this action
+// - agentPlayerActionConditionMap, to determine when this action can be performed on given agent
+// - batchAgentPlayerActionOptionLabel, to show label in player actions dropdown
+// - gameEventDisplayMap, to determine how to display corresponding event in event log
+//   - this has both the displayed type, and templated details
+//
+// I feel it would be better to consolidate all of these maps into one, by introducing a class
+// representing this player action. This class would have methods like:
+// - getBackendPayloadProvider(),
+// - getCanBeAppliedToAgent(agent),
+// - getLabel(),
+// - getEventDisplay()
+//
+// The underlying maps may still be useful, and the method implementations may call into those maps.
+//
+// But instead of doing this:
+//   const payloadProvider = playerActionsPayloadsProviders[playerActionName]
+// I would do this:
+//  playerAction.getBackendPayloadProvider()
+//
+// Instead of doing this:
+//   action: BatchAgentPlayerActionOption,
+//   return agentPlayerActionConditionMap[action](rowAgent)
+// I would do this:
+//   playerAction.getCanBeAppliedToAgent(rowAgent)
+//
+// I would sometimes need to retrieve the player action class based on its name,
+// so I would likely have a map from player action names to player action classes.

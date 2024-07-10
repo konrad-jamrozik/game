@@ -5,11 +5,10 @@ import {
   type GameEventName,
   type GameEventWithTurn,
 } from '../codesync/GameEvent'
-import type { PlayerActionName } from '../codesync/PlayerActionName'
 import { never, str } from '../utils'
 import { formatString } from './formatString'
 
-const playerActionNameToDisplayMap: {
+const gameEventDisplayMap: {
   [name in GameEventName]: {
     displayedType: string
     displayedDetails: string
@@ -75,13 +74,12 @@ export function getDisplayedKind(event: GameEventWithTurn): string {
 }
 
 export function getDisplayedType(event: GameEventWithTurn): string {
-  return playerActionNameToDisplayMap[event.Type].displayedType
+  return gameEventDisplayMap[event.Type].displayedType
 }
 
 export function getDisplayedDetails(event: GameEventWithTurn): string {
   return formatString(
-    playerActionNameToDisplayMap[event.Type as PlayerActionName]
-      .displayedDetails,
+    gameEventDisplayMap[event.Type].displayedDetails,
     'Ids' in event ? event.Ids : undefined,
     'TargetId' in event ? event.TargetId : undefined,
   )

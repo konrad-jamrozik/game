@@ -36,14 +36,14 @@ export type GameEventWithTurn = GameEvent & {
   readonly Turn: number
 }
 
+export function isWorldEvent(event: GameEvent): event is WorldEvent {
+  return _.includes(WorldEventNameVal, event.Type)
+}
+
 export function isPlayerActionEvent(
   event: GameEvent,
 ): event is PlayerActionEvent {
   return _.includes(PlayerActionNameVal, event.Type)
-}
-
-export function isWorldEvent(event: GameEvent): event is WorldEvent {
-  return _.includes(WorldEventNameVal, event.Type)
 }
 
 export function addTurnToGameEvent(
