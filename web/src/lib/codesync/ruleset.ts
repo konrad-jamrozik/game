@@ -11,7 +11,7 @@ import type {
   Mission,
   MissionSite,
 } from './GameState'
-import type { AgentPlayerActionName } from './PlayerActionEvent'
+import type { AgentPlayerActionName } from './PlayerActionName'
 
 export const agentUpkeepCost = 5
 

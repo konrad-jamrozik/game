@@ -1,11 +1,4 @@
-// codesync: UfoGameLib.Controller.PlayerAction
-import type { GameEventBase } from './GameEvent'
-
-export type PlayerActionEvent = GameEventBase & {
-  readonly Ids: number[] | undefined
-  readonly TargetId: number | undefined
-}
-
+// codesync: UfoGameLib.Controller.PlayerActionName
 export const AgentPlayerActionNameVal = [
   'RecallAgentsPlayerAction',
   'SackAgentsPlayerAction',

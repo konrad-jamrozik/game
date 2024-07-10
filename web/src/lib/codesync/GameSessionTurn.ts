@@ -1,9 +1,7 @@
 // codesync: UfoGameLib.State.GameSessionTurn
 import _ from 'lodash'
-import type { GameEvent } from './GameEvent'
+import type { GameEvent, PlayerActionEvent, WorldEvent } from './GameEvent'
 import type { GameState } from './GameState'
-import type { PlayerActionEvent } from './PlayerActionEvent'
-import type { WorldEvent } from './WorldEvent'
 
 export type GameSessionTurn = {
   readonly EventsUntilStartState: WorldEvent[]

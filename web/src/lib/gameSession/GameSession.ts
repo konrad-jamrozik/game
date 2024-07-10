@@ -17,7 +17,7 @@ import {
   type GameSessionTurn,
 } from '../codesync/GameSessionTurn'
 import { initialTurn, type Assets, type GameState } from '../codesync/GameState'
-import type { AgentPlayerActionName } from '../codesync/PlayerActionEvent'
+import type { AgentPlayerActionName } from '../codesync/PlayerActionName'
 import type { PlayerActionPayload } from '../codesync/PlayerActionPayload'
 import type { AIPlayerName } from '../codesync/aiPlayer'
 import { agentHireCost, transportCapBuyingCost } from '../codesync/ruleset'

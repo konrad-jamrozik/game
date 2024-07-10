@@ -17,3 +17,7 @@ export function median(numbers: number[]): number {
 export function str(array: (string | number)[]): string {
   return `[${array.join(', ')}]`
 }
+
+export function never(): never {
+  throw new Error(`Never invoked. This should never happen.`)
+}

@@ -1,5 +1,6 @@
 // codesync: UfoGameLib.Api.PlayerActionPayload
-import type { PlayerActionNameInTurn } from './PlayerActionEvent'
+
+import type { PlayerActionNameInTurn } from './PlayerActionName'
 
 export type PlayerActionPayload = {
   readonly Name: PlayerActionNameInTurn

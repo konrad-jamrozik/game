@@ -1,10 +1,12 @@
 import _ from 'lodash'
-import type { GameEventName, GameEventWithTurn } from '../codesync/GameEvent'
 import {
-  type PlayerActionName,
-  PlayerActionNameVal,
-} from '../codesync/PlayerActionEvent'
-import { str } from '../utils'
+  isPlayerActionEvent,
+  isWorldEvent,
+  type GameEventName,
+  type GameEventWithTurn,
+} from '../codesync/GameEvent'
+import type { PlayerActionName } from '../codesync/PlayerActionName'
+import { never, str } from '../utils'
 import { formatString } from './formatString'
 
 const playerActionNameToDisplayMap: {
@@ -64,9 +66,12 @@ const playerActionNameToDisplayMap: {
 }
 
 export function getDisplayedKind(event: GameEventWithTurn): string {
-  return _.includes(PlayerActionNameVal, event.Type)
-    ? 'Player Action'
-    : 'World Event'
+  if (isWorldEvent(event)) {
+    return 'World Event'
+  } else if (isPlayerActionEvent(event)) {
+    return 'Player Action'
+  }
+  return never()
 }
 
 export function getDisplayedType(event: GameEventWithTurn): string {
