@@ -50,7 +50,7 @@ public static class Contract
             tuple =>
             {
                 if (!tuple.First.Equals(tuple.Second))
-                    throw new InvariantException();
+                    throw new InvariantException($"First: {tuple.First}, Second: {tuple.Second}");
             });
     }
 

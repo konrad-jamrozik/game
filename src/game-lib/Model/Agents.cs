@@ -77,7 +77,7 @@ public class Agents : List<Agent>
     public Agents GetByIds(int[] ids)
     {
         var agents = this.Where(agent => ids.Contains(agent.Id)).ToAgents();
-        Contract.AssertEqual(agents.Select(agent => agent.Id), ids);
+        Contract.AssertEqual(agents.Select(agent => agent.Id).Order(), ids.Order());
         return agents;
     }
 
