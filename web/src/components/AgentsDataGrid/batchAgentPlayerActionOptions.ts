@@ -1,15 +1,19 @@
+import _ from 'lodash'
 import type { AgentPlayerActionName } from '../../lib/codesync/PlayerActionName'
+import { playerActionMap } from '../../lib/model/PlayerAction'
 
 export type BatchAgentPlayerActionOption = AgentPlayerActionName | 'None'
 
-// kja to replace with playerActionMap
 export const batchAgentPlayerActionOptionLabel: {
   [key in BatchAgentPlayerActionOption]: string
 } = {
+  SendAgentsToGenerateIncomePlayerAction:
+    playerActionMap.SendAgentsToGenerateIncomePlayerAction.label,
+  SendAgentsToGatherIntelPlayerAction:
+    playerActionMap.SendAgentsToGatherIntelPlayerAction.label,
+  SendAgentsToTrainingPlayerAction:
+    playerActionMap.SendAgentsToTrainingPlayerAction.label,
+  RecallAgentsPlayerAction: playerActionMap.RecallAgentsPlayerAction.label,
+  SackAgentsPlayerAction: playerActionMap.SackAgentsPlayerAction.label,
   None: 'None',
-  RecallAgentsPlayerAction: 'Recall',
-  SackAgentsPlayerAction: 'Sack',
-  SendAgentsToGatherIntelPlayerAction: 'Send to gather intel',
-  SendAgentsToGenerateIncomePlayerAction: 'Send to gen. income',
-  SendAgentsToTrainingPlayerAction: 'Send to training',
 }
