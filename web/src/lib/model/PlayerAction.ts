@@ -1,6 +1,11 @@
 // codesync: UfoGameLib.Model.PlayerAction
 // codesync: UfoGameLib.Model.Agent
-import _ from 'lodash'
+import {
+  newPayloadFromIds,
+  newPayloadFromIdsAndTargetId,
+  newPayloadFromTargetId,
+  type PayloadProvider,
+} from '../api/playerActionsPayloadsProviders'
 import type { Agent } from '../codesync/GameState'
 import type { PlayerActionName } from '../codesync/PlayerActionName'
 import {
@@ -23,39 +28,62 @@ import {
 export type PlayerAction = {
   label: string
   canApplyToAgent?: (agent: Agent) => boolean
+  payloadProvider?: PayloadProvider
 }
 
 export const playerActionMap: {
   [key in PlayerActionName]: PlayerAction
 } = {
   AdvanceTimePlayerAction: { label: 'Advance time' },
-  BuyTransportCapacityPlayerAction: { label: 'Buy transport capacity' },
-  HireAgentsPlayerAction: { label: 'Hire agents' },
-  InvestIntelPlayerAction: { label: 'Invest intel' },
-  LaunchMissionPlayerAction: { label: 'Launch mission' },
+  BuyTransportCapacityPlayerAction: {
+    label: 'Buy transport capacity',
+    payloadProvider: newPayloadFromTargetId('BuyTransportCapacityPlayerAction'),
+  },
+  HireAgentsPlayerAction: {
+    label: 'Hire agents',
+    payloadProvider: newPayloadFromTargetId('HireAgentsPlayerAction'),
+  },
+  InvestIntelPlayerAction: {
+    label: 'Invest intel',
+    payloadProvider: newPayloadFromIdsAndTargetId('InvestIntelPlayerAction'),
+  },
+  LaunchMissionPlayerAction: {
+    label: 'Launch mission',
+    payloadProvider: newPayloadFromIdsAndTargetId('LaunchMissionPlayerAction'),
+  },
   RecallAgentsPlayerAction: {
     label: 'Recall',
     canApplyToAgent: canBeRecalled,
+    payloadProvider: newPayloadFromIds('RecallAgentsPlayerAction'),
   },
-  SackAgentsPlayerAction: { label: 'Sack', canApplyToAgent: canBeSacked },
+  SackAgentsPlayerAction: {
+    label: 'Sack',
+    canApplyToAgent: canBeSacked,
+    payloadProvider: newPayloadFromIds('SackAgentsPlayerAction'),
+  },
   SendAgentsToGatherIntelPlayerAction: {
     label: 'Send to gather intel',
     canApplyToAgent: canBeSentOnMission,
+    payloadProvider: newPayloadFromIds('SendAgentsToGatherIntelPlayerAction'),
   },
   SendAgentsToGenerateIncomePlayerAction: {
     label: 'Send to gen. income',
     canApplyToAgent: canBeSentOnMission,
+    payloadProvider: newPayloadFromIds(
+      'SendAgentsToGenerateIncomePlayerAction',
+    ),
   },
   SendAgentsToTrainingPlayerAction: {
     label: 'Send to training',
     canApplyToAgent: canBeSentToTraining,
+    payloadProvider: newPayloadFromIds('SendAgentsToTrainingPlayerAction'),
   },
 }
 
 // kja searching e.g. for 'SendAgentsToGatherIntelPlayerAction:' shows it usage in following maps:
 // - playerActionsPayloadsProviders, to determine how to call the backend for this action
-// - agentPlayerActionConditionMap, to determine when this action can be performed on given agent
-// - batchAgentPlayerActionOptionLabel, to show label in player actions dropdown
+// - DONE agentPlayerActionConditionMap, to determine when this action can be performed on given agent
+// - DONE batchAgentPlayerActionOptionLabel, to show label in player actions dropdown
 // - gameEventDisplayMap, to determine how to display corresponding event in event log
 //   - this has both the displayed type, and templated details
 //

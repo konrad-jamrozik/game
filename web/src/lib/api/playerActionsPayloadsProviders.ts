@@ -59,6 +59,34 @@ export type PayloadFromIdsAndTargetId = (
   TargetId: number,
 ) => PlayerActionPayload
 
+export function newPayloadFromIds(
+  name: PlayerActionNameInTurn,
+): PayloadFromIds {
+  return (ids: number[]) => ({
+    Name: name,
+    Ids: ids,
+  })
+}
+
+export function newPayloadFromTargetId(
+  name: PlayerActionNameInTurn,
+): PayloadFromTargetId {
+  return (targetId: number) => ({
+    Name: name,
+    TargetId: targetId,
+  })
+}
+
+export function newPayloadFromIdsAndTargetId(
+  name: PlayerActionNameInTurn,
+): PayloadFromIdsAndTargetId {
+  return (ids: number[], targetId: number) => ({
+    Name: name,
+    Ids: ids,
+    TargetId: targetId,
+  })
+}
+
 type PayloadProviderMap = {
   [key in PlayerActionNameInTurn]: PayloadProvider
 } & {
