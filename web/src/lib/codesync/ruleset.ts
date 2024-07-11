@@ -78,16 +78,7 @@ export function requiredSurvivingAgentsForSuccess(site: MissionSite): number {
   return reqAgentsForSuccess
 }
 
-export const agentPlayerActionConditionMap: {
-  [action in AgentPlayerActionName]: (agent: Agent) => boolean
-} = {
-  RecallAgentsPlayerAction: canBeRecalled,
-  SackAgentsPlayerAction: canBeSacked,
-  SendAgentsToGatherIntelPlayerAction: canBeSentOnMission,
-  SendAgentsToGenerateIncomePlayerAction: canBeSentOnMission,
-  SendAgentsToTrainingPlayerAction: canBeSentToTraining,
-}
-
+// kja this does not belong in ruleset
 type EstimatableAssets = Pick<Assets, 'Money' | 'Intel'>
 
 export function getAssetTurnDiffEstimate(
@@ -131,17 +122,17 @@ function intelGatheringAgents(gameState: GameState): Agent[] {
   )
 }
 
-function canBeRecalled(agent: Agent): boolean {
+export function canBeRecalled(agent: Agent): boolean {
   const validStates: AgentState[] = ['GatheringIntel', 'GeneratingIncome']
   return _.includes(validStates, agent.CurrentState)
 }
 
-function canBeSacked(agent: Agent): boolean {
+export function canBeSacked(agent: Agent): boolean {
   const validStates: AgentState[] = ['Available', 'Training']
   return _.includes(validStates, agent.CurrentState)
 }
 
-function canBeSentToTraining(agent: Agent): boolean {
+export function canBeSentToTraining(agent: Agent): boolean {
   const validStates: AgentState[] = ['Available']
   return _.includes(validStates, agent.CurrentState)
 }

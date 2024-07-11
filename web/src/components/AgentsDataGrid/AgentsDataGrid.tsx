@@ -18,7 +18,6 @@ import type {
 } from '../../lib/codesync/GameState'
 import { getSurvivalChance } from '../../lib/codesync/agentSurvivalRoll'
 import {
-  agentPlayerActionConditionMap,
   canBeSentOnMission,
   getSurvivalSkill,
 } from '../../lib/codesync/ruleset'
@@ -26,6 +25,7 @@ import {
   useGameSessionContext,
   type GameSession,
 } from '../../lib/gameSession/GameSession'
+import { playerActionMap } from '../../lib/model/PlayerAction'
 import {
   agentStateColors,
   agentStateGridColDef,
@@ -177,7 +177,9 @@ function isAgentRowSelectable(
   const agents = gameSession.getAssets().Agents
   const rowAgent: Agent = _.find(agents, (agent) => agent.Id === id)!
 
-  return agentPlayerActionConditionMap[action](rowAgent)
+  const playerAction = playerActionMap[action]
+  return playerAction.canApplyToAgent!(rowAgent)
+  //return agentPlayerActionConditionMap[action](rowAgent)
 }
 
 function filterAgents(
