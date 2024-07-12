@@ -7,7 +7,7 @@ import { Md5 } from 'ts-md5'
 import { GameSessionContext } from '../../components/GameSessionProvider'
 import { callAdvanceTurnsApi } from '../api/advanceTurnsApi'
 import { callApplyPlayerActionApi } from '../api/applyPlayerActionApi'
-import { playerActionsPayloadsProviders } from '../api/playerActionsPayloadsProviders'
+import { actionNameToPayloadProviderMap } from '../api/playerActionsPayloadsProviders'
 import type { GameEventWithTurn } from '../codesync/GameEvent'
 import {
   getTurnNo,
@@ -116,7 +116,7 @@ export class GameSession {
 
   public async hireAgents(count: number): Promise<boolean> {
     const payloadProvider =
-      playerActionsPayloadsProviders.HireAgentsPlayerAction
+      actionNameToPayloadProviderMap.HireAgentsPlayerAction
     const payload = payloadProvider(count)
     return this.applyPlayerAction(payload)
   }
@@ -126,7 +126,7 @@ export class GameSession {
     amount: number,
   ): Promise<boolean> {
     const payloadProvider =
-      playerActionsPayloadsProviders.InvestIntelPlayerAction
+      actionNameToPayloadProviderMap.InvestIntelPlayerAction
     const payload = payloadProvider([factionId], amount)
     return this.applyPlayerAction(payload)
   }
@@ -140,7 +140,7 @@ export class GameSession {
     }
     /* c8 ignore stop */
     const payloadProvider =
-      playerActionsPayloadsProviders.BuyTransportCapacityPlayerAction
+      actionNameToPayloadProviderMap.BuyTransportCapacityPlayerAction
     const payload = payloadProvider(count)
     return this.applyPlayerAction(payload)
   }
@@ -150,7 +150,7 @@ export class GameSession {
     missionSiteId: number,
   ): Promise<boolean> {
     const payloadProvider =
-      playerActionsPayloadsProviders.LaunchMissionPlayerAction
+      actionNameToPayloadProviderMap.LaunchMissionPlayerAction
     const payload = payloadProvider(agentsIds, missionSiteId)
     return this.applyPlayerAction(payload)
   }
@@ -159,7 +159,7 @@ export class GameSession {
     playerActionName: AgentPlayerActionName,
     agentsIds: number[],
   ): Promise<boolean> {
-    const payloadProvider = playerActionsPayloadsProviders[playerActionName]
+    const payloadProvider = actionNameToPayloadProviderMap[playerActionName]
     const payload = payloadProvider(agentsIds)
     return this.applyPlayerAction(payload)
   }

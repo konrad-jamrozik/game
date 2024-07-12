@@ -205,6 +205,12 @@ module.exports = {
     'unicorn/no-negated-condition': 'off',
     // https://github.com/sindresorhus/eslint-plugin-unicorn/blob/main/docs/rules/no-keyword-prefix.md
     'unicorn/no-keyword-prefix': 'off',
+    // https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v53.0.0/docs/rules/prefer-object-from-entries.md
+    // I prefer using _.fromPairs() instead, for consistency with using other lodash methods.
+    // Specifically, I decided for following replacements:
+    // Object.fromEntries -> _.fromPairs
+    // Object.entries -> _.toPairs (or _.map)
+    'unicorn/prefer-object-from-entries': 'off',
 
     // https://github.com/wix-incubator/eslint-plugin-lodash/blob/master/docs/rules/import-scope.md
     'lodash/import-scope': ['error', 'full'],
