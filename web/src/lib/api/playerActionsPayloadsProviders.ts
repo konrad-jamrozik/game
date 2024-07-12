@@ -111,8 +111,7 @@ function payloadFromIdsAndTargetIdFactory(
   name: PlayerActionNameInTurn,
 ): PayloadFromIdsAndTargetId {
   return (ids: number[], targetId: number) => ({
-    Name: name,
-    Ids: ids,
+    ...payloadFromIdsFactory(name)(ids),
     TargetId: targetId,
   })
 }
