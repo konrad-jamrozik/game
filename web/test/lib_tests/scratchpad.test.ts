@@ -82,11 +82,20 @@ const providerMap2 = Object.fromEntries([
   ['bar', providerFuncFromNumberFactory('bar')],
 ])
 
+const providerMap3 = {
+  foo: providerFuncFromNumberFactory('foo'),
+  bar: providerFuncFromNumberFactory('bar'),
+}
+
 describe('scratchpad tests', () => {
   test('test scratchpad', () => {
-    const parsedProviderMap1 = ProviderMapSchema.safeParse(providerMap1)
-    const parsedProviderMap2 = ProviderMapSchema.safeParse(providerMap2)
-    expect(parsedProviderMap1.success).toBe(true)
-    expect(parsedProviderMap2.success).toBe(false)
+    const res1 = ProviderMapSchema.safeParse(providerMap1)
+    const res2 = ProviderMapSchema.safeParse(providerMap2)
+    const res3 = ProviderMapSchema.safeParse(providerMap3)
+    expect([res1.success, res2.success, res3.success]).toBe([
+      true,
+      false,
+      false,
+    ])
   })
 })
