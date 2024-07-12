@@ -38,6 +38,17 @@ const actionNameToPayloadProviderFactoryMap: {
 // However, if this declares "LaunchMissionPlayerAction" player action
 // should produce payload from "IDs" and "TargetId" parameters, and the actual implementation
 // would take "IDs" parameter only, then this would not catch that.
+//
+// This is due to the assumption that the signature says we CAN produce payload from MORE parameters,
+// but if actual produces payload from LESS parameters, then the code still works.
+// This is the Liskov substitution principle of "require all that is provided or less, but not more".
+// This is also parameter contra-variance, i.e. reversal of assignment compatibility:
+//   We can assign less generic parameter object (with less information, i.e. less params) to the expected
+//   more derived parameter objet (with more information, i.e. more params).
+//
+// Related:
+// https://stackoverflow.com/questions/49099224/passing-a-function-accepting-fewer-parameters-how-to-enforce-the-same-number-o
+// https://stackoverflow.com/questions/27336393/is-there-a-way-to-make-typescript-consider-function-types-non-equivalent-when-th
 type PayloadProviderMap =
   // prettier-ignore
   {
@@ -55,6 +66,13 @@ type PayloadProviderMap =
 export const actionNameToPayloadProviderMap: PayloadProviderMap = _.fromPairs(
   _.map(actionNameToPayloadProviderFactoryMap, (factory, actionName) => {
     const typedActionName = actionName as PlayerActionNameInTurn
+    // note: factory type here is:
+    //   (parameter) factory: (name: PlayerActionNameInTurn) => PayloadFromTargetId | PayloadFromIdsAndTargetId
+    // i.e. PayloadFromIds is missing.
+    // This is because PayloadFromIds is subsumed by PayloadFromIdAndTargetId:
+    //   If the factory returns PayloadFromIdsAndTargetId, then one can also pass to it function
+    //   that matches PayloadFromIds signature, i.e. one can pass a function that requires only IDs, and not TargetId.
+    // Read comment PayloadProviderMap for details.
     return [typedActionName, factory(typedActionName)]
   }),
 ) as PayloadProviderMap
