@@ -49,6 +49,7 @@ const actionNameToPayloadProviderFactoryMap: {
 // Related:
 // https://stackoverflow.com/questions/49099224/passing-a-function-accepting-fewer-parameters-how-to-enforce-the-same-number-o
 // https://stackoverflow.com/questions/27336393/is-there-a-way-to-make-typescript-consider-function-types-non-equivalent-when-th
+// kja2-refactor: deduplicate per answer to: https://stackoverflow.com/questions/78739104/how-can-i-avoid-duplicating-key-in-value-and-duplicating-type-and-const-definit
 type PayloadProviderMap =
   // prettier-ignore
   {
