@@ -88,11 +88,11 @@ const providerMap3 = {
 }
 
 describe('scratchpad tests', () => {
-  test('test scratchpad', () => {
+  test('test zod schema validation', () => {
     const res1 = ProviderMapSchema.safeParse(providerMap1)
     const res2 = ProviderMapSchema.safeParse(providerMap2)
     const res3 = ProviderMapSchema.safeParse(providerMap3)
-    expect([res1.success, res2.success, res3.success]).toBe([
+    expect([res1.success, res2.success, res3.success]).toStrictEqual([
       true,
       true, // I was hoping for this to be false
       true, // I was hoping for this to be false
