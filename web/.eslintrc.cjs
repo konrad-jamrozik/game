@@ -1,5 +1,5 @@
 // Note: eslint is not running prettier on purpose. Prettier is ran separately.
-// https://typescript-eslint.io/linting/troubleshooting/performance-troubleshooting/#eslint-plugin-prettier
+// https://typescript-eslint.io/troubleshooting/typed-linting/performance#eslint-plugin-prettier
 module.exports = {
   root: true, // [vite template][ts-eslint]
   env: {
