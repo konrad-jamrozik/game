@@ -1,6 +1,6 @@
 <#
 .SYNOPSIS
-PowerShell module with aliases faciliating local development.
+PowerShell module with aliases facilitating local development.
 
 .INPUTS
 This script assumes that:
